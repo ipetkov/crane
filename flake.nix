@@ -7,25 +7,31 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, utils, ... }: utils.lib.eachDefaultSystem (system:
+  outputs = inputs@{ self, nixpkgs, utils, ... }:
     let
-      pkgs = import nixpkgs {
-        inherit system;
-      };
-
-      lib = import ./lib {
-        inherit pkgs;
-      };
-
-      checks = import ./checks {
-        inherit pkgs;
-      };
+      myPkgsFor = pkgs: pkgs.callPackages ./pkgs { };
     in
     {
-      inherit checks lib;
+      overlay = final: prev: myPkgsFor final;
+    } // utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+        };
 
-      devShell = pkgs.mkShell {
-        inputsFrom = builtins.attrValues checks;
-      };
-    });
+        lib = import ./lib {
+          inherit (pkgs) lib newScope;
+        };
+
+        checks = pkgs.callPackages ./checks { };
+      in
+      {
+        inherit checks lib;
+
+        packages = myPkgsFor pkgs;
+
+        devShell = pkgs.mkShell {
+          inputsFrom = builtins.attrValues checks;
+        };
+      });
 }

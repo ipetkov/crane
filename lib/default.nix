@@ -1,6 +1,8 @@
-{ pkgs }:
+{ lib
+, newScope
+}:
 
-pkgs.lib.makeScope pkgs.newScope (self:
+lib.makeScope newScope (self:
   let
     callPackage = self.newScope { };
   in
