@@ -14,5 +14,7 @@ EOF
 }
 
 if [ -n "${cargoVendorDir-}" ]; then
-  postPatchHooks+=(configureCargoVendoredDepsHook)
+  preConfigureHooks+=(configureCargoVendoredDepsHook)
+else
+  echo "cargoVendorDir not set"
 fi

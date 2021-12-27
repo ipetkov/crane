@@ -19,8 +19,12 @@
           inherit system;
         };
 
+        myPkgs = myPkgsFor pkgs;
+
+        # To override do: lib.overrideScope' (self: super: { ... });
         lib = import ./lib {
           inherit (pkgs) lib newScope;
+          inherit myPkgs;
         };
 
         checks = pkgs.callPackages ./checks { };
@@ -28,7 +32,7 @@
       {
         inherit checks lib;
 
-        packages = myPkgsFor pkgs;
+        packages = myPkgs;
 
         devShell = pkgs.mkShell {
           inputsFrom = builtins.attrValues checks;
