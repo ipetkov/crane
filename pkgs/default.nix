@@ -1,4 +1,6 @@
-{ makeSetupHook }:
+{ makeSetupHook
+, zstd
+}:
 
 {
   configureCargoCommonVarsHook = makeSetupHook
@@ -14,5 +16,8 @@
   copyCargoTargetToOutputHook = makeSetupHook
     {
       name = "copyCargoTargetToOutputHook";
+      substitutions = {
+        zstd = "${zstd}/bin/zstd";
+      };
     } ./copyCargoTargetToOutputHook.sh;
 }

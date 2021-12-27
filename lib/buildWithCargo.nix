@@ -6,13 +6,15 @@
 , stdenv
 }:
 
-{ doCopyTarget ? true
+{ doCompressTarget ? true
+, doCopyTarget ? true
 , nativeBuildInputs ? [ ]
 , outputs ? [ "out" ]
 , ...
 }@args:
 stdenv.mkDerivation (args // {
   inherit
+    doCompressTarget
     doCopyTarget;
 
   nativeBuildInputs = nativeBuildInputs ++ [
