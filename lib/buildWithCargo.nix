@@ -7,15 +7,13 @@
 }:
 
 { doCopyTarget ? true
-, doCopyTargetToSeparateOutput ? doCopyTarget
 , nativeBuildInputs ? [ ]
 , outputs ? [ "out" ]
 , ...
 }@args:
 stdenv.mkDerivation (args // {
   inherit
-    doCopyTarget
-    doCopyTargetToSeparateOutput;
+    doCopyTarget;
 
   nativeBuildInputs = nativeBuildInputs ++ [
     cargo
@@ -24,7 +22,7 @@ stdenv.mkDerivation (args // {
     copyCargoTargetToOutputHook
   ];
 
-  outputs = outputs ++ lib.optional (doCopyTarget && doCopyTargetToSeparateOutput) "target";
+  outputs = outputs ++ lib.optional doCopyTarget "target";
 
   buildPhase = ''
     cargo check --release
