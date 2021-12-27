@@ -10,4 +10,9 @@
     {
       name = "configureCargoVendoredDepsHook";
     } ./configureCargoVendoredDepsHook.sh;
+
+  copyCargoTargetToOutputHook = makeSetupHook
+    {
+      name = "copyCargoTargetToOutputHook";
+    } ./copyCargoTargetToOutputHook.sh;
 }
