@@ -9,7 +9,7 @@
 }:
 
 { doCompressTarget ? true
-, doCopyTarget ? true
+, doCopyTargetToOutput ? true
 , nativeBuildInputs ? [ ]
 , outputs ? [ "out" ]
 , ...
@@ -32,7 +32,7 @@ let
   defaultValues = {
     inherit
       doCompressTarget
-      doCopyTarget;
+      doCopyTargetToOutput;
 
     buildPhase = ''
       runHook preBuild
@@ -53,7 +53,7 @@ let
   };
 
   additions = {
-    outputs = outputs ++ lib.optional doCopyTarget "target";
+    outputs = outputs ++ lib.optional doCopyTargetToOutput "target";
 
     nativeBuildInputs = nativeBuildInputs ++ [
       cargo

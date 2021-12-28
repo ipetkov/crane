@@ -1,7 +1,7 @@
 copyCargoTargetToOutput() {
   echo "Executing copyCargoTargetToOutput"
 
-  if [ "1" != "${doCopyTarget-}" ]; then
+  if [ "1" != "${doCopyTargetToOutput-}" ]; then
     return
   fi
 
