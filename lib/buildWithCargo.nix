@@ -2,8 +2,10 @@
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
 , copyCargoTargetToOutputHook
+, inheritCargoTargetHook
 , lib
 , stdenv
+, vendorCargoDeps
 }:
 
 { doCompressTarget ? true
@@ -12,27 +14,54 @@
 , outputs ? [ "out" ]
 , ...
 }@args:
-stdenv.mkDerivation (args // {
-  inherit
-    doCompressTarget
-    doCopyTarget;
+let
+  vendorFromCargoLockPath = path:
+    let
+      cargoLock = path + "/Cargo.lock";
+    in
+    if builtins.pathExists cargoLock
+    then vendorCargoDeps { inherit cargoLock; }
+    else
+      throw ''
+        unable to find Cargo.lock at ${path}. please ensure one of the following:
+        - a Cargo.lock exists at the root of the source directory of the derivation
+        - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
+        - set `cargoVendorDir = null` to skip vendoring altogether
+      '';
 
-  nativeBuildInputs = nativeBuildInputs ++ [
-    cargo
-    configureCargoCommonVarsHook
-    configureCargoVendoredDepsHook
-    copyCargoTargetToOutputHook
-  ];
+  defaultValues = {
+    inherit
+      doCompressTarget
+      doCopyTarget;
 
-  outputs = outputs ++ lib.optional doCopyTarget "target";
+    buildPhase = ''
+      runHook preBuild
+      cargo check --release
+      runHook postBuild
+    '';
 
-  buildPhase = ''
-    cargo check --release
-  '';
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out
+      runHook postInstall
+    '';
 
-  installPhase = ''
-    runHook preInstall
-    mkdir -p $out
-    runHook postInstall
-  '';
-})
+    cargoVendorDir =
+      if args ? src
+      then vendorFromCargoLockPath args.src
+      else null;
+  };
+
+  additions = {
+    outputs = outputs ++ lib.optional doCopyTarget "target";
+
+    nativeBuildInputs = nativeBuildInputs ++ [
+      cargo
+      configureCargoCommonVarsHook
+      configureCargoVendoredDepsHook
+      copyCargoTargetToOutputHook
+      inheritCargoTargetHook
+    ];
+  };
+in
+stdenv.mkDerivation (defaultValues // args // additions)
