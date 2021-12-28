@@ -7,32 +7,41 @@
 , stdenv
 , vendorCargoDeps
 }:
+let
+  vendorCargoDepsFromArgs = args:
+    if args ? src
+    then
+      let
+        path = args.src;
+        cargoLock = path + "/Cargo.lock";
+      in
+      if builtins.pathExists cargoLock
+      then vendorCargoDeps { inherit cargoLock; }
+      else
+        throw ''
+          unable to find Cargo.lock at ${path}. please ensure one of the following:
+          - a Cargo.lock exists at the root of the source directory of the derivation
+          - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
+          - set `cargoVendorDir = null` to skip vendoring altogether
+        ''
+    else null;
+in
 
-{ doCompressTarget ? true
+{ cargoVendorDir ? vendorCargoDepsFromArgs args
+, doCompressTarget ? true
 , doCopyTargetToOutput ? true
+, inheritCargoTarget ? null
 , nativeBuildInputs ? [ ]
 , outputs ? [ "out" ]
 , ...
 }@args:
 let
-  vendorFromCargoLockPath = path:
-    let
-      cargoLock = path + "/Cargo.lock";
-    in
-    if builtins.pathExists cargoLock
-    then vendorCargoDeps { inherit cargoLock; }
-    else
-      throw ''
-        unable to find Cargo.lock at ${path}. please ensure one of the following:
-        - a Cargo.lock exists at the root of the source directory of the derivation
-        - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
-        - set `cargoVendorDir = null` to skip vendoring altogether
-      '';
-
   defaultValues = {
     inherit
+      cargoVendorDir
       doCompressTarget
-      doCopyTargetToOutput;
+      doCopyTargetToOutput
+      inheritCargoTarget;
 
     buildPhase = ''
       runHook preBuild
@@ -46,10 +55,6 @@ let
       runHook postInstall
     '';
 
-    cargoVendorDir =
-      if args ? src
-      then vendorFromCargoLockPath args.src
-      else null;
   };
 
   additions = {
