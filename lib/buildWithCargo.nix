@@ -2,7 +2,7 @@
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
 , copyCargoTargetToOutputHook
-, inheritCargoTargetHook
+, inheritCargoArtifactsHook
 , lib
 , stdenv
 , vendorCargoDeps
@@ -27,10 +27,10 @@ let
     else null;
 in
 
-{ cargoVendorDir ? vendorCargoDepsFromArgs args
+{ cargoArtifacts ? null
+, cargoVendorDir ? vendorCargoDepsFromArgs args
 , doCompressTarget ? true
 , doCopyTargetToOutput ? true
-, inheritCargoTarget ? null
 , nativeBuildInputs ? [ ]
 , outputs ? [ "out" ]
 , ...
@@ -40,8 +40,7 @@ let
     inherit
       cargoVendorDir
       doCompressTarget
-      doCopyTargetToOutput
-      inheritCargoTarget;
+      doCopyTargetToOutput;
 
     buildPhase = ''
       runHook preBuild
@@ -65,7 +64,7 @@ let
       configureCargoCommonVarsHook
       configureCargoVendoredDepsHook
       copyCargoTargetToOutputHook
-      inheritCargoTargetHook
+      inheritCargoArtifactsHook
     ];
   };
 in

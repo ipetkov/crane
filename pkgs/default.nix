@@ -22,12 +22,12 @@
       };
     } ./copyCargoTargetToOutputHook.sh;
 
-    inheritCargoTargetHook = makeSetupHook
+  inheritCargoArtifactsHook = makeSetupHook
     {
-      name = "inheritCargoTargetHook";
+      name = "inheritCargoArtifactsHook";
       substitutions = {
         rsync = "${rsync}/bin/rsync";
         zstd = "${zstd}/bin/zstd";
       };
-    } ./inheritCargoTargetHook.sh;
+    } ./inheritCargoArtifactsHook.sh;
 }
