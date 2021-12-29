@@ -35,4 +35,9 @@
     {
       name = "installFromCargoArtifactsHook";
     } ./installFromCargoArtifactsHook.sh;
+
+  remapSourcePathPrefixHook = makeSetupHook
+    {
+      name = "remapSourcePathPrefixHook";
+    } ./remapSourcePathPrefixHook.sh;
 }

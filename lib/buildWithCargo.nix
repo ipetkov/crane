@@ -5,6 +5,7 @@
 , inheritCargoArtifactsHook
 , installFromCargoArtifactsHook
 , lib
+, remapSourcePathPrefixHook
 , stdenv
 , vendorCargoDeps
 }:
@@ -32,6 +33,7 @@ in
 , cargoVendorDir ? vendorCargoDepsFromArgs args
 , doCompressTarget ? true
 , doCopyTargetToOutput ? true
+, doRemapSourcePathPrefix ? true
 , nativeBuildInputs ? [ ]
 , outputs ? [ "out" ]
 , ...
@@ -41,7 +43,8 @@ let
     inherit
       cargoVendorDir
       doCompressTarget
-      doCopyTargetToOutput;
+      doCopyTargetToOutput
+      doRemapSourcePathPrefix;
 
     buildPhase = ''
       runHook preBuild
@@ -60,6 +63,7 @@ let
       copyCargoTargetToOutputHook
       inheritCargoArtifactsHook
       installFromCargoArtifactsHook
+      remapSourcePathPrefixHook
     ];
   };
 in
