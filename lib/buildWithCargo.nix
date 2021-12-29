@@ -3,6 +3,7 @@
 , configureCargoVendoredDepsHook
 , copyCargoTargetToOutputHook
 , inheritCargoArtifactsHook
+, installFromCargoArtifactsHook
 , lib
 , stdenv
 , vendorCargoDeps
@@ -47,13 +48,6 @@ let
       cargo check --release
       runHook postBuild
     '';
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out
-      runHook postInstall
-    '';
-
   };
 
   additions = {
@@ -65,6 +59,7 @@ let
       configureCargoVendoredDepsHook
       copyCargoTargetToOutputHook
       inheritCargoArtifactsHook
+      installFromCargoArtifactsHook
     ];
   };
 in

@@ -30,4 +30,9 @@
         zstd = "${zstd}/bin/zstd";
       };
     } ./inheritCargoArtifactsHook.sh;
+
+  installFromCargoArtifactsHook = makeSetupHook
+    {
+      name = "installFromCargoArtifactsHook";
+    } ./installFromCargoArtifactsHook.sh;
 }
