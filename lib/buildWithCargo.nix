@@ -60,7 +60,7 @@ let
 
     buildPhase = ''
       runHook preBuild
-      cargo check --release
+      cargo build --release
       runHook postBuild
     '';
   };
