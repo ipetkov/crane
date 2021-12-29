@@ -1,6 +1,11 @@
 configureCargoCommonVars() {
   echo "Executing configureCargoCommonVars"
 
+  # Set a CARGO_HOME if it doesn't exist so cargo does not go
+  # looking for a non-existent HOME directory
+  export CARGO_HOME=${CARGO_HOME:-${PWD}/.cargo-home}
+  mkdir -p ${CARGO_HOME}
+
   export CARGO_BUILD_JOBS=${CARGO_BUILD_JOBS:-$NIX_BUILD_CORES}
   export RUST_TEST_THREADS=${RUST_TEST_THREADS:-$NIX_BUILD_CORES}
 
@@ -8,8 +13,8 @@ configureCargoCommonVars() {
   # while building with nix. Allow a declared-but-empty variable which will tell
   # cargo to honor the definition used in the build profile
   export CARGO_BUILD_INCREMENTAL=${CARGO_BUILD_INCREMENTAL-false}
-
-  echo "Finished configureCargoCommonVars"
 }
 
-preConfigureHooks+=(configureCargoCommonVars)
+# NB: run after patching, but before other configure hooks so that we can set
+# any default values as early in the process as possible.
+postPatchHooks+=(configureCargoCommonVars)
