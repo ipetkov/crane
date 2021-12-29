@@ -1,10 +1,6 @@
 copyCargoTargetToOutput() {
   echo "Executing copyCargoTargetToOutput"
 
-  if [ "1" != "${doCopyTargetToOutput-}" ]; then
-    return
-  fi
-
   export SOURCE_DATE_EPOCH=1
   mkdir -p "${target}"
 
@@ -22,4 +18,6 @@ copyCargoTargetToOutput() {
     -c target | @zstd@ -o "${target}/target.tar.zst"
 }
 
-postInstallHooks+=(copyCargoTargetToOutput)
+if [ "1" = "${doCopyTargetToOutput-}" ]; then
+  postInstallHooks+=(copyCargoTargetToOutput)
+fi
