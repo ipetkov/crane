@@ -1,4 +1,4 @@
-{ buildWithDummySrc
+{ buildDepsOnly
 , cargo
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
@@ -39,12 +39,12 @@ let
         cargoLock = path + /Cargo.lock;
       in
       if builtins.pathExists cargoToml && builtins.pathExists cargoLock
-      then (buildWithDummySrc args).target
+      then (buildDepsOnly args).target
       else
         throw ''
           unable to find Cargo.toml and Cargo.lock at ${path}. please ensure one of the following:
           - a Cargo.toml and Cargo.lock exists at the root of the source directory of the derivation
-          - set `cargoArtifacts = buildWithDummySrc { src = ./some/path/to/cargo/root; }`
+          - set `cargoArtifacts = buildDepsOnly { src = ./some/path/to/cargo/root; }`
           - set `cargoArtifacts = null` to skip reusing cargo artifacts altogether
         ''
     else null;

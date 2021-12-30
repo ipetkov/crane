@@ -12,8 +12,8 @@ lib.makeScope newScope (self:
   {
     inherit fromTOML toTOML;
 
+    buildDepsOnly = callPackage ./buildDepsOnly.nix { };
     buildWithCargo = callPackage ./buildWithCargo.nix { };
-    buildWithDummySrc = callPackage ./buildWithDummySrc.nix { };
     cleanCargoToml = callPackage ./cleanCargoToml.nix { };
     crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix { };
     downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
