@@ -29,7 +29,9 @@
           inherit myPkgs;
         };
 
-        checks = pkgs.callPackages ./checks { };
+        checks = pkgs.callPackages ./checks {
+          myLib = lib;
+        };
       in
       {
         inherit checks lib;

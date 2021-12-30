@@ -1,0 +1,212 @@
+cargo-features = ["some unstable features"]
+
+[package]
+name = "some name"
+version = "1.2.3"
+authors = ["some author", "another author"]
+edition = "2021"
+rust-version = "1.56"
+description = "some description"
+documentation = "documentation url"
+readme = "readme/path"
+homepage = "some homepage"
+repository = "some repository"
+license = "some license"
+license-file = "some license-file"
+keywords = ["first keyword", "second keyword"]
+categories = ["first category", "second category"]
+workspace = "some/path/to/workspace"
+build = "buildScript.rs"
+links = "libfoo"
+exclude = ["first exclude", "second exclude"]
+include = ["first include", "second include"]
+publish = true
+default-run = "some default-run"
+autobins = true
+autoexamples = true
+autotests = true
+autobenches = true
+resolver = "2"
+
+[package.metadata.android]
+package-name = "my-awesome-android-app"
+assets = "path/to/static"
+
+[lib]
+name = "foo"
+path = "src/lib.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+crate-type = ["lib"]
+required-features = ["libfeature1", "libfeature2"]
+
+[[bin]]
+name = "bin1"
+path = "src/bin1.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+required-features = ["bin1feature1", "bin1feature2"]
+
+[[bin]]
+name = "bin2"
+path = "src/bin2.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+required-features = ["bin2feature1", "bin2feature2"]
+
+[[example]]
+name = "example1"
+path = "src/example1.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+required-features = ["example1feature1", "example1feature2"]
+
+[[example]]
+name = "example2"
+path = "src/example2.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+required-features = ["example2feature1", "example2feature2"]
+
+[[test]]
+name = "test1"
+path = "src/test1.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+required-features = ["test1feature1", "test1feature2"]
+
+[[test]]
+name = "test2"
+path = "src/test2.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+required-features = ["test2feature1", "test2feature2"]
+
+[[bench]]
+name = "bench1"
+path = "src/bench1.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+required-features = ["bench1feature1", "bench1feature2"]
+
+[[bench]]
+name = "bench2"
+path = "src/bench2.rs"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2015"
+required-features = ["bench2feature1", "bench2feature2"]
+
+[dependencies]
+foo = "1"
+bar = { version = "2", features = ["bar-feature", "bar-another-feature"] }
+
+[dependencies.baz]
+version = "3"
+features = [
+  "baz-feature",
+  "baz-feature2",
+]
+
+[dev-dependencies]
+qux = "4"
+
+[dev-dependencies.zuul]
+version = "5"
+
+[build-dependencies.corge]
+version = "6"
+
+[target.'cfg(unix)'.dependencies]
+grault = "7"
+
+[target.'cfg(target_arch = "x86")'.dependencies]
+garply = "8"
+
+[badges]
+some-badge = "some-badge-value"
+
+[features]
+foofeature = []
+barfeature = ["foofeature"]
+
+[patch.crates-io]
+foo = { git = 'https://github.com/example/foo' }
+bar = { path = 'my/local/bar' }
+
+[replace]
+"foo2:0.1.0" = { git = 'https://github.com/example/foo2' }
+"bar3:1.0.2" = { path = 'my/local/bar3' }
+
+[profile.dev]
+opt-level = 1
+overflow-checks = false
+
+[profile.release]
+opt-level = 2
+overflow-checks = true
+
+[workspace]
+members = ["member1", "path/to/member2", "crates/*"]
+default-members = ["path/to/member2", "path/to/member3/foo"]
+exclude = ["crates/foo", "path/to/other"]
+
+[workspace.metadata.webcontents]
+root = "path/to/webproject"
+tool = ["npm", "run", "build"]
+
+[some-unrecognized-object]
+some-unrecognized-field = "some value"

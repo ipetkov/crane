@@ -7,14 +7,15 @@
 
 lib.makeScope newScope (self:
   let
-    callPackage = self.newScope { };
+    callPackage = self.newScope myPkgs;
   in
-  myPkgs // {
-    inherit callPackage fromTOML toTOML;
+  {
+    inherit fromTOML toTOML;
 
     buildWithCargo = callPackage ./buildWithCargo.nix { };
     cleanCargoToml = callPackage ./cleanCargoToml.nix { };
     downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
     urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
     vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
+    writeTOML = callPackage ./writeTOML.nix { };
   })

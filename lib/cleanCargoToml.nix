@@ -4,8 +4,12 @@
 }:
 
 let
-  dummyLib = writeText "lib.rs" "#[test] fn it_works() {}";
-  dummyMain = writeText "main.rs" "fn main() {}";
+  dummyrs = writeText "dummy.rs" ''
+    #![allow(dead_code)]
+    pub fn main() {}
+    #[test]
+    fn it_works() {}
+  '';
 
   # https://doc.rust-lang.org/cargo/reference/manifest.html#the-package-section
   cleanPackage = package: removeAttrs package [
@@ -42,7 +46,7 @@ let
   ];
 
   # https://doc.rust-lang.org/cargo/reference/cargo-targets.html#configuring-a-target
-  cleanTargetCommon = pathReplacement: target:
+  cleanTargetCommon = target:
     let
       cleanedCommon =
         removeAttrs target [
@@ -62,11 +66,28 @@ let
           # "required-features" # influences dependency feature combinations
         ];
     in
-    cleanedCommon // { path = builtins.toString pathReplacement; };
+    cleanedCommon // { path = builtins.toString dummyrs; };
+
+  cleanWorkspace = workspace: removeAttrs workspace [
+    "metadata"
+
+    # Additional package attributes which are expressly kept in
+    # (but listed here for audit purposes)
+    # "default-members"
+    # "exclude"
+    # "members"
+  ];
 
   # https://doc.rust-lang.org/cargo/reference/manifest.html
   cleanCargoToml = parsed:
     let
+      safeClean = f: attr:
+        if builtins.hasAttr attr parsed
+        then { ${attr} = f (builtins.getAttr attr parsed); }
+        else { };
+
+      safeCleanList = f: safeClean (map f);
+
       topLevelCleaned = removeAttrs parsed [
         "badges" # Badges to display on a registry.
 
@@ -80,20 +101,16 @@ let
         # "profile"            # this could influence how dependencies are built/optimized
         # "replace"            # (deprecated) configures sources as the project wants
         # "target"             # we want to build and cache these
-        # "workspace"          # keep the workspace hierarchy as the project wants
       ];
-
-      recursivelyCleaned = {
-        package = cleanPackage (parsed.package or { });
-        lib = cleanTargetCommon dummyLib (parsed.lib or { });
-
-        bench = map (cleanTargetCommon dummyLib) (parsed.bench or [ ]);
-        bin = map (cleanTargetCommon dummyMain) (parsed.bin or [ ]);
-        example = map (cleanTargetCommon dummyLib) (parsed.example or [ ]);
-        test = map (cleanTargetCommon dummyLib) (parsed.test or [ ]);
-      };
     in
-    topLevelCleaned // recursivelyCleaned;
+    topLevelCleaned
+    // (safeClean cleanPackage "package")
+    // (safeClean cleanTargetCommon "lib")
+    // (safeClean cleanWorkspace "workspace")
+    // (safeCleanList cleanTargetCommon "bench")
+    // (safeCleanList cleanTargetCommon "bin")
+    // (safeCleanList cleanTargetCommon "example")
+    // (safeCleanList cleanTargetCommon "test");
 in
 { cargoToml ? throw "either cargoToml or cargoTomlContents must be specified"
 , cargoTomlContents ? builtins.readFile cargoToml

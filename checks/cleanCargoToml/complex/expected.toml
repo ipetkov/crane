@@ -1,0 +1,117 @@
+cargo-features = ["some unstable features"]
+
+[build-dependencies]
+[build-dependencies.corge]
+version = "6"
+
+[dependencies]
+foo = "1"
+
+[dependencies.bar]
+features = ["bar-feature", "bar-another-feature"]
+version = "2"
+
+[dependencies.baz]
+features = ["baz-feature", "baz-feature2"]
+version = "3"
+
+[dev-dependencies]
+qux = "4"
+
+[dev-dependencies.zuul]
+version = "5"
+
+[features]
+barfeature = ["foofeature"]
+foofeature = []
+
+[lib]
+name = "foo"
+path = "/nix/store/dummy.rs"
+required-features = ["libfeature1", "libfeature2"]
+
+[package]
+name = "some name"
+version = "1.2.3"
+workspace = "some/path/to/workspace"
+
+[patch]
+[patch.crates-io]
+[patch.crates-io.bar]
+path = "my/local/bar"
+
+[patch.crates-io.foo]
+git = "https://github.com/example/foo"
+
+[profile]
+[profile.dev]
+opt-level = 1
+overflow-checks = false
+
+[profile.release]
+opt-level = 2
+overflow-checks = true
+
+[replace]
+[replace."bar3:1.0.2"]
+path = "my/local/bar3"
+
+[replace."foo2:0.1.0"]
+git = "https://github.com/example/foo2"
+
+[some-unrecognized-object]
+some-unrecognized-field = "some value"
+
+[target]
+[target."cfg(target_arch = \"x86\")"]
+[target."cfg(target_arch = \"x86\")".dependencies]
+garply = "8"
+
+[target."cfg(unix)"]
+[target."cfg(unix)".dependencies]
+grault = "7"
+
+[workspace]
+default-members = ["path/to/member2", "path/to/member3/foo"]
+exclude = ["crates/foo", "path/to/other"]
+members = ["member1", "path/to/member2", "crates/*"]
+
+[[bench]]
+name = "bench1"
+path = "/nix/store/dummy.rs"
+required-features = ["bench1feature1", "bench1feature2"]
+
+[[bench]]
+name = "bench2"
+path = "/nix/store/dummy.rs"
+required-features = ["bench2feature1", "bench2feature2"]
+
+[[bin]]
+name = "bin1"
+path = "/nix/store/dummy.rs"
+required-features = ["bin1feature1", "bin1feature2"]
+
+[[bin]]
+name = "bin2"
+path = "/nix/store/dummy.rs"
+required-features = ["bin2feature1", "bin2feature2"]
+
+[[example]]
+name = "example1"
+path = "/nix/store/dummy.rs"
+required-features = ["example1feature1", "example1feature2"]
+
+[[example]]
+name = "example2"
+path = "/nix/store/dummy.rs"
+required-features = ["example2feature1", "example2feature2"]
+
+[[test]]
+name = "test1"
+path = "/nix/store/dummy.rs"
+required-features = ["test1feature1", "test1feature2"]
+
+[[test]]
+name = "test2"
+path = "/nix/store/dummy.rs"
+required-features = ["test2feature1", "test2feature2"]
