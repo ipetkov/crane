@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "nix-std": {
+      "locked": {
+        "lastModified": 1624642189,
+        "narHash": "sha256-tIt3p1k0PsYeIxK2xO9Z8k2Ggq2nH4auqj3RbVAiRrg=",
+        "owner": "chessai",
+        "repo": "nix-std",
+        "rev": "9ef1cf73948bfad05d370165c7f3011b82c4d679",
+        "type": "github"
+      },
+      "original": {
+        "owner": "chessai",
+        "repo": "nix-std",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1640269308,
@@ -18,6 +33,7 @@
     },
     "root": {
       "inputs": {
+        "nix-std": "nix-std",
         "nixpkgs": "nixpkgs",
         "utils": "utils"
       }

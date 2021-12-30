@@ -1,13 +1,14 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-std.url = "github:chessai/nix-std";
     utils = {
       url = "github:numtide/flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, utils, ... }:
+  outputs = inputs@{ self, nixpkgs, nix-std, utils, ... }:
     let
       myPkgsFor = pkgs: pkgs.callPackages ./pkgs { };
     in
@@ -23,6 +24,7 @@
 
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = import ./lib {
+          inherit (nix-std.lib.serde) fromTOML toTOML;
           inherit (pkgs) lib newScope;
           inherit myPkgs;
         };

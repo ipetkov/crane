@@ -1,4 +1,5 @@
 { downloadCargoPackage
+, fromTOML
 , linkFarm
 }:
 
@@ -6,7 +7,7 @@
 , cargoLockContents ? builtins.readFile cargoLock
 }:
 let
-  lock = builtins.fromTOML cargoLockContents;
+  lock = fromTOML cargoLockContents;
 
   packages =
     if lock ? package

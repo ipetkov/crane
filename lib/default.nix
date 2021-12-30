@@ -1,6 +1,8 @@
-{ lib
+{ fromTOML
+, lib
 , myPkgs
 , newScope
+, toTOML
 }:
 
 lib.makeScope newScope (self:
@@ -8,9 +10,10 @@ lib.makeScope newScope (self:
     callPackage = self.newScope { };
   in
   myPkgs // {
-    inherit callPackage;
+    inherit callPackage fromTOML toTOML;
 
     buildWithCargo = callPackage ./buildWithCargo.nix { };
+    cleanCargoToml = callPackage ./cleanCargoToml.nix { };
     downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
     urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
     vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
