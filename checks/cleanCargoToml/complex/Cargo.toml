@@ -42,7 +42,7 @@ doc = true
 plugin = false
 proc-macro = false
 harness = true
-edition = "2015"
+edition = "2021"
 crate-type = ["lib"]
 required-features = ["libfeature1", "libfeature2"]
 
@@ -69,7 +69,7 @@ doc = true
 plugin = false
 proc-macro = false
 harness = true
-edition = "2015"
+edition = "2018"
 required-features = ["bin2feature1", "bin2feature2"]
 
 [[example]]
@@ -95,7 +95,7 @@ doc = true
 plugin = false
 proc-macro = false
 harness = true
-edition = "2015"
+edition = "2018"
 required-features = ["example2feature1", "example2feature2"]
 
 [[test]]
@@ -121,7 +121,7 @@ doc = true
 plugin = false
 proc-macro = false
 harness = true
-edition = "2015"
+edition = "2018"
 required-features = ["test2feature1", "test2feature2"]
 
 [[bench]]
@@ -147,7 +147,7 @@ doc = true
 plugin = false
 proc-macro = false
 harness = true
-edition = "2015"
+edition = "2018"
 required-features = ["bench2feature1", "bench2feature2"]
 
 [dependencies]

@@ -1,5 +1,4 @@
 { fromTOML
-, toTOML
 , writeText
 }:
 
@@ -23,7 +22,6 @@ let
     "default-run"
     "description"
     "documentation"
-    "edition"
     "exclude"
     "homepage"
     "include"
@@ -40,9 +38,10 @@ let
 
     # Additional package attributes which are expressly kept in
     # (but listed here for audit purposes)
-    # "name"         # The name of the package.
-    # "version"      # The version of the package.
-    # "workspace"    # Path to the workspace for the package.
+    # "edition"      # Influences cargo behavior
+    # "name"         # Required
+    # "version"      # Required
+    # "workspace"    # Keep project structure as is
   ];
 
   # https://doc.rust-lang.org/cargo/reference/cargo-targets.html#configuring-a-target
@@ -54,7 +53,6 @@ let
           "doctest"
           "bench"
           "doc"
-          "edition"
           "plugin"
           "proc-macro"
           "harness"
@@ -62,6 +60,7 @@ let
 
           # Additional package attributes which are expressly kept in
           # (but listed here for audit purposes)
+          # "edition"           # Influences cargo behavior
           # "name"              # let cargo manage targets/collisions/etc.
           # "required-features" # influences dependency feature combinations
         ];
