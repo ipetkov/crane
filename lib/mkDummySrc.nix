@@ -10,6 +10,7 @@
 , cargoLock ? src + /Cargo.lock
 , cargoConfig ? src + /.cargo/config
 , cargoConfigToml ? src + /.cargo/config.toml
+, ...
 }:
 let
   inherit (builtins)

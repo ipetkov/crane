@@ -1,7 +1,9 @@
-{ cargo
+{ buildWithDummySrc
+, cargo
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
 , copyCargoTargetToOutputHook
+, crateNameFromCargoToml
 , inheritCargoArtifactsHook
 , installFromCargoArtifactsHook
 , lib
@@ -15,7 +17,7 @@ let
     then
       let
         path = args.src;
-        cargoLock = path + "/Cargo.lock";
+        cargoLock = path + /Cargo.lock;
       in
       if builtins.pathExists cargoLock
       then vendorCargoDeps { inherit cargoLock; }
@@ -27,14 +29,36 @@ let
           - set `cargoVendorDir = null` to skip vendoring altogether
         ''
     else null;
+
+  cargoArtifactsFromArgs = args:
+    if args ? src
+    then
+      let
+        path = args.src;
+        cargoToml = path + /Cargo.toml;
+        cargoLock = path + /Cargo.lock;
+      in
+      if builtins.pathExists cargoToml && builtins.pathExists cargoLock
+      then (buildWithDummySrc args).target
+      else
+        throw ''
+          unable to find Cargo.toml and Cargo.lock at ${path}. please ensure one of the following:
+          - a Cargo.toml and Cargo.lock exists at the root of the source directory of the derivation
+          - set `cargoArtifacts = buildWithDummySrc { src = ./some/path/to/cargo/root; }`
+          - set `cargoArtifacts = null` to skip reusing cargo artifacts altogether
+        ''
+    else null;
 in
 
 {
   # A directory to an existing cargo `target` directory, which will be reused
-  # at the start of the derivation. Useful for caching incremental cargo builds
-  cargoArtifacts ? null
+  # at the start of the derivation. Useful for caching incremental cargo builds.
+  # This can be inferred automatically if the `src` root has both a Cargo.toml
+  # and Cargo.lock file.
+  cargoArtifacts ? cargoArtifactsFromArgs args
   # A directory of vendored cargo sources which can be consumed without network
-  # access. Directory structure should basically follow the output of `cargo vendor`
+  # access. Directory structure should basically follow the output of `cargo vendor`.
+  # This can be inferred automatically if the `src` root has a Cargo.lock file.
 , cargoVendorDir ? vendorCargoDepsFromArgs args
   # Controls whether cargo's `target` directory should be compressed when copied
   # to the output at the end of the derivation.
@@ -51,8 +75,9 @@ in
 , ...
 }@args:
 let
-  defaultValues = {
+  defaultValues = (crateNameFromCargoToml args) // {
     inherit
+      cargoArtifacts
       cargoVendorDir
       doCompressTarget
       doCopyTargetToOutput
@@ -60,8 +85,14 @@ let
 
     buildPhase = ''
       runHook preBuild
-      cargo build --release
+      cargo build --workspace --release
       runHook postBuild
+    '';
+
+    checkPhase = ''
+      runHook preCheck
+      cargo test --workspace --release
+      runHook postCheck
     '';
   };
 
