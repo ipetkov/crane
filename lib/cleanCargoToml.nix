@@ -1,15 +1,7 @@
 { fromTOML
-, writeText
 }:
 
 let
-  dummyrs = writeText "dummy.rs" ''
-    #![allow(dead_code)]
-    pub fn main() {}
-    #[test]
-    fn it_works() {}
-  '';
-
   # https://doc.rust-lang.org/cargo/reference/manifest.html#the-package-section
   cleanPackage = package: removeAttrs package [
     "authors"
@@ -45,27 +37,23 @@ let
   ];
 
   # https://doc.rust-lang.org/cargo/reference/cargo-targets.html#configuring-a-target
-  cleanTargetCommon = target:
-    let
-      cleanedCommon =
-        removeAttrs target [
-          "test"
-          "doctest"
-          "bench"
-          "doc"
-          "plugin"
-          "proc-macro"
-          "harness"
-          "crate-type"
+  cleanTargetCommon = target: removeAttrs target [
+    "test"
+    "doctest"
+    "bench"
+    "doc"
+    "plugin"
+    "proc-macro"
+    "harness"
+    "crate-type"
 
-          # Additional package attributes which are expressly kept in
-          # (but listed here for audit purposes)
-          # "edition"           # Influences cargo behavior
-          # "name"              # let cargo manage targets/collisions/etc.
-          # "required-features" # influences dependency feature combinations
-        ];
-    in
-    cleanedCommon // { path = builtins.toString dummyrs; };
+    # Additional package attributes which are expressly kept in
+    # (but listed here for audit purposes)
+    # "edition"           # Influences cargo behavior
+    # "path"              # maintain project structure
+    # "name"              # let cargo manage targets/collisions/etc.
+    # "required-features" # influences dependency feature combinations
+  ];
 
   cleanWorkspace = workspace: removeAttrs workspace [
     "metadata"
