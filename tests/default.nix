@@ -14,4 +14,9 @@ pkgs.lib.makeScope myLib.newScope (self:
   {
     cleanCargoTomlSimple = callPackage ./cleanCargoToml/simple { };
     cleanCargoTomlComplex = callPackage ./cleanCargoToml/complex { };
+
+    compilesFresh = callPackage ./compilesFresh.nix { };
+    compilesFreshSimple = self.compilesFresh {
+      src = ./simple;
+    };
   })
