@@ -3,26 +3,29 @@
 , jq
 }:
 
-{ src, ... }@args:
+src: expected:
 let
   runCargoAndCheckFreshness = cmd: ''
     cargo ${cmd} --workspace --release --message-format json-diagnostic-short >${cmd}out
 
     filter='select(.reason == "compiler-artifact" and .fresh != true) | .target.name'
-    builtTargets="$(jq -r "$filter" <${cmd}out)"
+    builtTargets="$(jq -r "$filter" <${cmd}out | sort -u)"
 
     # Make sure only the crate needed building
-    if [[ "simple" != "$builtTargets" ]]; then
-      echo unexpected built targets: $builtTargets
+    if [[ "${expected}" != "$builtTargets" ]]; then
+      echo expected \""${expected}"\"
+      echo but got  \""$builtTargets"\"
       false
     fi
   '';
 in
-buildWithCargo (args // {
+buildWithCargo {
   inherit src;
   doCopyTargetToOutput = false;
 
-  cargoArtifacts = (buildDepsOnly args).target;
+  # NB: explicit call here so that the buildDepsOnly call
+  # doesn't inherit our build commands
+  cargoArtifacts = (buildDepsOnly { inherit src; }).target;
 
   nativeBuildInputs = [ jq ];
 
@@ -46,4 +49,4 @@ buildWithCargo (args // {
     installPhase = ''
       touch $out
     '';
-})
+}
