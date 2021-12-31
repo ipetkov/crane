@@ -27,6 +27,18 @@ pkgs.lib.makeScope myLib.newScope (self:
         "overlapping-targets"
       ]);
 
+    customCargoTargetDirectory = let
+      simple = myLib.buildWithCargo {
+        doCopyTargetToOutput = false;
+        src = ./simple;
+        CARGO_TARGET_DIR = "my-custom-cargo-dir";
+      };
+    in pkgs.runCommand "smoke-simple" { } ''
+      # does it run?
+      ${simple}/bin/simple
+      touch $out
+    '';
+
     smokeSimple = let
       simple = myLib.buildWithCargo {
         doCopyTargetToOutput = false;

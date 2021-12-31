@@ -26,7 +26,6 @@
     {
       name = "inheritCargoArtifactsHook";
       substitutions = {
-        rsync = "${rsync}/bin/rsync";
         zstd = "${zstd}/bin/zstd";
       };
     } ./inheritCargoArtifactsHook.sh;

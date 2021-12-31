@@ -1,5 +1,5 @@
 inheritCargoArtifacts() {
-  echo "Executing inheritCargoArtifacts"
+  echo cargoArtifacts is ${cargoArtifacts}
 
   local cargoTarget="${CARGO_TARGET_DIR:-target}"
   mkdir -p "${cargoTarget}"
@@ -7,16 +7,6 @@ inheritCargoArtifacts() {
   if [ -f "${cargoArtifacts}/target.tar.zst" ]; then
     @zstd@ -d "${cargoArtifacts}/target.tar.zst" --stdout | \
       tar -x -C "${cargoTarget}" --strip-components=1
-  elif [ -d "${cargoArtifacts}/target" ]; then
-    @rsync@ \
-      --recursive \
-      --links \
-      --executability \
-      --chmod=+w \
-      --no-perms \
-      --no-owner \
-      --no-group \
-      "${cargoArtifacts}/target" "${cargoTarget}"
   else
     echo "${cargoArtifacts} looks invalid, are you sure it is pointing to a ".target" output?"
     false

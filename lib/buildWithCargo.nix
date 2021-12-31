@@ -60,9 +60,6 @@ in
   # access. Directory structure should basically follow the output of `cargo vendor`.
   # This can be inferred automatically if the `src` root has a Cargo.lock file.
 , cargoVendorDir ? vendorCargoDepsFromArgs args
-  # Controls whether cargo's `target` directory should be compressed when copied
-  # to the output at the end of the derivation.
-, doCompressTarget ? true
   # Controls whether cargo's `target` directory should be copied as an output
 , doCopyTargetToOutput ? true
   # Controls instructing rustc to remap the path prefix of any sources it
@@ -79,7 +76,6 @@ let
     inherit
       cargoArtifacts
       cargoVendorDir
-      doCompressTarget
       doCopyTargetToOutput
       doRemapSourcePathPrefix;
 
