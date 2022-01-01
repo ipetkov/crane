@@ -3,13 +3,15 @@
 , writeTOML
 }:
 
+path:
 let
   cleaned = cleanCargoToml {
-    cargoToml = ./Cargo.toml;
+    cargoToml = path + /Cargo.toml;
   };
   cleanedToml = writeTOML "cleaned.toml" cleaned;
+  expected = path + /expected.toml;
 in
 runCommand "compare" { } ''
-  diff ${./expected.toml} ${cleanedToml}
+  diff ${expected} ${cleanedToml}
   touch $out
 ''

@@ -12,8 +12,9 @@ pkgs.lib.makeScope myLib.newScope (self:
     callPackage = self.newScope { };
   in
   {
-    cleanCargoTomlSimple = callPackage ./cleanCargoToml/simple { };
-    cleanCargoTomlComplex = callPackage ./cleanCargoToml/complex { };
+    cmpCleanCargoToml = callPackage ./cleanCargoToml { };
+    cmpCleanCargoTomlSimple = self.cmpCleanCargoToml ./cleanCargoToml/barebones;
+    cmpCleanCargoTomlComplex = self.cmpCleanCargoToml ./cleanCargoToml/complex;
 
     compilesFresh = callPackage ./compilesFresh.nix { };
     compilesFreshSimple = self.compilesFresh ./simple "simple";
