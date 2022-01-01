@@ -46,13 +46,13 @@ let
     "proc-macro"
     "harness"
     "crate-type"
+    "required-features" # only affects selection of a target, does not actually enable any features
 
     # Additional package attributes which are expressly kept in
     # (but listed here for audit purposes)
     # "edition"           # Influences cargo behavior
     # "path"              # maintain project structure
     # "name"              # let cargo manage targets/collisions/etc.
-    # "required-features" # influences dependency feature combinations
   ];
 
   cleanWorkspace = workspace: removeAttrs workspace [
