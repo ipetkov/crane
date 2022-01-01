@@ -53,7 +53,7 @@ let
   safeStubList = attr: defaultPath:
     let
       targetList = trimmedCargoToml.${attr} or [ ];
-      paths = map (t: t.path or "${defaultPath}/${t.name}") targetList;
+      paths = map (t: t.path or "${defaultPath}/${t.name}.rs") targetList;
       commands = map cpDummy paths;
     in
     concatStringsSep "\n" commands;
@@ -73,7 +73,7 @@ runCommand name { } ''
   # Stub all other targets in case they have particular feature combinations
   ${safeStubLib}
   ${safeStubList "bench" "benches"}
-  ${safeStubList "bin" "bin"}
+  ${safeStubList "bin" "src/bin"}
   ${safeStubList "example" "examples"}
   ${safeStubList "test" "tests"}
 ''

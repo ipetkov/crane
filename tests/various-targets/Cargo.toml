@@ -1,0 +1,28 @@
+[package]
+name = "various-targets"
+version = "0.1.0"
+edition = "2021"
+
+[[bench]]
+name = "foo"
+
+[[bench]]
+name = "bar"
+
+[[bin]]
+name = "baz"
+
+[[bin]]
+name = "qux"
+
+[[example]]
+name = "zuul"
+
+[[example]]
+name = "corge"
+
+[[test]]
+name = "grault"
+
+[[test]]
+name = "garply"

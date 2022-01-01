@@ -41,6 +41,10 @@ pkgs.lib.makeScope myLib.newScope (self:
         touch $out
       '';
 
+    depsOnlyVariousTargets = myLib.buildDepsOnly {
+      src = ./various-targets;
+    };
+
     simple = myLib.buildWithCargo {
       doCopyTargetToOutput = false;
       src = ./simple;
