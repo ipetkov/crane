@@ -4,14 +4,18 @@ inheritCargoArtifacts() {
   local preparedArtifacts="${1:-${cargoArtifacts:?not defined}}"
   local cargoTargetDir="${2:-${CARGO_TARGET_DIR:-target}}"
 
-  if [ -f "${preparedArtifacts}/target.tar.zst" ]; then
+  if [ -d "${preparedArtifacts}" ]; then
+    local preparedArtifacts="${preparedArtifacts}/target.tar.zst"
+  fi
+
+  if [ -f "${preparedArtifacts}" ]; then
     mkdir -p "${cargoTargetDir}"
     echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
   
-    @zstd@ -d "${preparedArtifacts}/target.tar.zst" --stdout | \
+    @zstd@ -d "${preparedArtifacts}" --stdout | \
       tar -x -C "${cargoTargetDir}" --strip-components=1
   else
-    echo "${preparedArtifacts} looks invalid, are you sure it is pointing to a ".target" output?"
+    echo unable to copy cargo artifacts, \"${preparedArtifacts}\" looks invalid
     false
   fi
 }
