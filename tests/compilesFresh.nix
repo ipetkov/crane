@@ -25,7 +25,7 @@ buildWithCargo {
 
   # NB: explicit call here so that the buildDepsOnly call
   # doesn't inherit our build commands
-  cargoArtifacts = (buildDepsOnly { inherit src; }).target;
+  cargoArtifacts = buildDepsOnly { inherit src; };
 
   nativeBuildInputs = [ jq ];
 

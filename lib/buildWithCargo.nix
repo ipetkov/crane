@@ -39,7 +39,7 @@ let
         cargoLock = path + /Cargo.lock;
       in
       if builtins.pathExists cargoToml && builtins.pathExists cargoLock
-      then (buildDepsOnly args).target
+      then buildDepsOnly args
       else
         throw ''
           unable to find Cargo.toml and Cargo.lock at ${path}. please ensure one of the following:
@@ -68,7 +68,6 @@ in
   # as including them will make Nix pull in all sources when installing any binaries.
 , doRemapSourcePathPrefix ? true
 , nativeBuildInputs ? [ ]
-, outputs ? [ "out" ]
 , ...
 }@args:
 let
@@ -93,8 +92,6 @@ let
   };
 
   additions = {
-    outputs = outputs ++ lib.optional doCopyTargetToOutput "target";
-
     nativeBuildInputs = nativeBuildInputs ++ [
       cargo
       configureCargoCommonVarsHook

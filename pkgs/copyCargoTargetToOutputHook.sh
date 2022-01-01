@@ -1,7 +1,7 @@
 prepareCargoTargetDirAndCopyToDir() {
   # Allow for calling with customized parameters
   # or fall back to defaults if none are provided
-  local dir="${1:-${target}}"
+  local dir="${1:-${out}}"
   local cargoTargetDir="${2:-${CARGO_TARGET_DIR:-target}}"
   local dest="${dir}/target.tar.zst"
 
