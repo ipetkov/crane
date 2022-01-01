@@ -38,15 +38,15 @@ buildWithCargo {
     runHook postBuild
   '';
 
-    checkPhase = ''
-      runHook preCheck
+  checkPhase = ''
+    runHook preCheck
 
-      ${runCargoAndCheckFreshness "test"}
+    ${runCargoAndCheckFreshness "test"}
 
-      runHook postCheck
-    '';
+    runHook postCheck
+  '';
 
-    installPhase = ''
-      touch $out
-    '';
+  installPhase = ''
+    touch $out
+  '';
 }
