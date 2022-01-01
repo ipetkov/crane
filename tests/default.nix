@@ -17,7 +17,6 @@ pkgs.lib.makeScope myLib.newScope (self:
 
     compilesFresh = callPackage ./compilesFresh.nix { };
     compilesFreshSimple = self.compilesFresh ./simple "simple";
-
     compilesFreshOverlappingTargets = self.compilesFresh
       ./overlapping-targets
       (builtins.concatStringsSep "\n" [
@@ -29,12 +28,11 @@ pkgs.lib.makeScope myLib.newScope (self:
 
     customCargoTargetDirectory =
       let
-        simple = myLib.buildWithCargo {
+        simple = self.simple.overrideAttrs (old: {
           name = "customCargoTargetDirectory";
           doCopyTargetToOutput = false;
-          src = ./simple;
           CARGO_TARGET_DIR = "some/nested/custom-cargo-dir";
-        };
+        });
       in
       pkgs.runCommand "smoke-simple" { } ''
         # does it run?
@@ -42,18 +40,16 @@ pkgs.lib.makeScope myLib.newScope (self:
         touch $out
       '';
 
-    smokeSimple =
-      let
-        simple = myLib.buildWithCargo {
-          doCopyTargetToOutput = false;
-          src = ./simple;
-        };
-      in
-      pkgs.runCommand "smoke-simple" { } ''
-        # does it run?
-        ${simple}/bin/simple
-        touch $out
-      '';
+    simple = myLib.buildWithCargo {
+      doCopyTargetToOutput = false;
+      src = ./simple;
+    };
+
+    smokeSimple = pkgs.runCommand "smoke-simple" { } ''
+      # does it run?
+      ${self.simple}/bin/simple
+      touch $out
+    '';
 
     smokeOverlappingTargets =
       let
