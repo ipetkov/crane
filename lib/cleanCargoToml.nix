@@ -45,7 +45,6 @@ let
     "plugin"
     "proc-macro"
     "harness"
-    "crate-type"
     "required-features" # only affects selection of a target, does not actually enable any features
 
     # Additional package attributes which are expressly kept in
@@ -53,6 +52,8 @@ let
     # "edition"           # Influences cargo behavior
     # "path"              # maintain project structure
     # "name"              # let cargo manage targets/collisions/etc.
+    # "crate-type"        # some tools may try to inspect crate types (e.g. wasm-pack), retain the
+    #                     # definition to honor the project structure
   ];
 
   cleanWorkspace = workspace: removeAttrs workspace [

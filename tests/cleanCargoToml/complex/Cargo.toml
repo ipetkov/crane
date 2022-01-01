@@ -43,7 +43,7 @@ plugin = false
 proc-macro = false
 harness = true
 edition = "2021"
-crate-type = ["lib"]
+crate-type = ["lib", "rlib"]
 required-features = ["libfeature1", "libfeature2"]
 
 [[bin]]
@@ -83,6 +83,7 @@ plugin = false
 proc-macro = false
 harness = true
 edition = "2015"
+crate-type = ["staticlib"]
 required-features = ["example1feature1", "example1feature2"]
 
 [[example]]

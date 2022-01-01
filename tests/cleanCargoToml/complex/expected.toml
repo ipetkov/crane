@@ -26,6 +26,7 @@ barfeature = ["foofeature"]
 foofeature = []
 
 [lib]
+crate-type = ["lib", "rlib"]
 edition = "2021"
 name = "foo"
 path = "src/lib.rs"
@@ -98,6 +99,7 @@ name = "bin2"
 path = "src/bin2.rs"
 
 [[example]]
+crate-type = ["staticlib"]
 edition = "2015"
 name = "example1"
 path = "src/example1.rs"
