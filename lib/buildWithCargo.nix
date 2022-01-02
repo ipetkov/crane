@@ -1,14 +1,7 @@
 { buildDepsOnly
-, cargo
-, configureCargoCommonVarsHook
-, configureCargoVendoredDepsHook
-, copyCargoTargetToOutputHook
 , crateNameFromCargoToml
-, inheritCargoArtifactsHook
 , installFromCargoArtifactsHook
-, lib
-, remapSourcePathPrefixHook
-, stdenv
+, mkCargoDerivation
 , vendorCargoDeps
 }:
 let
@@ -60,47 +53,36 @@ in
   # access. Directory structure should basically follow the output of `cargo vendor`.
   # This can be inferred automatically if the `src` root has a Cargo.lock file.
 , cargoVendorDir ? vendorCargoDepsFromArgs args
-  # Controls whether cargo's `target` directory should be copied as an output
-, doCopyTargetToOutput ? true
-  # Controls instructing rustc to remap the path prefix of any sources it
-  # captures (for example, this can include file names in panic info). This is
-  # useful to omit any references to `/nix/store/...` from the final binary,
-  # as including them will make Nix pull in all sources when installing any binaries.
-, doRemapSourcePathPrefix ? true
-, nativeBuildInputs ? [ ]
+, cargoBuildCommand ? "cargo build --workspace --release"
+, cargoTestCommand ? "cargo test --workspace --release"
+, cargoExtraArgs ? ""
 , ...
 }@args:
 let
-  defaultValues = (crateNameFromCargoToml args) // {
-    inherit
-      cargoArtifacts
-      cargoVendorDir
-      doCopyTargetToOutput
-      doRemapSourcePathPrefix;
-
-    buildPhase = ''
-      runHook preBuild
-      cargo build --workspace --release
-      runHook postBuild
-    '';
-
-    checkPhase = ''
-      runHook preCheck
-      cargo test --workspace --release
-      runHook postCheck
-    '';
-  };
-
-  additions = {
-    nativeBuildInputs = nativeBuildInputs ++ [
-      cargo
-      configureCargoCommonVarsHook
-      configureCargoVendoredDepsHook
-      copyCargoTargetToOutputHook
-      inheritCargoArtifactsHook
-      installFromCargoArtifactsHook
-      remapSourcePathPrefixHook
-    ];
-  };
+  crateName = crateNameFromCargoToml args;
 in
-stdenv.mkDerivation (defaultValues // args // additions)
+mkCargoDerivation (args // {
+  pname = args.pname or crateName.pname;
+  version = args.version or crateName.version;
+
+  inherit cargoArtifacts cargoVendorDir;
+
+  # Don't copy target dir by default since we are going to be installing bins/libs
+  doCopyTargetToOutput = args.doCopyTargetToOutput ? false;
+
+  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
+    installFromCargoArtifactsHook
+  ];
+
+  buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
+    ${cargoBuildCommand} ${cargoExtraArgs}
+  '';
+
+  checkPhaseCargoCommand = args.checkPhaseCargoCommand or ''
+    ${cargoTestCommand} ${cargoExtraArgs}
+  '';
+
+  installPhaseCargoCommand = args.installPhaseCargoCommand or ''
+    installFromCargoArtifacts
+  '';
+})

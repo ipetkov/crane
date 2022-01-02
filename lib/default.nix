@@ -17,6 +17,7 @@ lib.makeScope newScope (self:
     cleanCargoToml = callPackage ./cleanCargoToml.nix { };
     crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix { };
     downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
+    mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
     mkDummySrc = callPackage ./mkDummySrc.nix { };
     urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
     vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };

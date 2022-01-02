@@ -1,36 +1,46 @@
-{ buildWithCargo
-, crateNameFromCargoToml
+{ crateNameFromCargoToml
+, mkCargoDerivation
 , mkDummySrc
+, vendorCargoDeps
 }:
 
-args:
+{ cargoExtraArgs ? ""
+, cargoCheckCommand ? "cargo check --workspace --release"
+, cargoBuildCommand ? "cargo build --workspace --release"
+, cargoTestCommand ? "cargo test --workspace --release"
+, ...
+}@args:
 let
   crateName = crateNameFromCargoToml args;
-  defaults = {
-    inherit (crateName) version;
-    pname = "${crateName.pname}-deps";
-
-    buildPhase = ''
-      runHook preBuild
-      cargo check --workspace --release
-      cargo build --workspace --release
-      runHook postBuild
-    '';
-
-    # Don't install anything by default, but let the caller set their own if they wish
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out
-      runHook postInstall
-    '';
-  };
-
-  forced = {
-    # Prevent infinite recursion, we are the root of all artifacts
-    cargoArtifacts = null;
-    # No point in building this if not for the cargo artifacts
-    doCopyTargetToOutput = true;
-    src = mkDummySrc args;
-  };
 in
-buildWithCargo (defaults // args // forced)
+mkCargoDerivation (args // {
+  src = mkDummySrc args;
+  pname = args.pname or "${crateName.pname}-deps";
+  version = args.version or crateName.version;
+
+  cargoArtifacts = null;
+
+  cargoVendorDir = args.cargoVendorDir or vendorCargoDeps {
+    cargoLock = args.src + /Cargo.lock;
+  };
+
+  # First we run `cargo check` to cache cargo's internal artifacts, fingerprints, etc. for all deps.
+  # Then we run `cargo build` to actually compile the deps and cache the results
+  buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
+    ${cargoCheckCommand} ${cargoExtraArgs}
+    ${cargoBuildCommand} ${cargoExtraArgs}
+  '';
+
+  checkPhaseCargoCommand = args.checkPhaseCargoCommand or ''
+    ${cargoTestCommand} ${cargoExtraArgs}
+  '';
+
+  # No point in building this if not for the cargo artifacts
+  doCopyTargetToOutput = true;
+
+  # By default, don't install anything (else, besides the cargo target directory),
+  # but let the caller set their own if they wish
+  installPhaseCargoCommand = args.installPhaseCargoCommand or ''
+    mkdir -p $out
+  '';
+})
