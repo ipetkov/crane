@@ -21,5 +21,6 @@ lib.makeScope newScope (self:
     mkDummySrc = callPackage ./mkDummySrc.nix { };
     urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
     vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
+    vendorCargoDepsFromArgs = callPackage ./vendorCargoDepsFromArgs.nix { };
     writeTOML = callPackage ./writeTOML.nix { };
   })

@@ -1,7 +1,7 @@
 { crateNameFromCargoToml
 , mkCargoDerivation
 , mkDummySrc
-, vendorCargoDeps
+, vendorCargoDepsFromArgs
 }:
 
 { cargoExtraArgs ? ""
@@ -19,10 +19,7 @@ mkCargoDerivation (args // {
   version = args.version or crateName.version;
 
   cargoArtifacts = null;
-
-  cargoVendorDir = args.cargoVendorDir or vendorCargoDeps {
-    cargoLock = args.src + /Cargo.lock;
-  };
+  cargoVendorDir = args.cargoVendorDir or vendorCargoDepsFromArgs args;
 
   # First we run `cargo check` to cache cargo's internal artifacts, fingerprints, etc. for all deps.
   # Then we run `cargo build` to actually compile the deps and cache the results

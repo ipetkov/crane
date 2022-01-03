@@ -2,27 +2,9 @@
 , crateNameFromCargoToml
 , installFromCargoArtifactsHook
 , mkCargoDerivation
-, vendorCargoDeps
+, vendorCargoDepsFromArgs
 }:
 let
-  vendorCargoDepsFromArgs = args:
-    if args ? src
-    then
-      let
-        path = args.src;
-        cargoLock = path + /Cargo.lock;
-      in
-      if builtins.pathExists cargoLock
-      then vendorCargoDeps { inherit cargoLock; }
-      else
-        throw ''
-          unable to find Cargo.lock at ${path}. please ensure one of the following:
-          - a Cargo.lock exists at the root of the source directory of the derivation
-          - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
-          - set `cargoVendorDir = null` to skip vendoring altogether
-        ''
-    else null;
-
   cargoArtifactsFromArgs = args:
     if args ? src
     then
@@ -43,17 +25,7 @@ let
     else null;
 in
 
-{
-  # A directory to an existing cargo `target` directory, which will be reused
-  # at the start of the derivation. Useful for caching incremental cargo builds.
-  # This can be inferred automatically if the `src` root has both a Cargo.toml
-  # and Cargo.lock file.
-  cargoArtifacts ? cargoArtifactsFromArgs args
-  # A directory of vendored cargo sources which can be consumed without network
-  # access. Directory structure should basically follow the output of `cargo vendor`.
-  # This can be inferred automatically if the `src` root has a Cargo.lock file.
-, cargoVendorDir ? vendorCargoDepsFromArgs args
-, cargoBuildCommand ? "cargo build --workspace --release"
+{ cargoBuildCommand ? "cargo build --workspace --release"
 , cargoTestCommand ? "cargo test --workspace --release"
 , cargoExtraArgs ? ""
 , ...
@@ -65,10 +37,19 @@ mkCargoDerivation (args // {
   pname = args.pname or crateName.pname;
   version = args.version or crateName.version;
 
-  inherit cargoArtifacts cargoVendorDir;
+  # A directory to an existing cargo `target` directory, which will be reused
+  # at the start of the derivation. Useful for caching incremental cargo builds.
+  # This can be inferred automatically if the `src` root has both a Cargo.toml
+  # and Cargo.lock file.
+  cargoArtifacts = args.cargoArtifacts or (cargoArtifactsFromArgs args);
+
+  # A directory of vendored cargo sources which can be consumed without network
+  # access. Directory structure should basically follow the output of `cargo vendor`.
+  # This can be inferred automatically if the `src` root has a Cargo.lock file.
+  cargoVendorDir = args.cargoVendorDir or (vendorCargoDepsFromArgs args);
 
   # Don't copy target dir by default since we are going to be installing bins/libs
-  doCopyTargetToOutput = args.doCopyTargetToOutput ? false;
+  doCopyTargetToOutput = args.doCopyTargetToOutput or false;
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     installFromCargoArtifactsHook
