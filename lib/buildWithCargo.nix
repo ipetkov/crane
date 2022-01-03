@@ -48,9 +48,6 @@ mkCargoDerivation (args // {
   # This can be inferred automatically if the `src` root has a Cargo.lock file.
   cargoVendorDir = args.cargoVendorDir or (vendorCargoDepsFromArgs args);
 
-  # Don't copy target dir by default since we are going to be installing bins/libs
-  doCopyTargetToOutput = args.doCopyTargetToOutput or false;
-
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     installFromCargoArtifactsHook
   ];

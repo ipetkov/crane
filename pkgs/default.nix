@@ -1,4 +1,6 @@
-{ makeSetupHook
+{ cargo
+, makeSetupHook
+, jq
 , rsync
 , zstd
 }:
@@ -34,6 +36,15 @@
     {
       name = "installFromCargoArtifactsHook";
     } ./installFromCargoArtifactsHook.sh;
+
+  installFromCargoBuildLogHook = makeSetupHook
+    {
+      name = "installFromCargoBuildLogHook";
+      substitutions = {
+        cargo = "${cargo}/bin/cargo";
+        jq = "${jq}/bin/jq";
+      };
+    } ./installFromCargoBuildLogHook.sh;
 
   remapSourcePathPrefixHook = makeSetupHook
     {

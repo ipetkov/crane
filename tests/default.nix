@@ -45,8 +45,26 @@ pkgs.lib.makeScope myLib.newScope (self:
       src = ./various-targets;
     };
 
-    simple = myLib.buildWithCargo {
-      doCopyTargetToOutput = false;
+    manyLibs = myLib.buildPackage {
+      src = ./with-libs;
+      pname = "my-libs";
+      version = "0.0.1";
+      cargoArtifacts = null;
+    };
+
+    manyLibsInstalledAsExpected = pkgs.runCommand "manyLibsInstalledAsExpected" { } ''
+      cat >expected <<EOF
+      liball_types.a
+      liball_types.so
+      libonly_cdylib.so
+      libonly_staticlib.a
+      EOF
+
+      diff ./expected <(ls -1 ${self.manyLibs}/lib)
+      touch $out
+    '';
+
+    simple = myLib.buildPackage {
       src = ./simple;
     };
 
@@ -58,8 +76,7 @@ pkgs.lib.makeScope myLib.newScope (self:
 
     smokeOverlappingTargets =
       let
-        overlappingTargets = myLib.buildWithCargo {
-          doCopyTargetToOutput = false;
+        overlappingTargets = myLib.buildPackage {
           src = ./overlapping-targets;
         };
       in
