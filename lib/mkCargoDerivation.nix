@@ -20,9 +20,9 @@ args@{
   # A command (likely a cargo invocation) to run during the derivation's check
   # phase. Pre and post check hooks will automatically be run.
 , checkPhaseCargoCommand
-  # A command (likely a cargo invocation) to run during the derivation's install
+  # A command  to run during the derivation's install
   # phase. Pre and post install hooks will automatically be run.
-, installPhaseCargoCommand
+, installPhaseCommand ? "mkdir -p $out"
 , ...
 }:
 stdenv.mkDerivation (args // {
@@ -58,7 +58,7 @@ stdenv.mkDerivation (args // {
 
   installPhase = args.installPhase or ''
     runHook preInstall
-    ${installPhaseCargoCommand}
+    ${installPhaseCommand}
     runHook postInstall
   '';
 })

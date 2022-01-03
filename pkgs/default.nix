@@ -32,11 +32,6 @@
       };
     } ./inheritCargoArtifactsHook.sh;
 
-  installFromCargoArtifactsHook = makeSetupHook
-    {
-      name = "installFromCargoArtifactsHook";
-    } ./installFromCargoArtifactsHook.sh;
-
   installFromCargoBuildLogHook = makeSetupHook
     {
       name = "installFromCargoBuildLogHook";

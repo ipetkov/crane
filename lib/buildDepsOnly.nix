@@ -34,10 +34,4 @@ mkCargoDerivation (args // {
 
   # No point in building this if not for the cargo artifacts
   doCopyTargetToOutput = true;
-
-  # By default, don't install anything (else, besides the cargo target directory),
-  # but let the caller set their own if they wish
-  installPhaseCargoCommand = args.installPhaseCargoCommand or ''
-    mkdir -p $out
-  '';
 })

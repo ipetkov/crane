@@ -25,7 +25,7 @@
 
   installPhase = args.installPhase or ''
     runHook preInstall
-    ${args.installPhaseCargoCommand or ''
+    ${args.installPhaseCommand or ''
       if [ -n "$cargoBuildLog" -a -f "$cargoBuildLog" ]; then
         installFromCargoBuildLog "$out" "$cargoBuildLog"
       else
@@ -34,7 +34,7 @@
           By default `buildPackage` will capture cargo'"'"'s output and use it to determine which binaries
           should be installed (instead of just guessing based on what is present in cargo'"'"'s target directory).
           If you are overriding the derivation with a custom build step, you have two options:
-          1. override `installPhaseCargoCommand` with the appropriate installation steps
+          1. override `installPhaseCommand` with the appropriate installation steps
           2. ensure that cargo'"'"'s build log is captured in a file and point $cargoBuildLog at it
           At a minimum, the latter option can be achieved with running:
               cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)

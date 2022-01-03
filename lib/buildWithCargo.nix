@@ -1,6 +1,5 @@
 { buildDepsOnly
 , crateNameFromCargoToml
-, installFromCargoArtifactsHook
 , mkCargoDerivation
 , vendorCargoDepsFromArgs
 }:
@@ -48,19 +47,11 @@ mkCargoDerivation (args // {
   # This can be inferred automatically if the `src` root has a Cargo.lock file.
   cargoVendorDir = args.cargoVendorDir or (vendorCargoDepsFromArgs args);
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
-    installFromCargoArtifactsHook
-  ];
-
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
     ${cargoBuildCommand} ${cargoExtraArgs}
   '';
 
   checkPhaseCargoCommand = args.checkPhaseCargoCommand or ''
     ${cargoTestCommand} ${cargoExtraArgs}
-  '';
-
-  installPhaseCargoCommand = args.installPhaseCargoCommand or ''
-    installFromCargoArtifacts
   '';
 })
