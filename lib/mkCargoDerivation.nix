@@ -1,8 +1,8 @@
 { cargo
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
-, copyCargoTargetToOutputHook
 , inheritCargoArtifactsHook
+, installCargoTargetDirHook
 , remapSourcePathPrefixHook
 , stdenv
 }:
@@ -39,8 +39,8 @@ stdenv.mkDerivation (args // {
     cargo
     configureCargoCommonVarsHook
     configureCargoVendoredDepsHook
-    copyCargoTargetToOutputHook
     inheritCargoArtifactsHook
+    installCargoTargetDirHook
     remapSourcePathPrefixHook
   ];
 

@@ -16,14 +16,6 @@
       name = "configureCargoVendoredDepsHook";
     } ./configureCargoVendoredDepsHook.sh;
 
-  copyCargoTargetToOutputHook = makeSetupHook
-    {
-      name = "copyCargoTargetToOutputHook";
-      substitutions = {
-        zstd = "${zstd}/bin/zstd";
-      };
-    } ./copyCargoTargetToOutputHook.sh;
-
   inheritCargoArtifactsHook = makeSetupHook
     {
       name = "inheritCargoArtifactsHook";
@@ -31,6 +23,14 @@
         zstd = "${zstd}/bin/zstd";
       };
     } ./inheritCargoArtifactsHook.sh;
+
+  installCargoTargetDirHook = makeSetupHook
+    {
+      name = "installCargoTargetDirHook";
+      substitutions = {
+        zstd = "${zstd}/bin/zstd";
+      };
+    } ./installCargoTargetDirHook.sh;
 
   installFromCargoBuildLogHook = makeSetupHook
     {
