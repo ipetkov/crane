@@ -6,8 +6,8 @@ edition = "2021"
 [features]
 default = []
 foo = ["libc"]
-bar = ["regex"]
+bar = ["byteorder"]
 
 [dependencies]
 libc = { version = "*", optional = true }
-regex = { version = "*", optional = true }
+byteorder = { version = "*", optional = true }

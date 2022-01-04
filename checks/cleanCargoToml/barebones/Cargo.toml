@@ -3,4 +3,4 @@ name = "barebones"
 version = "0.1.0"
 
 [dependencies]
-regex = "1"
+byteorder = "1"
