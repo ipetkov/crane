@@ -1,0 +1,40 @@
+{ buildDepsOnly
+, cargoClippy
+, linkFarmFromDrvs
+}:
+
+let
+  src = ./clippytest;
+  cargoArtifacts = buildDepsOnly {
+    inherit src;
+  };
+in
+linkFarmFromDrvs "clippy-tests" (builtins.attrValues {
+  clippytest = cargoClippy {
+    inherit cargoArtifacts src;
+  };
+
+  checkWarnings = cargoClippy {
+    inherit cargoArtifacts src;
+    pname = "checkWarnings";
+
+    cargoClippyExtraArgs = "2>clippy.log";
+    installPhaseCommand = ''
+      grep 'warning: use of `println!`' <clippy.log
+      mkdir -p $out
+    '';
+  };
+
+  denyWarnings = cargoClippy {
+    inherit cargoArtifacts src;
+    pname = "denyWarnings";
+
+    cargoClippyExtraArgs = ''
+      -- --deny warnings 2>clippy.log || [ "0" != "$?" ]
+    '';
+    installPhaseCommand = ''
+      grep 'error: use of `println!`' <clippy.log
+      mkdir -p $out
+    '';
+  };
+})

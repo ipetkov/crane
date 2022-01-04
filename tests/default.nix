@@ -12,6 +12,8 @@ pkgs.lib.makeScope myLib.newScope (self:
     callPackage = self.newScope { };
   in
   {
+    clippy = callPackage ./clippy { };
+
     cmpCleanCargoToml = callPackage ./cleanCargoToml { };
     cmpCleanCargoTomlSimple = self.cmpCleanCargoToml ./cleanCargoToml/barebones;
     cmpCleanCargoTomlComplex = self.cmpCleanCargoToml ./cleanCargoToml/complex;
