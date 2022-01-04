@@ -1,0 +1,13 @@
+[package]
+name = "features"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+foo = ["libc"]
+bar = ["regex"]
+
+[dependencies]
+libc = { version = "*", optional = true }
+regex = { version = "*", optional = true }

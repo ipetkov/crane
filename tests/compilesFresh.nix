@@ -3,10 +3,10 @@
 , jq
 }:
 
-src: expected:
+src: expected: args:
 let
   runCargoAndCheckFreshness = cmd: ''
-    cargo ${cmd} --workspace --release --message-format json-diagnostic-short >${cmd}out
+    cargo ${cmd} --workspace --release --message-format json-diagnostic-short ${args.cargoExtraArgs or ""} >${cmd}out
 
     filter='select(.reason == "compiler-artifact" and .fresh != true) | .target.name'
     builtTargets="$(jq -r "$filter" <${cmd}out | sort -u)"
@@ -19,13 +19,13 @@ let
     fi
   '';
 in
-buildWithCargo {
+buildWithCargo (args // {
   inherit src;
   doCopyTargetToOutput = false;
 
   # NB: explicit call here so that the buildDepsOnly call
   # doesn't inherit our build commands
-  cargoArtifacts = buildDepsOnly { inherit src; };
+  cargoArtifacts = buildDepsOnly (args // { inherit src; });
 
   nativeBuildInputs = [ jq ];
 
@@ -49,4 +49,4 @@ buildWithCargo {
   installPhase = ''
     touch $out
   '';
-}
+})

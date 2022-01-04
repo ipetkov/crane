@@ -17,7 +17,7 @@ pkgs.lib.makeScope myLib.newScope (self:
     cmpCleanCargoTomlComplex = self.cmpCleanCargoToml ./cleanCargoToml/complex;
 
     compilesFresh = callPackage ./compilesFresh.nix { };
-    compilesFreshSimple = self.compilesFresh ./simple "simple";
+    compilesFreshSimple = self.compilesFresh ./simple "simple" { };
     compilesFreshOverlappingTargets = self.compilesFresh
       ./overlapping-targets
       (builtins.concatStringsSep "\n" [
@@ -25,7 +25,8 @@ pkgs.lib.makeScope myLib.newScope (self:
         "baz"
         "foo"
         "overlapping-targets"
-      ]);
+      ])
+      { };
 
     customCargoTargetDirectory =
       let
@@ -45,65 +46,7 @@ pkgs.lib.makeScope myLib.newScope (self:
       src = ./various-targets;
     };
 
-    featuresDefault =
-      let
-        crate = myLib.buildPackage {
-          src = ./features;
-        };
-      in
-      pkgs.runCommand "featuresDefault" { } ''
-        set -x
-        [[ "hello" == "$(${crate}/bin/features)" ]]
-        touch $out
-      '';
-
-    featuresFoo =
-      let
-        crate = myLib.buildPackage {
-          src = ./features;
-          cargoExtraArgs = "--features foo";
-        };
-      in
-      pkgs.runCommand "featuresFoo" { } ''
-        [[ "$(echo -e 'hello\nfoo')" == "$(${crate}/bin/features)" ]]
-        touch $out
-      '';
-
-    featuresBar =
-      let
-        crate = myLib.buildPackage {
-          src = ./features;
-          cargoExtraArgs = "--features bar";
-        };
-      in
-      pkgs.runCommand "featuresBar" { } ''
-        [[ "$(echo -e 'hello\nbar')" == "$(${crate}/bin/features)" ]]
-        touch $out
-      '';
-
-    featuresFooBar =
-      let
-        crate = myLib.buildPackage {
-          src = ./features;
-          cargoExtraArgs = "--features 'foo bar'";
-        };
-      in
-      pkgs.runCommand "featuresFoo" { } ''
-        [[ "$(echo -e 'hello\nfoo\nbar')" == "$(${crate}/bin/features)" ]]
-        touch $out
-      '';
-
-    featuresAll =
-      let
-        crate = myLib.buildPackage {
-          src = ./features;
-          cargoExtraArgs = "--all-features";
-        };
-      in
-      pkgs.runCommand "featuresAll" { } ''
-        [[ "$(echo -e 'hello\nfoo\nbar')" == "$(${crate}/bin/features)" ]]
-        touch $out
-      '';
+    features = callPackage ./features { };
 
     manyLibs = myLib.buildPackage {
       src = ./with-libs;
