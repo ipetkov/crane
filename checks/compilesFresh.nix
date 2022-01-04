@@ -1,5 +1,5 @@
 { buildDepsOnly
-, buildWithCargo
+, cargoBuild
 , jq
 }:
 
@@ -19,7 +19,7 @@ let
     fi
   '';
 in
-buildWithCargo (args // {
+cargoBuild (args // {
   inherit src;
   doCopyTargetToOutput = false;
 

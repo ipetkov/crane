@@ -1,4 +1,4 @@
-{ buildWithCargo
+{ cargoBuild
 , clippy
 , buildDepsOnly
 }:
@@ -11,12 +11,11 @@
 let
   args = builtins.removeAttrs origArgs [ "cargoClippyExtraArgs" ];
 in
-buildWithCargo (args // {
+cargoBuild (args // {
   inherit cargoArtifacts;
 
-  buildPhaseCargoCommand = ''
-    cargo clippy --workspace --release --all-targets ${cargoExtraArgs} ${cargoClippyExtraArgs}
-  '';
+  cargoBuildCommand = "cargo clippy --workspace --release --all-targets";
+  cargoExtraArgs = "${cargoExtraArgs} ${cargoClippyExtraArgs}";
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ clippy ];
 

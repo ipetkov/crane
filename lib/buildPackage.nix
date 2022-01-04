@@ -1,4 +1,4 @@
-{ buildWithCargo
+{ cargoBuild
 , installFromCargoBuildLogHook
 , lib
 }:
@@ -42,7 +42,7 @@ let
     ''
     else defaultInstallPhaseCommand;
 in
-(buildWithCargo args).overrideAttrs (old: {
+(cargoBuild args).overrideAttrs (old: {
   # NB: we use overrideAttrs here so that our extra additions here do not end up
   # invalidating any deps builds by being inherited. For example, we probably don't
   # care about installing bins/libs from the deps only build, so there's no point to
