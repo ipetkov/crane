@@ -32,6 +32,9 @@ mkCargoDerivation (args // {
     ${cargoTestCommand} ${cargoExtraArgs}
   '';
 
+  # Run tests by default to ensure we cache any dev-dependencies
+  doCheck = args.doCheck or true;
+
   # No point in building this if not for the cargo artifacts
   doCopyTargetToOutput = true;
 })

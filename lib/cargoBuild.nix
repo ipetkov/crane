@@ -36,6 +36,8 @@ mkCargoDerivation (args // {
   pname = args.pname or crateName.pname;
   version = args.version or crateName.version;
 
+  doCheck = args.doCheck or true;
+
   # A directory to an existing cargo `target` directory, which will be reused
   # at the start of the derivation. Useful for caching incremental cargo builds.
   # This can be inferred automatically if the `src` root has both a Cargo.toml

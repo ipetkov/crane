@@ -5,8 +5,13 @@
 
 src: expected: args:
 let
-  runCargoAndCheckFreshness = cmd: ''
-    cargo ${cmd} --workspace --release --message-format json-diagnostic-short ${args.cargoExtraArgs or ""} >${cmd}out
+  runCargoAndCheckFreshness = cmd: extra: ''
+    cargo ${cmd} \
+      --workspace \
+      --release \
+      --message-format json-diagnostic-short \
+      ${extra} \
+      ${args.cargoExtraArgs or ""} >${cmd}out
 
     filter='select(.reason == "compiler-artifact" and .fresh != true) | .target.name'
     builtTargets="$(jq -r "$filter" <${cmd}out | sort -u)"
@@ -32,8 +37,8 @@ cargoBuild (args // {
   buildPhase = ''
     runHook preBuild
 
-    ${runCargoAndCheckFreshness "check"}
-    ${runCargoAndCheckFreshness "build"}
+    ${runCargoAndCheckFreshness "check" ""}
+    ${runCargoAndCheckFreshness "build" ""}
 
     runHook postBuild
   '';
@@ -41,7 +46,7 @@ cargoBuild (args // {
   checkPhase = ''
     runHook preCheck
 
-    ${runCargoAndCheckFreshness "test"}
+    ${runCargoAndCheckFreshness "test" "--no-run"}
 
     runHook postCheck
   '';
