@@ -3,6 +3,7 @@
 , configureCargoVendoredDepsHook
 , inheritCargoArtifactsHook
 , installCargoTargetDirHook
+, lib
 , remapSourcePathPrefixHook
 , stdenv
 }:
@@ -46,18 +47,21 @@ stdenv.mkDerivation (args // {
 
   buildPhase = args.buildPhase or ''
     runHook preBuild
+    echo running: ${lib.strings.escapeShellArg buildPhaseCargoCommand}
     ${buildPhaseCargoCommand}
     runHook postBuild
   '';
 
   checkPhase = args.checkPhase or ''
     runHook preCheck
+    echo running: ${lib.strings.escapeShellArg checkPhaseCargoCommand}
     ${checkPhaseCargoCommand}
     runHook postCheck
   '';
 
   installPhase = args.installPhase or ''
     runHook preInstall
+    echo running: ${lib.strings.escapeShellArg installPhaseCommand}
     ${installPhaseCommand}
     runHook postInstall
   '';
