@@ -35,6 +35,7 @@
         };
 
         checks = pkgs.callPackages ./checks {
+          inherit pkgs;
           myLib = lib;
         };
       in
@@ -44,7 +45,9 @@
         packages = myPkgs;
 
         devShell = pkgs.mkShell {
-          inputsFrom = builtins.attrValues checks;
+          nativeBuildInputs = with pkgs; [
+            nixpkgs-fmt
+          ];
         };
       });
 }
