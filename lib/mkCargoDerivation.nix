@@ -26,7 +26,17 @@ args@{
 , installPhaseCommand ? "mkdir -p $out"
 , ...
 }:
-stdenv.mkDerivation (args // {
+let
+  cleanedArgs = builtins.removeAttrs args [
+    "buildPhaseCargoCommand"
+    "checkPhaseCargoCommand"
+    "installPhaseCommand"
+    "pnameSuffix"
+  ];
+in
+stdenv.mkDerivation (cleanedArgs // {
+  pname = "${args.pname}${args.pnameSuffix or ""}";
+
   # Controls whether cargo's `target` directory should be copied as an output
   doCopyTargetToOutput = args.doCopyTargetToOutput or true;
 

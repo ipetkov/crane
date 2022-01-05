@@ -31,8 +31,13 @@ in
 }@args:
 let
   crateName = crateNameFromCargoToml args;
+  cleanedArgs = builtins.removeAttrs args [
+    "cargoBuildCommand"
+    "cargoExtraArgs"
+    "cargoTestCommand"
+  ];
 in
-mkCargoDerivation (args // {
+mkCargoDerivation (cleanedArgs // {
   pname = args.pname or crateName.pname;
   version = args.version or crateName.version;
 

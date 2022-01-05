@@ -6,10 +6,10 @@
 }:
 
 let
-  mkTests = { name, cargoExtraArgs, runResult }:
+  mkTests = { pname, cargoExtraArgs, runResult }:
     let
       crate = buildPackage {
-        inherit cargoExtraArgs name;
+        inherit cargoExtraArgs pname;
         src = ./features;
       };
     in
@@ -18,10 +18,10 @@ let
 
       (compilesFresh ./features "features" {
         inherit cargoExtraArgs;
-        name = "${name}CompilesFresh";
+        pname = "${pname}CompilesFresh";
       })
 
-      (runCommand "${name}Run" { } ''
+      (runCommand "${pname}Run" { } ''
         [[ "hello${runResult}" == "$(${crate}/bin/features)" ]]
         touch $out
       '')
@@ -29,31 +29,31 @@ let
 
   tests = [
     (mkTests {
-      name = "default";
+      pname = "default";
       cargoExtraArgs = "";
       runResult = "";
     })
 
     (mkTests {
-      name = "foo";
+      pname = "foo";
       cargoExtraArgs = "--features foo";
       runResult = "\nfoo";
     })
 
     (mkTests {
-      name = "bar";
+      pname = "bar";
       cargoExtraArgs = "--features bar";
       runResult = "\nbar";
     })
 
     (mkTests {
-      name = "fooBar";
+      pname = "fooBar";
       cargoExtraArgs = "--features 'foo bar'";
       runResult = "\nfoo\nbar";
     })
 
     (mkTests {
-      name = "all";
+      pname = "all";
       cargoExtraArgs = "--all-features";
       runResult = "\nfoo\nbar";
     })

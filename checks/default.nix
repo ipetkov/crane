@@ -30,7 +30,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
     customCargoTargetDirectory =
       let
         simple = self.simple.overrideAttrs (old: {
-          name = "customCargoTargetDirectory";
+          pname = "customCargoTargetDirectory";
           doCopyTargetToOutput = false;
           CARGO_TARGET_DIR = "some/nested/custom-cargo-dir";
         });

@@ -20,9 +20,8 @@ else
       else builtins.readFile cargoToml;
 
     toml = fromTOML cargoTomlRealContents;
-    p = toml.package;
   in
   {
-    inherit (p) version;
-    pname = p.name;
+    pname = toml.package.name or "cargo-package";
+    version = toml.package.version or "unknown";
   }

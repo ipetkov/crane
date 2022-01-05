@@ -13,6 +13,7 @@ let
 in
 cargoBuild (args // {
   inherit cargoArtifacts;
+  pnameSuffix = "-clippy";
 
   cargoBuildCommand = "cargo clippy --workspace --release --all-targets";
   cargoExtraArgs = "${cargoExtraArgs} ${cargoClippyExtraArgs}";
