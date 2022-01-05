@@ -36,23 +36,26 @@ let
     "cargoExtraArgs"
     "cargoTestCommand"
   ];
-in
-mkCargoDerivation (cleanedArgs // {
-  pname = args.pname or crateName.pname;
-  version = args.version or crateName.version;
 
+  # Avoid recomputing values when passing args down
+  memoizedArgs = {
+    pname = args.pname or crateName.pname;
+    version = args.version or crateName.version;
+
+    # A directory of vendored cargo sources which can be consumed without network
+    # access. Directory structure should basically follow the output of `cargo vendor`.
+    # This can be inferred automatically if the `src` root has a Cargo.lock file.
+    cargoVendorDir = args.cargoVendorDir or (vendorCargoDepsFromArgs args);
+  };
+in
+mkCargoDerivation (cleanedArgs // memoizedArgs // {
   doCheck = args.doCheck or true;
 
   # A directory to an existing cargo `target` directory, which will be reused
   # at the start of the derivation. Useful for caching incremental cargo builds.
   # This can be inferred automatically if the `src` root has both a Cargo.toml
   # and Cargo.lock file.
-  cargoArtifacts = args.cargoArtifacts or (cargoArtifactsFromArgs args);
-
-  # A directory of vendored cargo sources which can be consumed without network
-  # access. Directory structure should basically follow the output of `cargo vendor`.
-  # This can be inferred automatically if the `src` root has a Cargo.lock file.
-  cargoVendorDir = args.cargoVendorDir or (vendorCargoDepsFromArgs args);
+  cargoArtifacts = args.cargoArtifacts or (cargoArtifactsFromArgs args // memoizedArgs);
 
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
     ${cargoBuildCommand} ${cargoExtraArgs}
