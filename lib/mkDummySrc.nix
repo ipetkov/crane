@@ -35,9 +35,9 @@ let
     # the .toml extension is preferred, but the extension-less path takes precedence
     # https://doc.rust-lang.org/cargo/reference/config.html
     if pathExists cargoConfig
-    then "cp ${cargoConfig} $out/.cargo"
+    then "cp ${cargoConfig} $out/.cargo/config"
     else if pathExists cargoConfigToml
-    then "cp ${cargoConfigToml} $out/.cargo"
+    then "cp ${cargoConfigToml} $out/.cargo/config.toml"
     else "";
 
   cpDummy = path: ''

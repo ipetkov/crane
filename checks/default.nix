@@ -66,6 +66,8 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       touch $out
     '';
 
+    mkDummySrcTests = callPackage ./mkDummySrcTests { };
+
     simple = myLib.buildPackage {
       src = ./simple;
     };
