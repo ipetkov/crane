@@ -11,7 +11,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
   {
     checkNixpkgsFmt = callPackage ./nixpkgs-fmt.nix { };
 
-    cleanCargoTomlTests = callPackage ./cleanCargoToml { };
+    cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
     clippy = callPackage ./clippy { };
 
