@@ -72,24 +72,17 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       src = ./simple;
     };
 
-    smokeSimple = pkgs.runCommand "smoke-simple" { } ''
-      # does it run?
-      ${self.simple}/bin/simple
-      touch $out
-    '';
+    smoke = callPackage ./smoke.nix { };
+    smokeSimple = self.smoke [ "simple" ] self.simple;
 
-    smokeOverlappingTargets =
-      let
-        overlappingTargets = myLib.buildPackage {
-          src = ./overlapping-targets;
-        };
-      in
-      pkgs.runCommand "smoke-overlapping-targets" { } ''
-        # does it run?
-        ${overlappingTargets}/bin/foo
-        ${overlappingTargets}/bin/bar
-        ${overlappingTargets}/bin/baz
-        touch $out
-      '';
+    smokeOverlappingTargets = self.smoke [ "foo" "bar" "baz" ] (myLib.buildPackage {
+      src = ./overlapping-targets;
+    });
+
+    smokeWorkspace = self.smoke [ "print" ] self.workspace;
+
+    workspace = myLib.buildPackage {
+      src = ./workspace;
+    };
   })
 )
