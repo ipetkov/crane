@@ -47,6 +47,12 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 
     features = callPackage ./features { };
 
+    illegalBin = myLib.buildPackage {
+      pname = "illegalBin";
+      version = "0.0.1";
+      src = ./illegal-bin;
+    };
+
     manyLibs = myLib.buildPackage {
       src = ./with-libs;
       pname = "my-libs";
@@ -70,6 +76,11 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 
     simple = myLib.buildPackage {
       src = ./simple;
+    };
+
+    # Test building a real world example
+    ripgrep = myLib.buildPackage {
+      inherit (pkgs.ripgrep) pname src version;
     };
 
     smoke = callPackage ./smoke.nix { };

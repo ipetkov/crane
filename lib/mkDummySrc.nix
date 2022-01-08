@@ -96,7 +96,7 @@ let
         # To build build-dependencies
         ${cpDummy parentDir "build.rs"}
         # To build regular and dev dependencies (cargo build + cargo test)
-        ${cpDummy parentDir "src/main.rs"}
+        ${cpDummy parentDir "src/lib.rs"}
 
         # Stub all other targets in case they have particular feature combinations
         ${safeStubLib}

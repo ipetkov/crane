@@ -1,0 +1,15 @@
+# This cargo workspace contains a member called "examples"
+# If we drop a dummy file in `src/main.rs` cargo will complain with:
+#
+# error: failed to load manifest for workspace member `/build/dummy-src/examples`
+# Caused by:
+#   failed to parse manifest at `/build/dummy-src/examples/Cargo.toml`
+# Caused by:
+#   the binary target name `examples` is forbidden, it conflicts with with cargo's build directory names
+#
+# Instead we need to drop a dummy file at `src/lib.rs`, and this is a
+# regression test for that case.
+[workspace]
+members = [
+  "examples",
+]
