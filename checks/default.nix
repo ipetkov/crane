@@ -80,9 +80,14 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
     });
 
     smokeWorkspace = self.smoke [ "print" ] self.workspace;
+    smokeWorkspaceRoot = self.smoke [ "print" ] self.workspaceRoot;
 
     workspace = myLib.buildPackage {
       src = ./workspace;
+    };
+
+    workspaceRoot = myLib.buildPackage {
+      src = ./workspace-root;
     };
   })
 )
