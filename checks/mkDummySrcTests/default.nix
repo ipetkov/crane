@@ -18,4 +18,5 @@ in
 linkFarmFromDrvs "cleanCargoToml" [
   (cmpDummySrc "single" ./single)
   (cmpDummySrc "single-alt" ./single-alt)
+  (cmpDummySrc "workspace" ./workspace)
 ]
