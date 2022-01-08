@@ -53,6 +53,7 @@ in
 
   buildPhase = args.buildPhase or ''
     runHook preBuild
+    cargo --version
     echo running: ${lib.strings.escapeShellArg buildPhaseCargoCommand}
     ${buildPhaseCargoCommand}
     runHook postBuild
