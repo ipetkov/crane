@@ -6,6 +6,7 @@
 }:
 
 { src
+, cargoLock ? src + /Cargo.lock
 , ...
 }:
 let
@@ -22,8 +23,6 @@ let
     removePrefix;
 
   inherit (lib.strings) concatStrings;
-
-  cargoLock = src + /Cargo.lock;
 
   dummyrs = writeText "dummy.rs" ''
     #![allow(dead_code)]
