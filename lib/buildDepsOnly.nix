@@ -43,5 +43,5 @@ mkCargoDerivation (cleanedArgs // {
   doCheck = args.doCheck or true;
 
   # No point in building this if not for the cargo artifacts
-  doCopyTargetToOutput = true;
+  doInstallCargoArtifacts = true;
 })

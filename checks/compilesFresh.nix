@@ -26,7 +26,7 @@ let
 in
 cargoBuild (args // {
   inherit src;
-  doCopyTargetToOutput = false;
+  doInstallCargoArtifacts = false;
 
   # NB: explicit call here so that the buildDepsOnly call
   # doesn't inherit our build commands

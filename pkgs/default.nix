@@ -24,13 +24,13 @@
       };
     } ./inheritCargoArtifactsHook.sh;
 
-  installCargoTargetDirHook = makeSetupHook
+  installCargoArtifactsHook = makeSetupHook
     {
-      name = "installCargoTargetDirHook";
+      name = "installCargoArtifactsHook";
       substitutions = {
         zstd = "${zstd}/bin/zstd";
       };
-    } ./installCargoTargetDirHook.sh;
+    } ./installCargoArtifactsHook.sh;
 
   installFromCargoBuildLogHook = makeSetupHook
     {

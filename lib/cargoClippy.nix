@@ -25,5 +25,5 @@ cargoBuild (args // {
   # The existence of the build completing without error is enough to ensure
   # the checks have passed, so we do not strictly need to install the cargo artifacts.
   # However, we allow the caller to retain them if needed.
-  doCopyTargetToOutput = args.doCopyTargetToOutput or false;
+  doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
 })

@@ -2,7 +2,7 @@
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
 , inheritCargoArtifactsHook
-, installCargoTargetDirHook
+, installCargoArtifactsHook
 , lib
 , remapSourcePathPrefixHook
 , stdenv
@@ -38,7 +38,7 @@ stdenv.mkDerivation (cleanedArgs // {
   pname = "${args.pname}${args.pnameSuffix or ""}";
 
   # Controls whether cargo's `target` directory should be copied as an output
-  doCopyTargetToOutput = args.doCopyTargetToOutput or true;
+  doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;
 
   # Controls instructing rustc to remap the path prefix of any sources it
   # captures (for example, this can include file names in panic info). This is
@@ -51,7 +51,7 @@ stdenv.mkDerivation (cleanedArgs // {
     configureCargoCommonVarsHook
     configureCargoVendoredDepsHook
     inheritCargoArtifactsHook
-    installCargoTargetDirHook
+    installCargoArtifactsHook
     remapSourcePathPrefixHook
   ];
 

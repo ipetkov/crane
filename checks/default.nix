@@ -31,7 +31,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       let
         simple = self.simple.overrideAttrs (old: {
           pname = "customCargoTargetDirectory";
-          doCopyTargetToOutput = false;
+          doInstallCargoArtifacts = false;
           CARGO_TARGET_DIR = "some/nested/custom-cargo-dir";
         });
       in

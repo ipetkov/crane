@@ -1,4 +1,4 @@
-prepareCargoTargetDirAndCopyToDir() {
+prepareAndInstallCargoArtifactsDir() {
   # Allow for calling with customized parameters
   # or fall back to defaults if none are provided
   local dir="${1:-${out}}"
@@ -20,6 +20,6 @@ prepareCargoTargetDirAndCopyToDir() {
     -c "${cargoTargetDir}" | @zstd@ -o "${dest}"
 }
 
-if [ "1" = "${doCopyTargetToOutput-}" ]; then
-  postInstallHooks+=(prepareCargoTargetDirAndCopyToDir)
+if [ "1" = "${doInstallCargoArtifacts-}" ]; then
+  postInstallHooks+=(prepareAndInstallCargoArtifactsDir)
 fi

@@ -49,7 +49,7 @@ in
   # trying to build it with the install scripts in its build environment.
 
   # Don't copy target dir by default since we are going to be installing bins/libs
-  doCopyTargetToOutput = args.doCopyTargetToOutput or false;
+  doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
 
   buildPhase = args.buildPhase or ''
     runHook preBuild
