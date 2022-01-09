@@ -1,7 +1,7 @@
 { buildDepsOnly
 , crateNameFromCargoToml
 , mkCargoDerivation
-, vendorCargoDepsFromArgs
+, vendorCargoDeps
 }:
 let
   cargoArtifactsFromArgs = args:
@@ -45,7 +45,7 @@ let
     # A directory of vendored cargo sources which can be consumed without network
     # access. Directory structure should basically follow the output of `cargo vendor`.
     # This can be inferred automatically if the `src` root has a Cargo.lock file.
-    cargoVendorDir = args.cargoVendorDir or (vendorCargoDepsFromArgs args);
+    cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
   };
 in
 mkCargoDerivation (cleanedArgs // memoizedArgs // {

@@ -3,10 +3,29 @@
 , linkFarm
 }:
 
-{ cargoLock ? throw "either cargoLock or cargoLockContents must be specified"
-, cargoLockContents ? builtins.readFile cargoLock
-}:
+args:
 let
+  src = args.src or (throw ''
+    unable to find `src` attribute. consider one of the following:
+    - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
+    - set `cargoVendorDir = vendorCargoDeps { src = ./src/containing/cargo/lock/file; }`
+    - set `cargoVendorDir = null` to skip vendoring altogether
+  '');
+
+  cargoLock = args.cargoLock or (src + /Cargo.lock);
+  cargoLockContents = args.cargoLockContents or (
+    if builtins.pathExists cargoLock
+    then builtins.readFile cargoLock
+    else
+      throw ''
+        unable to find Cargo.lock at ${src}. please ensure one of the following:
+        - a Cargo.lock exists at the root of the source directory of the derivation
+        - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
+        - set `cargoVendorDir = vendorCargoDeps { src = ./src/containing/cargo/lock/file; }`
+        - set `cargoVendorDir = null` to skip vendoring altogether
+      ''
+  );
+
   lock = fromTOML cargoLockContents;
 
   packages =
