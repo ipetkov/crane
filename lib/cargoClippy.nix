@@ -1,6 +1,5 @@
 { cargoBuild
 , clippy
-, buildDepsOnly
 }:
 
 { cargoArtifacts
