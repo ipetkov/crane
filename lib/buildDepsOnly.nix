@@ -26,7 +26,7 @@ mkCargoDerivation (cleanedArgs // {
   version = args.version or crateName.version;
 
   cargoArtifacts = null;
-  cargoVendorDir = args.cargoVendorDir or vendorCargoDepsFromArgs args;
+  cargoVendorDir = args.cargoVendorDir or (vendorCargoDepsFromArgs args);
 
   # First we run `cargo check` to cache cargo's internal artifacts, fingerprints, etc. for all deps.
   # Then we run `cargo build` to actually compile the deps and cache the results
