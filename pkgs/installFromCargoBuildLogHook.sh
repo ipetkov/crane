@@ -38,5 +38,5 @@ function installFromCargoBuildLog() (
     done
   )
 
-  echo searching for bins/libs complete!
+  echo searching for bins/libs complete
 )
