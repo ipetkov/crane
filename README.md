@@ -462,3 +462,125 @@ writes it to a file with the given name.
 lib.writeTOML "foo.toml" { foo.bar = "baz"; }
 # «derivation /nix/store/...-foo.toml.drv»
 ```
+
+## Hooks
+
+### `configureCargoCommonVarsHook`
+
+Defines `configureCargoCommonVars()` which will set various common cargo-related
+variables, such as honoring the amount of parallelism dictated by Nix, disabling
+incremental artifacts, etc. More specifically:
+* `CARGO_BUILD_INCREMENTAL` is set to `false` if not already defined
+* `CARGO_BUILD_JOBS` is set to `$NIX_BUILD_CORES` if not already defined
+* `CARGO_HOME` is set to `$PWD/.cargo-home` if not already defined.
+  - The directory that `CARGO_HOME` points to will be created
+* `RUST_TEST_THREADS` is set to `$NIX_BUILD_CORES` if not already defined
+
+**Automatic behavior:** runs as a post-patch hook
+
+### `configureCargoVendoredDepsHook`
+
+Defines `configureCargoVendoredDeps()` which will prepare cargo to use a
+directory of vendored crate sources. It takes two positional arguments:
+1. a path to the vendored sources
+   * If not specified, the value of `$cargoVendorDir` will be used
+   * If `cargoVendorDir` is not specified, an error will be raised
+1. a path to a cargo config file to modify
+   * If not specified, the value of `$CARGO_HOME/config.toml` will be used
+   * This cargo config file will be appended with a stanza which will instruct
+     cargo to replace the `crates-io` source with a source named `nix-sources`
+     - This source will be configured to point to the directory mentioned above
+   * Note that any cargo configuration files within the source will take
+     precedence over this file, and if any of them choose to replace the
+     `crates-io` source with another one, the changes made here will be
+     ignonred.
+
+**Automatic behavior:** if `cargoVendorDir` is set, then
+`configureCargoVendoredDeps "$cargoVendorDir" "$CARGO_HOME/config.toml"` will be
+run as a pre configure hook.
+
+### `inheritCargoArtifactsHook`
+
+Defines `inheritCargoArtifacts()` which will pre-populate cargo's artifact
+directory using a previous derivation. It takes two positional arguments:
+1. a path to the previously prepared artifacts
+   * If not specified, the value of `$cargoArtifacts` will be used
+   * If `cargoArtifacts` is not specified, an error will be raised
+   * If the specified path is a directory which contains a file called
+     `target.tar.zst`, then that file will be used during unpacking
+   * The previously prepared artifacts are expected to be a zstd compressed
+     tarball
+1. the path to cargo's artifact directory, where the previously prepared
+   artifacts should be unpacked
+   * If not specified, the value of `$CARGO_TARGET_DIR` will be used
+   * If `CARGO_TARGET_DIR` is not set, cargo's default target location  (i.e.
+     `./target`) will be used.
+
+**Automatic behavior:** if `cargoArtifacts` is set, then
+`inheritCargoArtifacts "$cargoArtifacts" "$CARGO_TARGET_DIR"` will be run as a
+post patch hook.
+
+### `installCargoArtifactsHook`
+
+Defines `prepareAndInstallCargoArtifactsDir()` which handles installing cargo's
+artifact directory to the derivation's output. It takes two positional
+arguments:
+1. the installation directory for the output.
+   * If not specified, the value of `$out` will be used
+   * Cargo's artifact directory will be compressed as a reproducible tarball
+     with zstd compression. It will be written to this directory and named
+     `target.tar.zstd`
+1. the path to cargo's artifact directory
+   * If not specified, the value of `$CARGO_TARGET_DIR` will be used
+   * If `CARGO_TARGET_DIR` is not set, cargo's default target location  (i.e.
+     `./target`) will be used.
+
+**Automatic behavior:** if `doInstallCargoArtifacts` is set to `1`, then
+`prepareAndInstallCargoArtifactsDir "$out" "$CARGO_TARGET_DIR"` will be run as a
+post install hook.
+
+### `installFromCargoBuildLogHook`
+
+Defines `installFromCargoBuildLog()` which will use a build log produced by
+cargo to find and install any binaries and libraries which have been built. It
+takes two positional arguments:
+1. a path to where artifacts should be installed
+   * If not specified, the value of `$out` will be used
+   * Binaries will be installed in a `bin` subdirectory
+   * Libraries will be installed in a `lib` subdirectory
+     - Note that only library targets with the `staticlib` and `cdylib`
+       crate-types will be installed. Library targets with the `rlib` crate-type
+       will be ignored
+1. a path to a JSON formatted build log written by cargo
+   * If not specified, the value of `$cargoBuildLog` will be used
+   * If `cargoBuildLog` is not set, an error will be raised
+   * This log can be captured, for example, via `cargo build --message-format
+     json-render-diagnostics >cargo-build.json`
+
+**Automatic behavior:** none
+
+### `remapSourcePathPrefixHook`
+
+Defines `remapPathPrefix()` which will instruct rustc to strip a provided source
+prefix from any final binaries. This is useful for excluding any path prefixes
+to the Nix store such that installing the resulting binaries does not result in
+Nix also installing the crate sources as well. The function takes one positional
+argument:
+1. the source prefix to strip, e.g. `/nix/store/someHash-directoryName`
+   * If not specified, an error will be raised
+
+The rustc flags to perform the source remapping will be appended to _one_ of the
+following environment variables:
+1. `RUSTFLAGS`, if it is already present
+1. `CARGO_BUILD_RUSTFLAGS` otherwise
+
+**Note:** cargo will consume rust flags from environment variables with higher
+precedence than those set via `.cargo/config.toml`, and (at the time of this
+writing) it will _not merge the values_. If your project requires setting its
+own rust flags, consider disabling this hook.
+
+This hook will also define `remapPathPrefixToVendoredDir` which is a shortcut to
+invoke `remapPathPrefix "$cargoVendorDir"` if `cargoVendorDir` is defined.
+
+**Automatic behavior:** if `doRemapSourcePathPrefix` is set to `1` then
+`remapPathPrefixToVendoredDir` will be run as a post configure hook.
