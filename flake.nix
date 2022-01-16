@@ -27,6 +27,9 @@
       inherit mkLib;
 
       overlay = final: prev: myPkgsFor final;
+
+      templates = import ./examples;
+      defaultTemplate = self.templates.hello-world;
     } // utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
