@@ -1,0 +1,35 @@
+name: "Test"
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+
+jobs:
+  tests:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: ubuntu-latest
+            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-21.11"
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v16
+    - uses: cachix/cachix-action@v10
+      with:
+        name: crane
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: flake checks
+      run: nix flake check --print-build-logs ${{ matrix.nixpkgs-override }}
+    - name: validate examples
+      run: |
+        for f in $(ls examples/); do
+          pushd "examples/${f}"
+          echo "validating ${f}"
+          nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          nix run .# --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          popd
+        done
