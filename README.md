@@ -6,10 +6,19 @@
 
 Creates a `lib` instance bound to the specified (and instantiated) `pkgs` set.
 This is a convenience escape hatch in case you want to use your own custom
-instantiation of nixpkgs without having to wrangle flake inputs.
+instantiation of nixpkgs with the overlays you may need.
 
 ```nix
 mkLib (import inputs.nixpkgs { system = "armv7l-linux"; })
+```
+
+Note that if you wish to override a particular package without having to overlay
+it across all of nixpkgs, consider using `overrideScope'`:
+
+```nix
+(mkLib pkgs).overrideScope' (final: prev: {
+  cargo: myCustomCargoVersion;
+})
 ```
 
 ## `lib`
