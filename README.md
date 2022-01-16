@@ -1,4 +1,17 @@
 # API Documentation
+
+## `mkLib`
+
+`mkLib :: pkgs -> set`
+
+Creates a `lib` instance bound to the specified (and instantiated) `pkgs` set.
+This is a convenience escape hatch in case you want to use your own custom
+instantiation of nixpkgs without having to wrangle flake inputs.
+
+```nix
+mkLib (import inputs.nixpkgs { system = "armv7l-linux"; })
+```
+
 ## `lib`
 
 ### `lib.buildDepsOnly`

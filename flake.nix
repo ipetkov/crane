@@ -16,8 +16,16 @@
   outputs = inputs@{ self, nixpkgs, nix-std, utils, ... }:
     let
       myPkgsFor = pkgs: pkgs.callPackages ./pkgs { };
+
+      mkLib = pkgs: import ./lib {
+        inherit (nix-std.lib.serde) fromTOML toTOML;
+        inherit (pkgs) lib newScope;
+        myPkgs = myPkgsFor pkgs;
+      };
     in
     {
+      inherit mkLib;
+
       overlay = final: prev: myPkgsFor final;
     } // utils.lib.eachDefaultSystem (system:
       let
@@ -28,11 +36,7 @@
         myPkgs = myPkgsFor pkgs;
 
         # To override do: lib.overrideScope' (self: super: { ... });
-        lib = import ./lib {
-          inherit (nix-std.lib.serde) fromTOML toTOML;
-          inherit (pkgs) lib newScope;
-          inherit myPkgs;
-        };
+        lib = mkLib pkgs;
 
         checks = pkgs.callPackages ./checks {
           inherit pkgs;
