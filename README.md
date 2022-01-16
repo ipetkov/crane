@@ -271,7 +271,7 @@ raised during evaluation.
   - Default value: `"cargo-package"` if the specified Cargo.toml file did not
     include a name
 * `version`: the version of the crate
-  - Default value: `"unknown"` if the specified Cargo.toml file did not
+  - Default value: `"0.0.1"` if the specified Cargo.toml file did not
     include a version
 
 ### `lib.downloadCargoPackage`

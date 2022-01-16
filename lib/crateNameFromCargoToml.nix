@@ -14,5 +14,5 @@ let
 in
 {
   pname = toml.package.name or "cargo-package";
-  version = toml.package.version or "unknown";
+  version = toml.package.version or "0.0.1";
 }
