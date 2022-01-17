@@ -36,21 +36,32 @@
         my-crate = craneLib.buildPackage {
           inherit cargoArtifacts src;
         };
-
-        # Run clippy (and deny all warnings) on the crate source,
-        # again, resuing the dependency artifacts from above.
-        #
-        # Note that this is done as a separate derivation so that
-        # we can block the CI if there are issues here, but not
-        # prevent downstream consumers from building our crate by itself.
-        my-crate-clippy = craneLib.cargoClippy {
-          inherit cargoArtifacts src;
-          cargoClippyExtraArgs = "-- --deny warnings";
-        };
       in
       {
         checks = {
-          inherit my-crate my-crate-clippy;
+          # Build the crate as part of `nix flake check` for convenience
+          inherit my-crate;
+
+          # Run clippy (and deny all warnings) on the crate source,
+          # again, resuing the dependency artifacts from above.
+          #
+          # Note that this is done as a separate derivation so that
+          # we can block the CI if there are issues here, but not
+          # prevent downstream consumers from building our crate by itself.
+          my-crate-clippy = craneLib.cargoClippy {
+            inherit cargoArtifacts src;
+            cargoClippyExtraArgs = "-- --deny warnings";
+          };
+
+          # Check formatting
+          my-crate-fmt = craneLib.cargoFmt {
+            inherit src;
+          };
+
+          # Check code coverage (note: this will not upload coverage anywhere)
+          my-crate-coverage = craneLib.cargoTarpaulin {
+            inherit cargoArtifacts src;
+          };
         };
 
         defaultPackage = my-crate;
