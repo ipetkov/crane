@@ -17,7 +17,7 @@ it across all of nixpkgs, consider using `overrideScope'`:
 
 ```nix
 (mkLib pkgs).overrideScope' (final: prev: {
-  cargo: myCustomCargoVersion;
+  cargo = myCustomCargoVersion;
 })
 ```
 
