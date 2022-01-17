@@ -94,5 +94,16 @@ of:
 * `cannot build '/nix/store/...-source.drv' during evaluation because the option 'allow-import-from-derivation' is disabled`
 * `a 'aarch64-darwin' with features {} is required to build '/nix/store/...', but I am a 'x86_64-linux' with features {}`
 
+## License
+
+This project is licensed under the [MIT license].
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion by you, shall be licensed as MIT, without any additional terms or
+conditions.
+
 [API docs]: ./docs/API.md
 [custom-toolchain]: ./examples/custom-toolchain/flake.nix
+[MIT license]: ./LICENSE
