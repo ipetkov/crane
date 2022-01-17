@@ -28,8 +28,18 @@
 
       overlay = final: prev: myPkgsFor final;
 
-      templates = import ./examples;
       defaultTemplate = self.templates.hello-world;
+      templates = {
+        custom-toolchain = {
+          description = "Build a cargo project with a custom toolchain";
+          path = ./examples/custom-toolchain;
+        };
+
+        hello-world = {
+          description = "Build a cargo project";
+          path = ./examples/hello-world;
+        };
+      };
     } // utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
