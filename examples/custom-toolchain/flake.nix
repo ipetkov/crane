@@ -36,6 +36,7 @@
         craneLib = (crane.mkLib pkgs).overrideScope' (final: prev: {
           rustc = rustWithWasiTarget;
           cargo = rustWithWasiTarget;
+          rustfmt = rustWithWasiTarget;
         });
 
         my-crate = craneLib.buildPackage {

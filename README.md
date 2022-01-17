@@ -242,6 +242,43 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoClippyExtraArgs`
 
+### `lib.cargoFmt`
+
+`cargoFmt :: set -> drv`
+
+Create a derivation which will run a `cargo fmt` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+`cargoBuild`, and can be used to influence its behavior.
+* `cargoArtifacts` is disabled/cleared
+* `cargoBuildCommand` will be set to run `cargo fmt` for all targets in the
+  workspace.
+* `cargoExtraArgs` will have `rustFmtExtraArgs` appended to it
+  - Default value: `""`
+* `cargoVendorDir` is disabled/cleared
+* `doCheck` is disabled
+* `doInstallCargoArtifacts` is disabled
+* `doRemapSourcePathPrefix` is disabled
+* `pnameSuffix` will be set to `"-fmt"`
+
+#### Optional attributes
+* `rustFmtExtraArgs`: additional flags to be passed in the rustfmt invocation
+  - Default value: `""`
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
+  - Default value: `""`
+
+#### Native build dependencies
+The `rustfmt` package is automatically appended as a native build input to any
+other `nativeBuildInputs` specified by the caller.
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`cargoBuild`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `rustFmtExtraArgs`
+
 ### `lib.cleanCargoToml`
 
 `cleanCargoToml :: set -> set`
