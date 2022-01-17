@@ -252,8 +252,7 @@ workspace.
 Except where noted below, all derivation attributes are delegated to
 `cargoBuild`, and can be used to influence its behavior.
 * `cargoArtifacts` is disabled/cleared
-* `cargoBuildCommand` will be set to run `cargo fmt` for all targets in the
-  workspace.
+* `cargoBuildCommand` will be set to run `cargo fmt` in the workspace.
 * `cargoExtraArgs` will have `rustFmtExtraArgs` appended to it
   - Default value: `""`
 * `cargoVendorDir` is disabled/cleared
@@ -278,6 +277,41 @@ The following attributes will be removed before being lowered to
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `rustFmtExtraArgs`
+
+### `lib.cargoTarpaulin`
+
+`cargoTarpaulin :: set -> drv`
+
+Create a derivation which will run a `cargo tarpaulin` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+`cargoBuild`, and can be used to influence its behavior.
+* `cargoArtifacts` will be instantiated via `buildDepsOnly` if not specified
+  - `cargoTarpaulinExtraArgs` will be removed before delegating to `buildDepsOnly`
+* `cargoBuildCommand` will be set to run `cargo tarpaulin` in the workspace.
+* `cargoExtraArgs` will have `cargoTarpaulinExtraArgs` appended to it
+  - Default value: `""`
+* `doCheck` is disabled
+* `pnameSuffix` will be set to `"-tarpaulin"`
+
+#### Optional attributes
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
+  - Default value: `""`
+* `cargoTarpaulinExtraArgs`: additional flags to be passed in the cargo
+  tarpaulin invocation
+  - Default value: `"--skip-clean --out Xml --output-dir $out"`
+
+#### Native build dependencies
+The `cargo-tarpaulin` package is automatically appended as a native build input to any
+other `nativeBuildInputs` specified by the caller.
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`cargoBuild`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `cargoTarpaulinExtraArgs`
 
 ### `lib.cleanCargoToml`
 

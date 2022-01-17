@@ -19,6 +19,10 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       src = ./simple;
     };
 
+    cargoTarpaulin = myLib.cargoTarpaulin {
+      src = ./simple;
+    };
+
     compilesFresh = callPackage ./compilesFresh.nix { };
     compilesFreshSimple = self.compilesFresh ./simple "simple" { };
     compilesFreshOverlappingTargets = self.compilesFresh
