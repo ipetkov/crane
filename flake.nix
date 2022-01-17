@@ -28,16 +28,21 @@
 
       overlay = final: prev: myPkgsFor final;
 
-      defaultTemplate = self.templates.hello-world;
+      defaultTemplate = self.templates.quick-start;
       templates = {
         custom-toolchain = {
           description = "Build a cargo project with a custom toolchain";
           path = ./examples/custom-toolchain;
         };
 
-        hello-world = {
+        quick-start = {
           description = "Build a cargo project";
-          path = ./examples/hello-world;
+          path = ./examples/quick-start;
+        };
+
+        quick-start-simple = {
+          description = "Build a cargo project without extra checks";
+          path = ./examples/quick-start-simple;
         };
       };
     } // utils.lib.eachDefaultSystem (system:
