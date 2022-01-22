@@ -9,8 +9,8 @@ A [Nix](https://nixos.org/) library for building [cargo](https://doc.rust-lang.o
 
 ## Features
 
-Detailed [API docs] are available, but at a glance, the following are
-supported:
+Examples can be found [here](./examples). Detailed [API docs] are available, but
+at a glance, the following are supported:
 * Automatic vendoring of dependencies in a way that works with Nix
   - Private registry and git dependency support coming soon!
 * Reusing dependency artifacts after only building them once
