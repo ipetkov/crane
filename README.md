@@ -70,8 +70,10 @@ invalidating the derivation whenever the source files are updated. Then, a
 second derivation is built, this time using the real source files, which also
 imports the cargo artifacts generated in the first step.
 
-Let's take a look at two examples at how very similar configurations can give us
-very different behavior!
+This pattern can be used with any arbitrary sequence of commands, regardless of
+whether those commands are running additional lints, performing code coverage
+analysis, or even generating types from a model schema. Let's take a look at two
+examples at how very similar configurations can give us very different behavior!
 
 ### Example One
 
