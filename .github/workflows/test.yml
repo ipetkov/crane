@@ -26,8 +26,8 @@ jobs:
       run: nix flake check --print-build-logs ${{ matrix.nixpkgs-override }}
     - name: validate examples
       run: |
-        for f in $(ls examples/); do
-          pushd "examples/${f}"
+        for f in $(find examples -maxdepth 1 -mindepth 1 -type d); do
+          pushd "${f}"
           echo "validating ${f}"
           nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
           nix run .# --override-input crane ../.. ${{ matrix.nixpkgs-override }}
