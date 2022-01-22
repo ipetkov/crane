@@ -2,7 +2,7 @@
 
 A [Nix](https://nixos.org/) library for building [cargo](https://doc.rust-lang.org/cargo/) projects.
 
-* **No messing with hashes**: a Cargo.lock file is all you need
+* **Source fetching**: automatically done using a Cargo.lock file
 * **Incremental**: never build a dependency twice with easy artifact caching
 * **Composable**: split builds and tests into granular steps. Gate CI without
   burdening downstream consumers building from source.
