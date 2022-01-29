@@ -380,6 +380,18 @@ vendoring.
 * `source`: the source key recorded in the Cargo.lock file
 * `version`: the version of the crate
 
+### `lib.findCargoFiles`
+
+`findCargoFiles :: path -> set of lists`
+
+Given a path, recursively search it for any `Cargo.toml`, `.cargo/config` or
+`.cargo/config.toml` files.
+
+```nix
+lib.findCargoFiles ./src
+# { cargoTomls = [ "..." ]; cargoConfigs = [ "..." ]; }
+```
+
 ### `lib.fromTOML`
 
 `fromTOML :: String -> set`

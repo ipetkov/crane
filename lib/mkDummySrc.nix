@@ -1,4 +1,5 @@
 { cleanCargoToml
+, findCargoFiles
 , lib
 , runCommand
 , writeText
@@ -13,12 +14,10 @@ let
   inherit (builtins)
     dirOf
     concatStringsSep
-    filter
     hasAttr
     pathExists;
 
   inherit (lib)
-    hasSuffix
     optionalString
     removePrefix;
 
@@ -34,22 +33,9 @@ let
     cp -f ${dummyrs} ${prefix}/${path}
   '';
 
-  allPaths = lib.filesystem.listFilesRecursive src;
-
-  isCargoToml = path: hasSuffix "Cargo.toml" path;
-  isCargoConfig = path:
-    let
-      p = toString path;
-      matches = s: hasSuffix s p;
-      # Cargo accepts one of two file names for its configuration.
-      # Just copy whatever we find and let cargo sort it out.
-      # https://doc.rust-lang.org/cargo/reference/config.html
-      isMatch = matches ".cargo/config" || matches ".cargo/config.toml";
-    in
-    isMatch;
-
-  cargoConfigs = filter isCargoConfig allPaths;
-  cargoTomls = filter isCargoToml allPaths;
+  inherit (findCargoFiles src)
+    cargoTomls
+    cargoConfigs;
 
   basePath = (toString src) + "/";
   copyAllCargoConfigs = concatStrings (map
