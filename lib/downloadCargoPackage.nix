@@ -1,6 +1,6 @@
 { fetchurl
 , urlForCargoPackage
-, runCommand
+, runCommandLocal
 }:
 
 { name
@@ -16,7 +16,7 @@ let
     url = urlForCargoPackage args;
   };
 in
-runCommand "cargo-package-${name}-${version}" { } ''
+runCommandLocal "cargo-package-${name}-${version}" { } ''
   mkdir -p $out
   tar -xzf ${tarball} -C $out --strip-components=1
   echo '{"files":{}, "package":"${checksum}"}' > $out/.cargo-checksum.json

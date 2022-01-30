@@ -43,7 +43,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
           CARGO_TARGET_DIR = "some/nested/custom-cargo-dir";
         });
       in
-      pkgs.runCommand "smoke-simple" { } ''
+      pkgs.runCommandLocal "smoke-simple" { } ''
         # does it run?
         ${simple}/bin/simple
         touch $out
@@ -68,7 +68,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       cargoArtifacts = null;
     };
 
-    manyLibsInstalledAsExpected = pkgs.runCommand "manyLibsInstalledAsExpected" { } ''
+    manyLibsInstalledAsExpected = pkgs.runCommandLocal "manyLibsInstalledAsExpected" { } ''
       cat >expected <<EOF
       liball_types.a
       liball_types.so

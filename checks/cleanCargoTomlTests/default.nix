@@ -1,6 +1,6 @@
 { cleanCargoToml
 , linkFarmFromDrvs
-, runCommand
+, runCommandLocal
 , writeTOML
 }:
 
@@ -13,7 +13,7 @@ let
       cleanedToml = writeTOML "cleaned.toml" cleaned;
       expected = path + /expected.toml;
     in
-    runCommand "compare-${name}" { } ''
+    runCommandLocal "compare-${name}" { } ''
       diff ${expected} ${cleanedToml}
       touch $out
     '';

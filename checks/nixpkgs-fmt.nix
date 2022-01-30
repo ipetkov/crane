@@ -1,13 +1,13 @@
 { lib
 , nixpkgs-fmt
-, runCommand
+, runCommandLocal
 }:
 
 let
   cleaned = lib.cleanSource ./..;
   nixOnly = lib.sourceFilesBySuffices cleaned [ ".nix" ];
 in
-runCommand "nixpkgs-fmt"
+runCommandLocal "nixpkgs-fmt"
 {
   nativeBuildInputs = [ nixpkgs-fmt ];
 } ''

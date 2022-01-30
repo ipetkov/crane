@@ -2,7 +2,7 @@
 , compilesFresh
 , lib
 , linkFarmFromDrvs
-, runCommand
+, runCommandLocal
 }:
 
 let
@@ -21,7 +21,7 @@ let
         pname = "${pname}CompilesFresh";
       })
 
-      (runCommand "${pname}Run" { } ''
+      (runCommandLocal "${pname}Run" { } ''
         [[ "hello${runResult}" == "$(${crate}/bin/features)" ]]
         touch $out
       '')
