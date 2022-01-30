@@ -115,6 +115,11 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       src = ./overlapping-targets;
     });
 
+    smokeManuallyVendored = self.smoke [ "manually-vendored" ] (myLib.buildPackage {
+      src = ./manually-vendored;
+      cargoVendorDir = ./manually-vendored/vendor;
+    });
+
     smokeWorkspace = self.smoke [ "print" ] self.workspace;
     smokeWorkspaceRoot = self.smoke [ "print" ] self.workspaceRoot;
 
