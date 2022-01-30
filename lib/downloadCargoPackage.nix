@@ -8,14 +8,12 @@
 , checksum
 , source
 , ...
-}:
+}@args:
 let
   tarball = fetchurl {
     name = "${name}-${version}";
     sha256 = checksum;
-    url = urlForCargoPackage {
-      inherit name version source;
-    };
+    url = urlForCargoPackage args;
   };
 in
 runCommand "cargo-package-${name}-${version}" { } ''
