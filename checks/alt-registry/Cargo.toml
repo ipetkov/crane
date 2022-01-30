@@ -1,0 +1,8 @@
+[package]
+name = "alt-registry"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+byteorder = { version = "*" }
+epitech_api = { version = "*", registry = "alexandrie" }
