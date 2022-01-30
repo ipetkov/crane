@@ -97,7 +97,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       let
         myLibWithRegistry = myLib.appendCrateRegistries [
           (myLib.registryFromGitIndex {
-            url = "https://github.com/Hirevo/alexandrie-index";
+            indexUrl = "https://github.com/Hirevo/alexandrie-index";
             rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
           })
         ];

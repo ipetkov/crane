@@ -39,13 +39,13 @@ See the documentation on each function for more specifics.
 ```nix
 newLib = lib.appendCrateRegistries [
   (lib.registryFromDownloadUrl {
-    dl = "https://crates.io/api/v1/crates";
     indexUrl = "https://github.com/rust-lang/crates.io-index";
+    dl = "https://crates.io/api/v1/crates";
   })
 
   # Or, alternatively
   (lib.registryFromGitIndex {
-    url = "https://github.com/Hirevo/alexandrie-index";
+    indexUrl = "https://github.com/Hirevo/alexandrie-index";
     rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
   })
 ];
@@ -606,7 +606,7 @@ that IFD will need to be enabled. If this is unsatisfactory, consider using
 `registryFromDownloadUrl` as a simpler alternative.
 
 #### Required attributes
-* `url`: an HTTP URL to the index
+* `indexUrl`: an HTTP URL to the index
 * `rev`: any git revision which contains the latest `config.json` definition
 
 ```nix

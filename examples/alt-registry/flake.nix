@@ -34,14 +34,14 @@
           # registry's `config.json` file. In other words, this commit revision only needs to be
           # updated if the `config.json` file changes the download endpoint for this registry.
           (craneLibOrig.registryFromGitIndex {
-            url = "https://github.com/Hirevo/alexandrie-index";
+            indexUrl = "https://github.com/Hirevo/alexandrie-index";
             rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
           })
 
           # As a more lightweight alternative, the `dl` endpoint of the registry's `config.json`
           # file can be copied here to avoid needing to copy the index to the Nix store.
           # (craneLibOrig.registryFromDownloadUrl {
-          #   url = "https://github.com/Hirevo/alexandrie-index";
+          #   indexUrl = "https://github.com/Hirevo/alexandrie-index";
           #   dl = "https://crates.polomack.eu/api/v1/crates/{crate}/{version}/download";
           # })
         ];

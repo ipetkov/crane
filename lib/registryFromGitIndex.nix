@@ -2,13 +2,14 @@
 , registryFromDownloadUrl
 }:
 
-{ url
+{ indexUrl
 , rev
 }:
 
 let
   index = builtins.fetchGit {
-    inherit url rev;
+    inherit rev;
+    url = indexUrl;
   };
 
   configPath = "${index}/config.json";
@@ -25,6 +26,5 @@ let
   '');
 in
 registryFromDownloadUrl {
-  inherit dl;
-  indexUrl = url;
+  inherit dl indexUrl;
 }
