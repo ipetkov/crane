@@ -23,6 +23,34 @@ it across all of nixpkgs, consider using `overrideScope'`:
 
 ## `lib`
 
+### `lib.appendCrateRegistries`
+
+`appendCrateRegistries :: [registry mapping] -> new lib`
+
+Creates a new `lib` instance which will make additional registries available for
+use when downloading crate sources. Each entry can be defined using:
+* `registryFromDownloadUrl`: if you know the exact `dl` URL as defined in the
+  registry's `config.json` file
+* `registryFromGitIndex`: if you would like the download URL to be inferred from
+  the index's source directly.
+
+See the documentation on each function for more specifics.
+
+```nix
+newLib = lib.appendCrateRegistries [
+  (lib.registryFromDownloadUrl {
+    dl = "https://crates.io/api/v1/crates";
+    indexUrl = "https://github.com/rust-lang/crates.io-index";
+  })
+
+  # Or, alternatively
+  (lib.registryFromGitIndex {
+    url = "https://github.com/Hirevo/alexandrie-index";
+    rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
+  })
+];
+```
+
 ### `lib.buildDepsOnly`
 
 `buildDepsOnly :: set -> drv`
@@ -351,6 +379,19 @@ lib.crateNameFromCargoToml { cargoToml = ./Cargo.toml; }
 # { pname = "simple"; version = "0.1.0"; }
 ```
 
+### `lib.crateRegistries`
+
+`crateRegistries :: set`
+
+A set of crate registries made available for use in downloading crate sources.
+The keys are registry URLs as used in the Cargo.lock file (e.g.
+"registry+https://...") and the values are the download URL for that registry,
+including any [placeholder
+values](https://doc.rust-lang.org/cargo/reference/registries.html#index-format)
+cargo is expected to populate for downloads.
+
+This definition can be updated via `appendCrateRegistries`.
+
 #### Input attributes
 * `src`: a directory which includes a Cargo.toml file at its root.
 * `cargoToml`: a path to a Cargo.toml file
@@ -516,6 +557,65 @@ build caches. More specifically:
 #### Optional attributes
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
+
+### `lib.registryFromDownloadUrl`
+
+`registryFromDownloadUrl :: set -> set`
+
+Prepares a crate registry into a format that can be passed directly to
+`appendCrateRegistries` using the registry's download URL.
+
+If the registry in question has a stable download URL (which either never
+changes, or it does so very infrequently), then `registryFromDownloadUrl` is a
+great and lightweight choice for including the registry. To get started, look up
+the
+[`config.json`](https://github.com/rust-lang/crates.io-index/blob/24ecfa9c82456a79ec115736f1fcefc0be375b52/config.json#L2) at the registry's root and copy the value of the `dl` entry.
+
+If the registry's download endpoint changes more frequently and you would like
+to infer the configuration directly from a git revision, consider using
+`registryFromGitIndex` as an alternative.
+
+#### Required attributes
+* `dl`: the value of the `dl` entry in the registry's `config.json` file
+* `indexUrl`: an HTTP URL to the index
+
+```nix
+lib.registryFromDownloadUrl {
+  dl = "https://crates.io/api/v1/crates";
+  indexUrl = "https://github.com/rust-lang/crates.io-index";
+}
+# { "registry+https://github.com/rust-lang/crates.io-index" = "https://crates.io/api/v1/crates/{crate}/{version}/download"; }
+```
+
+### `lib.registryFromGitIndex`
+
+`registryFromGitIndex :: set -> set`
+
+Prepares a crate registry into a format that can be passed directly to
+`appendCrateRegistries` using a revision of the registry index to infer the
+download URL.
+
+Note that the specified git revision _does not need to track updates to the
+index itself_ as long as the pinned revision contains the most recent version of
+the `config.json` file. In other words, this commit revision only needs to be
+updated if the `config.json` file changes.
+
+Also note that this approach means that the contents of the entire index at the
+specified revision will be added to the Nix store during evaluation time, and
+that IFD will need to be enabled. If this is unsatisfactory, consider using
+`registryFromDownloadUrl` as a simpler alternative.
+
+#### Required attributes
+* `url`: an HTTP URL to the index
+* `rev`: any git revision which contains the latest `config.json` definition
+
+```nix
+lib.registryFromGitIndex {
+  url = "https://github.com/Hirevo/alexandrie-index";
+  rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
+}
+# { "registry+https://github.com/Hirevo/alexandrie-index" = "https://crates.polomack.eu/api/v1/crates/{crate}/{version}/download"; }
+```
 
 ### `lib.toTOML`
 
