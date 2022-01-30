@@ -13,7 +13,9 @@ A [Nix](https://nixos.org/) library for building [cargo](https://doc.rust-lang.o
 Examples can be found [here](./examples). Detailed [API docs] are available, but
 at a glance, the following are supported:
 * Automatic vendoring of dependencies in a way that works with Nix
-  - Private registry and git dependency support coming soon!
+  - Alternative cargo registries are supported (with a minor configuration
+    change)
+  - Git dependency support coming soon!
 * Reusing dependency artifacts after only building them once
 * [clippy](https://github.com/rust-lang/rust-clippy) checks
 * [rustfmt](https://github.com/rust-lang/rustfmt) checks
@@ -32,6 +34,9 @@ nix flake init -t github:ipetkov/crane#quick-start-simple
 
 # If you need a custom rust toolchain (e.g. to build WASM targets):
 nix flake init -t github:ipetkov/crane#custom-toolchain
+
+# If you need to use another crate registry besides crates.io
+nix flake init -t github:ipetkov/crane#alt-registry
 ```
 
 For an even more lean, no frills set up, create a `flake.nix` file with the

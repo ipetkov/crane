@@ -103,7 +103,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
         ];
       in
       myLibWithRegistry.buildPackage {
-        src = ./alt-registry;
+        src = ../examples/alt-registry;
         nativeBuildInputs = with pkgs; [
           pkgconfig
           openssl
