@@ -648,6 +648,12 @@ Creates a derivation which will download all crates referenced by a Cargo.lock
 file, and prepare a vendored directory which cargo can use for subsequent builds
 without needing network access.
 
+Each unique crate index will be vendored as its own subdirectory within the
+output of the derivation. A `config.toml` file will also be placed at the root
+of the output which will contain the necessary configurations to point cargo to
+the vendored directories (i.e. this configuration can be appended to the
+`.cargo/config.toml` definition of the project).
+
 #### Input attributes
 * `src`: a directory which includes a Cargo.lock file at its root.
 * `cargoLock`: a path to a Cargo.lock file
@@ -693,12 +699,12 @@ directory of vendored crate sources. It takes two positional arguments:
 1. a path to a cargo config file to modify
    * If not specified, the value of `$CARGO_HOME/config.toml` will be used
    * This cargo config file will be appended with a stanza which will instruct
-     cargo to replace the `crates-io` source with a source named `nix-sources`
-     - This source will be configured to point to the directory mentioned above
-   * Note that any cargo configuration files within the source will take
-     precedence over this file, and if any of them choose to replace the
-     `crates-io` source with another one, the changes made here will be
-     ignonred.
+     cargo to use the vendored sources (instead of downloading the sources
+     directly) as follows:
+       - If the vendored directory path contains a file named `config.toml`,
+         then its contents will be appended to the specified cargo config path.
+       - Otherwise the entire vendored directory path will be treated as if it
+         only vendors the crates.io index and will be configured as such.
 
 **Automatic behavior:** if `cargoVendorDir` is set, then
 `configureCargoVendoredDeps "$cargoVendorDir" "$CARGO_HOME/config.toml"` will be
