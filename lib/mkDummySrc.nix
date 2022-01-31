@@ -1,7 +1,7 @@
 { cleanCargoToml
 , findCargoFiles
 , lib
-, runCommand
+, runCommandLocal
 , writeText
 , writeTOML
 }:
@@ -99,7 +99,7 @@ let
     then "cp ${cargoLock} $out/Cargo.lock"
     else "echo could not find Cargo.lock at src root";
 in
-runCommand "dummy-src" { } ''
+runCommandLocal "dummy-src" { } ''
   mkdir -p $out
   ${copyCargoLock}
   ${copyAllCargoConfigs}

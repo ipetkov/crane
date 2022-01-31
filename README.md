@@ -253,6 +253,19 @@ the ability to enforce a strict build order. However, we can easily change our
 mind, which would be much more difficult if we had written everything as one
 giant derivation.
 
+## Compatibility Policy
+
+Breaking changes can land on the `master` branch at any time, so it is
+recommended you use a versioning strategy when consuming this library (for
+example, using something like flakes or [niv]).
+
+Tagged releases will be cut periodically and changes will be documented in the
+[CHANGELOG]. Release versions will follow [Semantic Versioning].
+
+The test suite is run against the latest stable nixpkgs release, as well as
+`nixpkgs-unstable`. Any breakage on those channels is considered a bug and
+should be reported as such.
+
 ## FAQs
 
 ### I want to use a custom version of nixpkgs or another specific system
@@ -312,5 +325,8 @@ for inclusion by you, shall be licensed as MIT, without any additional terms or
 conditions.
 
 [API docs]: ./docs/API.md
+[CHANGELOG]: ./CHANGELOG.md
 [custom-toolchain]: ./examples/custom-toolchain/flake.nix
 [MIT license]: ./LICENSE
+[niv]: https://github.com/nmattia/niv
+[Semantic Versioning]: http://semver.org/spec/v2.0.0.html
