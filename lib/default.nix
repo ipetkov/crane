@@ -38,5 +38,6 @@ lib.makeScope newScope (self:
     registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
     urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
     vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
+    vendorCargoRegistries = callPackage ./vendorCargoRegistries.nix { };
     writeTOML = callPackage ./writeTOML.nix { };
   })

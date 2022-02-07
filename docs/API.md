@@ -661,6 +661,26 @@ the vendored directories (i.e. this configuration can be appended to the
 At least one of the above attributes must be specified, or an error will be
 raised during evaluation.
 
+### `lib.vendorCargoRegistries`
+
+`vendorCargoRegistries :: set -> set`
+
+Creates the derivations necessary to download all crates from all registries
+referenced by a `Cargo.lock` file, and prepare the vendored directories which
+cargo can use for subsequent builds without needing network access.
+
+#### Input attributes
+* `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
+  appear in the project
+* `lockPackages`: a list of all `[[package]]` entries found in the project's
+  `Cargo.lock` file (parsed via `fromTOML`)
+
+#### Output attributes
+* `config`: the configuration entires needed to point cargo to the vendored
+  crates. This is intended to be appended to `$CARGO_HOME/config.toml` verbatim
+* `sources`: an attribute set of all the newly created cargo sources' names to
+  their location in the Nix store
+
 ### `lib.writeTOML`
 
 `writeTOML :: String -> String -> drv`
