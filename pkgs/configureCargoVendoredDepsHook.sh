@@ -9,7 +9,7 @@ configureCargoVendoredDepsHook() {
   # doing and has its own source replacement going on, it can happily
   # ignore the changes we are trying to make!
   if [[ -f "${vendoredDir}/config.toml" ]]; then
-    echo using config.toml manifest from vendored directory ${vendoredDir}
+    echo will append ${cargoConfig} with contents of ${vendoredDir}/config.toml
     cat "${vendoredDir}/config.toml" >>"${cargoConfig}"
     return
   fi
