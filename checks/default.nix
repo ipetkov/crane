@@ -91,6 +91,9 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
     simple = myLib.buildPackage {
       src = ./simple;
     };
+    simpleGit = myLib.buildPackage {
+      src = ./simple-git;
+    };
 
     # Test building a real world example
     ripgrep = myLib.buildPackage {
@@ -99,6 +102,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 
     smoke = callPackage ./smoke.nix { };
     smokeSimple = self.smoke [ "simple" ] self.simple;
+    smokeSimpleGit = self.smoke [ "simple-git" ] self.simpleGit;
     smokeAltRegistry = self.smoke [ "alt-registry" ] (
       let
         myLibWithRegistry = myLib.appendCrateRegistries [

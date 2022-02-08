@@ -1,0 +1,23 @@
+[package]
+name = "simple-git"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.byteorder]
+version = "*"
+git = "https://github.com/BurntSushi/byteorder.git"
+
+[dependencies.libc]
+version = "*"
+git = "https://github.com/rust-lang/libc.git"
+branch = "master"
+
+[dependencies.num_cpus]
+version = "*"
+git = "https://github.com/seanmonstar/num_cpus.git"
+tag = "v1.13.1"
+
+[dependencies.rustversion]
+version = "*"
+git = "https://github.com/dtolnay/rustversion.git"
+rev = "2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb"

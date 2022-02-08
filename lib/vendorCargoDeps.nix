@@ -3,6 +3,7 @@
 , lib
 , runCommandLocal
 , vendorCargoRegistries
+, vendorGitDeps
 }:
 
 args:
@@ -37,21 +38,30 @@ let
       ''
   );
 
-  lock = fromTOML cargoLockContents;
-  vendoredRegistries = vendorCargoRegistries {
-    cargoConfigs = (findCargoFiles src).cargoConfigs;
-    lockPackages = lock.package or (throw "Cargo.lock missing [[package]] definitions");
-  };
+  linkSources = sources: concatMapStrings
+    (name: ''
+      ln -s ${escapeShellArg sources.${name}} $out/${escapeShellArg name}
+    '')
+    (attrNames sources);
 
-  inherit (vendoredRegistries) sources;
+  lock = fromTOML cargoLockContents;
+  lockPackages = lock.package or (throw "Cargo.lock missing [[package]] definitions");
+
+  vendoredRegistries = vendorCargoRegistries {
+    inherit lockPackages;
+    cargoConfigs = (findCargoFiles src).cargoConfigs;
+  };
+  vendoredGit = vendorGitDeps {
+    inherit lockPackages;
+  };
 in
 runCommandLocal "vendor-cargo-deps" { } ''
   mkdir -p $out
   cat >>$out/config.toml <<EOF
   ${vendoredRegistries.config}
+  ${vendoredGit.config}
   EOF
 
-  ${concatMapStrings (name: ''
-    ln -s ${escapeShellArg sources.${name}} $out/${escapeShellArg name}
-  '') (attrNames sources)}
+  ${linkSources vendoredRegistries.sources}
+  ${linkSources vendoredGit.sources}
 ''
