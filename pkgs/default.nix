@@ -2,7 +2,7 @@
 , makeSetupHook
 , jq
 , rsync
-, zstd
+, pkgsBuildBuild
 }:
 
 {
@@ -20,7 +20,7 @@
     {
       name = "inheritCargoArtifactsHook";
       substitutions = {
-        zstd = "${zstd}/bin/zstd";
+        zstd = "${pkgsBuildBuild.zstd}/bin/zstd";
       };
     } ./inheritCargoArtifactsHook.sh;
 
@@ -28,7 +28,7 @@
     {
       name = "installCargoArtifactsHook";
       substitutions = {
-        zstd = "${zstd}/bin/zstd";
+        zstd = "${pkgsBuildBuild.zstd}/bin/zstd";
       };
     } ./installCargoArtifactsHook.sh;
 
