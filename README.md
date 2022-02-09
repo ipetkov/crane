@@ -56,6 +56,11 @@ following contents at the root of your cargo workspace:
     flake-utils.lib.eachDefaultSystem (system: {
       defaultPackage = crane.lib.${system}.buildPackage {
         src = ./.;
+
+        # Add extra inputs here or any other derivation settings
+        # doCheck = true;
+        # buildInputs = [];
+        # nativeBuildInputs = [];
       };
     });
 }
