@@ -110,7 +110,7 @@ let
         sourceValues = concatMapStrings extractAttr ([ "git" ] ++ knownGitParams);
       in
       ''
-        [source."${p.git}"]
+        [source."${p.id}"]
         replace-with = "nix-sources-${hash p.id}"
         ${sourceValues}
       ''

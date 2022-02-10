@@ -135,10 +135,17 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 
     workspace = myLib.buildPackage {
       src = ./workspace;
+      pname = "workspace";
     };
 
     workspaceRoot = myLib.buildPackage {
       src = ./workspace-root;
+      pname = "workspace-root";
+    };
+
+    workspaceGit = myLib.buildPackage {
+      src = ./workspace-git;
+      pname = "workspace-git";
     };
   })
 )

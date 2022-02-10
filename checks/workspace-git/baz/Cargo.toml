@@ -1,0 +1,8 @@
+[package]
+name = "baz"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+foo = { path = "../foo" }
+bar = { path = "../bar" }
