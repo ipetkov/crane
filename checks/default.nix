@@ -95,6 +95,18 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       src = ./simple-git;
     };
 
+    remapPathPrefixWorks = pkgs.runCommandLocal "remapPathPrefixWorks" { } ''
+      if ${pkgs.binutils-unwrapped}/bin/strings ${self.ripgrep}/bin/rg | \
+        grep -v glibc | \
+        grep --count '/nix/store'
+      then
+        echo found references to /nix/store sources
+        false
+      else
+        touch $out
+      fi
+    '';
+
     # Test building a real world example
     ripgrep = myLib.buildPackage {
       inherit (pkgs.ripgrep) pname src version;

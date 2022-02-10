@@ -16,6 +16,7 @@ let
     head
     isString
     listToAttrs
+    placeholder
     split;
 
   inherit (lib)
@@ -95,7 +96,7 @@ let
   configLocalSources = concatMapStrings
     (hashedId: ''
       [source.nix-sources-${hashedId}]
-      directory = "${sources.${hashedId}}"
+      directory = "${placeholder "out"}/${hashedId}"
     '')
     (attrNames sources);
 

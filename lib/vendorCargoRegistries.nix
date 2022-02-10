@@ -17,6 +17,7 @@ let
     hashString
     head
     length
+    placeholder
     mapAttrs
     readFile;
 
@@ -64,7 +65,7 @@ let
   configLocalSources = concatMapStrings
     (hashedUrl: ''
       [source.nix-sources-${hashedUrl}]
-      directory = "${sources.${hashedUrl}}"
+      directory = "${placeholder "out"}/${hashedUrl}"
     '')
     (attrNames sources);
 
