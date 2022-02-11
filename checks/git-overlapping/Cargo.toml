@@ -1,0 +1,8 @@
+[package]
+name = "git-overlapping"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { git = "https://github.com/tokio-rs/tokio" }
+tokio-util = { git = "https://github.com/tokio-rs/tokio" }

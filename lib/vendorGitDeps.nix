@@ -72,25 +72,16 @@ let
     lockedPackagesFromGit
   );
 
-  linkGitSource = p:
-    let
-      inherit (p.package) name version;
-      source = downloadCargoPackageFromGit {
-        inherit name version;
+  sources = mapAttrs'
+    (id: ps:
+      let
+        p = head ps;
+      in
+      nameValuePair (hash id) (downloadCargoPackageFromGit {
         inherit (p) git;
         rev = p.lockedRev;
-      };
-    in
-    ''
-      ln -s ${escapeShellArg source} $out/${escapeShellArg "${name}-${version}"}
-    '';
-  vendorSingleGitSource = ps: runCommandLocal "vendor-git" { } ''
-    mkdir -p $out
-    ${concatMapStrings linkGitSource ps}
-  '';
-
-  sources = mapAttrs'
-    (id: ps: nameValuePair (hash id) (vendorSingleGitSource ps))
+      })
+    )
     lockedGitGroups;
 
   configLocalSources = concatMapStrings

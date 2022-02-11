@@ -424,13 +424,12 @@ vendoring.
 
 `downloadCargoPackageFromGit :: set -> drv`
 
-Download a cargo crate from a git repository and prepare it for vendoring.
+Download a git repository containing a cargo crate or workspace, and prepare it
+any crates it contains for vendoring.
 
 #### Required input attributes
 * `git`: the URL to the repository
-* `name`: the name of the crate
 * `rev`: the exact revision to check out
-* `version`: the version of the crate
 
 ### `lib.findCargoFiles`
 
