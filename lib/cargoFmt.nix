@@ -13,7 +13,6 @@ cargoBuild (args // {
   cargoArtifacts = null;
   cargoVendorDir = null;
   doCheck = false;
-  doInstallCargoArtifacts = false;
   doRemapSourcePathPrefix = false;
   pnameSuffix = "-fmt";
 
@@ -21,4 +20,9 @@ cargoBuild (args // {
   cargoExtraArgs = "${cargoExtraArgs} -- --check ${rustFmtExtraArgs}";
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ rustfmt ];
+
+  preInstallPhases = [ "ensureTargetDir" ] ++ (args.preInstallPhases or [ ]);
+  ensureTargetDir = ''
+    mkdir -p ''${CARGO_TARGET_DIR:-target}
+  '';
 })

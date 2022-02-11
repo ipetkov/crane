@@ -19,6 +19,12 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       src = ./simple;
     };
 
+    # https://github.com/ipetkov/crane/issues/6
+    cargoFmtThenClippy = myLib.cargoClippy {
+      src = ./simple;
+      cargoArtifacts = self.cargoFmt;
+    };
+
     cargoTarpaulin = myLib.cargoTarpaulin {
       src = ./simple;
     };

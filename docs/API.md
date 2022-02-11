@@ -285,7 +285,6 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `""`
 * `cargoVendorDir` is disabled/cleared
 * `doCheck` is disabled
-* `doInstallCargoArtifacts` is disabled
 * `doRemapSourcePathPrefix` is disabled
 * `pnameSuffix` will be set to `"-fmt"`
 
