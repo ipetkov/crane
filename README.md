@@ -15,7 +15,10 @@ at a glance, the following are supported:
 * Automatic vendoring of dependencies in a way that works with Nix
   - Alternative cargo registries are supported (with a minor configuration
     change)
-  - Git dependency support coming soon!
+  - Git dependencies are automatically supported without additional
+    configuration.
+    - Cargo retains the flexibility to only use these dependencies when they are
+      actually needed, without forcing an override for the entire workspace.
 * Reusing dependency artifacts after only building them once
 * [clippy](https://github.com/rust-lang/rust-clippy) checks
 * [rustfmt](https://github.com/rust-lang/rustfmt) checks
