@@ -1,0 +1,24 @@
+[package]
+name = "foo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+[dependencies.byteorder_141]
+package = "byteorder"
+version = "*"
+git = "https://github.com/BurntSushi/byteorder.git"
+tag = "1.4.1"
+
+[dependencies.byteorder_142]
+package = "byteorder"
+version = "*"
+git = "https://github.com/BurntSushi/byteorder.git"
+tag = "1.4.2"
+
+[dependencies.byteorder_143]
+package = "byteorder"
+version = "*"
+git = "https://github.com/BurntSushi/byteorder.git"
+tag = "1.4.3"
+

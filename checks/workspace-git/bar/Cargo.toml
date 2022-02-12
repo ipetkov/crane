@@ -1,0 +1,24 @@
+[package]
+name = "bar"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+[dependencies.byteorder_141]
+package = "byteorder"
+version = "*"
+git = "https://github.com/BurntSushi/byteorder.git"
+tag = "1.4.1"
+
+[dependencies.byteorder_142]
+package = "byteorder"
+version = "*"
+git = "https://github.com/BurntSushi/byteorder.git"
+rev = "54ca336ec2b11a3036eb6a5951738b1a72692f12"
+
+[dependencies.byteorder_143]
+package = "byteorder"
+version = "*"
+git = "https://github.com/BurntSushi/byteorder.git"
+tag = "1.4.3"
+

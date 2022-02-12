@@ -61,6 +61,10 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 
     features = callPackage ./features { };
 
+    gitOverlappingRepo = myLib.buildPackage {
+      src = ./git-overlapping;
+    };
+
     illegalBin = myLib.buildPackage {
       pname = "illegalBin";
       version = "0.0.1";
@@ -91,6 +95,21 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
     simple = myLib.buildPackage {
       src = ./simple;
     };
+    simpleGit = myLib.buildPackage {
+      src = ./simple-git;
+    };
+
+    remapPathPrefixWorks = pkgs.runCommandLocal "remapPathPrefixWorks" { } ''
+      if ${pkgs.binutils-unwrapped}/bin/strings ${self.ripgrep}/bin/rg | \
+        grep -v glibc | \
+        grep --count '/nix/store'
+      then
+        echo found references to /nix/store sources
+        false
+      else
+        touch $out
+      fi
+    '';
 
     # Test building a real world example
     ripgrep = myLib.buildPackage {
@@ -99,6 +118,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 
     smoke = callPackage ./smoke.nix { };
     smokeSimple = self.smoke [ "simple" ] self.simple;
+    smokeSimpleGit = self.smoke [ "simple-git" ] self.simpleGit;
     smokeAltRegistry = self.smoke [ "alt-registry" ] (
       let
         myLibWithRegistry = myLib.appendCrateRegistries [
@@ -131,10 +151,17 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 
     workspace = myLib.buildPackage {
       src = ./workspace;
+      pname = "workspace";
     };
 
     workspaceRoot = myLib.buildPackage {
       src = ./workspace-root;
+      pname = "workspace-root";
+    };
+
+    workspaceGit = myLib.buildPackage {
+      src = ./workspace-git;
+      pname = "workspace-git";
     };
   })
 )

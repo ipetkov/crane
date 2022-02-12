@@ -31,6 +31,7 @@ lib.makeScope newScope (self:
     };
 
     downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
+    downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
     findCargoFiles = callPackage ./findCargoFiles.nix { };
     mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
     mkDummySrc = callPackage ./mkDummySrc.nix { };
@@ -38,5 +39,7 @@ lib.makeScope newScope (self:
     registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
     urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
     vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
+    vendorCargoRegistries = callPackage ./vendorCargoRegistries.nix { };
+    vendorGitDeps = callPackage ./vendorGitDeps.nix { };
     writeTOML = callPackage ./writeTOML.nix { };
   })

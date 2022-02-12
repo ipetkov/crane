@@ -420,6 +420,17 @@ vendoring.
 * `source`: the source key recorded in the Cargo.lock file
 * `version`: the version of the crate
 
+### `lib.downloadCargoPackageFromGit`
+
+`downloadCargoPackageFromGit :: set -> drv`
+
+Download a git repository containing a cargo crate or workspace, and prepare it
+any crates it contains for vendoring.
+
+#### Required input attributes
+* `git`: the URL to the repository
+* `rev`: the exact revision to check out
+
 ### `lib.findCargoFiles`
 
 `findCargoFiles :: path -> set of lists`
@@ -660,6 +671,45 @@ the vendored directories (i.e. this configuration can be appended to the
 
 At least one of the above attributes must be specified, or an error will be
 raised during evaluation.
+
+### `lib.vendorCargoRegistries`
+
+`vendorCargoRegistries :: set -> set`
+
+Creates the derivations necessary to download all crates from all registries
+referenced by a `Cargo.lock` file, and prepare the vendored directories which
+cargo can use for subsequent builds without needing network access.
+
+#### Input attributes
+* `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
+  appear in the project
+* `lockPackages`: a list of all `[[package]]` entries found in the project's
+  `Cargo.lock` file (parsed via `fromTOML`)
+
+#### Output attributes
+* `config`: the configuration entires needed to point cargo to the vendored
+  crates. This is intended to be appended to `$CARGO_HOME/config.toml` verbatim
+* `sources`: an attribute set of all the newly created cargo sources' names to
+  their location in the Nix store
+
+### `lib.vendorGitDeps`
+
+`vendorGitDeps :: set -> set`
+
+Creates the derivations necessary to download all crates from all git
+dependencies referenced by a `Cargo.lock` file, and prepare the vendored
+directories which cargo can use for subsequent builds without needing network
+access.
+
+#### Input attributes
+* `lockPackages`: a list of all `[[package]]` entries found in the project's
+  `Cargo.lock` file (parsed via `fromTOML`)
+
+#### Output attributes
+* `config`: the configuration entires needed to point cargo to the vendored
+  sources. This is intended to be appended to `$CARGO_HOME/config.toml` verbatim
+* `sources`: an attribute set of all the newly created cargo sources' names to
+  their location in the Nix store
 
 ### `lib.writeTOML`
 
