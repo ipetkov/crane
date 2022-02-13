@@ -16,7 +16,6 @@ cargoBuild (args // {
   cargoExtraArgs = "${cargoExtraArgs} ${cargoTarpaulinExtraArgs}";
 
   doCheck = false;
-  doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
   pnameSuffix = "-tarpaulin";
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-tarpaulin ];
