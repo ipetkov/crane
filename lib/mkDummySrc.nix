@@ -7,7 +7,7 @@
 }:
 
 { src
-, cargoLock ? src + /Cargo.lock
+, cargoLock ? src + "/Cargo.lock"
 , ...
 }:
 let
