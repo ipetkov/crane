@@ -20,6 +20,15 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
     };
 
     # https://github.com/ipetkov/crane/issues/6
+    cargoClippyThenBuild = myLib.buildPackage {
+      src = ./simple;
+      cargoArtifacts = myLib.cargoClippy {
+        cargoArtifacts = null;
+        src = ./simple;
+      };
+    };
+
+    # https://github.com/ipetkov/crane/issues/6
     cargoFmtThenClippy = myLib.cargoClippy {
       src = ./simple;
       cargoArtifacts = self.cargoFmt;

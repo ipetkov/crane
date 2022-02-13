@@ -255,9 +255,6 @@ Except where noted below, all derivation attributes are delegated to
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
-* `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
-  be copied as an output
-  - Default value: `false`
 
 #### Native build dependencies
 The `clippy` package is automatically appended as a native build input to any
