@@ -15,12 +15,13 @@
 
   outputs = inputs@{ self, nixpkgs, nix-std, utils, ... }:
     let
-      myPkgsFor = pkgs: pkgs.callPackages ./pkgs { };
+      mkMyPkgs = callPackage: import ./pkgs callPackage;
+      myPkgsFor = pkgs: mkMyPkgs pkgs.callPackage;
 
       mkLib = pkgs: import ./lib {
         inherit (nix-std.lib.serde) fromTOML toTOML;
         inherit (pkgs) lib newScope;
-        myPkgs = myPkgsFor pkgs;
+        inherit mkMyPkgs;
       };
     in
     {
@@ -56,13 +57,12 @@
           inherit system;
         };
 
-        myPkgs = myPkgsFor pkgs;
-
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
+        myPkgs = myPkgsFor pkgs;
 
         checks = pkgs.callPackages ./checks {
-          inherit pkgs;
+          inherit pkgs myPkgs;
           myLib = lib;
         };
       in

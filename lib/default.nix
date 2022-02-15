@@ -1,15 +1,15 @@
 { fromTOML
 , lib
-, myPkgs
+, mkMyPkgs
 , newScope
 , toTOML
 }:
 
 lib.makeScope newScope (self:
   let
-    callPackage = self.newScope myPkgs;
+    inherit (self) callPackage;
   in
-  {
+  (mkMyPkgs callPackage) // {
     inherit fromTOML toTOML;
 
     appendCrateRegistries = input: self.overrideScope' (final: prev: {

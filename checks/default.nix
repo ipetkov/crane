@@ -1,4 +1,4 @@
-{ pkgs, myLib }:
+{ pkgs, myLib, myPkgs }:
 
 let
   inherit (pkgs) lib;
@@ -8,7 +8,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
   let
     callPackage = self.newScope { };
   in
-  {
+  myPkgs // {
     checkNixpkgsFmt = callPackage ./nixpkgs-fmt.nix { };
 
     cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
