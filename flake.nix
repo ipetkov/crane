@@ -30,6 +30,11 @@
 
       defaultTemplate = self.templates.quick-start;
       templates = {
+        alt-registry = {
+          description = "Build a cargo project with alternative crate registries";
+          path = ./examples/alt-registry;
+        };
+
         custom-toolchain = {
           description = "Build a cargo project with a custom toolchain";
           path = ./examples/custom-toolchain;
