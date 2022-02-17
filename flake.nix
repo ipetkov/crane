@@ -15,12 +15,13 @@
 
   outputs = inputs@{ self, nixpkgs, nix-std, utils, ... }:
     let
-      myPkgsFor = pkgs: pkgs.callPackages ./pkgs { };
+      mkMyPkgs = callPackage: import ./pkgs callPackage;
+      myPkgsFor = pkgs: mkMyPkgs pkgs.callPackage;
 
       mkLib = pkgs: import ./lib {
         inherit (nix-std.lib.serde) fromTOML toTOML;
         inherit (pkgs) lib newScope;
-        myPkgs = myPkgsFor pkgs;
+        inherit mkMyPkgs;
       };
     in
     {
@@ -30,6 +31,21 @@
 
       defaultTemplate = self.templates.quick-start;
       templates = {
+        alt-registry = {
+          description = "Build a cargo project with alternative crate registries";
+          path = ./examples/alt-registry;
+        };
+
+        cross-musl = {
+          description = "Building static binaries with musl";
+          path = ./examples/cross-rust-overlay;
+        };
+
+        cross-rust-overlay = {
+          description = "Cross compiling a rust program using rust-overlay";
+          path = ./examples/cross-rust-overlay;
+        };
+
         custom-toolchain = {
           description = "Build a cargo project with a custom toolchain";
           path = ./examples/custom-toolchain;
@@ -51,13 +67,12 @@
           inherit system;
         };
 
-        myPkgs = myPkgsFor pkgs;
-
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
+        myPkgs = myPkgsFor pkgs;
 
         checks = pkgs.callPackages ./checks {
-          inherit pkgs;
+          inherit pkgs myPkgs;
           myLib = lib;
         };
       in
