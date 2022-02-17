@@ -5,11 +5,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+### Added
+* Added template and example for cross compiling to other platforms
+* Added template and example for building static binaries using musl
+
+### Changed
 * `cargoClippy` and `cargoTarpaulin` will install cargo artifacts by default (or
   install an empty `target` directory if there are none). This allows for more
   easily chaining derivations if doing so is desired.
   - This can be disabled by setting `doInstallCargoArtifacts = false;` in the
     derivation
+
+### Fixed
+* Fixed an issue where cross compiling would try to needlessly cross compile
+  rustc and cargo themselves
 
 ## [0.3.0] - 2022-02-11
 
