@@ -36,6 +36,11 @@
           path = ./examples/alt-registry;
         };
 
+        cross-musl = {
+          description = "Building static binaries with musl";
+          path = ./examples/cross-rust-overlay;
+        };
+
         cross-rust-overlay = {
           description = "Cross compiling a rust program using rust-overlay";
           path = ./examples/cross-rust-overlay;

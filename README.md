@@ -43,6 +43,9 @@ nix flake init -t github:ipetkov/crane#alt-registry
 
 # If you need cross-compilation, you can also try out
 nix flake init -t github:ipetkov/crane#cross-rust-overlay
+
+# For statically linked binaries using musl
+nix flake init -t github:ipetkov/crane#cross-musl
 ```
 
 For an even more lean, no frills set up, create a `flake.nix` file with the
