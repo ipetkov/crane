@@ -1,6 +1,6 @@
 { linkFarmFromDrvs
 , mkDummySrc
-, runCommandLocal
+, runCommand
 }:
 
 let
@@ -10,7 +10,7 @@ let
         src = path + /input;
       };
     in
-    runCommandLocal "compare-${name}" { } ''
+    runCommand "compare-${name}" { } ''
       diff -r ${path + /expected} ${dummySrc}
       touch $out
     '';

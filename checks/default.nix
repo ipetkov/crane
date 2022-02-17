@@ -58,7 +58,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
           CARGO_TARGET_DIR = "some/nested/custom-cargo-dir";
         });
       in
-      pkgs.runCommandLocal "smoke-simple" { } ''
+      pkgs.runCommand "smoke-simple" { } ''
         # does it run?
         ${simple}/bin/simple
         touch $out
@@ -87,7 +87,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       cargoArtifacts = null;
     };
 
-    manyLibsInstalledAsExpected = pkgs.runCommandLocal "manyLibsInstalledAsExpected" { } ''
+    manyLibsInstalledAsExpected = pkgs.runCommand "manyLibsInstalledAsExpected" { } ''
       cat >expected <<EOF
       liball_types.a
       liball_types.so
@@ -108,7 +108,7 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       src = ./simple-git;
     };
 
-    remapPathPrefixWorks = pkgs.runCommandLocal "remapPathPrefixWorks" { } ''
+    remapPathPrefixWorks = pkgs.runCommand "remapPathPrefixWorks" { } ''
       if ${pkgs.binutils-unwrapped}/bin/strings ${self.ripgrep}/bin/rg | \
         grep -v glibc | \
         grep --count '/nix/store'
