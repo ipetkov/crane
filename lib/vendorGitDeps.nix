@@ -76,9 +76,14 @@ let
     (id: ps:
       let
         p = head ps;
+        ref =
+          if p ? tag then "refs/tags/${p.tag}"
+          else if p ? branch then "refs/heads/${p.branch}"
+          else null;
       in
       nameValuePair (hash id) (downloadCargoPackageFromGit {
         inherit (p) git;
+        inherit ref;
         rev = p.lockedRev;
       })
     )

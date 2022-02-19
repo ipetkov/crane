@@ -74,6 +74,10 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       src = ./git-overlapping;
     };
 
+    gitRevNoRef = myLib.buildPackage {
+      src = ./gitRevNoRef;
+    };
+
     illegalBin = myLib.buildPackage {
       pname = "illegalBin";
       version = "0.0.1";

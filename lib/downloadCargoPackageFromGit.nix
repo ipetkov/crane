@@ -1,18 +1,22 @@
 { cargo
 , jq
+, lib
 , remarshal
 , runCommandLocal
 }:
 
 { git
 , rev
+, ref ? null
+, allRefs ? ref == null
 }@args:
 let
-  repo = builtins.fetchGit {
-    inherit rev;
+  maybeRef = lib.optionalAttrs (ref != null) { inherit ref; };
+  repo = builtins.fetchGit (maybeRef // {
+    inherit allRefs rev;
     url = git;
     submodules = true;
-  };
+  });
 
   deps = {
     nativeBuildInputs = [
