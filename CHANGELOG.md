@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.3.2] - 2022-02-18
+
+### Fixed
+* Fixed handling git dependencies whose locked revision is not on the
+  repository's main branch
+
 ## [0.3.1] - 2022-02-17
 
 ### Added
@@ -77,6 +83,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.3.2]: https://github.com/ipetkov/crane/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/ipetkov/crane/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/ipetkov/crane/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/ipetkov/crane/compare/v0.2.0...v0.2.1
