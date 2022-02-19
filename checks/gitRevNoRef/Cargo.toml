@@ -1,0 +1,14 @@
+# Regression test for https://github.com/ipetkov/crane/issues/13
+[package]
+name = "git-rev-no-ref"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.tokio]
+git = "https://github.com/tokio-rs/tokio"
+branch = "tokio-1.14.x"
+
+[dependencies.tokio2]
+git = "https://github.com/tokio-rs/tokio"
+rev = "2a3c803dd1c487868eabcef547066952cc07624e" # Coming from tokio-1.13.x
+package = "tokio"

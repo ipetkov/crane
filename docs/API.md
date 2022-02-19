@@ -428,6 +428,15 @@ any crates it contains for vendoring.
 * `git`: the URL to the repository
 * `rev`: the exact revision to check out
 
+#### Optional attributes
+* `ref`: the ref (i.e. branch or tag) to which `rev` belongs to. For branches it
+  should be `"refs/head/${branch}"` and for tags it should be
+  `"refs/tags/${tag}"`
+  - Default value: `null`
+* `allRefs`: whether all git refs should be fetched in order to look for the
+  specified `rev`
+  - Default value: `true` if `ref` is set to `null`, `false` otherwise
+
 ### `lib.findCargoFiles`
 
 `findCargoFiles :: path -> set of lists`
