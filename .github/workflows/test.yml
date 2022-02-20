@@ -12,13 +12,19 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
+            # Latest and greatest release of Nix
+            install_url: https://nixos.org/nix/install
           - os: ubuntu-latest
+            # The 21.11 branch ships with Nix 2.3 but flakes support laneded in 2.4
+            install_url: https://releases.nixos.org/nix/nix-2.4/install
             nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-21.11"
 
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2.4.0
     - uses: cachix/install-nix-action@v16
+      with:
+        install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v10
       with:
         name: crane
