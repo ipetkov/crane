@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* Use `lib.groupBy` if `builtins.groupBy` isn't available (i.e. if a Nix version
+  earlier than 2.5 is used)
+
 ## [0.3.2] - 2022-02-18
 
 ### Fixed

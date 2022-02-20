@@ -12,7 +12,6 @@ let
     attrNames
     concatStringsSep
     filter
-    groupBy
     hasAttr
     hashString
     head
@@ -30,6 +29,9 @@ let
     mapAttrs'
     mapAttrsToList
     nameValuePair;
+
+  # compat(2.5): fallback to lib.groupBy if the builtin version isn't available
+  groupBy = builtins.groupBy or lib.groupBy;
 
   hash = hashString "sha256";
 
