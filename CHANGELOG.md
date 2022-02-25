@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.3.3] - 2022-02-24
+
 ### Fixed
 * Use `lib.groupBy` if `builtins.groupBy` isn't available (i.e. if a Nix version
   earlier than 2.5 is used)
+* The cross compilation example also hows how to set the `HOST_CC` environment
+  variable which may be required by some build scripts to function properly
 
 ## [0.3.2] - 2022-02-18
 
@@ -87,6 +91,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.3.3]: https://github.com/ipetkov/crane/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/ipetkov/crane/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/ipetkov/crane/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/ipetkov/crane/compare/v0.2.1...v0.3.0
