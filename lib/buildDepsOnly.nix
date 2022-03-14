@@ -28,7 +28,7 @@ let
 
   path = args.src or throwMsg;
   cargoToml = path + "/Cargo.toml";
-  cargoLock = path + "/Cargo.lock";
+  cargoLock = args.cargoLock or (path + "/Cargo.lock");
   dummySrc =
     if builtins.pathExists cargoToml && builtins.pathExists cargoLock
     then mkDummySrc args
