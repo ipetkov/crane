@@ -13,19 +13,19 @@ version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
- "libc 0.2.117 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.124 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "libc"
-version = "0.2.117"
+version = "0.2.124"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e74d72e0f9b65b5b4ca49a346af3976df0f9c61d550727f349ecd559f251a26c"
+checksum = "21a41fed9d98f27ab1c6d161da622a4fa35e8a54a8adc24bbf3ddd0ef70b0e50"
 
 [[package]]
 name = "libc"
-version = "0.2.117"
-source = "git+https://github.com/rust-lang/libc.git?branch=master#c8ca99b26b335d34aad4fdae1e19b687252e1bdd"
+version = "0.2.124"
+source = "git+https://github.com/rust-lang/libc.git?branch=master#f6df53fd694f6fc903058c765efc10d77725b31b"
 
 [[package]]
 name = "num_cpus"
@@ -33,7 +33,7 @@ version = "1.13.1"
 source = "git+https://github.com/seanmonstar/num_cpus.git?tag=v1.13.1#5f1b03332000b4c4274b5bd35fac516049ff1c6b"
 dependencies = [
  "hermit-abi",
- "libc 0.2.117 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.124 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -46,7 +46,7 @@ name = "simple-git"
 version = "0.1.0"
 dependencies = [
  "byteorder",
- "libc 0.2.117 (git+https://github.com/rust-lang/libc.git?branch=master)",
+ "libc 0.2.124 (git+https://github.com/rust-lang/libc.git?branch=master)",
  "num_cpus",
  "rustversion",
 ]

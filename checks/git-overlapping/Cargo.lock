@@ -9,12 +9,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c4872d67bab6358e59559027aa3b9157c53d9358c51423c17554809a8858e0f8"
 
 [[package]]
-name = "cfg-if"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-
-[[package]]
 name = "futures-core"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -35,37 +29,27 @@ dependencies = [
 ]
 
 [[package]]
-name = "log"
-version = "0.4.14"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "51b9bbe6c47d51fc3e1a9b945965946b4c44142ab8792c50835a980d362c2710"
-dependencies = [
- "cfg-if",
-]
-
-[[package]]
 name = "pin-project-lite"
-version = "0.2.8"
+version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e280fbe77cc62c91527259e9442153f4688736748d24660126286329742b4c6c"
+checksum = "e0a7ae3ac2f1173085d398531c705756c94a4c56843785df85a60c1a0afac116"
 
 [[package]]
 name = "tokio"
-version = "1.16.1"
-source = "git+https://github.com/tokio-rs/tokio#e7a0da60cd997f10b33f32c4763c8ecef01144f8"
+version = "1.18.0"
+source = "git+https://github.com/tokio-rs/tokio#fa665b91a8f7bbf0ab234f60f28ef25e5afac10b"
 dependencies = [
  "pin-project-lite",
 ]
 
 [[package]]
 name = "tokio-util"
-version = "0.7.0"
-source = "git+https://github.com/tokio-rs/tokio#e7a0da60cd997f10b33f32c4763c8ecef01144f8"
+version = "0.7.1"
+source = "git+https://github.com/tokio-rs/tokio#fa665b91a8f7bbf0ab234f60f28ef25e5afac10b"
 dependencies = [
  "bytes",
  "futures-core",
  "futures-sink",
- "log",
  "pin-project-lite",
  "tokio",
 ]
