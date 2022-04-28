@@ -7,10 +7,7 @@
       flake = false;
     };
     nix-std.url = "github:chessai/nix-std";
-    utils = {
-      url = "github:numtide/flake-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    utils.url = "github:numtide/flake-utils";
   };
 
   outputs = inputs@{ self, nixpkgs, nix-std, utils, ... }:
