@@ -112,9 +112,9 @@
           inherit my-crate;
         };
 
-        defaultPackage = my-crate;
+        packages.default = my-crate;
 
-        defaultApp = flake-utils.lib.mkApp {
+        apps.default = flake-utils.lib.mkApp {
           drv = pkgs.writeScriptBin "my-app" ''
             ${pkgs.pkgsBuildBuild.qemu}/bin/qemu-aarch64 ${my-crate}/bin/cross-rust-overlay
           '';

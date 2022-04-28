@@ -51,6 +51,6 @@
           inherit my-crate;
         };
 
-        defaultPackage = my-crate;
+        packages.default = my-crate;
       });
 }

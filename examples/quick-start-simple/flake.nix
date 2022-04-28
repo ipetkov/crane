@@ -28,13 +28,11 @@
           inherit my-crate;
         };
 
-        defaultPackage = my-crate;
-        packages.my-crate = my-crate;
+        packages.default = my-crate;
 
-        apps.my-app = flake-utils.lib.mkApp {
+        apps.default = flake-utils.lib.mkApp {
           drv = my-crate;
         };
-        defaultApp = self.apps.${system}.my-app;
 
         devShell = pkgs.mkShell {
           inputsFrom = builtins.attrValues self.checks;
