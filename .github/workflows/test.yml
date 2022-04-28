@@ -38,6 +38,7 @@ jobs:
           pushd "${f}"
           echo "validating ${f}"
           nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
-          nix run .# --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          # Explicitly run .#default so it continues to work with nix versions < 2.8
+          nix run .#default --override-input crane ../.. ${{ matrix.nixpkgs-override }}
           popd
         done
