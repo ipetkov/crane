@@ -6,11 +6,12 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+
+    flake-utils.url = "github:numtide/flake-utils";
     nix-std.url = "github:chessai/nix-std";
-    utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = inputs@{ self, nixpkgs, nix-std, utils, ... }:
+  outputs = inputs@{ self, nixpkgs, nix-std, flake-utils, ... }:
     let
       mkMyPkgs = callPackage: import ./pkgs callPackage;
       myPkgsFor = pkgs: mkMyPkgs pkgs.callPackage;
@@ -58,7 +59,7 @@
           path = ./examples/quick-start-simple;
         };
       };
-    } // utils.lib.eachDefaultSystem (system:
+    } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
