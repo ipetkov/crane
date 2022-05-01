@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v16
+    - uses: cachix/install-nix-action@v17
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v10
