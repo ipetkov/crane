@@ -24,7 +24,7 @@ let
     - set `cargoVendorDir = null` to skip vendoring altogether
   '');
 
-  cargoLock = args.cargoLock or (src + /Cargo.lock);
+  cargoLock = args.cargoLock or (src + "/Cargo.lock");
   cargoLockContents = args.cargoLockContents or (
     if pathExists cargoLock
     then readFile cargoLock

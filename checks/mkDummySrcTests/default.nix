@@ -7,7 +7,7 @@ let
   cmpDummySrc = name: path:
     let
       dummySrc = mkDummySrc {
-        src = path + /input;
+        src = path + "/input";
       };
     in
     runCommand "compare-${name}" { } ''
