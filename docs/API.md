@@ -83,7 +83,7 @@ to influence its behavior.
   - Default value: `"${cargoCheckCommand} ${cargoExtraArgs}\n${cargoBuildCommand} ${cargoExtraArgs}"`
 * `cargoBuildCommand`: A cargo (build) invocation to run during the derivation's build
   phase
-  - Default value: `"cargo build --workspace --release"`
+  - Default value: `"cargo build --workspace --release --all-targets"`
 * `cargoCheckCommand`: A cargo (check) invocation to run during the derivation's build
   phase (in order to cache additional artifacts)
   - Default value: `"cargo build --workspace --release"`

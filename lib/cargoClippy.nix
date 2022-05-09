@@ -19,5 +19,5 @@ cargoBuild (args // {
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ clippy ];
 
-  doCheck = false; # We don't need to run tests to benefit from `cargo check`
+  doCheck = false; # We don't need to run tests to benefit from `cargo clippy`
 })
