@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* `buildDepsOnly` now adds `--all-targets` to the default `cargo
+  check` invocation. This allows caching all artifacts (including from
+  dev-dependencies) such that tools like clippy don't have to generate them
+  every time they run.
+
 ## [0.3.3] - 2022-02-24
 
 ### Fixed

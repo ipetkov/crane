@@ -5,7 +5,7 @@
 }:
 
 { cargoBuildCommand ? "cargo build --workspace --release"
-, cargoCheckCommand ? "cargo check --workspace --release"
+, cargoCheckCommand ? "cargo check --workspace --release --all-targets"
 , cargoExtraArgs ? ""
 , cargoTestCommand ? "cargo test --workspace --release"
 , ...
