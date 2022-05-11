@@ -6,11 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.4.0] - 2022-05-10
+
 ### Changed
+* **Breaking**: the previously named `utils` flake input has been renamed to
+  `flake-utils`
 * `buildDepsOnly` now adds `--all-targets` to the default `cargo
   check` invocation. This allows caching all artifacts (including from
   dev-dependencies) such that tools like clippy don't have to generate them
   every time they run.
+* Templates now use the newer flake format accepted by Nix 2.8 (e.g.
+  `{packages,overlays,devShells}.default`, etc.)
+
+### Fixed
+* Fixed project and template flakes to avoid superfluous follows declaration for
+  `flake-utils`
+* Fixed quoting of relative paths to allow building with external sources
 
 ## [0.3.3] - 2022-02-24
 
@@ -97,6 +108,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.4.0]: https://github.com/ipetkov/crane/compare/v0.3.3...v0.4.0
 [0.3.3]: https://github.com/ipetkov/crane/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/ipetkov/crane/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/ipetkov/crane/compare/v0.3.0...v0.3.1
