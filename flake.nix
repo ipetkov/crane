@@ -36,7 +36,7 @@
 
         cross-musl = {
           description = "Building static binaries with musl";
-          path = ./examples/cross-rust-overlay;
+          path = ./examples/cross-musl;
         };
 
         cross-rust-overlay = {
