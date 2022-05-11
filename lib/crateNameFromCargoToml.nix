@@ -7,7 +7,7 @@ let
     contains a valid Cargo.toml file, or consider setting a derivation name explicitly
   '');
 
-  cargoToml = args.cargoToml or (args.src + /Cargo.toml);
+  cargoToml = args.cargoToml or (args.src + "/Cargo.toml");
   cargoTomlContents = args.cargoTomlContents or (builtins.readFile cargoToml);
 
   toml = fromTOML cargoTomlContents;

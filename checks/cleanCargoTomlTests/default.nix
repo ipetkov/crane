@@ -8,10 +8,10 @@ let
   cmpCleanCargoToml = name: path:
     let
       cleaned = cleanCargoToml {
-        cargoToml = path + /Cargo.toml;
+        cargoToml = path + "/Cargo.toml";
       };
       cleanedToml = writeTOML "cleaned.toml" cleaned;
-      expected = path + /expected.toml;
+      expected = path + "/expected.toml";
     in
     runCommand "compare-${name}" { } ''
       diff ${expected} ${cleanedToml}
