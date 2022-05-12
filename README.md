@@ -128,13 +128,30 @@ Here's how we can set up our flake to achieve our goals:
         };
 
         craneLib = crane.lib.${system};
-        src = ./.;
+
+        # Common derivation arguments used for all builds
+        commonArgs = {
+          src = ./.;
+
+          buildInputs = with pkgs; [
+            # Add extra build inputs here, etc.
+            # openssl
+          ];
+
+          nativeBuildInputs = with pkgs; [
+            # Add extra native build inputs here, etc.
+            # pkg-config
+          ];
+        };
 
         # Build *just* the cargo dependencies, so we can reuse
         # all of that work (e.g. via cachix) when running in CI
-        cargoArtifacts = craneLib.buildDepsOnly {
-          inherit src;
-        };
+        cargoArtifacts = craneLib.buildDepsOnly (commonArgs // {
+          # Additional arguments specific to this derivation can be added here.
+          # Be warned that using `//` will not do a deep copy of nested
+          # structures
+          pname = "mycrate-deps";
+        });
 
         # Run clippy (and deny all warnings) on the crate source,
         # resuing the dependency artifacts (e.g. from build scripts or
@@ -142,31 +159,38 @@ Here's how we can set up our flake to achieve our goals:
         #
         # Note that this is done as a separate derivation so it
         # does not impact building just the crate by itself.
-        my-crate-clippy = craneLib.cargoClippy {
-          inherit cargoArtifacts src;
+        myCrateClippy = craneLib.cargoClippy (commonArgs // {
+          # Again we apply some extra arguments only to this derivation
+          # and not every where else. In this case we add some clippy flags
+          inherit cargoArtifacts;
           cargoClippyExtraArgs = "-- --deny warnings";
-        };
+        });
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
-        my-crate = craneLib.buildPackage {
-          inherit cargoArtifacts src;
-        };
+        myCrate = craneLib.buildPackage (commonArgs // {
+          inherit cargoArtifacts;
+        });
 
         # Also run the crate tests under cargo-tarpaulin so that we can keep
         # track of code coverage
-        my-crate-coverage = craneLib.cargoTarpaulin {
-          inherit cargoArtifacts src;
-        };
+        myCrateCoverage = craneLib.cargoTarpaulin (commonArgs // {
+          # In this case we are choosing to only run our tarpaulin tests after
+          # we've checked everything with clippy first. If we do not want this
+          # we can uncomment the next line and delete the second one.
+
+          # inherit cargoArtifacts;
+          cargoArtifacts = myCrateClippy;
+        });
       in
       {
-        defaultPackage = my-crate;
+        defaultPackage = myCrate;
         checks = {
          inherit
            # Build the crate as part of `nix flake check` for convenience
-           my-crate
-           my-crate-clippy
-           my-crate-coverage;
+           myCrate
+           myCrateClippy
+           myCrateCoverage;
         };
       });
 }
