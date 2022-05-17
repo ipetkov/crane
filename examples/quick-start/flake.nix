@@ -19,6 +19,8 @@
           inherit system;
         };
 
+        inherit (pkgs) lib;
+
         craneLib = crane.lib.${system};
         src = ./.;
 
@@ -54,7 +56,8 @@
           my-crate-fmt = craneLib.cargoFmt {
             inherit src;
           };
-
+        } // lib.optionalAttrs (system == "x86_64-linux") {
+          # NB: cargo-tarpaulin only supports x86_64 systems
           # Check code coverage (note: this will not upload coverage anywhere)
           my-crate-coverage = craneLib.cargoTarpaulin {
             inherit cargoArtifacts src;
