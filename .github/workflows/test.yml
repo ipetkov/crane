@@ -32,6 +32,8 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: flake checks
       run: nix flake check --print-build-logs ${{ matrix.nixpkgs-override }}
+    - name: extra tests
+      run: nix develop ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
     - name: validate examples
       run: |
         for f in $(find examples -maxdepth 1 -mindepth 1 -type d); do
