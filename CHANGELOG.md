@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.4.1] - 2022-05-29
+
 ### Fixed
 * Dummy source derivations go to greater lengths to only depend on the files
   they consume. Specifying the entire flake source as an input (e.g. via
@@ -114,6 +116,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.4.1]: https://github.com/ipetkov/crane/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/ipetkov/crane/compare/v0.3.3...v0.4.0
 [0.3.3]: https://github.com/ipetkov/crane/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/ipetkov/crane/compare/v0.3.1...v0.3.2
