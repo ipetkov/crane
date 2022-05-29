@@ -81,6 +81,7 @@
 
         devShell = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
+            jq
             nixpkgs-fmt
           ];
         };
