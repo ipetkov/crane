@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* Dummy source derivations go to greater lengths to only depend on the files
+  they consume. Specifying the entire flake source as an input (e.g. via
+  `buildPackage { src = self; }`) now avoids rebuilding everything from scratch
+  whenever _any_ file is changed. #28
+
 ## [0.4.0] - 2022-05-10
 
 ### Changed
