@@ -17,7 +17,7 @@
       myPkgsFor = pkgs: mkMyPkgs pkgs.callPackage;
 
       mkLib = pkgs: import ./lib {
-        inherit (nix-std.lib.serde) fromTOML toTOML;
+        fromTOML = builtins.fromTOML;
         inherit (pkgs) lib newScope;
         inherit mkMyPkgs;
       };

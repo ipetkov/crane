@@ -633,17 +633,6 @@ lib.registryFromGitIndex {
 # { "registry+https://github.com/Hirevo/alexandrie-index" = "https://crates.polomack.eu/api/v1/crates/{crate}/{version}/download"; }
 ```
 
-### `lib.toTOML`
-
-`toTOML :: set -> String`
-
-Convert an attribute set to a TOML string.
-
-```nix
-lib.toTOML { foo.bar = "baz"; }
-# "[foo]\nbar = \"baz\""
-```
-
 ### `lib.urlForCargoPackage`
 
 `urlForCargoPackage :: set -> String`
