@@ -17,7 +17,6 @@
       myPkgsFor = pkgs: mkMyPkgs pkgs.callPackage;
 
       mkLib = pkgs: import ./lib {
-        fromTOML = builtins.fromTOML;
         inherit (pkgs) lib newScope;
         inherit mkMyPkgs;
       };

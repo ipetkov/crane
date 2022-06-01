@@ -1,5 +1,4 @@
-{ fromTOML
-, lib
+{ lib
 , mkMyPkgs
 , newScope
 }:
@@ -9,8 +8,6 @@ lib.makeScope newScope (self:
     inherit (self) callPackage;
   in
   (mkMyPkgs callPackage) // {
-    inherit fromTOML;
-
     appendCrateRegistries = input: self.overrideScope' (final: prev: {
       crateRegistries = prev.crateRegistries // (lib.foldl (a: b: a // b) { } input);
     });

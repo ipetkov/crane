@@ -1,5 +1,4 @@
 { findCargoFiles
-, fromTOML
 , lib
 , runCommandLocal
 , vendorCargoRegistries
@@ -44,7 +43,7 @@ let
     '')
     (attrNames sources);
 
-  lock = fromTOML cargoLockContents;
+  lock = builtins.fromTOML cargoLockContents;
   lockPackages = lock.package or (throw "Cargo.lock missing [[package]] definitions");
 
   vendoredRegistries = vendorCargoRegistries {

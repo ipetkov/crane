@@ -449,17 +449,6 @@ lib.findCargoFiles ./src
 # { cargoTomls = [ "..." ]; cargoConfigs = [ "..." ]; }
 ```
 
-### `lib.fromTOML`
-
-`fromTOML :: String -> set`
-
-Convert a TOML string to a Nix attribute set.
-
-```nix
-lib.fromTOML (builtins.readFile ./Cargo.toml)
-# { package = { edition = "2021"; name = "simple"; version = "0.1.0"; }; }
-```
-
 ### `lib.mkCargoDerivation`
 
 `mkCargoDerivation :: set -> drv`
@@ -679,7 +668,7 @@ cargo can use for subsequent builds without needing network access.
 * `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
   appear in the project
 * `lockPackages`: a list of all `[[package]]` entries found in the project's
-  `Cargo.lock` file (parsed via `fromTOML`)
+  `Cargo.lock` file (parsed via `builtins.fromTOML`)
 
 #### Output attributes
 * `config`: the configuration entires needed to point cargo to the vendored
@@ -698,7 +687,7 @@ access.
 
 #### Input attributes
 * `lockPackages`: a list of all `[[package]]` entries found in the project's
-  `Cargo.lock` file (parsed via `fromTOML`)
+  `Cargo.lock` file (parsed via `builtins.fromTOML`)
 
 #### Output attributes
 * `config`: the configuration entires needed to point cargo to the vendored
