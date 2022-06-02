@@ -12,12 +12,13 @@ let
     attrNames
     concatStringsSep
     filter
+    groupBy
     hasAttr
     hashString
     head
     length
-    placeholder
     mapAttrs
+    placeholder
     readFile;
 
   inherit (lib)
@@ -29,9 +30,6 @@ let
     mapAttrs'
     mapAttrsToList
     nameValuePair;
-
-  # compat(2.5): fallback to lib.groupBy if the builtin version isn't available
-  groupBy = builtins.groupBy or lib.groupBy;
 
   hash = hashString "sha256";
 

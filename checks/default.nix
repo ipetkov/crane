@@ -7,6 +7,7 @@ in
 onlyDrvs (lib.makeScope myLib.newScope (self:
   let
     callPackage = self.newScope { };
+    x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
   in
   myPkgs // {
     checkNixpkgsFmt = callPackage ./nixpkgs-fmt.nix { };
@@ -34,9 +35,9 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       cargoArtifacts = self.cargoFmt;
     };
 
-    cargoTarpaulin = myLib.cargoTarpaulin {
+    cargoTarpaulin = lib.optionalAttrs x64Linux (myLib.cargoTarpaulin {
       src = ./simple;
-    };
+    });
 
     compilesFresh = callPackage ./compilesFresh.nix { };
     compilesFreshSimple = self.compilesFresh ./simple "simple" { };

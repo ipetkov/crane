@@ -11,6 +11,7 @@ let
     any
     attrNames
     filter
+    groupBy
     hashString
     head
     isString
@@ -28,9 +29,6 @@ let
     mapAttrsToList
     nameValuePair
     removePrefix;
-
-  # compat(2.5): fallback to lib.groupBy if the builtin version isn't available
-  groupBy = builtins.groupBy or lib.groupBy;
 
   knownGitParams = [ "branch" "rev" "tag" ];
   parseGitUrl = lockUrl:

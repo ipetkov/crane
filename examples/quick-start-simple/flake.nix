@@ -34,7 +34,7 @@
           drv = my-crate;
         };
 
-        devShell = pkgs.mkShell {
+        devShells.default = pkgs.mkShell {
           inputsFrom = builtins.attrValues self.checks;
 
           # Extra inputs can be added here
