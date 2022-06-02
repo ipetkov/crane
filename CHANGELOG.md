@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 # Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.8.1
+* **Breaking**: updated all flake attributes to follow the new `.default`
+  guidance as per Nix's warnings. Specifically:
+  * Crane's default overlay is now available at `.overlays.default` (previously
+    `.overlay`)
+  * All templates now use `{app,devShells,packages}.default` as well
 
 ## [0.4.1] - 2022-05-29
 

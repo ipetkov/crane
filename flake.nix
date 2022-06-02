@@ -25,10 +25,9 @@
     {
       inherit mkLib;
 
-      overlay = final: prev: myPkgsFor final;
+      overlays.default = final: prev: myPkgsFor final;
 
-      defaultTemplate = self.templates.quick-start;
-      templates = {
+      templates = rec {
         alt-registry = {
           description = "Build a cargo project with alternative crate registries";
           path = ./examples/alt-registry;
@@ -49,6 +48,7 @@
           path = ./examples/custom-toolchain;
         };
 
+        default = quick-start;
         quick-start = {
           description = "Build a cargo project";
           path = ./examples/quick-start;
@@ -79,7 +79,7 @@
 
         packages = myPkgs;
 
-        devShell = pkgs.mkShell {
+        devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
             jq
             nixpkgs-fmt

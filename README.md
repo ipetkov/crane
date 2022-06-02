@@ -62,7 +62,7 @@ following contents at the root of your cargo workspace:
 
   outputs = { self, nixpkgs, crane, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system: {
-      defaultPackage = crane.lib.${system}.buildPackage {
+      packages.default = crane.lib.${system}.buildPackage {
         src = ./.;
 
         # Add extra inputs here or any other derivation settings
@@ -179,7 +179,7 @@ Here's how we can set up our flake to achieve our goals:
         });
       in
       {
-        defaultPackage = myCrate;
+        packages.default = myCrate;
         checks = {
          inherit
            # Build the crate as part of `nix flake check` for convenience
@@ -275,7 +275,7 @@ build.
         });
       in
       {
-        defaultPackage = myCrate;
+        packages.default = myCrate;
         checks = {
          inherit
            # Build the crate as part of `nix flake check` for convenience
