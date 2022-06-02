@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+# Changed
+* **Breaking**: dropped compatibility for Nix versions below 2.8.1
+
 ## [0.4.1] - 2022-05-29
 
 ### Fixed

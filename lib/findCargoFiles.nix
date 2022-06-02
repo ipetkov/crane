@@ -5,12 +5,10 @@ src:
 let
   inherit (lib)
     flatten
+    groupBy
     lists
     mapAttrs
     mapAttrsToList;
-
-  # compat(2.5): fallback to lib.groupBy if the builtin version isn't available
-  groupBy = builtins.groupBy or lib.groupBy;
 
   # A specialized form of lib.listFilesRecursive except it will only look
   # for Cargo.toml and config.toml files to keep the intermediate results lean
