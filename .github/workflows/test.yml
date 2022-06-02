@@ -16,9 +16,9 @@ jobs:
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
           - os: ubuntu-latest
-            # The 21.11 branch ships with Nix 2.3 but flakes support landed in 2.4
-            install_url: https://releases.nixos.org/nix/nix-2.4/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-21.11"
+            # The 22.05 branch ships with Nix 2.8.1
+            install_url: https://releases.nixos.org/nix/nix-2.8.1/install
+            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-22.05"
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -31,7 +31,7 @@ jobs:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: flake checks
-      run: nix flake check --print-build-logs ${{ matrix.nixpkgs-override }}
+      run: nix flake check --keep-going --print-build-logs ${{ matrix.nixpkgs-override }}
     - name: extra tests
       run: nix develop ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
     - name: validate examples
@@ -40,7 +40,6 @@ jobs:
           pushd "${f}"
           echo "validating ${f}"
           nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
-          # Explicitly run .#default so it continues to work with nix versions < 2.8
-          nix run .#default --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          nix run --override-input crane ../.. ${{ matrix.nixpkgs-override }}
           popd
         done
