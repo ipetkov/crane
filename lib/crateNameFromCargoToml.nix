@@ -1,4 +1,4 @@
-{ fromTOML }:
+{}:
 
 args:
 let
@@ -10,7 +10,7 @@ let
   cargoToml = args.cargoToml or (args.src + "/Cargo.toml");
   cargoTomlContents = args.cargoTomlContents or (builtins.readFile cargoToml);
 
-  toml = fromTOML cargoTomlContents;
+  toml = builtins.fromTOML cargoTomlContents;
 in
 {
   pname = toml.package.name or "cargo-package";

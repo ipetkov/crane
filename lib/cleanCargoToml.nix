@@ -1,5 +1,4 @@
-{ fromTOML
-}:
+{}:
 
 let
   # https://doc.rust-lang.org/cargo/reference/manifest.html#the-package-section
@@ -103,4 +102,4 @@ in
 { cargoToml ? throw "either cargoToml or cargoTomlContents must be specified"
 , cargoTomlContents ? builtins.readFile cargoToml
 }:
-cleanCargoToml (fromTOML cargoTomlContents)
+cleanCargoToml (builtins.fromTOML cargoTomlContents)

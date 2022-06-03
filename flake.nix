@@ -8,16 +8,14 @@
     };
 
     flake-utils.url = "github:numtide/flake-utils";
-    nix-std.url = "github:chessai/nix-std";
   };
 
-  outputs = inputs@{ self, nixpkgs, nix-std, flake-utils, ... }:
+  outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
     let
       mkMyPkgs = callPackage: import ./pkgs callPackage;
       myPkgsFor = pkgs: mkMyPkgs pkgs.callPackage;
 
       mkLib = pkgs: import ./lib {
-        inherit (nix-std.lib.serde) fromTOML toTOML;
         inherit (pkgs) lib newScope;
         inherit mkMyPkgs;
       };

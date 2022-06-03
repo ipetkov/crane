@@ -1,11 +1,6 @@
-let
-  lock = builtins.fromJSON (builtins.readFile ./flake.lock);
-  locked = lock.nodes.flake-compat.locked;
-  compat = fetchTarball {
-    url = "https://github.com/${locked.owner}/${locked.repo}/archive/${locked.rev}.tar.gz";
-    sha256 = locked.narHash;
-  };
+{ pkgs ? import <nixpkgs> { } }:
 
-  flake = import compat { src = ./.; };
-in
-flake.defaultNix
+import ./lib {
+  inherit (pkgs) lib newScope;
+  mkMyPkgs = callPackage: import ./pkgs callPackage;
+}

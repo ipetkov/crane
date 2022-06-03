@@ -31,21 +31,6 @@
         "type": "github"
       }
     },
-    "nix-std": {
-      "locked": {
-        "lastModified": 1652574713,
-        "narHash": "sha256-HQw5VtHI4uYvWfwXtDwupP8SV/efZa3Vot5VNbH0RRU=",
-        "owner": "chessai",
-        "repo": "nix-std",
-        "rev": "082f38023b68f93cd3a6e3a8ddda54d3f5487c52",
-        "type": "github"
-      },
-      "original": {
-        "owner": "chessai",
-        "repo": "nix-std",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1654007547,
@@ -66,7 +51,6 @@
       "inputs": {
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
-        "nix-std": "nix-std",
         "nixpkgs": "nixpkgs"
       }
     }

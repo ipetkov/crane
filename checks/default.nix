@@ -113,6 +113,12 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
       src = ./simple-git;
     };
 
+    simple-nonflake = (import ../default.nix {
+      inherit pkgs;
+    }).buildPackage {
+      src = ./simple;
+    };
+
     remapPathPrefixWorks = pkgs.runCommand "remapPathPrefixWorks" { } ''
       if ${pkgs.binutils-unwrapped}/bin/strings ${self.ripgrep}/bin/rg | \
         grep -v glibc | \
