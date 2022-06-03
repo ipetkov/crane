@@ -28,9 +28,8 @@ let
 
   path = args.src or throwMsg;
   cargoToml = path + "/Cargo.toml";
-  cargoLock = path + "/Cargo.lock";
   dummySrc =
-    if builtins.pathExists cargoToml && builtins.pathExists cargoLock
+    if builtins.pathExists cargoToml
     then mkDummySrc args
     else throwMsg;
 in
