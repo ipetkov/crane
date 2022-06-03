@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   * Crane's default overlay is now available at `.overlays.default` (previously
     `.overlay`)
   * All templates now use `{app,devShells,packages}.default` as well
+* **Breaking**: `lib.fromTOML` and `lib.toTOML` have been removed in favor of
+  `builtins.fromTOML`
+* Improved support for consuming `crane` without using flakes
+* The `nix-std` dependency has been dropped
 
 ## [0.4.1] - 2022-05-29
 
