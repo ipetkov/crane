@@ -1,7 +1,7 @@
-{ writeText
-, remarshal
+# NB: ideally this should just be `remarshal` but it appears to cause an infinite loop when building
+# against the release-22.05 branch, so using this as a workaround for now
+{ pkgsBuildBuild
 , runCommand
-, pkgsBuildBuild
 }:
 
 name: contents: runCommand name
