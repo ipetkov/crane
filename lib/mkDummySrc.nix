@@ -168,14 +168,11 @@ let
   );
 
   # Since we allow the caller to provide a path to *some* Cargo.lock file
-  # we include it in our dummy build only if it was explicitly specified
-  # and the path exists.
+  # we include it in our dummy build only if it was explicitly specified.
   copyCargoLock =
     if cargoLock == null
     then ""
-    else if pathExists cargoLock
-    then "cp ${cargoLock} $out/Cargo.lock"
-    else throw "`cargoLock` was specified but the path it points to does not exist: ${cargoLock}";
+    else "cp ${cargoLock} $out/Cargo.lock";
 in
 runCommandLocal "dummy-src" { } ''
   mkdir -p $out
