@@ -11,7 +11,6 @@ let
     attrNames
     concatStringsSep
     filter
-    groupBy
     hasAttr
     hashString
     head
@@ -25,6 +24,7 @@ let
     concatStrings
     escapeShellArg
     flatten
+    groupBy
     hasPrefix
     mapAttrs'
     mapAttrsToList

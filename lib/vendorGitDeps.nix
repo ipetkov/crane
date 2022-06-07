@@ -10,7 +10,6 @@ let
     any
     attrNames
     filter
-    groupBy
     hashString
     head
     isString
@@ -22,6 +21,7 @@ let
     concatMapStrings
     concatStrings
     escapeShellArg
+    groupBy
     hasPrefix
     last
     mapAttrs'
