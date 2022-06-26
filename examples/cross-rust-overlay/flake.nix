@@ -21,7 +21,8 @@
   };
 
   outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    flake-utils.lib.eachDefaultSystem (localSystem:
+    # NB: temporarily skip aarch64-darwin since QEMU can't build there on nixpkgs-unstable
+    flake-utils.lib.eachSystem [ "aarch64-linux" "i686-linux" "x86_64-darwin" "x86_64-linux" ] (localSystem:
       let
         # Replace with the system you want to build for
         crossSystem = "aarch64-linux";
@@ -35,12 +36,7 @@
           targets = [ "aarch64-unknown-linux-gnu" ];
         };
 
-        craneLib = (crane.mkLib pkgs).overrideScope' (final: prev: {
-          cargo = rustToolchain;
-          clippy = rustToolchain;
-          rustc = rustToolchain;
-          rustfmt = rustToolchain;
-        });
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
         # Note: we have to use the `callPackage` approach here so that Nix
         # can "splice" the packages in such a way that dependencies are
