@@ -32,12 +32,7 @@
           targets = [ "x86_64-unknown-linux-musl" ];
         };
 
-        craneLib = (crane.mkLib pkgs).overrideScope' (final: prev: {
-          cargo = rustToolchain;
-          clippy = rustToolchain;
-          rustc = rustToolchain;
-          rustfmt = rustToolchain;
-        });
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
         my-crate = craneLib.buildPackage {
           src = ./.;

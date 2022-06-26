@@ -35,12 +35,7 @@
           targets = [ "aarch64-unknown-linux-gnu" ];
         };
 
-        craneLib = (crane.mkLib pkgs).overrideScope' (final: prev: {
-          cargo = rustToolchain;
-          clippy = rustToolchain;
-          rustc = rustToolchain;
-          rustfmt = rustToolchain;
-        });
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
         # Note: we have to use the `callPackage` approach here so that Nix
         # can "splice" the packages in such a way that dependencies are

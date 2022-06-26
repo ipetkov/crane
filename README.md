@@ -327,12 +327,16 @@ crane.mkLib (import nixpkgs { system = "armv7l-linux"; })
 
 Specific inputs can be overridden for the entire library via the
 `overrideScope'` API as follows. For more information, see the [API docs] for
-`mkLib` or checkout the [custom-toolchain] example.
+`mkLib`/`overrideToolchain`, or checkout the [custom-toolchain] example.
 
 ```nix
 crane.lib.${system}.overrideScope' (final: prev: {
-  cargo = myCustomCargoVersion;
+  cargo-tarpaulin = myCustomCargoTarpaulinVersion;
 })
+```
+
+```nix
+crane.lib.${system}.overrideToolchain myCustomToolchain
 ```
 
 ### My custom rust flags are getting ignored

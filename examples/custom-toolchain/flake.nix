@@ -36,11 +36,7 @@
         # pkgs (which would require rebuidling anything else which uses rust).
         # Instead, we just want to update the scope that crane will use by appending
         # our specific toolchain there.
-        craneLib = (crane.mkLib pkgs).overrideScope' (final: prev: {
-          rustc = rustWithWasiTarget;
-          cargo = rustWithWasiTarget;
-          rustfmt = rustWithWasiTarget;
-        });
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustWithWasiTarget;
 
         my-crate = craneLib.buildPackage {
           src = ./.;

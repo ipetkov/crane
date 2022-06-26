@@ -31,6 +31,14 @@ lib.makeScope newScope (self:
     findCargoFiles = callPackage ./findCargoFiles.nix { };
     mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
     mkDummySrc = callPackage ./mkDummySrc.nix { };
+
+    overrideToolchain = toolchain: self.overrideScope' (final: prev: {
+      cargo = toolchain;
+      clippy = toolchain;
+      rustc = toolchain;
+      rustfmt = toolchain;
+    });
+
     registryFromDownloadUrl = callPackage ./registryFromDownloadUrl.nix { };
     registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
     urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };

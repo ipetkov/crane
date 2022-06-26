@@ -17,9 +17,12 @@ it across all of nixpkgs, consider using `overrideScope'`:
 
 ```nix
 (mkLib pkgs).overrideScope' (final: prev: {
-  cargo = myCustomCargoVersion;
+  cargo-tarpaulin = myCustomCargoTarpaulinVersion;
 })
 ```
+
+To overlay an entire rust toolchain (e.g. `cargo`, `rustc`, `clippy`, `rustfmt`,
+etc.) consider using `overrideToolchain`.
 
 ## `lib`
 
@@ -562,6 +565,19 @@ build caches. More specifically:
 #### Optional attributes
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
+
+### `lib.overrideToolchain`
+
+`overrideToolchain :: drv -> set`
+
+A convenience method to override and use tools (like `cargo`, `clippy`,
+`rustfmt`, `rustc`, etc.) from one specific toolchain. The input should be a
+single derivation which contains all the tools as binaries. For example, this
+can be the output of `oxalica/rust-overlay`.
+
+```nix
+crane.lib.${system}.overrideToolchain myCustomToolchain
+```
 
 ### `lib.registryFromDownloadUrl`
 
