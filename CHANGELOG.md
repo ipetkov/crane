@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 * Added `.overrideToolchain` as a convenience for using a custom rust toolchain
 
+### Fixed
+* Fixed an issue where `mkDummySrc` would produce incorrect results for filtered
+  sources: #46
+
 ## [0.5.0] - 2022-06-12
 
 ### Changed

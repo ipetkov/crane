@@ -78,17 +78,25 @@ let
   # directory, we check if it happens to be an ancestor for an interesting file (i.e. is a prefix of
   # an interesting file). That way we are left with the smallest possible source needed for our
   # dummy derivation, and we bring any cache invalidation to a minimum. Whew!
-  mkBasePath = p: (toString p) + "/";
-  uncleanSrcBasePath = mkBasePath src;
 
-  uncleanFiles = findCargoFiles src;
+  # NB: if the `src` we were provided was filtered, make sure that we crawl the `origSrc`! Otherwise
+  # when we try to crawl the source Nix will evaluate the filter(s) fully resulting in a store path
+  # whose prefix won't match the paths we observe when we try to clean the source a bit further down
+  # (Nix optimizes multiple filters by running them all once against the original source).
+  # https://github.com/ipetkov/crane/issues/46
+  origSrc =
+    if src ? _isLibCleanSourceWith
+    then src.origSrc
+    else src;
+
+  uncleanSrcBasePath = (toString origSrc) + "/";
+  uncleanFiles = findCargoFiles origSrc;
 
   cargoTomlsBase = uncleanSrcBasePath;
   inherit (uncleanFiles) cargoTomls;
 
   cleanSrc =
     let
-      adjustPaths = builtins.map (p: removePrefix uncleanSrcBasePath (toString p));
       allUncleanFiles = map
         (p: removePrefix uncleanSrcBasePath (toString p))
         # Allow the default `Cargo.lock` location to be picked up here
