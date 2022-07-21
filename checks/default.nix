@@ -10,8 +10,6 @@ let
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
 in
 myPkgs // {
-  checkNixpkgsFmt = callPackage ./nixpkgs-fmt.nix { };
-
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
   clippy = callPackage ./clippy { };
