@@ -7,7 +7,6 @@ src: expected: args:
 let
   runCargoAndCheckFreshness = cmd: extra: ''
     cargo ${cmd} \
-      --workspace \
       --release \
       --message-format json-diagnostic-short \
       ${extra} \

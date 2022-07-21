@@ -3,7 +3,7 @@
 , lib
 }:
 
-{ cargoBuildCommand ? "cargo build --workspace --release"
+{ cargoBuildCommand ? "cargo build --release"
 , cargoExtraArgs ? ""
 , ...
 }@args:

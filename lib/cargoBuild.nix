@@ -4,8 +4,8 @@
 , vendorCargoDeps
 }:
 
-{ cargoBuildCommand ? "cargo build --workspace --release"
-, cargoTestCommand ? "cargo test --workspace --release"
+{ cargoBuildCommand ? "cargo build --release"
+, cargoTestCommand ? "cargo test --release"
 , cargoExtraArgs ? ""
 , ...
 }@args:

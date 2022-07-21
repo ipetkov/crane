@@ -86,15 +86,15 @@ to influence its behavior.
   - Default value: `"${cargoCheckCommand} ${cargoExtraArgs}\n${cargoBuildCommand} ${cargoExtraArgs}"`
 * `cargoBuildCommand`: A cargo (build) invocation to run during the derivation's build
   phase
-  - Default value: `"cargo build --workspace --release --all-targets"`
+  - Default value: `"cargo build --release --all-targets"`
 * `cargoCheckCommand`: A cargo (check) invocation to run during the derivation's build
   phase (in order to cache additional artifacts)
-  - Default value: `"cargo build --workspace --release"`
+  - Default value: `"cargo build --release"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
-  - Default value: `"cargo test --workspace --release"`
+  - Default value: `"cargo test --release"`
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
   follow the output of `cargo vendor`.
@@ -148,7 +148,7 @@ log.
     file. The `cargoBuildLog` shell variable should point to this log.
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
   phase
-  - Default value: `"cargo build --workspace --release"`
+  - Default value: `"cargo build --release"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
@@ -195,13 +195,13 @@ its behavior.
     set (with the respective default values)
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
   phase
-  - Default value: `"cargo build --workspace --release"`
+  - Default value: `"cargo build --release"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
-  - Default value: `"cargo test --workspace --release"`
+  - Default value: `"cargo test --release"`
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
   follow the output of `cargo vendor`.

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* **Breaking**: the `--workspace` flag is no longer set for all cargo commands
+  by default. The previous behavior can be recovered by setting `cargoExtraArgs
+  = "--workspace";` in any derivation.
+
 ## [0.5.1] - 2022-07-20
 
 ### Added

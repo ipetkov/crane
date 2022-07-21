@@ -4,10 +4,10 @@
 , vendorCargoDeps
 }:
 
-{ cargoBuildCommand ? "cargo build --workspace --release"
-, cargoCheckCommand ? "cargo check --workspace --release --all-targets"
+{ cargoBuildCommand ? "cargo build --release"
+, cargoCheckCommand ? "cargo check --release --all-targets"
 , cargoExtraArgs ? ""
-, cargoTestCommand ? "cargo test --workspace --release"
+, cargoTestCommand ? "cargo test --release"
 , ...
 }@args:
 let
