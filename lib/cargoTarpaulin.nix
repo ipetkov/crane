@@ -12,7 +12,7 @@ let
 in
 cargoBuild (args // {
   cargoArtifacts = args.cargoArtifacts or (buildDepsOnly args);
-  cargoBuildCommand = "cargo tarpaulin";
+  cargoBuildCommand = "cargoWithProfile tarpaulin";
   cargoExtraArgs = "${cargoExtraArgs} ${cargoTarpaulinExtraArgs}";
 
   doCheck = false;

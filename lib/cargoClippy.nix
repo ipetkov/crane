@@ -14,7 +14,7 @@ cargoBuild (args // {
   inherit cargoArtifacts;
   pnameSuffix = "-clippy";
 
-  cargoBuildCommand = "cargo clippy --release --all-targets";
+  cargoBuildCommand = "cargoWithProfile clippy --all-targets";
   cargoExtraArgs = "${cargoExtraArgs} ${cargoClippyExtraArgs}";
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ clippy ];

@@ -3,7 +3,7 @@
 , lib
 }:
 
-{ cargoBuildCommand ? "cargo build --release"
+{ cargoBuildCommand ? "cargoWithProfile build"
 , cargoExtraArgs ? ""
 , ...
 }@args:
@@ -27,7 +27,7 @@ let
         2. ensure that cargo's build log is captured in a file and point $cargoBuildLog at it
         At a minimum, the latter option can be achieved with running:
             cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)
-            cargo build --message-format json-render-diagnostics >"$cargoBuildLog"
+            cargo build --release --message-format json-render-diagnostics >"$cargoBuildLog"
       ''}
 
       false

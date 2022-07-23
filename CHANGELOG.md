@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking**: the `--workspace` flag is no longer set for all cargo commands
   by default. The previous behavior can be recovered by setting `cargoExtraArgs
   = "--workspace";` in any derivation.
+* **Breaking**: the `$CARGO_PROFILE` environment variable can be used to specify
+  which cargo-profile all invocations use (by default `release` will be used).
+  Technically breaking if the default command was overridden for any derivation;
+  set `CARGO_PROFILE = null;` to avoid telling cargo to use a release build.
+* **Breaking**: `cargoTarpaulin` will use the release profile by default
 * All cargo invocations made during the build are automatically logged
 
 ## [0.5.1] - 2022-07-20

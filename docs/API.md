@@ -86,15 +86,24 @@ to influence its behavior.
   - Default value: `"${cargoCheckCommand} ${cargoExtraArgs}\n${cargoBuildCommand} ${cargoExtraArgs}"`
 * `cargoBuildCommand`: A cargo (build) invocation to run during the derivation's build
   phase
-  - Default value: `"cargo build --release --all-targets"`
+  - Default value: `"cargo build --profile release --all-targets"`
+    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+      is selected; setting it to `null` will omit specifying a profile
+      altogether.
 * `cargoCheckCommand`: A cargo (check) invocation to run during the derivation's build
   phase (in order to cache additional artifacts)
-  - Default value: `"cargo build --release"`
+  - Default value: `"cargo build --profile release"`
+    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+      is selected; setting it to `null` will omit specifying a profile
+      altogether.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
-  - Default value: `"cargo test --release"`
+  - Default value: `"cargo test --profile release"`
+    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+      is selected; setting it to `null` will omit specifying a profile
+      altogether.
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
   follow the output of `cargo vendor`.
@@ -148,7 +157,10 @@ log.
     file. The `cargoBuildLog` shell variable should point to this log.
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
   phase
-  - Default value: `"cargo build --release"`
+  - Default value: `"cargo build --profile release"`
+    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+      is selected; setting it to `null` will omit specifying a profile
+      altogether.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
@@ -195,13 +207,19 @@ its behavior.
     set (with the respective default values)
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
   phase
-  - Default value: `"cargo build --release"`
+  - Default value: `"cargo build --profile release"`
+    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+      is selected; setting it to `null` will omit specifying a profile
+      altogether.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
-  - Default value: `"cargo test --release"`
+  - Default value: `"cargo test --profile release"`
+    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+      is selected; setting it to `null` will omit specifying a profile
+      altogether.
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
   follow the output of `cargo vendor`.
@@ -236,8 +254,11 @@ workspace.
 
 Except where noted below, all derivation attributes are delegated to
 `cargoBuild`, and can be used to influence its behavior.
-* `cargoBuildCommand` will be set to run `cargo clippy` for all targets in the
-  workspace.
+* `cargoBuildCommand` will be set to run `cargo clippy --profile release
+  --all-targets` for the workspace.
+  - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+    is selected; setting it to `null` will omit specifying a profile
+    altogether.
 * `cargoExtraArgs` will have `cargoClippyExtraArgs` appended to it
   - Default value: `""`
 * `doCheck` is disabled
@@ -316,7 +337,10 @@ Except where noted below, all derivation attributes are delegated to
 `cargoBuild`, and can be used to influence its behavior.
 * `cargoArtifacts` will be instantiated via `buildDepsOnly` if not specified
   - `cargoTarpaulinExtraArgs` will be removed before delegating to `buildDepsOnly`
-* `cargoBuildCommand` will be set to run `cargo tarpaulin` in the workspace.
+* `cargoBuildCommand` will be set to run `cargo tarpaulin --profile release` in
+  the workspace.
+  - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
+    selected; setting it to `null` will omit specifying a profile altogether.
 * `cargoExtraArgs` will have `cargoTarpaulinExtraArgs` appended to it
   - Default value: `""`
 * `doCheck` is disabled
@@ -735,6 +759,13 @@ worth documenting them just in case:
 * Defines a `cargo()` function which will immediately invoke the `cargo` command
   found on the `$PATH` after echoing the exact arguments that were passed in.
   Useful for automatically logging all cargo invocations to the log.
+* Defines a `cargoWithProfile()` function which will invoke `cargo` with the
+  provided arguments. If `$CARGO_PROFILE` is set, then `--profile
+  $CARGO_PROFILE` will be injected into the `cargo` invocation
+  - Note: a default value of `$CARGO_PROFILE` is set via
+    `configureCargoCommonVarsHook`. You can set `CARGO_PROFILE = "something"` in
+    your derivation to change which profile is used, or set `CARGO_PROFILE =
+    null;` to omit it altogether.
 
 ### `configureCargoCommonVarsHook`
 
@@ -745,6 +776,9 @@ incremental artifacts, etc. More specifically:
 * `CARGO_BUILD_JOBS` is set to `$NIX_BUILD_CORES` if not already defined
 * `CARGO_HOME` is set to `$PWD/.cargo-home` if not already defined.
   - The directory that `CARGO_HOME` points to will be created
+* `CARGO_PROFILE` is set to `release` if not already defined.
+  - Note that this is is used internally specify a cargo profile (e.g. `cargo
+    build --profile release`) and not something natively understood by cargo.
 * `RUST_TEST_THREADS` is set to `$NIX_BUILD_CORES` if not already defined
 
 **Automatic behavior:** runs as a post-patch hook
