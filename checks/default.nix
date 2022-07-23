@@ -104,6 +104,8 @@ myPkgs // {
 
   mkDummySrcTests = callPackage ./mkDummySrcTests { };
 
+  nextest = callPackage ./nextest.nix { };
+
   simple = myLib.buildPackage {
     src = ./simple;
   };
@@ -188,28 +190,6 @@ myPkgs // {
   workspaceGit = myLib.buildPackage {
     src = ./workspace-git;
     pname = "workspace-git";
-  };
-
-  nextestSimple = myLib.cargoNextest {
-    src = ./simple;
-    pname = "nextest-simple";
-    cargoArtifacts = null;
-  };
-
-  nextestPartitionsCount = myLib.cargoNextest {
-    src = ./simple;
-    pname = "nextest-partitions-count";
-    partitions = 4;
-    partitionType = "count";
-    cargoArtifacts = null;
-  };
-
-  nextestPartitionsHash = myLib.cargoNextest {
-    src = ./simple;
-    pname = "nextest-partitions-hash";
-    partitions = 4;
-    partitionType = "hash";
-    cargoArtifacts = null;
   };
 })
 )
