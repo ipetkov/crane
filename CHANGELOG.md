@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* Added `cargoNextest` for running tests via [cargo-nextest](https://nexte.st/)
+
 ### Changed
 * **Breaking**: the `--workspace` flag is no longer set for all cargo commands
   by default. The previous behavior can be recovered by setting `cargoExtraArgs

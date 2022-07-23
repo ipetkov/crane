@@ -326,6 +326,62 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `rustFmtExtraArgs`
 
+### `lib.cargoNextest`
+
+`cargoNextest :: set -> drv`
+
+Create a derivation which will run a `cargo nextest` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+`cargoBuild`, and can be used to influence its behavior.
+* `cargoTestCommand` will be set to run `cargo nextest run --profile release`
+  for the workspace.
+  - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+    is selected; setting it to `""` will omit specifying a profile
+    altogether.
+* `cargoExtraArgs` will have `cargoNextestExtraArgs` appended to it, along with
+  any additional flags needed for handling multiple partitions
+  - Default value: `""`
+* `pnameSuffix` will be set to `"-nextest"` and may include partition numbers
+
+#### Required attributes
+* `cargoArtifacts`: A path (or derivation) which contains an existing cargo
+  `target` directory, which will be reused at the start of the derivation.
+  Useful for caching incremental cargo builds.
+  - This can be prepared via `buildDepsOnly`
+  - Alternatively, any cargo-based derivation which was built with
+    `doInstallCargoArtifacts = true` will work as well
+
+#### Optional attributes
+* `buildPhaseCargoCommand`, unless specified, will be set to print the nextest version
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
+  enabling specific features)
+  - Default value: `""`
+* `cargoNextestExtraArgs`: additional flags to be passed in the clippy invocation (e.g.
+  deny specific lints)
+  - Default value: `""`
+* `partitions`: The number of separate nextest partitions to run. Useful if the
+  test suite takes a long time and can be parallelized across multiple build
+  nodes.
+  - Default value: `1`
+* `partitionType`: The kind of nextest partition to run (e.g. `"count"` or
+  `"hash"` based).
+  - Default value: `"count"`
+
+#### Native build dependencies
+The `cargo-nextest` package is automatically appended as a native build input to any
+other `nativeBuildInputs` specified by the caller.
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`cargoBuild`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `cargoNextestExtraArgs`
+* `partitions`
+* `partitionType`
+
 ### `lib.cargoTarpaulin`
 
 `cargoTarpaulin :: set -> drv`

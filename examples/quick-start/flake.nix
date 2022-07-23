@@ -56,6 +56,15 @@
           my-crate-fmt = craneLib.cargoFmt {
             inherit src;
           };
+
+          # Run tests with cargo-nextest
+          # Consider setting `doCheck = false` on `my-crate` if you do not want
+          # the tests to run twice
+          my-crate-nextest = craneLib.cargoNextest {
+            inherit cargoArtifacts src;
+            partitions = 1;
+            partitionType = "count";
+          };
         } // lib.optionalAttrs (system == "x86_64-linux") {
           # NB: cargo-tarpaulin only supports x86_64 systems
           # Check code coverage (note: this will not upload coverage anywhere)
