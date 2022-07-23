@@ -3,7 +3,7 @@
 , lib
 }:
 
-{ cargoBuildCommand ? "cargo build --workspace --release"
+{ cargoBuildCommand ? "cargoWithProfile build"
 , cargoExtraArgs ? ""
 , ...
 }@args:
@@ -13,7 +13,7 @@ let
     ${cargoBuildCommand} --message-format json-render-diagnostics ${cargoExtraArgs} >"$cargoBuildLog"
   '';
 
-  defaultInstallPhaseCommand = ''
+  installPhaseCommand = args.installPhaseCommand or ''
     if [ -n "$cargoBuildLog" -a -f "$cargoBuildLog" ]; then
       installFromCargoBuildLog "$out" "$cargoBuildLog"
     else
@@ -27,20 +27,12 @@ let
         2. ensure that cargo's build log is captured in a file and point $cargoBuildLog at it
         At a minimum, the latter option can be achieved with running:
             cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)
-            cargo build --message-format json-render-diagnostics >"$cargoBuildLog"
+            cargo build --release --message-format json-render-diagnostics >"$cargoBuildLog"
       ''}
 
       false
     fi
   '';
-
-  installPhaseCommand =
-    if args ? installPhaseCommand
-    then ''
-      echo running: ${lib.strings.escapeShellArg args.installPhaseCommand}
-      ${args.installPhaseCommand}
-    ''
-    else defaultInstallPhaseCommand;
 in
 (cargoBuild args).overrideAttrs (old: {
   # NB: we use overrideAttrs here so that our extra additions here do not end up
@@ -53,8 +45,6 @@ in
 
   buildPhase = args.buildPhase or ''
     runHook preBuild
-    cargo --version
-    echo running: ${lib.strings.escapeShellArg buildPhaseCargoCommand}
     ${buildPhaseCargoCommand}
     runHook postBuild
   '';

@@ -1,4 +1,5 @@
 { cargo
+, cargoHelperFunctionsHook
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
 , inheritCargoArtifactsHook
@@ -48,6 +49,7 @@ stdenv.mkDerivation (cleanedArgs // {
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     cargo
+    cargoHelperFunctionsHook
     configureCargoCommonVarsHook
     configureCargoVendoredDepsHook
     inheritCargoArtifactsHook
@@ -58,21 +60,18 @@ stdenv.mkDerivation (cleanedArgs // {
   buildPhase = args.buildPhase or ''
     runHook preBuild
     cargo --version
-    echo running: ${lib.strings.escapeShellArg buildPhaseCargoCommand}
     ${buildPhaseCargoCommand}
     runHook postBuild
   '';
 
   checkPhase = args.checkPhase or ''
     runHook preCheck
-    echo running: ${lib.strings.escapeShellArg checkPhaseCargoCommand}
     ${checkPhaseCargoCommand}
     runHook postCheck
   '';
 
   installPhase = args.installPhase or ''
     runHook preInstall
-    echo running: ${lib.strings.escapeShellArg installPhaseCommand}
     ${installPhaseCommand}
     runHook postInstall
   '';

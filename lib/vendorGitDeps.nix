@@ -20,7 +20,6 @@ let
   inherit (lib)
     concatMapStrings
     concatStrings
-    escapeShellArg
     groupBy
     hasPrefix
     last

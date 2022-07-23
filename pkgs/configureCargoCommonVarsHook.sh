@@ -13,6 +13,10 @@ configureCargoCommonVars() {
   # while building with nix. Allow a declared-but-empty variable which will tell
   # cargo to honor the definition used in the build profile
   export CARGO_BUILD_INCREMENTAL=${CARGO_BUILD_INCREMENTAL-false}
+
+  # Used by `cargoWithProfile` to specify a cargo profile to use.
+  # Not exported since it is not natively understood by cargo.
+  CARGO_PROFILE=${CARGO_PROFILE:-release}
 }
 
 # NB: run after patching, but before other configure hooks so that we can set
