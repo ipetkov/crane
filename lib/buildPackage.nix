@@ -13,7 +13,7 @@ let
     ${cargoBuildCommand} --message-format json-render-diagnostics ${cargoExtraArgs} >"$cargoBuildLog"
   '';
 
-  defaultInstallPhaseCommand = ''
+  installPhaseCommand = args.installPhaseCommand or ''
     if [ -n "$cargoBuildLog" -a -f "$cargoBuildLog" ]; then
       installFromCargoBuildLog "$out" "$cargoBuildLog"
     else
@@ -33,14 +33,6 @@ let
       false
     fi
   '';
-
-  installPhaseCommand =
-    if args ? installPhaseCommand
-    then ''
-      echo running: ${lib.strings.escapeShellArg args.installPhaseCommand}
-      ${args.installPhaseCommand}
-    ''
-    else defaultInstallPhaseCommand;
 in
 (cargoBuild args).overrideAttrs (old: {
   # NB: we use overrideAttrs here so that our extra additions here do not end up
@@ -53,8 +45,6 @@ in
 
   buildPhase = args.buildPhase or ''
     runHook preBuild
-    cargo --version
-    echo running: ${lib.strings.escapeShellArg buildPhaseCargoCommand}
     ${buildPhaseCargoCommand}
     runHook postBuild
   '';

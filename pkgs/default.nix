@@ -9,6 +9,7 @@
 # etc. scopes).
 callPackage:
 {
+  cargoHelperFunctionsHook = callPackage ./cargoHelperFunctionsHook.nix { };
   configureCargoCommonVarsHook = callPackage ./configureCargoCommonVars.nix { };
   configureCargoVendoredDepsHook = callPackage ./configureCargoVendoredDeps.nix { };
   inheritCargoArtifactsHook = callPackage ./inheritCargoArtifacts.nix { };

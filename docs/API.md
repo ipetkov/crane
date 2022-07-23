@@ -527,6 +527,7 @@ environment variables during the build, you can bring them back via
 The `cargo` package is automatically appended as a native build input to any
 other `nativeBuildInputs` specified by the caller, along with the following
 hooks:
+* `cargoHelperFunctionsHook`
 * `configureCargoCommonVarsHook`
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
@@ -724,6 +725,16 @@ lib.writeTOML "foo.toml" { foo.bar = "baz"; }
 ```
 
 ## Hooks
+
+### `cargoHelperFunctionsHook`
+
+Defines helper functions for internal use. It is probably not a great idea to
+depend on these directly as their behavior can change at any time, but it is
+worth documenting them just in case:
+
+* Defines a `cargo()` function which will immediately invoke the `cargo` command
+  found on the `$PATH` after echoing the exact arguments that were passed in.
+  Useful for automatically logging all cargo invocations to the log.
 
 ### `configureCargoCommonVarsHook`
 
