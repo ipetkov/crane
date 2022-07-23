@@ -110,6 +110,14 @@ myPkgs // {
   simpleGit = myLib.buildPackage {
     src = ./simple-git;
   };
+  simpleCustomProfile = myLib.buildPackage {
+    src = ./simple;
+    CARGO_PROFILE = "test";
+  };
+  simpleNoProfile = myLib.buildPackage {
+    src = ./simple;
+    CARGO_PROFILE = "";
+  };
 
   simple-nonflake = (import ../default.nix {
     inherit pkgs;
