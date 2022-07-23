@@ -16,7 +16,7 @@ configureCargoCommonVars() {
 
   # Used by `cargoWithProfile` to specify a cargo profile to use.
   # Not exported since it is not natively understood by cargo.
-  CARGO_PROFILE=${CARGO_PROFILE:-release}
+  CARGO_PROFILE=${CARGO_PROFILE-release}
 }
 
 # NB: run after patching, but before other configure hooks so that we can set

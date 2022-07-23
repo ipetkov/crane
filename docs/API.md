@@ -88,13 +88,13 @@ to influence its behavior.
   phase
   - Default value: `"cargo build --profile release --all-targets"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-      is selected; setting it to `null` will omit specifying a profile
+      is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoCheckCommand`: A cargo (check) invocation to run during the derivation's build
   phase (in order to cache additional artifacts)
   - Default value: `"cargo build --profile release"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-      is selected; setting it to `null` will omit specifying a profile
+      is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
@@ -102,7 +102,7 @@ to influence its behavior.
   phase
   - Default value: `"cargo test --profile release"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-      is selected; setting it to `null` will omit specifying a profile
+      is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
@@ -159,7 +159,7 @@ log.
   phase
   - Default value: `"cargo build --profile release"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-      is selected; setting it to `null` will omit specifying a profile
+      is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
@@ -209,7 +209,7 @@ its behavior.
   phase
   - Default value: `"cargo build --profile release"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-      is selected; setting it to `null` will omit specifying a profile
+      is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
@@ -218,7 +218,7 @@ its behavior.
   phase
   - Default value: `"cargo test --profile release"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-      is selected; setting it to `null` will omit specifying a profile
+      is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
@@ -257,7 +257,7 @@ Except where noted below, all derivation attributes are delegated to
 * `cargoBuildCommand` will be set to run `cargo clippy --profile release
   --all-targets` for the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-    is selected; setting it to `null` will omit specifying a profile
+    is selected; setting it to `""` will omit specifying a profile
     altogether.
 * `cargoExtraArgs` will have `cargoClippyExtraArgs` appended to it
   - Default value: `""`
@@ -340,7 +340,7 @@ Except where noted below, all derivation attributes are delegated to
 * `cargoBuildCommand` will be set to run `cargo tarpaulin --profile release` in
   the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
-    selected; setting it to `null` will omit specifying a profile altogether.
+    selected; setting it to `""` will omit specifying a profile altogether.
 * `cargoExtraArgs` will have `cargoTarpaulinExtraArgs` appended to it
   - Default value: `""`
 * `doCheck` is disabled
@@ -765,7 +765,7 @@ worth documenting them just in case:
   - Note: a default value of `$CARGO_PROFILE` is set via
     `configureCargoCommonVarsHook`. You can set `CARGO_PROFILE = "something"` in
     your derivation to change which profile is used, or set `CARGO_PROFILE =
-    null;` to omit it altogether.
+    "";` to omit it altogether.
 
 ### `configureCargoCommonVarsHook`
 
