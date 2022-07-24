@@ -104,6 +104,8 @@ myPkgs // {
 
   mkDummySrcTests = callPackage ./mkDummySrcTests { };
 
+  nextest = callPackage ./nextest.nix { };
+
   simple = myLib.buildPackage {
     src = ./simple;
   };

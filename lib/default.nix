@@ -17,6 +17,7 @@ in
   cargoBuild = callPackage ./cargoBuild.nix { };
   cargoClippy = callPackage ./cargoClippy.nix { };
   cargoFmt = callPackage ./cargoFmt.nix { };
+  cargoNextest = callPackage ./cargoNextest.nix { };
   cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };
   cleanCargoToml = callPackage ./cleanCargoToml.nix { };
   crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix { };
