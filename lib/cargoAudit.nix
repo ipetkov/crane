@@ -1,5 +1,5 @@
 { cargoBuild
-, audit
+, cargo-audit
 }:
 
 { cargoArtifacts
@@ -12,12 +12,11 @@ let
 in
 cargoBuild (args // {
   inherit cargoArtifacts;
-  pnameSuffix = "-audit";
-
   cargoBuildCommand = "cargo audit";
   cargoExtraArgs = "${cargoExtraArgs} ${cargoAuditExtraArgs}";
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ audit ];
-
   doCheck = false; # We don't need to run tests to benefit from `cargo audit`
+  pnameSuffix = "-audit";
+
+  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-audit ];
 })
