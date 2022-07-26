@@ -35,8 +35,10 @@ myPkgs // {
 
   cargoAudit = myLib.cargoAudit {
     src = ./simple;
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./simple;
+    };
     advisory-db = pkgs.fetchFromGitHub {
-#      url = "github:rustsec/advisory-db";
       owner = "rustsec";
       repo = "advisory-db";
       rev = "36df8a4efc6f2da4ccc7ced0d431136f473b2001";
