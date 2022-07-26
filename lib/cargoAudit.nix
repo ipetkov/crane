@@ -1,7 +1,8 @@
 { cargoBuild
 , cargo-audit
 ,
-}: { cargoAuditExtraArgs ? ""
+}: { cargoArtifacts
+   , cargoAuditExtraArgs ? ""
    , cargoExtraArgs ? ""
    , advisory-db
    , ...
@@ -11,7 +12,7 @@ let
 in
 cargoBuild (args
   // {
-  cargoArtifacts = null;
+  inherit cargoArtifacts;
   cargoBuildCommand = "cargo audit -n -d ${advisory-db}";
   cargoExtraArgs = "${cargoExtraArgs} ${cargoAuditExtraArgs}";
 
