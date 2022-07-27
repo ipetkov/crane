@@ -14,9 +14,9 @@ in
 
   buildDepsOnly = callPackage ./buildDepsOnly.nix { };
   buildPackage = callPackage ./buildPackage.nix { };
+  cargoAudit = callPackage ./cargoAudit.nix { };
   cargoBuild = callPackage ./cargoBuild.nix { };
   cargoClippy = callPackage ./cargoClippy.nix { };
-  cargoAudit = callPackage ./cargoAudit.nix { };
   cargoFmt = callPackage ./cargoFmt.nix { };
   cargoNextest = callPackage ./cargoNextest.nix { };
   cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };
