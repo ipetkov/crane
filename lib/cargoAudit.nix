@@ -1,7 +1,7 @@
 { cargoBuild
 , cargo-audit
 ,
-}: { cargoArtifacts
+}: { cargoVendorDir
    , cargoAuditExtraArgs ? ""
    , cargoExtraArgs ? ""
    , advisory-db
@@ -12,11 +12,13 @@ let
 in
 cargoBuild (args
   // {
-  inherit cargoArtifacts;
+  inherit cargoVendorDir;
+  cargoArtifacts = null;
   cargoBuildCommand = "cargo audit -n -d ${advisory-db}";
   cargoExtraArgs = "${cargoExtraArgs} ${cargoAuditExtraArgs}";
 
   doCheck = false; # We don't need to run tests to benefit from `cargo audit`
+  doInstallCargoArtifacts = false; # We don't expect to/need to install artifacts
   pnameSuffix = "-audit";
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-audit ];
