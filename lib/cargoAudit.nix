@@ -1,8 +1,8 @@
 { cargoBuild
 , cargo-audit
+, vendorCargoDeps
 ,
-}: { cargoVendorDir
-   , cargoAuditExtraArgs ? ""
+}: { cargoAuditExtraArgs ? ""
    , cargoExtraArgs ? ""
    , advisory-db
    , ...
@@ -10,9 +10,9 @@
 let
   args = builtins.removeAttrs origArgs [ "cargoAuditExtraArgs" ];
 in
-cargoBuild (args
-  // {
-  inherit cargoVendorDir;
+cargoBuild (args // {
+  cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
+
   cargoArtifacts = null;
   cargoBuildCommand = "cargo audit -n -d ${advisory-db}";
   cargoExtraArgs = "${cargoExtraArgs} ${cargoAuditExtraArgs}";

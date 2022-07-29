@@ -184,6 +184,8 @@ workspace.
 
 Except where noted below, all derivation attributes are delegated to
 `cargoBuild`, and can be used to influence its behavior.
+* `cargoVendorDir` will be instantiated via `vendorCargoDeps` if not specified
+  - `cargoAuditExtraArgs` will be removed before delegating to `vendorCargoDeps`
 * `advisory-db` will be passed to the call cargo-audit as the advisory database
   (a git repo).
 * `cargoBuildCommand` will be set to run `cargo audit -n -d ${advisory-db}` in
@@ -191,6 +193,7 @@ Except where noted below, all derivation attributes are delegated to
 * `cargoExtraArgs` will have `cargoAuditExtraArgs` appended to it
   - Default value: `""`
 * `doCheck` is disabled
+* `doInstallCargoArtifacts` is disabled
 * `pnameSuffix` will be set to `"-audit"`
 
 #### Optional attributes

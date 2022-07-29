@@ -65,7 +65,7 @@
 
           # Audit dependencies
           my-crate-audit = craneLib.cargoAudit {
-            inherit src cargoArtifacts advisory-db;
+            inherit src advisory-db;
           };
 
           # Run tests with cargo-nextest
