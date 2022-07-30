@@ -10,9 +10,14 @@
     };
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    advisory-db = {
+      url = "github:rustsec/advisory-db";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, ... }:
+  outputs = { self, nixpkgs, crane, flake-utils, advisory-db, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -55,6 +60,12 @@
           # Check formatting
           my-crate-fmt = craneLib.cargoFmt {
             inherit src;
+          };
+
+
+          # Audit dependencies
+          my-crate-audit = craneLib.cargoAudit {
+            inherit src advisory-db;
           };
 
           # Run tests with cargo-nextest
