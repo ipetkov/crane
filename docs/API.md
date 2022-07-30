@@ -176,6 +176,41 @@ log.
 The following hooks are automatically added as native build inputs:
 * `installFromCargoBuildLogHook`
 
+### `lib.cargoAudit`
+`cargoAudit :: set -> drv`
+
+Create a derivation which will run a `cargo audit` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+`cargoBuild`, and can be used to influence its behavior.
+* `advisory-db` will be passed to the call cargo-audit as the advisory database
+  (a git repo).
+* `cargoBuildCommand` will be set to run `cargo audit -n -d ${advisory-db}` in
+  the workspace.
+* `cargoExtraArgs` will have `cargoAuditExtraArgs` appended to it
+  - Default value: `""`
+* `doCheck` is disabled
+* `doInstallCargoArtifacts` is disabled
+* `pnameSuffix` will be set to `"-audit"`
+
+#### Optional attributes
+* `cargoAuditExtraArgs`: additional flags to be passed in the cargo-audit invocation
+  - Default value: `""`
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
+  - Default value: `""`
+
+#### Native build dependencies
+The `cargo-audit` package is automatically appended as a native build input to any
+other `nativeBuildInputs` specified by the caller.
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`cargoBuild`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `cargoAuditExtraArgs`
+
 ### `lib.cargoBuild`
 
 `cargoBuild :: set -> drv`
