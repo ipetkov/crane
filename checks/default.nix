@@ -33,15 +33,7 @@ myPkgs // {
     cargoArtifacts = self.cargoFmt;
   };
 
-  cargoAudit = myLib.cargoAudit {
-    src = ./simple;
-    advisory-db = pkgs.fetchFromGitHub {
-      owner = "rustsec";
-      repo = "advisory-db";
-      rev = "36df8a4efc6f2da4ccc7ced0d431136f473b2001";
-      sha256 = "sha256-9eSrCrsSNyl79JMH7LrlCpn9a8lYJ01daZNxUDBKMEo=";
-    };
-  };
+  cargoAuditTests = callPackage ./cargoAudit.nix { };
 
   cargoTarpaulin = lib.optionalAttrs x64Linux (myLib.cargoTarpaulin {
     src = ./simple;

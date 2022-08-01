@@ -184,21 +184,37 @@ workspace.
 
 Except where noted below, all derivation attributes are delegated to
 `cargoBuild`, and can be used to influence its behavior.
-* `advisory-db` will be passed to the call cargo-audit as the advisory database
-  (a git repo).
+* `cargoArtifacts` will be set to `null` as they are not needed
 * `cargoBuildCommand` will be set to run `cargo audit -n -d ${advisory-db}` in
   the workspace.
 * `cargoExtraArgs` will have `cargoAuditExtraArgs` appended to it
   - Default value: `""`
+* `cargoVendorDir` will be set to `null` as it is not needed
 * `doCheck` is disabled
 * `doInstallCargoArtifacts` is disabled
 * `pnameSuffix` will be set to `"-audit"`
+* `src` will be filtered to only keep `Cargo.lock` files
+
+#### Required attributes
+* `advisory-db`: A path (or derivation) which contains the advisory database
+  - It is possible to track the advisory database as a flake input and avoid
+    having to manually update hashes or specific revisions to check out
+* `src`: The project source to audit, it must contain a `Cargo.lock` file
+  - Note that the source will internally be filtered to omit any files besides
+    `Cargo.lock`. This avoids having to audit the project again until either the
+    advisory database or the dependencies change.
 
 #### Optional attributes
 * `cargoAuditExtraArgs`: additional flags to be passed in the cargo-audit invocation
   - Default value: `""`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
   - Default value: `""`
+* `pname`: the name of the derivation; will _not_ be introspected from a
+  `Cargo.toml` file
+  - Default value: `"crate"`
+* `version`: the version of the derivation, will _not_ be introspected from a
+  `Cargo.toml` file
+  - Default value: `"0.0.0"`
 
 #### Native build dependencies
 The `cargo-audit` package is automatically appended as a native build input to any
