@@ -209,9 +209,9 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `""`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
   - Default value: `""`
-* `pname`: the name of the derivation, will _not_ be introspected from a
+* `pname`: the name of the derivation; will _not_ be introspected from a
   `Cargo.toml` file
-  - Default value: `"cargo"` (to give a final name of `"cargo-audit"`)
+  - Default value: `"crate"`
 * `version`: the version of the derivation, will _not_ be introspected from a
   `Cargo.toml` file
   - Default value: `"0.0.0"`
