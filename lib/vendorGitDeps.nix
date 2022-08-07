@@ -13,6 +13,7 @@ let
     hashString
     head
     isString
+    length
     listToAttrs
     placeholder
     split;
@@ -29,15 +30,20 @@ let
     removePrefix;
 
   knownGitParams = [ "branch" "rev" "tag" ];
-  parseGitUrl = lockUrl:
+  parseGitUrl = p:
     let
+      lockUrl = removePrefix "git+" p.source;
       revSplit = split "#" (removePrefix "git+" lockUrl);
       # uniquely identifies the repo in terms of what cargo can address via
       # source replacement (e.g. the url along with any branch/tag/rev).
       id = head revSplit;
       # NB: this is distict from the `rev` query param which may show up
       # if the dependency is explicitly listed with a `rev` value.
-      lockedRev = last revSplit;
+      lockedRev = if 3 == length revSplit then last revSplit else
+      throw ''
+        Cargo.lock is missing a locked revision for ${p.name}@${p.version}.
+        you can try to resolve this by running `cargo update -p ${lockUrl}#${p.name}@${p.version}`
+      '';
 
       querySplit = split "\\?" (head revSplit);
       git = head querySplit;
@@ -66,7 +72,7 @@ let
     (p: hasPrefix "git" (p.source or ""))
     lockPackages;
   lockedGitGroups = groupBy (p: p.id) (map
-    (p: (parseGitUrl p.source) // { package = p; })
+    (p: (parseGitUrl p) // { package = p; })
     lockedPackagesFromGit
   );
 
