@@ -122,6 +122,9 @@ myPkgs // {
     src = ./simple;
     CARGO_PROFILE = "";
   };
+  simpleOnlyTests = myLib.buildPackage {
+    src = ./simple-only-tests;
+  };
 
   simple-nonflake = (import ../default.nix {
     inherit pkgs;
