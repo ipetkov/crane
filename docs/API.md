@@ -305,13 +305,13 @@ workspace.
 
 Except where noted below, all derivation attributes are delegated to
 `cargoBuild`, and can be used to influence its behavior.
-* `cargoBuildCommand` will be set to run `cargo clippy --profile release
-  --all-targets` for the workspace.
+* `cargoBuildCommand` will be set to run `cargo clippy --profile release` for
+  the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
     is selected; setting it to `""` will omit specifying a profile
     altogether.
 * `cargoExtraArgs` will have `cargoClippyExtraArgs` appended to it
-  - Default value: `""`
+  - Default value: `"--all-targets"`
 * `doCheck` is disabled
 * `pnameSuffix` will be set to `"-clippy"`
 
@@ -326,7 +326,7 @@ Except where noted below, all derivation attributes are delegated to
 #### Optional attributes
 * `cargoClippyExtraArgs`: additional flags to be passed in the clippy invocation (e.g.
   deny specific lints)
-  - Default value: `""`
+  - Default value: `"--all-targets"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`

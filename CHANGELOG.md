@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   Technically breaking if the default command was overridden for any derivation;
   set `CARGO_PROFILE = "";` to avoid telling cargo to use a release build.
 * **Breaking**: `cargoTarpaulin` will use the release profile by default
+* **Breaking**: `cargoClippy`'s `cargoClippyExtraArgs` now default to
+  `"--all-targets"` instead of being specified as the cargo command itself. If
+  you have set `cargoClippyExtraArgs` to an explicit value and wish to retain
+  the previous behavior you should prepend `"--all-targets"` to it.
 * All cargo invocations made during the build are automatically logged
 * Vendoring git dependencies will throw a descriptive error message if a locked
   revision is missing from `Cargo.lock` and a hint towards resolution

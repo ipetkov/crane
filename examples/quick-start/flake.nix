@@ -54,7 +54,7 @@
           # prevent downstream consumers from building our crate by itself.
           my-crate-clippy = craneLib.cargoClippy {
             inherit cargoArtifacts src;
-            cargoClippyExtraArgs = "-- --deny warnings";
+            cargoClippyExtraArgs = "--all-targets -- --deny warnings";
           };
 
           # Check formatting
