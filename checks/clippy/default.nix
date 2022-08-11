@@ -18,7 +18,7 @@ linkFarmFromDrvs "clippy-tests" (builtins.attrValues {
     inherit cargoArtifacts src;
     pname = "checkWarnings";
 
-    cargoClippyExtraArgs = "2>clippy.log";
+    cargoClippyExtraArgs = "--all-targets 2>clippy.log";
     installPhaseCommand = ''
       grep 'warning: use of `println!`' <clippy.log
       mkdir -p $out
@@ -30,7 +30,7 @@ linkFarmFromDrvs "clippy-tests" (builtins.attrValues {
     pname = "denyWarnings";
 
     cargoClippyExtraArgs = ''
-      -- --deny warnings 2>clippy.log || [ "0" != "$?" ]
+      --all-targets -- --deny warnings 2>clippy.log || [ "0" != "$?" ]
     '';
     installPhaseCommand = ''
       grep 'error: use of `println!`' <clippy.log

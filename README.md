@@ -163,7 +163,7 @@ Here's how we can set up our flake to achieve our goals:
           # Again we apply some extra arguments only to this derivation
           # and not every where else. In this case we add some clippy flags
           inherit cargoArtifacts;
-          cargoClippyExtraArgs = "-- --deny warnings";
+          cargoClippyExtraArgs = "--all-targets -- --deny warnings";
         });
 
         # Build the actual crate itself, reusing the dependency
@@ -260,7 +260,7 @@ build.
           # Again we apply some extra arguments only to this derivation
           # and not every where else. In this case we add some clippy flags
           inherit cargoArtifacts;
-          cargoClippyExtraArgs = "-- --deny warnings";
+          cargoClippyExtraArgs = "--all-targets -- --deny warnings";
         });
 
         # Next, we want to run the tests and collect code-coverage, _but only if
