@@ -21,6 +21,8 @@ let
   inherit (lib)
     concatMapStrings
     concatStrings
+    concatStringsSep
+    escapeShellArg
     groupBy
     hasPrefix
     last
@@ -84,12 +86,33 @@ let
           if p ? tag then "refs/tags/${p.tag}"
           else if p ? branch then "refs/heads/${p.branch}"
           else null;
+
+        extractedPackages = downloadCargoPackageFromGit {
+          inherit (p) git;
+          inherit ref;
+          rev = p.lockedRev;
+        };
+
+        # NB: we filter out any crates NOT in the lock file
+        # as the repo could have other crates we don't need
+        # (e.g. testing crates which might not even build properly)
+        # https://github.com/ipetkov/crane/issues/60
+        linkPsInLock = concatStringsSep "\n" (map
+          (p:
+            let
+              name = escapeShellArg p.package.name;
+              version = escapeShellArg p.package.version;
+              vendoredName = "${name}-${version}";
+            in
+            "ln -s ${extractedPackages}/${vendoredName} $out/${vendoredName}"
+          )
+          ps
+        );
       in
-      nameValuePair (hash id) (downloadCargoPackageFromGit {
-        inherit (p) git;
-        inherit ref;
-        rev = p.lockedRev;
-      })
+      nameValuePair (hash id) (runCommandLocal "linkLockedDeps" { } ''
+        mkdir -p $out
+        ${linkPsInLock}
+      '')
     )
     lockedGitGroups;
 
