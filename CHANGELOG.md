@@ -28,6 +28,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Vendoring git dependencies will throw a descriptive error message if a locked
   revision is missing from `Cargo.lock` and a hint towards resolution
 
+### Fixed
+* **Breaking**: `vendorGitDeps` will only include crates referenced by the
+  `Cargo.lock` file, meaning any extraneous crates which happen to be present in
+  the git repository will be ignored.
+
 ## [0.5.1] - 2022-07-20
 
 ### Added

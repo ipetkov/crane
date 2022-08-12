@@ -182,6 +182,8 @@ myPkgs // {
   smokeWorkspace = self.smoke [ "print" ] self.workspace;
   smokeWorkspaceRoot = self.smoke [ "print" ] self.workspaceRoot;
 
+  vendorGitSubset = callPackage ./vendorGitSubset.nix { };
+
   workspace = myLib.buildPackage {
     src = ./workspace;
     pname = "workspace";

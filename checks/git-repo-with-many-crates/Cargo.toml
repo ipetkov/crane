@@ -1,0 +1,15 @@
+[package]
+name = "git-repo-with-many-crates"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.tokio]
+version = "*"
+git = "https://github.com/tokio-rs/tokio.git"
+rev = "d416b1d1d683f6bc9032516242f5d40fb4543d0a"
+features = ["rt", "macros"]
+
+[dependencies.tokio-util]
+version = "*"
+git = "https://github.com/tokio-rs/tokio.git"
+rev = "d416b1d1d683f6bc9032516242f5d40fb4543d0a"
