@@ -281,6 +281,9 @@ its behavior.
   - Default value: `"${cargoTestCommand} ${cargoExtraArgs}"`
 * `doCheck`: whether the derivation's check phase should be run
   - Default value: `true`
+* `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
+  be copied as an output
+  - Default value: `true`
 * `pname`: package name of the derivation
   - Default value: inherited from calling `crateNameFromCargoToml`
 * `version`: version of the derivation
