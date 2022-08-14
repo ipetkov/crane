@@ -364,6 +364,23 @@ of:
 * `cannot build '/nix/store/...-source.drv' during evaluation because the option 'allow-import-from-derivation' is disabled`
 * `a 'aarch64-darwin' with features {} is required to build '/nix/store/...', but I am a 'x86_64-linux' with features {}`
 
+### I'm getting rebuilds all of the time, especially when I change `flake.nix`
+
+Nix will rebuild a derivation if any of its inputs change, which includes any
+file contained by the source that is passed in. For example, if the build
+expression specifies `src = ./.;` then the crate will be rebuilt when _any_ file
+changes (including "unrelated" changes to `flake.nix`)!
+
+There are two main ways to avoid unnecessary builds:
+
+1. One option is to put the crate's source files into its own subdirectory (e.g.
+   `./mycrate`) and then set the build expression's source to that subdirectory
+   (e.g. `src = ./mycrate;`). Then, changes to files _outside_ of that directory
+   will be ignored and will not cause a rebuild
+1. The other option is to use a [source cleaning] function from nixpkgs which
+   can omit any files know to not be needed while building the crate (for
+   example, all `*.nix` sources, `flake.lock`, and so on)
+
 ## License
 
 This project is licensed under the [MIT license].
@@ -380,3 +397,4 @@ conditions.
 [MIT license]: ./LICENSE
 [niv]: https://github.com/nmattia/niv
 [Semantic Versioning]: http://semver.org/spec/v2.0.0.html
+[source cleaning]: https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-sources
