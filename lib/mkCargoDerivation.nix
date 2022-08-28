@@ -5,7 +5,6 @@
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
 , lib
-, remapSourcePathPrefixHook
 , stdenv
 }:
 
@@ -41,12 +40,6 @@ stdenv.mkDerivation (cleanedArgs // {
   # Controls whether cargo's `target` directory should be copied as an output
   doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;
 
-  # Controls instructing rustc to remap the path prefix of any sources it
-  # captures (for example, this can include file names in panic info). This is
-  # useful to omit any references to `/nix/store/...` from the final binary,
-  # as including them will make Nix pull in all sources when installing any binaries.
-  doRemapSourcePathPrefix = args.doRemapSourcePathPrefix or true;
-
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     cargo
     cargoHelperFunctionsHook
@@ -54,7 +47,6 @@ stdenv.mkDerivation (cleanedArgs // {
     configureCargoVendoredDepsHook
     inheritCargoArtifactsHook
     installCargoArtifactsHook
-    remapSourcePathPrefixHook
   ];
 
   buildPhase = args.buildPhase or ''

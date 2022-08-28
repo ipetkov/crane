@@ -132,10 +132,11 @@ myPkgs // {
     src = ./simple;
   };
 
-  remapPathPrefixWorks = pkgs.runCommand "remapPathPrefixWorks" { } ''
+  removeReferencesToVendorDir = pkgs.runCommand "removeReferencesToVendorDir" { } ''
     if ${pkgs.binutils-unwrapped}/bin/strings ${self.ripgrep}/bin/rg | \
-      grep -v glibc | \
-      grep --count '/nix/store'
+      grep --only-matching '${builtins.storeDir}/[^/]\+' | \
+      grep --invert-match glibc | \
+      grep --invert-match '${builtins.storeDir}/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' --count
     then
       echo found references to /nix/store sources
       false

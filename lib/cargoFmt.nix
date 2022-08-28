@@ -13,7 +13,6 @@ cargoBuild (args // {
   cargoArtifacts = null;
   cargoVendorDir = null;
   doCheck = false;
-  doRemapSourcePathPrefix = false;
   pnameSuffix = "-fmt";
 
   cargoBuildCommand = "cargo fmt";

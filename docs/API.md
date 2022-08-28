@@ -171,6 +171,13 @@ log.
   - Default value: the install phase will run `preInstall` hooks, look for a
     cargo build log and install all binary targets listed there, and run
     `postInstall` hooks
+* `doNotRemoveReferencesToVendorDir`: controls whether references to vendored sources
+  will be stripped from any installed binaries. This avoids forcing consumers to
+  download all project sources if, for example, debug/panic info refers to those
+  paths. By default references to the vendored sources _will be removed_ but
+  setting this environment variable to any value will leave the results
+  unaltered.
+  - Default value: `""`
 
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
@@ -360,7 +367,6 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `""`
 * `cargoVendorDir` is disabled/cleared
 * `doCheck` is disabled
-* `doRemapSourcePathPrefix` is disabled
 * `pnameSuffix` will be set to `"-fmt"`
 
 #### Optional attributes
@@ -628,12 +634,6 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
 * `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
   be copied as an output
   - Default value: `true`
-* `doRemapSourcePathPrefix`: Controls instructing rustc to remap the path prefix
-  of any sources it captures (for example, this can include file names used in
-  panic info). This is useful to omit any references to `/nix/store/...` from
-  the final binary, as including them will make Nix pull in all sources when
-  installing any binaries.
-  - Default value: `true`
 * `installPhase`: the commands used by the install phase of the derivation
   - Default value: the install phase will run `preInstall` hooks, log and evaluate
     `installPhaseCommand`, and run `postInstall` hooks
@@ -666,7 +666,6 @@ hooks:
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
-* `remapSourcePathPrefixHook`
 
 ### `lib.mkDummySrc`
 
@@ -973,29 +972,3 @@ takes two positional arguments:
      json-render-diagnostics >cargo-build.json`
 
 **Automatic behavior:** none
-
-### `remapSourcePathPrefixHook`
-
-Defines `remapPathPrefix()` which will instruct rustc to strip a provided source
-prefix from any final binaries. This is useful for excluding any path prefixes
-to the Nix store such that installing the resulting binaries does not result in
-Nix also installing the crate sources as well. The function takes one positional
-argument:
-1. the source prefix to strip, e.g. `/nix/store/someHash-directoryName`
-   * If not specified, an error will be raised
-
-The rustc flags to perform the source remapping will be appended to _one_ of the
-following environment variables:
-1. `RUSTFLAGS`, if it is already present
-1. `CARGO_BUILD_RUSTFLAGS` otherwise
-
-**Note:** cargo will consume rust flags from environment variables with higher
-precedence than those set via `.cargo/config.toml`, and (at the time of this
-writing) it will _not merge the values_. If your project requires setting its
-own rust flags, consider disabling this hook.
-
-This hook will also define `remapPathPrefixToVendoredDir` which is a shortcut to
-invoke `remapPathPrefix "$cargoVendorDir"` if `cargoVendorDir` is defined.
-
-**Automatic behavior:** if `doRemapSourcePathPrefix` is set to `1` then
-`remapPathPrefixToVendoredDir` will be run as a post configure hook.

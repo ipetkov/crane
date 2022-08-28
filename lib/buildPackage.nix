@@ -1,6 +1,7 @@
 { cargoBuild
 , installFromCargoBuildLogHook
 , lib
+, removeReferencesTo
 }:
 
 { cargoBuildCommand ? "cargoWithProfile build"
@@ -16,6 +17,12 @@ let
   installPhaseCommand = args.installPhaseCommand or ''
     if [ -n "$cargoBuildLog" -a -f "$cargoBuildLog" ]; then
       installFromCargoBuildLog "$out" "$cargoBuildLog"
+
+      # Strip any references to the sources directory (which may have slipped in via
+      # panic info) so depending on the binary doesn't pull in all the sources as well.
+      if [ -z "''${doNotRemoveReferencesToVendorDir-}" ] && [ -n "''${cargoVendorDir-}" ]; then
+        find "$out" -type f -exec remove-references-to -t "$cargoVendorDir" '{}' +
+      fi
     else
       echo ${lib.strings.escapeShellArg ''
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -57,5 +64,6 @@ in
 
   nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
     installFromCargoBuildLogHook
+    removeReferencesTo
   ];
 })
