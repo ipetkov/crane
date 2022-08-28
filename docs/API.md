@@ -171,6 +171,11 @@ log.
   - Default value: the install phase will run `preInstall` hooks, look for a
     cargo build log and install all binary targets listed there, and run
     `postInstall` hooks
+* `removeReferencesToVendorDir`: controls whether references to vendored sources
+  will be stripped from any installed binaries. This avoids forcing consumers to
+  download all project sources if, for example, debug/panic info refers to those
+  paths.
+  - Default value: `true`
 
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:

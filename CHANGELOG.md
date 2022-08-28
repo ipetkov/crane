@@ -24,6 +24,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `"--all-targets"` instead of being specified as the cargo command itself. If
   you have set `cargoClippyExtraArgs` to an explicit value and wish to retain
   the previous behavior you should prepend `"--all-targets"` to it.
+* **Breaking**: `remapSourcePathPrefixHook` and the `doRemapSourcePathPrefix`
+  option have been removed. The behavior to ensure binaries do not accidentally
+  refer to (i.e. depend) on their sources is now controlled via setting
+  `removeReferencesToVendorDir` when calling `buildPackage`. By default
+  references will be removed (same as the old behavior of
+  `doRemapSourcePathPrefix`).
 * All cargo invocations made during the build are automatically logged
 * Vendoring git dependencies will throw a descriptive error message if a locked
   revision is missing from `Cargo.lock` and a hint towards resolution
