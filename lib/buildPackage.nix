@@ -18,7 +18,9 @@ let
     if [ -n "$cargoBuildLog" -a -f "$cargoBuildLog" ]; then
       installFromCargoBuildLog "$out" "$cargoBuildLog"
 
-      if [ "1" = "''${removeReferencesToVendorDir-}" ] && [ -n "''${cargoVendorDir-}" ]; then
+      # Strip any references to the sources directory (which may have slipped in via
+      # panic info) so depending on the binary doesn't pull in all the sources as well.
+      if [ -z "''${doNotRemoveReferencesToVendorDir-}" ] && [ -n "''${cargoVendorDir-}" ]; then
         find "$out" -type f -exec remove-references-to -t "$cargoVendorDir" '{}' +
       fi
     else
@@ -47,10 +49,6 @@ in
 
   # Don't copy target dir by default since we are going to be installing bins/libs
   doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
-
-  # Strip any references to the sources directory (which may have slipped in via
-  # panic info) so depending on the binary doesn't pull in all the sources as well.
-  removeReferencesToVendorDir = args.removeReferencesToVendorDir or true;
 
   buildPhase = args.buildPhase or ''
     runHook preBuild
