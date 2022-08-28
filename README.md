@@ -339,14 +339,6 @@ crane.lib.${system}.overrideScope' (final: prev: {
 crane.lib.${system}.overrideToolchain myCustomToolchain
 ```
 
-### My custom rust flags are getting ignored
-
-If you are using a `build.rustflags` definition in `.cargo/config.toml`,
-consider turning off source prefix remapping by adding
-`doRemapSourcePathPrefix = false;` in your derivation.
-
-See the [API docs] for `remapSourcePathPrefixHook` for more information.
-
 ### Nix is complaining about IFD (import from derivation)
 
 If a derivation's `pname` and `version` attributes are not explicitly set,

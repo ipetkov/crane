@@ -15,5 +15,4 @@ callPackage:
   inheritCargoArtifactsHook = callPackage ./inheritCargoArtifacts.nix { };
   installCargoArtifactsHook = callPackage ./installCargoArtifacts.nix { };
   installFromCargoBuildLogHook = callPackage ./installFromCargoBuildLog.nix { };
-  remapSourcePathPrefixHook = callPackage ./remapSourcePathPrefix.nix { };
 }
