@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.6.0] - 2022-09-07
+
 ### Added
 * Added `cargoNextest` for running tests via [cargo-nextest](https://nexte.st/)
 * Added `cargoAudit` for running [cargo-audit](https://crates.io/crates/cargo-audit)
@@ -172,6 +174,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.6.0]: https://github.com/ipetkov/crane/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/ipetkov/crane/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/ipetkov/crane/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/ipetkov/crane/compare/v0.4.0...v0.4.1
