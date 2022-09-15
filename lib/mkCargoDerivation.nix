@@ -27,14 +27,16 @@ args@{
 , ...
 }:
 let
+  chosenStdenv = args.stdenv or stdenv;
   cleanedArgs = builtins.removeAttrs args [
     "buildPhaseCargoCommand"
     "checkPhaseCargoCommand"
     "installPhaseCommand"
     "pnameSuffix"
+    "stdenv"
   ];
 in
-stdenv.mkDerivation (cleanedArgs // {
+chosenStdenv.mkDerivation (cleanedArgs // {
   pname = "${args.pname}${args.pnameSuffix or ""}";
 
   # Controls whether cargo's `target` directory should be copied as an output

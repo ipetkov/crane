@@ -645,6 +645,8 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
     appropriate installation commands for the package being built.
 * `pnameSuffix`: a suffix appended to `pname`
   - Default value: `""`
+* `stdenv`: the standard build environment to use for this derivation
+  - Default value: `pkgs.stdenv`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -656,6 +658,7 @@ environment variables during the build, you can bring them back via
 * `checkPhaseCargoCommand`
 * `installPhaseCommand`
 * `pnameSuffix`
+* `stdenv`
 
 #### Native build dependencies and included hooks
 The `cargo` package is automatically appended as a native build input to any
