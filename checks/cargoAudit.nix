@@ -2,6 +2,7 @@
 , fetchFromGitHub
 , lib
 , linkFarmFromDrvs
+, runCommandLocal
 }:
 
 let
@@ -14,11 +15,25 @@ let
       sha256 = "sha256-9eSrCrsSNyl79JMH7LrlCpn9a8lYJ01daZNxUDBKMEo=";
     };
   };
+
+  simpleWithAuditToml = (auditWith "simple-with-audit-toml" ./simple-with-audit-toml);
+
+  containsAuditTomlInSrc = runCommandLocal "containsAuditTomlInSrc" { } ''
+    if [[ -f ${simpleWithAuditToml.src}/audit.toml ]]; then
+      touch $out
+    else
+      echo "missing audit.toml file"
+      false
+    fi
+  '';
 in
 linkFarmFromDrvs "cleanCargoToml" [
   # Check against all different kinds of workspace types to make sure it works
   (auditWith "simple" ./simple)
   (auditWith "simple-git" ./simple-git)
+
+  simpleWithAuditToml
+  containsAuditTomlInSrc
 
   (auditWith "gitRevNoRef" ./gitRevNoRef)
   (auditWith "git-overlapping" ./git-overlapping)
