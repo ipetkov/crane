@@ -19,7 +19,7 @@ let
   simpleWithAuditToml = (auditWith "simple-with-audit-toml" ./simple-with-audit-toml);
 
   containsAuditTomlInSrc = runCommandLocal "containsAuditTomlInSrc" { } ''
-    if [[ -f ${simpleWithAuditToml.src}/audit.toml ]]; then
+    if [[ -f ${simpleWithAuditToml.src}/.cargo/audit.toml ]]; then
       touch $out
     else
       echo "missing audit.toml file"
