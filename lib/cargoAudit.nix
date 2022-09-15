@@ -18,9 +18,11 @@ cargoBuild (args // {
 
   src = lib.cleanSourceWith {
     inherit src;
-    # Keep all Cargo.lock files in the source in case the caller wants to
+    # Keep all Cargo.lock and audit.toml files in the source in case the caller wants to
     # pass a flag to audit a specific one.
-    filter = path: type: type == "directory" || lib.hasSuffix "Cargo.lock" path;
+    filter = path: type: type == "directory"
+      || lib.hasSuffix "Cargo.lock" path
+      || lib.hasSuffix "audit.toml" path;
   };
 
   cargoArtifacts = null; # Don't need artifacts, just Cargo.lock

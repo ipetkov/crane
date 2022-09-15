@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## Fixed
+* `cargoAudit` properly keeps any `audit.toml` files when cleaning the source
+
 ## [0.6.0] - 2022-09-07
 
 ### Added
