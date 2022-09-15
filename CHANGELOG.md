@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## Changed
+* `mkCargoDerivation` (along with any of its callers like `cargoBuild`,
+  `buildPackage`, etc.) now accept a `stdenv` argument which will override the
+  default environment (coming from `pkgs.stdenv`) for that particular derivation
+
 ## Fixed
 * `cargoAudit` properly keeps any `audit.toml` files when cleaning the source
 

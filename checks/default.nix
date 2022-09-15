@@ -142,6 +142,10 @@ myPkgs // {
   simpleOnlyTests = myLib.buildPackage {
     src = ./simple-only-tests;
   };
+  simpleAltStdenv = myLib.buildPackage {
+    src = ./simple;
+    stdenv = pkgs.gcc12Stdenv;
+  };
 
   simple-nonflake = (import ../default.nix {
     inherit pkgs;
