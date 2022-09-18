@@ -52,6 +52,7 @@ in
 
   buildPhase = args.buildPhase or ''
     runHook preBuild
+    cargo --version
     ${buildPhaseCargoCommand}
     runHook postBuild
   '';

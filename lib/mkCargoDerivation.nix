@@ -64,6 +64,12 @@ chosenStdenv.mkDerivation (cleanedArgs // {
     runHook postCheck
   '';
 
+  configurePhase = args.configurePhase or ''
+    runHook preConfigure
+    echo default configurePhase, nothing to do
+    runHook postConfigure
+  '';
+
   installPhase = args.installPhase or ''
     runHook preInstall
     ${installPhaseCommand}

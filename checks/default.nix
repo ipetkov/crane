@@ -146,6 +146,13 @@ myPkgs // {
     src = ./simple;
     stdenv = pkgs.gcc12Stdenv;
   };
+  # https://github.com/ipetkov/crane/issues/104
+  simpleWithCmake = myLib.buildPackage {
+    src = ./simple;
+    nativeBuildInputs = with pkgs; [
+      cmake
+    ];
+  };
 
   simple-nonflake = (import ../default.nix {
     inherit pkgs;

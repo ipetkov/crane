@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ## Changed
+* **Breaking**: `mkCargoDerivation` now includes a default `configurePhase`
+  which does nothing but run the `preConfigure` and `postConfigure` hooks. This
+  is done to avoid breaking builds by including puts happen to have setup-hooks
+  which try to claim the configure phase (such as `cmake`). To get the old
+  behavior back, set `configurePhase = null;` in the derivation.
 * `mkCargoDerivation` (along with any of its callers like `cargoBuild`,
   `buildPackage`, etc.) now accept a `stdenv` argument which will override the
   default environment (coming from `pkgs.stdenv`) for that particular derivation
