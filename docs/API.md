@@ -631,6 +631,9 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
 * `checkPhase`: the commands used by the check phase of the derivation
   - Default value: the check phase will run `preCheck` hooks, log and evaluate
     `checkPhaseCargoCommand`, and run `postCheck` hooks
+* `configurePhase`: the commands used by the configure phase of the derivation
+  - Default value: the configure phase will run `preConfigureHooks` hooks, then
+    run `postConfigure` hooks
 * `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
   be copied as an output
   - Default value: `true`
