@@ -57,11 +57,14 @@
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
           };
 
+          my-crate-doc = craneLib.cargoDoc {
+            inherit cargoArtifacts src;
+          };
+
           # Check formatting
           my-crate-fmt = craneLib.cargoFmt {
             inherit src;
           };
-
 
           # Audit dependencies
           my-crate-audit = craneLib.cargoAudit {
