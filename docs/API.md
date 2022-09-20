@@ -86,13 +86,13 @@ to influence its behavior.
   - Default value: `"${cargoCheckCommand} ${cargoExtraArgs}\n${cargoBuildCommand} ${cargoExtraArgs}"`
 * `cargoBuildCommand`: A cargo (build) invocation to run during the derivation's build
   phase
-  - Default value: `"cargo build --profile release --all-targets"`
+  - Default value: `"cargo build --profile release"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
       is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoCheckCommand`: A cargo (check) invocation to run during the derivation's build
   phase (in order to cache additional artifacts)
-  - Default value: `"cargo build --profile release"`
+  - Default value: `"cargo check --profile release --all-targets"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
       is selected; setting it to `""` will omit specifying a profile
       altogether.
