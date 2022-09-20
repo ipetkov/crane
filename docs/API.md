@@ -352,6 +352,48 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoClippyExtraArgs`
 
+### `lib.cargoDoc`
+
+`cargoDoc :: set -> drv`
+
+Create a derivation which will run a `cargo doc` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+`cargoBuild`, and can be used to influence its behavior.
+* `cargoBuildCommand` will be set to run `cargo doc --profile release` for
+  the workspace.
+  - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+    is selected; setting it to `""` will omit specifying a profile
+    altogether.
+* `cargoExtraArgs` will have `cargoDocExtraArgs` appended to it
+  - Default value: `"--no-deps"`
+* `doCheck` is disabled
+* `pnameSuffix` will be set to `"-doc"`
+
+#### Required attributes
+* `cargoArtifacts`: A path (or derivation) which contains an existing cargo
+  `target` directory, which will be reused at the start of the derivation.
+  Useful for caching incremental cargo builds.
+  - This can be prepared via `buildDepsOnly`
+  - Alternatively, any cargo-based derivation which was built with
+    `doInstallCargoArtifacts = true` will work as well
+
+#### Optional attributes
+* `cargoDocExtraArgs`: additional flags to be passed in the rustdoc invocation (e.g.
+  deny specific lints)
+  - Default value: `"--no-deps"`
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
+  enabling specific features)
+  - Default value: `""`
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`cargoBuild`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `cargoDocExtraArgs`
+
 ### `lib.cargoFmt`
 
 `cargoFmt :: set -> drv`

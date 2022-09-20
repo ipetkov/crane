@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## Added
+* `cargoDoc` can now be used for building the documentation of a workspace
+
 ## Changed
 * **Breaking**: `mkCargoDerivation` now includes a default `configurePhase`
   which does nothing but run the `preConfigure` and `postConfigure` hooks. This

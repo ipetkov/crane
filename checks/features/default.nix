@@ -1,4 +1,5 @@
 { buildPackage
+, cargoBuild
 , compilesFresh
 , lib
 , linkFarmFromDrvs
@@ -16,8 +17,9 @@ let
     [
       crate
 
-      (compilesFresh ./features "features" {
+      (compilesFresh "features" cargoBuild {
         inherit cargoExtraArgs;
+        src = ./features;
         pname = "${pname}CompilesFresh";
       })
 

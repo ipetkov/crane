@@ -17,6 +17,7 @@ in
   cargoAudit = callPackage ./cargoAudit.nix { };
   cargoBuild = callPackage ./cargoBuild.nix { };
   cargoClippy = callPackage ./cargoClippy.nix { };
+  cargoDoc = callPackage ./cargoDoc.nix { };
   cargoFmt = callPackage ./cargoFmt.nix { };
   cargoNextest = callPackage ./cargoNextest.nix { };
   cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };

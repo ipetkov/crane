@@ -3,7 +3,7 @@
 , jq
 }:
 
-src: expected: args:
+expected: mkDrv: args:
 let
   runCargoAndCheckFreshness = cmd: extra: ''
     cargo ${cmd} \
@@ -23,13 +23,12 @@ let
     fi
   '';
 in
-cargoBuild (args // {
-  inherit src;
+mkDrv (args // {
   doInstallCargoArtifacts = false;
 
   # NB: explicit call here so that the buildDepsOnly call
   # doesn't inherit our build commands
-  cargoArtifacts = buildDepsOnly (args // { inherit src; });
+  cargoArtifacts = buildDepsOnly args;
 
   nativeBuildInputs = [ jq ];
 

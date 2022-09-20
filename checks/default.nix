@@ -57,16 +57,19 @@ myPkgs // {
   });
 
   compilesFresh = callPackage ./compilesFresh.nix { };
-  compilesFreshSimple = self.compilesFresh ./simple "simple" { };
+  compilesFreshSimple = self.compilesFresh "simple" (myLib.cargoBuild) {
+    src = ./simple;
+  };
   compilesFreshOverlappingTargets = self.compilesFresh
-    ./overlapping-targets
     (builtins.concatStringsSep "\n" [
       "bar"
       "baz"
       "foo"
       "overlapping-targets"
     ])
-    { };
+    myLib.cargoBuild {
+      src = ./overlapping-targets;
+    };
 
   customCargoTargetDirectory =
     let
@@ -81,6 +84,19 @@ myPkgs // {
       ${simple}/bin/simple
       touch $out
     '';
+
+  docs = myLib.cargoDoc {
+    src = ./simple;
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./simple;
+    };
+  };
+  docsFresh = self.compilesFresh "simple" (myLib.cargoDoc) {
+    src = ./simple;
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./simple;
+    };
+  };
 
   depsOnlyVariousTargets = myLib.buildDepsOnly {
     src = ./various-targets;
