@@ -522,6 +522,26 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoTarpaulinExtraArgs`
 
+### `lib.cleanCargoSource`
+
+`cleanCargoSource :: path or drv -> drv`
+
+Cleans a source tree to omit things like version control directories as well
+omit any non-Rust/non-cargo related files. Useful to avoid rebuilding a project
+when unrelated files are changed (e.g. `flake.nix` or any other nix files).
+
+The final output will be cleaned by both `cleanSourcesFilter` (from nixpkgs) and
+`lib.filterCargoSources`. See each of them for more details on which files are
+kept.
+
+If it is necessary to customize which files are kept, a custom filter can be
+written (which may want to also call `lib.filterCargoSources`) to achieve the
+desired behavior.
+
+```nix
+lib.cleanCargoSource ./.
+```
+
 ### `lib.cleanCargoToml`
 
 `cleanCargoToml :: set -> set`
@@ -632,6 +652,39 @@ Given a path, recursively search it for any `Cargo.toml`, `.cargo/config` or
 ```nix
 lib.findCargoFiles ./src
 # { cargoTomls = [ "..." ]; cargoConfigs = [ "..." ]; }
+```
+
+### `lib.filterCargoSources`
+
+`filterCargoSources :: path -> string -> bool`
+
+A source filter which when used with `cleanSourceWith` (from nixpkgs's `lib`)
+will retain the following files from a given source:
+- Cargo files (`Cargo.toml`, `Cargo.lock`, `.cargo/config.toml`, `.cargo/config`)
+- Rust files (files whose name end with `.rs`)
+- TOML files (files whose name end with `.toml`)
+
+```nix
+cleanSourceWith {
+  src = ./.;
+  filter = lib.filterCargoSources;
+}
+```
+
+Note that it is possible to compose source filters, especially if
+`filterCargoSources` omits files which are relevant to the build. For example:
+
+```nix
+let
+  # Only keeps markdown files
+  markdownFilter = path: _type: match ".*md$" path;
+  markdownOrCargo = path: type:
+    (markdownFilter path type) || (lib.filterCargoSources path type);
+in
+cleanSourceWith {
+  src = ./.;
+  filter = markdownOrCargo;
+}
 ```
 
 ### `lib.mkCargoDerivation`

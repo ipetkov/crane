@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Added
 * `cargoDoc` can now be used for building the documentation of a workspace
+* `cleanCargoSource` can now be used to filter sources to only include cargo and
+  Rust files (and avoid rebuilds when irrelevant files change).
+  `filterCargoSources` is the underlying filter implementation and can be
+  composed with other filters
 
 ## Changed
 * **Breaking**: `mkCargoDerivation` now includes a default `configurePhase`

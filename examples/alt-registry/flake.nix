@@ -46,7 +46,7 @@
         ];
 
         my-crate = craneLib.buildPackage {
-          src = ./.;
+          src = craneLib.cleanCargoSource ./.;
 
           # Specific to our example, but not always necessary in the general case.
           nativeBuildInputs = with pkgs; [

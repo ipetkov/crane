@@ -142,10 +142,10 @@ myPkgs // {
   nextest = callPackage ./nextest.nix { };
 
   simple = myLib.buildPackage {
-    src = ./simple;
+    src = myLib.cleanCargoSource ./simple;
   };
   simpleGit = myLib.buildPackage {
-    src = ./simple-git;
+    src = myLib.cleanCargoSource ./simple-git;
   };
   simpleCustomProfile = myLib.buildPackage {
     src = ./simple;
@@ -156,7 +156,7 @@ myPkgs // {
     CARGO_PROFILE = "";
   };
   simpleOnlyTests = myLib.buildPackage {
-    src = ./simple-only-tests;
+    src = myLib.cleanCargoSource ./simple-only-tests;
   };
   simpleAltStdenv = myLib.buildPackage {
     src = ./simple;
@@ -230,17 +230,17 @@ myPkgs // {
   vendorGitSubset = callPackage ./vendorGitSubset.nix { };
 
   workspace = myLib.buildPackage {
-    src = ./workspace;
+    src = myLib.cleanCargoSource ./workspace;
     pname = "workspace";
   };
 
   workspaceRoot = myLib.buildPackage {
-    src = ./workspace-root;
+    src = myLib.cleanCargoSource ./workspace-root;
     pname = "workspace-root";
   };
 
   workspaceGit = myLib.buildPackage {
-    src = ./workspace-git;
+    src = myLib.cleanCargoSource ./workspace-git;
     pname = "workspace-git";
   };
 })
