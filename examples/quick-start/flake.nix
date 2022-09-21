@@ -27,7 +27,7 @@
         inherit (pkgs) lib;
 
         craneLib = crane.lib.${system};
-        src = ./.;
+        src = craneLib.cleanCargoSource ./.;
 
         # Build *just* the cargo dependencies, so we can reuse
         # all of that work (e.g. via cachix) when running in CI

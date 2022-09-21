@@ -61,9 +61,13 @@ following contents at the root of your cargo workspace:
   };
 
   outputs = { self, nixpkgs, crane, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system: {
-      packages.default = crane.lib.${system}.buildPackage {
-        src = ./.;
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        craneLib = crane.lib.${system};
+      in
+    {
+      packages.default = craneLib.buildPackage {
+        src = craneLib.cleanCargoSource ./.;
 
         # Add extra inputs here or any other derivation settings
         # doCheck = true;
@@ -131,7 +135,7 @@ Here's how we can set up our flake to achieve our goals:
 
         # Common derivation arguments used for all builds
         commonArgs = {
-          src = ./.;
+          src = craneLib.cleanCargoSource ./.;
 
           buildInputs = with pkgs; [
             # Add extra build inputs here, etc.
@@ -233,7 +237,7 @@ build.
         craneLib = crane.lib.${system};
         # Common derivation arguments used for all builds
         commonArgs = {
-          src = ./.;
+          src = craneLib.cleanCargoSource ./.;
 
           buildInputs = with pkgs; [
             # Add extra build inputs here, etc.
@@ -365,13 +369,15 @@ changes (including "unrelated" changes to `flake.nix`)!
 
 There are two main ways to avoid unnecessary builds:
 
-1. One option is to put the crate's source files into its own subdirectory (e.g.
-   `./mycrate`) and then set the build expression's source to that subdirectory
-   (e.g. `src = ./mycrate;`). Then, changes to files _outside_ of that directory
-   will be ignored and will not cause a rebuild
-1. The other option is to use a [source cleaning] function from nixpkgs which
-   can omit any files know to not be needed while building the crate (for
-   example, all `*.nix` sources, `flake.lock`, and so on)
+1. Use a [source cleaning] function which can omit any files know to not be
+   needed while building the crate (for example, all `*.nix` sources,
+   `flake.lock`, and so on). For example `cleanCargoSource` (see [API docs] for
+   details) implements some good defaults for ignoring irrelevant files which
+   are not needed by cargo.
+1. Another option is to put the crate's source files into its own subdirectory
+   (e.g. `./mycrate`) and then set the build expression's source to that
+   subdirectory (e.g. `src = ./mycrate;`). Then, changes to files _outside_ of
+   that directory will be ignored and will not cause a rebuild
 
 ### I'm trying to build another cargo project from source which has no lock file
 

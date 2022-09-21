@@ -21,6 +21,7 @@ in
   cargoFmt = callPackage ./cargoFmt.nix { };
   cargoNextest = callPackage ./cargoNextest.nix { };
   cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };
+  cleanCargoSource = callPackage ./cleanCargoSource.nix { };
   cleanCargoToml = callPackage ./cleanCargoToml.nix { };
   crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix { };
 
@@ -32,6 +33,7 @@ in
   downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
   downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
   findCargoFiles = callPackage ./findCargoFiles.nix { };
+  filterCargoSources = callPackage ./filterCargoSources.nix { };
   mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
   mkDummySrc = callPackage ./mkDummySrc.nix { };
 

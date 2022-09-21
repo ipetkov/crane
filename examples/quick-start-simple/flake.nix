@@ -19,8 +19,9 @@
           inherit system;
         };
 
-        my-crate = crane.lib.${system}.buildPackage {
-          src = ./.;
+        craneLib = crane.lib.${system};
+        my-crate = craneLib.buildPackage {
+          src = craneLib.cleanCargoSource ./.;
         };
       in
       {
