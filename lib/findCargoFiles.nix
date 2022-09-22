@@ -11,12 +11,13 @@ let
     mapAttrsToList;
 
   # A specialized form of lib.listFilesRecursive except it will only look
-  # for Cargo.toml and config.toml files to keep the intermediate results lean
+  # for Cargo.toml and files in `.cargo/` to keep the intermediate results lean
   listFilesRecursive = parentIsDotCargo: dir: flatten (mapAttrsToList
     (name: type:
       let
         cur = dir + "/${name}";
         isConfig = parentIsDotCargo && (name == "config" || name == "config.toml");
+        isOther = !isConfig && parentIsDotCargo;
         isCargoToml = name == "Cargo.toml";
       in
       if type == "directory"
@@ -25,6 +26,8 @@ let
       then [{ path = cur; type = "cargoTomls"; }]
       else if isConfig
       then [{ path = cur; type = "cargoConfigs"; }]
+      else if isOther
+      then [{ path = cur; type = "other"; }]
       else [ ]
     )
     (builtins.readDir dir));
@@ -37,6 +40,7 @@ let
   default = {
     cargoTomls = [ ];
     cargoConfigs = [ ];
+    other = [ ];
   };
 in
 default // cleaned

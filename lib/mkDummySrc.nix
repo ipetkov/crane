@@ -29,7 +29,7 @@ let
   # We want to build a dummy version of the project source. The only things that
   # we want to keep are:
   # 1. the Cargo.lock file
-  # 2. any .cargo/config.toml files (unaltered)
+  # 2. any files under .cargo/ (unaltered)
   # 3. any Cargo.toml files stripped down only the attributes that would affect
   # caching dependencies
   #
@@ -101,7 +101,7 @@ let
         (p: removePrefix uncleanSrcBasePath (toString p))
         # Allow the default `Cargo.lock` location to be picked up here
         # (if it exists) so it automattically appears in the cleaned source
-        (uncleanFiles.cargoConfigs ++ [ "Cargo.lock" ]);
+        (uncleanFiles.cargoConfigs ++ uncleanFiles.other ++ [ "Cargo.lock" ]);
     in
     lib.cleanSourceWith {
       inherit src;

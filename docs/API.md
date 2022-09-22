@@ -781,8 +781,7 @@ empty programs, such that changes to the source files does not invalidate any
 build caches. More specifically:
 * The Cargo.lock file is kept as-is
   - Any changes to it will invalidate the build cache
-* Any cargo configuration files (i.e. files name `config` or `config.toml` whose
-  parent directory is named `.cargo`) are kept as-is.
+* Any cargo configuration files (i.e. files under `.cargo` directory) are kept as-is.
   - Any changes to these files will invalidate the build cache
 * Any files named `Cargo.toml` are reduced via `cleanCargoToml` and the result
   is kept. Only the following changes will result in invalidating the build
