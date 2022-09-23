@@ -17,6 +17,7 @@ let
     "cargoCheckCommand"
     "cargoExtraArgs"
     "cargoTestCommand"
+    "dummySrc"
   ];
 
   throwMsg = throw ''
@@ -28,10 +29,10 @@ let
 
   path = args.src or throwMsg;
   cargoToml = path + "/Cargo.toml";
-  dummySrc =
-    if builtins.pathExists cargoToml
+  dummySrc = args.dummySrc or
+    (if builtins.pathExists cargoToml
     then mkDummySrc args
-    else throwMsg;
+    else throwMsg);
 in
 mkCargoDerivation (cleanedArgs // {
   src = dummySrc;

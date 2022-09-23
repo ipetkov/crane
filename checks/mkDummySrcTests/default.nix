@@ -5,17 +5,21 @@
 }:
 
 let
-  cmpDummySrcRaw = name: input: expected:
+  doCompare = name: expected: actual:
+    runCommand "compare-${name}" { } ''
+      echo ${expected} ${actual}
+      diff -r ${expected} ${actual}
+      touch $out
+    '';
+
+
+  cmpDummySrcRaw = name: expected: input:
     let
       dummySrc = mkDummySrc {
         src = input;
       };
     in
-    runCommand "compare-${name}" { } ''
-      echo ${expected} ${dummySrc}
-      diff -r ${expected} ${dummySrc}
-      touch $out
-    '';
+    doCompare name expected dummySrc;
 
   cmpDummySrc = name: path:
     let
@@ -35,12 +39,27 @@ let
       };
     in
     [
-      (cmpDummySrcRaw name input expected)
-      (cmpDummySrcRaw "${name}-filtered" filteredInput expected)
+      (cmpDummySrcRaw name expected input)
+      (cmpDummySrcRaw "${name}-filtered" expected filteredInput)
     ];
+
+  customizedDummy =
+    let
+      expected = ./customized/expected;
+      input = ./customized/input;
+    in
+    doCompare "customized" expected (mkDummySrc {
+      src = input;
+      extraDummyScript = ''
+        cp ${input}/extra-custom-file.txt $out
+        echo 'another additional file' >$out/another-custom-file.txt
+      '';
+    });
 in
 linkFarmFromDrvs "cleanCargoToml" (lib.flatten [
   (cmpDummySrc "single" ./single)
   (cmpDummySrc "single-alt" ./single-alt)
   (cmpDummySrc "workspace" ./workspace)
+
+  customizedDummy
 ])

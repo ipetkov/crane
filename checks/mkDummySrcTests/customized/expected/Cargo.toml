@@ -1,0 +1,35 @@
+[[bench]]
+name = "bench1"
+
+[[bench]]
+name = "bench2"
+path = "benches/custom.rs"
+
+[[bin]]
+name = "bin1"
+
+[[bin]]
+name = "bin2"
+path = "src/bin/custom.rs"
+
+[[example]]
+name = "example1"
+
+[[example]]
+name = "example2"
+path = "examples/custom.rs"
+
+[[test]]
+name = "test1"
+
+[[test]]
+name = "test2"
+path = "tests/custom.rs"
+
+[lib]
+name = "foo"
+
+[package]
+edition = "2021"
+name = "mkDummySrcSimple"
+version = "0.1.0"

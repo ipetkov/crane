@@ -114,6 +114,9 @@ to influence its behavior.
   - Default value: `"${cargoTestCommand} ${cargoExtraArgs}"`
 * `doCheck`: whether the derivation's check phase should be run
   - Default value: `true`
+* `dummySrc`: the "dummy" source to use when building this derivation.
+  Automatically derived if not passed in
+  - Default value: `mkDummySrc args.src`
 * `pname`: package name of the derivation
   - Default value: inherited from calling `crateNameFromCargoToml`
 * `version`: version of the derivation
@@ -129,6 +132,7 @@ environment variables during the build, you can bring them back via
 * `cargoCheckCommand`
 * `cargoExtraArgs`
 * `cargoTestCommand`
+* `dummySrc`
 
 ### `lib.buildPackage`
 
@@ -794,6 +798,10 @@ build caches. More specifically:
 #### Optional attributes
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
+* `extraScript`: additional shell script which will be run inside the builder
+  verbatim. Useful for customizing what the dummy sources include by running any
+  arbitrary commands.
+  - Default value: `""`
 
 ### `lib.overrideToolchain`
 

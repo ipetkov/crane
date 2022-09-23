@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `mkCargoDerivation` (along with any of its callers like `cargoBuild`,
   `buildPackage`, etc.) now accept a `stdenv` argument which will override the
   default environment (coming from `pkgs.stdenv`) for that particular derivation
+* `mkDummySrc` now accepts `extraScript` which can be used to run a custom
+  script, and therefore customize what the dummy source contains
+* `buildDepsOnly` now accepts `dummySrc` as a way to directly pass in the dummy
+  source to be used. Automatically derived via `args.src` if not specified.
 
 ## Fixed
 * `cargoAudit` properly keeps any `audit.toml` files when cleaning the source

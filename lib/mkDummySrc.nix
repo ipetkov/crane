@@ -8,6 +8,7 @@
 
 { src
 , cargoLock ? null
+, extraDummyScript ? ""
 , ...
 }:
 let
@@ -187,4 +188,5 @@ runCommandLocal "dummy-src" { } ''
   cp --recursive --no-preserve=mode,ownership ${cleanSrc}/. -t $out
   ${copyCargoLock}
   ${copyAndStubCargoTomls}
+  ${extraDummyScript}
 ''
