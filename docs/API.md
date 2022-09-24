@@ -171,17 +171,11 @@ log.
   - Default value: the install phase will run `preInstall` hooks, look for a
     cargo build log and install all binary targets listed there, and run
     `postInstall` hooks
-* `doNotRemoveReferencesToVendorDir`: controls whether references to vendored sources
-  will be stripped from any installed binaries. This avoids forcing consumers to
-  download all project sources if, for example, debug/panic info refers to those
-  paths. By default references to the vendored sources _will be removed_ but
-  setting this environment variable to any value will leave the results
-  unaltered.
-  - Default value: `""`
 
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
 * `installFromCargoBuildLogHook`
+* `removeReferencesToVendoredSourcesHook`
 
 ### `lib.cargoAudit`
 `cargoAudit :: set -> drv`
@@ -1073,3 +1067,23 @@ takes two positional arguments:
      json-render-diagnostics >cargo-build.json`
 
 **Automatic behavior:** none
+
+### `removeReferencesToVendoredSourcesHook`
+
+Defines `removeReferencesToVendoredSources()` which handles removing all
+references to vendored sources from the installed binaries, which ensures that
+nix does not consider the binaries as having a (runtime) dependency on the
+sources themselves. It takes two positional arguments:
+1. the installation directory for the output.
+   * If not specified, the value of `$out` will be used
+   * If `out` is not specified, an error will be raised
+1. a path to the vendored sources
+   * If not specified, the value of `$cargoVendorDir` will be used
+   * If `cargoVendorDir` is not specified, an error will be raised
+   * Note: it is expected that this directory has the exact structure as would
+     be produced by `lib.vendorCargoDeps`
+
+**Automatic behavior:** if `cargoVendorDir` is set and
+`doNotRemoveReferencesToVendorDir` is not set, then
+`removeReferencesToVendoredSources "$out" "$cargoVendorDir"` will be run as a
+post install hook.
