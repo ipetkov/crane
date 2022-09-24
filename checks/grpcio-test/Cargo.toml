@@ -1,0 +1,8 @@
+[package]
+name = "grpcio-test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.grpcio]
+default-features = false
+version = "0.8"

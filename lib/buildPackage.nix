@@ -21,7 +21,22 @@ let
       # Strip any references to the sources directory (which may have slipped in via
       # panic info) so depending on the binary doesn't pull in all the sources as well.
       if [ -z "''${doNotRemoveReferencesToVendorDir-}" ] && [ -n "''${cargoVendorDir-}" ]; then
-        find "$out" -type f -exec remove-references-to -t "$cargoVendorDir" '{}' +
+        echo stripping references to cargoVendorDir
+
+        local allCrates=$(
+          (
+            echo "$cargoVendorDir"
+            find -L "$cargoVendorDir" -mindepth 1 -maxdepth 1 -type d | \
+              xargs -I DIR find -H DIR -type l -exec readlink '{}' \;
+          ) | sort -u
+        )
+
+        for f in $(find "$out" -type f); do
+          comm -1 -2 <(echo "$allCrates") <(strings "$f" | \
+            grep --only-matching '\(${builtins.storeDir}/[^/]\+\)' | \
+            sort -u) | \
+            xargs --verbose -I REF remove-references-to -t REF "$f"
+        done
       fi
     else
       echo ${lib.strings.escapeShellArg ''

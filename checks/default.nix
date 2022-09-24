@@ -176,18 +176,32 @@ myPkgs // {
     src = ./simple;
   };
 
-  removeReferencesToVendorDir = pkgs.runCommand "removeReferencesToVendorDir" { } ''
-    if ${pkgs.binutils-unwrapped}/bin/strings ${self.ripgrep}/bin/rg | \
-      grep --only-matching '${builtins.storeDir}/[^/]\+' | \
-      grep --invert-match glibc | \
-      grep --invert-match '${builtins.storeDir}/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' --count
-    then
-      echo found references to /nix/store sources
-      false
-    else
-      touch $out
-    fi
-  '';
+  # https://github.com/ipetkov/crane/issues/119
+  removeReferencesToVendorDirAndCrates =
+  let
+    crate = myLib.buildPackage {
+      src = ./grpcio-test;
+      nativeBuildInputs = [
+        pkgs.cmake
+      ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
+        pkgs.gcc10
+      ];
+    };
+  in
+    pkgs.runCommand "removeReferencesToVendorDir" {
+      nativeBuildInputs = [ pkgs.binutils-unwrapped ];
+    } ''
+      if strings ${crate}/bin/grpcio-test | \
+        grep --only-matching '${builtins.storeDir}/[^/]\+' | \
+        grep --invert-match 'glibc\|gcc' | \
+        grep --invert-match '${builtins.storeDir}/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' --count
+      then
+        echo found references to /nix/store sources
+        false
+      else
+        touch $out
+      fi
+    '';
 
   # Test building a real world example
   ripgrep = myLib.buildPackage {
