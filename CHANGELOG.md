@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   Rust files (and avoid rebuilds when irrelevant files change).
   `filterCargoSources` is the underlying filter implementation and can be
   composed with other filters
+* `removeReferencesToVendoredSourcesHook` defines a post-install hook which will
+  remove any references to vendored sources from any installed binaries. Useful
+  for preventing nix from considering the binaries as having a (runtime)
+  dependency on said sources
 
 ## Changed
 * **Breaking**: `mkCargoDerivation` now includes a default `configurePhase`
