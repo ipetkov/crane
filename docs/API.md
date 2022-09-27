@@ -114,6 +114,9 @@ to influence its behavior.
   - Default value: `"${cargoTestCommand} ${cargoExtraArgs}"`
 * `doCheck`: whether the derivation's check phase should be run
   - Default value: `true`
+* `dummySrc`: the "dummy" source to use when building this derivation.
+  Automatically derived if not passed in
+  - Default value: `mkDummySrc args.src`
 * `pname`: package name of the derivation
   - Default value: inherited from calling `crateNameFromCargoToml`
 * `version`: version of the derivation
@@ -129,6 +132,7 @@ environment variables during the build, you can bring them back via
 * `cargoCheckCommand`
 * `cargoExtraArgs`
 * `cargoTestCommand`
+* `dummySrc`
 
 ### `lib.buildPackage`
 
@@ -794,6 +798,41 @@ build caches. More specifically:
 #### Optional attributes
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
+* `extraDummyScript`: additional shell script which will be run inside the builder
+  verbatim. Useful for customizing what the dummy sources include by running any
+  arbitrary commands.
+  - Default value: `""`
+  - Note that this script will run in an environment
+    _where the original source is not present_ as doing so would cause a rebuild
+    if any part of the source changed. Additional files can be copied to the
+    derivation's result, but care must be taken that the derivation only depends
+    on (i.e. is rebuilt if) the smallest subset of the original source as
+    required.
+  - Here is an example of how to include an entire directory, in this case
+    `.cargo`, but any other directory would work as well:
+    ```nix
+    let
+    in
+    mkDummySrc {
+      # The _entire_ source of the project. mkDummySrc will automatically
+      # filter out irrelevant files as described above
+      src = ./.;
+
+      # Note that here we scope the path to just `./.cargo` and not any other
+      # directories which may exist at the root of the project. Also note that
+      # the entire path is inside of the `${ }` which ensures that the
+      # derivation only consumes that directory. Writing `${./.}/.cargo` would
+      # incorectly consume the entire source root, and therefore rebuild
+      # everything when any file changes, which defeats artifact caching.
+      #
+      # Also note the `--no-target-directory` flag which ensures the results are
+      # copied to `$out/.cargo` instead of something like `$out/HASH-.cargo`
+      extraDummyScript = ''
+        cp -r ${./.cargo} --no-target-directory $out/.cargo
+      '';
+    }
+    ```
+
 
 ### `lib.overrideToolchain`
 

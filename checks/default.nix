@@ -139,6 +139,14 @@ myPkgs // {
 
   mkDummySrcTests = callPackage ./mkDummySrcTests { };
 
+  # https://github.com/ipetkov/crane/issues/111
+  mkDummySrcCustom = myLib.buildPackage {
+    src = ./custom-dummy;
+    extraDummyScript = ''
+      cp -r ${./custom-dummy/.cargo} -T $out/.cargo
+    '';
+  };
+
   nextest = callPackage ./nextest.nix { };
 
   simple = myLib.buildPackage {
