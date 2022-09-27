@@ -50,7 +50,7 @@
 
           # Specific to our example, but not always necessary in the general case.
           nativeBuildInputs = with pkgs; [
-            pkgconfig
+            pkg-config
             openssl
           ];
         };

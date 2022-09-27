@@ -223,7 +223,7 @@ myPkgs // {
     myLibWithRegistry.buildPackage {
       src = ../examples/alt-registry;
       nativeBuildInputs = with pkgs; [
-        pkgconfig
+        pkg-config
         openssl
       ];
     }
