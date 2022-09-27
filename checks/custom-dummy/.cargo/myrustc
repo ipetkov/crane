@@ -1,0 +1,3 @@
+#!/bin/sh
+echo running custom rustc >&2
+exec rustc "$@"
