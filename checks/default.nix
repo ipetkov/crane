@@ -70,6 +70,38 @@ myPkgs // {
     myLib.cargoBuild {
       src = ./overlapping-targets;
     };
+  compilesFreshWithBuildScript = self.compilesFresh
+    {
+      check = (builtins.concatStringsSep "\n" [
+        "build-script-build"
+        "with-build-script"
+      ]);
+      build = (builtins.concatStringsSep "\n" [
+        "with-build-script"
+      ]);
+      test = (builtins.concatStringsSep "\n" [
+        "with-build-script"
+      ]);
+    }
+    myLib.cargoBuild {
+      src = ./with-build-script;
+    };
+  compilesFreshWithBuildScriptCustom = self.compilesFresh
+    {
+      check = (builtins.concatStringsSep "\n" [
+        "build-script-mycustomscript"
+        "with-build-script-custom"
+      ]);
+      build = (builtins.concatStringsSep "\n" [
+        "with-build-script-custom"
+      ]);
+      test = (builtins.concatStringsSep "\n" [
+        "with-build-script-custom"
+      ]);
+    }
+    myLib.cargoBuild {
+      src = ./with-build-script-custom;
+    };
 
   customCargoTargetDirectory =
     let
@@ -250,6 +282,15 @@ myPkgs // {
   smokeWorkspaceRoot = self.smoke [ "print" ] self.workspaceRoot;
 
   vendorGitSubset = callPackage ./vendorGitSubset.nix { };
+
+  # https://github.com/ipetkov/crane/issues/117
+  withBuildScript = myLib.buildPackage {
+    src = ./with-build-script;
+  };
+  # https://github.com/ipetkov/crane/issues/117
+  withBuildScriptCustom = myLib.buildPackage {
+    src = ./with-build-script-custom;
+  };
 
   workspace = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace;

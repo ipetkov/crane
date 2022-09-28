@@ -33,6 +33,7 @@ path = "../foo/bar/baz"
 name = "foo"
 
 [package]
+build = "cranespecific-dummy.rs"
 edition = "2021"
 name = "qux"
 version = "0.1.0"

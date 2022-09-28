@@ -20,6 +20,7 @@ let
 
   inherit (lib)
     optionalString
+    recursiveUpdate
     removePrefix;
 
   inherit (lib.strings) concatStrings;
@@ -139,9 +140,30 @@ let
         cargoTomlDest = builtins.unsafeDiscardStringContext (removePrefix cargoTomlsBase (toString p));
         parentDir = "$out/${dirOf cargoTomlDest}";
 
-        trimmedCargoToml = cleanCargoToml {
-          cargoToml = p;
-        };
+        # Override the cleaned Cargo.toml with a build script which points to our dummy
+        # source. We need a build script present to cache build-dependencies, which can be
+        # achieved by dropping a build.rs file in the source directory. Except that is the most
+        # common format to use, and cargo appears to use file timestamps to check for changes
+        # to the build script, yet nix will strip all timestamps when putting the sources in the
+        # store. This results in cargo not realizing that our dummy script and the project's
+        # _real_ script are, in fact, different. So we work around this by having the Cargo.toml
+        # file point directly to our dummy source in the store.
+        # https://github.com/ipetkov/crane/issues/117
+        trimmedCargoToml =
+          let
+            cleanedCargoToml = cleanCargoToml {
+              cargoToml = p;
+            };
+          in
+          # Only update if we have a `package` definition, workspaces Cargo.tomls don't need updating
+          if cleanedCargoToml ? package then
+            recursiveUpdate
+              cleanedCargoToml
+              {
+                package.build = dummyrs;
+              }
+          else
+            cleanedCargoToml;
 
         safeStubLib =
           if hasAttr "lib" trimmedCargoToml
@@ -160,8 +182,6 @@ let
         mkdir -p ${parentDir}
         cp ${writeTOML "Cargo.toml" trimmedCargoToml} $out/${cargoTomlDest}
       '' + optionalString (trimmedCargoToml ? package) ''
-        # To build build-dependencies
-        ${cpDummy parentDir "build.rs"}
         # To build regular and dev dependencies (cargo build + cargo test)
         ${cpDummy parentDir "src/lib.rs"}
 

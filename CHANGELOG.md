@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `buildPackage` now has more robust checks to ensure that all references to
   vendored sources are removed after installation (which avoids consumers of the
   final binaries having to download the sources as well)
+* `mkDummySrc` how handles build scripts in a manner which ensures cargo runs
+  the real script later (instead of thinking it has not changed)
 
 ## [0.6.0] - 2022-09-07
 

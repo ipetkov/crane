@@ -30,6 +30,7 @@ path = "tests/custom.rs"
 name = "foo"
 
 [package]
+build = "cranespecific-dummy.rs"
 edition = "2021"
 name = "bar"
 version = "0.1.0"
