@@ -5,7 +5,13 @@
 }:
 
 let
-  doCompare = name: expected: actual:
+  doCompare = name: expected: orig_actual:
+    let
+      actual = runCommand "trim-actual-${name}" { } ''
+        cp --recursive ${orig_actual} --no-target-directory $out --no-preserve=mode,ownership
+        find $out -name Cargo.toml | xargs sed -i"" 's!/nix/store/[^-]\+-dummy.rs!cranespecific-dummy.rs!'
+      '';
+    in
     runCommand "compare-${name}" { } ''
       echo ${expected} ${actual}
       diff -r ${expected} ${actual}

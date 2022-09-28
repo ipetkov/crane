@@ -3,9 +3,16 @@
 , jq
 }:
 
-expected: mkDrv: args:
+expectedArg: mkDrv: args:
 let
-  runCargoAndCheckFreshness = cmd: extra: ''
+  runCargoAndCheckFreshness = cmd: extra:
+  let
+    expected = if builtins.isAttrs expectedArg then
+      expectedArg.${cmd} or ""
+    else
+      expectedArg;
+  in
+  ''
     cargo ${cmd} \
       --release \
       --message-format json-diagnostic-short \
@@ -17,6 +24,7 @@ let
 
     # Make sure only the crate needed building
     if [[ "${expected}" != "$builtTargets" ]]; then
+      echo for command ${cmd}
       echo expected \""${expected}"\"
       echo but got  \""$builtTargets"\"
       false

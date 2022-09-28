@@ -3,6 +3,7 @@ name = "foo"
 path = "src/custom.rs"
 
 [package]
+build = "cranespecific-dummy.rs"
 edition = "2021"
 name = "mkDummySrcSimple"
 version = "0.1.0"
