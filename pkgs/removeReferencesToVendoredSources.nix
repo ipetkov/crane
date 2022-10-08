@@ -1,5 +1,4 @@
 { makeSetupHook
-, pkgsBuildBuild
 }:
 
 makeSetupHook
@@ -8,7 +7,4 @@ makeSetupHook
   substitutions = {
     storeDir = builtins.storeDir;
   };
-  deps = with pkgsBuildBuild; [
-    removeReferencesTo
-  ];
 } ./removeReferencesToVendoredSourcesHook.sh

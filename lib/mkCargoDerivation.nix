@@ -6,6 +6,7 @@
 , installCargoArtifactsHook
 , lib
 , stdenv
+, zstd
 }:
 
 args@{
@@ -49,6 +50,7 @@ chosenStdenv.mkDerivation (cleanedArgs // {
     configureCargoVendoredDepsHook
     inheritCargoArtifactsHook
     installCargoArtifactsHook
+    zstd
   ];
 
   buildPhase = args.buildPhase or ''

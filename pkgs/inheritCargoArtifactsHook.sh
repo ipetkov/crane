@@ -12,7 +12,7 @@ inheritCargoArtifacts() {
     mkdir -p "${cargoTargetDir}"
     echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
   
-    @zstd@ -d "${preparedArtifacts}" --stdout | \
+    zstd -d "${preparedArtifacts}" --stdout | \
       tar -x -C "${cargoTargetDir}" --strip-components=1
   else
     echo unable to copy cargo artifacts, \"${preparedArtifacts}\" looks invalid

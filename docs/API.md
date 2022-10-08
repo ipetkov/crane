@@ -179,6 +179,8 @@ log.
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
 * `installFromCargoBuildLogHook`
+* `jq`
+* `removeReferencesTo`
 * `removeReferencesToVendoredSourcesHook`
 
 ### `lib.cargoAudit`
@@ -765,6 +767,7 @@ hooks:
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
+* `zstd`
 
 ### `lib.mkDummySrc`
 
@@ -1068,6 +1071,8 @@ directory using a previous derivation. It takes two positional arguments:
 `inheritCargoArtifacts "$cargoArtifacts" "$CARGO_TARGET_DIR"` will be run as a
 post patch hook.
 
+**Required nativeBuildInputs**: assumes `zstd` is available on the `$PATH`
+
 ### `installCargoArtifactsHook`
 
 Defines `prepareAndInstallCargoArtifactsDir()` which handles installing cargo's
@@ -1086,6 +1091,8 @@ arguments:
 **Automatic behavior:** if `doInstallCargoArtifacts` is set to `1`, then
 `prepareAndInstallCargoArtifactsDir "$out" "$CARGO_TARGET_DIR"` will be run as a
 post install hook.
+
+**Required nativeBuildInputs**: assumes `zstd` is available on the `$PATH`
 
 ### `installFromCargoBuildLogHook`
 
@@ -1107,6 +1114,8 @@ takes two positional arguments:
 
 **Automatic behavior:** none
 
+**Required nativeBuildInputs**: assumes `cargo` and `jq` are available on the `$PATH`
+
 ### `removeReferencesToVendoredSourcesHook`
 
 Defines `removeReferencesToVendoredSources()` which handles removing all
@@ -1126,3 +1135,5 @@ sources themselves. It takes two positional arguments:
 `doNotRemoveReferencesToVendorDir` is not set, then
 `removeReferencesToVendoredSources "$out" "$cargoVendorDir"` will be run as a
 post install hook.
+
+**Required nativeBuildInputs**: assumes `remove-references-to` is available on the `$PATH`
