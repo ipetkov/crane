@@ -402,19 +402,17 @@ Create a derivation which will run a `cargo fmt` invocation in a cargo
 workspace.
 
 Except where noted below, all derivation attributes are delegated to
-`cargoBuild`, and can be used to influence its behavior.
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `buildPhaseCargoCommand` will be set to run `cargo fmt` (in check mode) in the
+  workspace.
 * `cargoArtifacts` is disabled/cleared
-* `cargoBuildCommand` will be set to run `cargo fmt` in the workspace.
-* `cargoExtraArgs` will have `rustFmtExtraArgs` appended to it
-  - Default value: `""`
 * `cargoVendorDir` is disabled/cleared
-* `doCheck` is disabled
 * `pnameSuffix` will be set to `"-fmt"`
 
 #### Optional attributes
-* `rustFmtExtraArgs`: additional flags to be passed in the rustfmt invocation
-  - Default value: `""`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
+  - Default value: `""`
+* `rustFmtExtraArgs`: additional flags to be passed in the rustfmt invocation
   - Default value: `""`
 
 #### Native build dependencies
@@ -426,6 +424,7 @@ The following attributes will be removed before being lowered to
 `cargoBuild`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
+* `cargoExtraArgs`
 * `rustFmtExtraArgs`
 
 ### `lib.cargoNextest`
