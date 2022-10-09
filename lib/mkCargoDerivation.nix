@@ -6,6 +6,7 @@
 , installCargoArtifactsHook
 , lib
 , stdenv
+, vendorCargoDeps
 , zstd
 }:
 
@@ -13,9 +14,6 @@ args@{
   # A directory to an existing cargo `target` directory, which will be reused
   # at the start of the derivation. Useful for caching incremental cargo builds.
   cargoArtifacts
-  # A directory of vendored cargo sources which can be consumed without network
-  # access. Directory structure should basically follow the output of `cargo vendor`.
-, cargoVendorDir
   # A command (likely a cargo invocation) to run during the derivation's build
   # phase. Pre and post build hooks will automatically be run.
 , buildPhaseCargoCommand
@@ -42,6 +40,10 @@ chosenStdenv.mkDerivation (cleanedArgs // {
 
   # Controls whether cargo's `target` directory should be copied as an output
   doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;
+
+  # A directory of vendored cargo sources which can be consumed without network
+  # access. Directory structure should basically follow the output of `cargo vendor`.
+  cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     cargo

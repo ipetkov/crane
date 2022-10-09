@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking** (technically): build hooks now expect helper tools (like `cargo`,
   `jq`, `zstd`, etc.) to be present on the path instead of substituting a
   reference to a (possibly different) executable in the store.
+* `mkCargoDerivation` now automatically vendors dependencies if `cargoVendorDir`
+  is not defined
 
 ### Fixed
 * Installing binaries now uses the same version of cargo as was used to build
