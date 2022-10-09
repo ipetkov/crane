@@ -29,12 +29,12 @@ function installFromCargoBuildLog() (
     rmdir --ignore-fail-on-non-empty "${loc}"
   }
 
-  @jq@ -r <"${log}" "${select_bins}" | installArtifacts "${dest}/bin"
+  jq -r <"${log}" "${select_bins}" | installArtifacts "${dest}/bin"
 
-  @cargo@ metadata --format-version 1 | @jq@ '.workspace_members[]' | (
+  command cargo metadata --format-version 1 | jq '.workspace_members[]' | (
     while IFS= read -r ws_member; do
       local select_member_libs="select(.package_id == ${ws_member}) | ${select_lib_files}"
-      @jq@ -r <"${log}" "${select_member_libs}" | installArtifacts "${dest}/lib"
+      jq -r <"${log}" "${select_member_libs}" | installArtifacts "${dest}/lib"
     done
   )
 

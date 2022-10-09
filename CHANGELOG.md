@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* **Breaking** (technically): build hooks now expect helper tools (like `cargo`,
+  `jq`, `zstd`, etc.) to be present on the path instead of substituting a
+  reference to a (possibly different) executable in the store.
+
+### Fixed
+* Installing binaries now uses the same version of cargo as was used to build
+  the package (instead of using whatever version is present in nixpkgs)
+
 ## [0.7.0] - 2022-09-28
 
 ## Added

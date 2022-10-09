@@ -1,6 +1,8 @@
 { cargoBuild
 , installFromCargoBuildLogHook
+, jq
 , lib
+, removeReferencesTo
 , removeReferencesToVendoredSourcesHook
 }:
 
@@ -59,6 +61,8 @@ in
 
   nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
     installFromCargoBuildLogHook
+    jq
+    removeReferencesTo
     removeReferencesToVendoredSourcesHook
   ];
 })
