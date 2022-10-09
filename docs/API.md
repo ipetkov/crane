@@ -709,10 +709,6 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - This can be prepared via `buildDepsOnly`
   - Alternatively, any cargo-based derivation which was built with
     `doInstallCargoArtifacts = true` will work as well
-* `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
-  be consumed without network access. Directory structure should basically
-  follow the output of `cargo vendor`.
-  - This can be prepared via `vendorCargoDeps`
 * `checkPhaseCargoCommand`: A command (likely a cargo invocation) to run during
   the derivation's check phase. Pre and post check hooks will automatically be
   run.
@@ -723,6 +719,11 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - Default value: the build phase will run `preBuild` hooks, print the cargo
     version, log and evaluate `buildPhaseCargoCommand`, and run `postBuild`
     hooks
+* `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
+  be consumed without network access. Directory structure should basically
+  follow the output of `cargo vendor`.
+  - Default value: the result of `vendorCargoDeps` after applying the arguments
+    set (with the respective default values)
 * `checkPhase`: the commands used by the check phase of the derivation
   - Default value: the check phase will run `preCheck` hooks, log and evaluate
     `checkPhaseCargoCommand`, and run `postCheck` hooks
