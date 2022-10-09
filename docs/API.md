@@ -268,63 +268,31 @@ environment variables during the build, you can bring them back via
 
 `cargoBuild :: set -> drv`
 
-Create a derivation which will build and test a cargo workspace.
+Create a derivation which will run a `cargo build` invocation in a cargo
+workspace. Consider using `buildPackage` if all you need is to build the
+workspace and install the resulting application binaries.
 
-The exact cargo command being run (or the arguments passed into it) can be
-easily updated to suit your needs. If a project requires multiple cargo
-invocations, they can either be run one after the other (as you'd expect in a
-regular derivation), or they can be split out into separate derivations and
-chained together via `cargoArtifacts` which would allow for more incremental
-building and caching of the results.
+Except where noted below, all derivation attributes are delegated to
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `buildPhaseCargoCommand` will be set to run `cargo build --profile release` for
+  the workspace.
+  - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+    is selected; setting it to `""` will omit specifying a profile
+    altogether.
+* `pnameSuffix` will be set to `"-build"`
 
-Consider using `buildPackage` if all you need is to build the workspace and
-install the resulting application binaries.
-
-In addition to all default values being set as documented below, all derivation
-attributes are delegated to `mkCargoDerivation`, and can be used to influence
-its behavior.
-
-#### Optional attributes
-* `buildPhaseCargoCommand`: A command to run during the derivation's build
-  phase. Pre and post build hooks will automatically be run.
-  - Default value: `"${cargoBuildCommand} ${cargoExtraArgs}"`
+#### Required attributes
 * `cargoArtifacts`: A path (or derivation) which contains an existing cargo
   `target` directory, which will be reused at the start of the derivation.
   Useful for caching incremental cargo builds.
-  - Default value: the result of `buildDepsOnly` after applying the arguments
-    set (with the respective default values)
-* `cargoBuildCommand`: A cargo invocation to run during the derivation's build
-  phase
-  - Default value: `"cargo build --profile release"`
-    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-      is selected; setting it to `""` will omit specifying a profile
-      altogether.
+  - This can be prepared via `buildDepsOnly`
+  - Alternatively, any cargo-based derivation which was built with
+    `doInstallCargoArtifacts = true` will work as well
+
+#### Optional attributes
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
-* `cargoTestCommand`: A cargo invocation to run during the derivation's check
-  phase
-  - Default value: `"cargo test --profile release"`
-    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
-      is selected; setting it to `""` will omit specifying a profile
-      altogether.
-* `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
-  be consumed without network access. Directory structure should basically
-  follow the output of `cargo vendor`.
-  - Default value: the result of `vendorCargoDeps` after applying the arguments
-    set (with the respective default values)
-* `checkPhaseCargoCommand`: A command to run during the derivation's check
-  phase. Pre and post check hooks will automatically be run.
-  - Default value: `"${cargoTestCommand} ${cargoExtraArgs}"`
-* `doCheck`: whether the derivation's check phase should be run
-  - Default value: `true`
-* `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
-  be copied as an output
-  - Default value: `true`
-* `pname`: package name of the derivation
-  - Default value: inherited from calling `crateNameFromCargoToml`
-* `version`: version of the derivation
-  - Default value: inherited from calling `crateNameFromCargoToml`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -332,9 +300,7 @@ The following attributes will be removed before being lowered to
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 
-* `cargoBuildCommand`
 * `cargoExtraArgs`
-* `cargoTestCommand`
 
 ### `lib.cargoClippy`
 
