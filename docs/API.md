@@ -96,14 +96,21 @@ to influence its behavior.
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
       is selected; setting it to `""` will omit specifying a profile
       altogether.
+* `cargoCheckExtraArgs`: additional flags to be passed in the `cargoCheckCommand`
+  invocation
+  - Default value: `"--all-targets"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
+  - Default value: `""`
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
   - Default value: `"cargo test --profile release"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
       is selected; setting it to `""` will omit specifying a profile
       altogether.
+* `cargoTestExtraArgs`: additional flags to be passed in the `cargoTestCommand`
+  invocation (e.g. enabling specific tests)
+  - Default value: `""`
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
   follow the output of `cargo vendor`.
@@ -130,8 +137,10 @@ environment variables during the build, you can bring them back via
 
 * `cargoBuildCommand`
 * `cargoCheckCommand`
+* `cargoCheckExtraArgs`
 * `cargoExtraArgs`
 * `cargoTestCommand`
+* `cargoTestExtraArgs`
 * `dummySrc`
 
 ### `lib.buildPackage`

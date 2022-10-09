@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * **Breaking**: all setup hooks have been removed from the `packages` flake
   output. They can still be accessed via the `lib` flake output.
+* **Breaking**: `buildDepsOnly` does not automatically imply the `--all-targets`
+  flag when invoking `cargo check`. Use `cargoCheckExtraArgs` to control this
+* `buildDepsOnly` now accepts `cargoCheckExtraArgs` for passing additional
+  arguments just to the `cargo check` invocation. By default `--all-targets`
+  will be used
+* `buildDepsOnly` now accepts `cargoTestExtraArgs` for passing additional
+  arguments just to the `cargo test` invocation
 * `buildPackage` now delegates to `mkCargoDerivation` instead of `cargoBuild`
 
 ## [0.8.0] - 2022-10-09
