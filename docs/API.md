@@ -360,15 +360,12 @@ Create a derivation which will run a `cargo doc` invocation in a cargo
 workspace.
 
 Except where noted below, all derivation attributes are delegated to
-`cargoBuild`, and can be used to influence its behavior.
-* `cargoBuildCommand` will be set to run `cargo doc --profile release` for
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `buildPhaseCargoCommand` will be set to run `cargo doc --profile release` for
   the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
     is selected; setting it to `""` will omit specifying a profile
     altogether.
-* `cargoExtraArgs` will have `cargoDocExtraArgs` appended to it
-  - Default value: `"--no-deps"`
-* `doCheck` is disabled
 * `pnameSuffix` will be set to `"-doc"`
 
 #### Required attributes
@@ -393,6 +390,7 @@ The following attributes will be removed before being lowered to
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoDocExtraArgs`
+* `cargoExtraArgs`
 
 ### `lib.cargoFmt`
 
