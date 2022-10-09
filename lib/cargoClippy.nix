@@ -1,5 +1,5 @@
-{ cargoBuild
-, clippy
+{ clippy
+, mkCargoDerivation
 }:
 
 { cargoArtifacts
@@ -8,16 +8,16 @@
 , ...
 }@origArgs:
 let
-  args = builtins.removeAttrs origArgs [ "cargoClippyExtraArgs" ];
+  args = builtins.removeAttrs origArgs [
+    "cargoClippyExtraArgs"
+    "cargoExtraArgs"
+  ];
 in
-cargoBuild (args // {
+mkCargoDerivation (args // {
   inherit cargoArtifacts;
   pnameSuffix = "-clippy";
 
-  cargoBuildCommand = "cargoWithProfile clippy";
-  cargoExtraArgs = "${cargoExtraArgs} ${cargoClippyExtraArgs}";
+  buildPhaseCargoCommand = "cargoWithProfile clippy ${cargoExtraArgs} ${cargoClippyExtraArgs}";
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ clippy ];
-
-  doCheck = false; # We don't need to run tests to benefit from `cargo clippy`
 })
