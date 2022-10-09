@@ -1,6 +1,6 @@
 { cargo-audit
-, cargoBuild
 , lib
+, mkCargoDerivation
 }:
 
 { advisory-db
@@ -10,11 +10,13 @@
 , ...
 }@origArgs:
 let
-  args = builtins.removeAttrs origArgs [ "cargoAuditExtraArgs" ];
+  args = builtins.removeAttrs origArgs [
+    "cargoAuditExtraArgs"
+    "cargoExtraArgs"
+  ];
 in
-cargoBuild (args // {
-  cargoBuildCommand = "cargo audit -n -d ${advisory-db}";
-  cargoExtraArgs = "${cargoExtraArgs} ${cargoAuditExtraArgs}";
+mkCargoDerivation (args // {
+  buildPhaseCargoCommand = "cargo audit ${cargoExtraArgs} -n -d ${advisory-db} ${cargoAuditExtraArgs}";
 
   src = lib.cleanSourceWith {
     inherit src;
@@ -27,7 +29,6 @@ cargoBuild (args // {
 
   cargoArtifacts = null; # Don't need artifacts, just Cargo.lock
   cargoVendorDir = null; # Don't need dependencies either
-  doCheck = false; # We don't need to run tests to benefit from `cargo audit`
   doInstallCargoArtifacts = false; # We don't expect to/need to install artifacts
   pnameSuffix = "-audit";
 
