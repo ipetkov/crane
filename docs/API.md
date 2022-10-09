@@ -226,7 +226,7 @@ other `nativeBuildInputs` specified by the caller.
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
-`cargoBuild`. If you absolutely need these attributes present as
+`mkCargoDerivation`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoAuditExtraArgs`
@@ -342,7 +342,7 @@ other `nativeBuildInputs` specified by the caller.
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
-`cargoBuild`. If you absolutely need these attributes present as
+`mkCargoDerivation`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoClippyExtraArgs`
@@ -382,7 +382,7 @@ Except where noted below, all derivation attributes are delegated to
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
-`cargoBuild`. If you absolutely need these attributes present as
+`mkCargoDerivation`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoDocExtraArgs`
@@ -415,7 +415,7 @@ other `nativeBuildInputs` specified by the caller.
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
-`cargoBuild`. If you absolutely need these attributes present as
+`mkCargoDerivation`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoExtraArgs`
@@ -467,7 +467,7 @@ other `nativeBuildInputs` specified by the caller.
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
-`cargoBuild`. If you absolutely need these attributes present as
+`mkCargoDerivation`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoExtraArgs`
@@ -505,7 +505,7 @@ other `nativeBuildInputs` specified by the caller.
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
-`cargoBuild`. If you absolutely need these attributes present as
+`mkCargoDerivation`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoExtraArgs`
