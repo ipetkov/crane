@@ -63,6 +63,9 @@ myPkgs // {
   compilesFreshSimple = self.compilesFresh "simple" (myLib.cargoBuild) {
     src = ./simple;
   };
+  compilesFreshSimpleBuildPackage = self.compilesFresh "simple" (myLib.buildPackage) {
+    src = ./simple;
+  };
   compilesFreshOverlappingTargets = self.compilesFresh
     (builtins.concatStringsSep "\n" [
       "bar"

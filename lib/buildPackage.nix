@@ -1,19 +1,49 @@
-{ cargoBuild
+{ buildDepsOnly
+, crateNameFromCargoToml
 , installFromCargoBuildLogHook
 , jq
 , lib
+, mkCargoDerivation
 , removeReferencesTo
 , removeReferencesToVendoredSourcesHook
+, vendorCargoDeps
 }:
 
 { cargoBuildCommand ? "cargoWithProfile build"
 , cargoExtraArgs ? ""
+, cargoTestCommand ? "cargoWithProfile test"
+, cargoTestExtraArgs ? ""
 , ...
 }@args:
 let
+  crateName = crateNameFromCargoToml args;
+  cleanedArgs = builtins.removeAttrs args [
+    "cargoBuildCommand"
+    "cargoExtraArgs"
+    "cargoTestCommand"
+    "cargoTestExtraArgs"
+  ];
+
+  # Avoid recomputing values when passing args down
+  memoizedArgs = {
+    pname = args.pname or crateName.pname;
+    version = args.version or crateName.version;
+    cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
+  };
+in
+mkCargoDerivation (cleanedArgs // memoizedArgs // {
+  doCheck = args.doCheck or true;
+  doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
+
+  cargoArtifacts = args.cargoArtifacts or (buildDepsOnly args // memoizedArgs);
+
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
     cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)
     ${cargoBuildCommand} --message-format json-render-diagnostics ${cargoExtraArgs} >"$cargoBuildLog"
+  '';
+
+  checkPhaseCargoCommand = args.checkPhaseCargoCommand or ''
+    ${cargoTestCommand} ${cargoExtraArgs} ${cargoTestExtraArgs}
   '';
 
   installPhaseCommand = args.installPhaseCommand or ''
@@ -36,30 +66,8 @@ let
       false
     fi
   '';
-in
-(cargoBuild args).overrideAttrs (old: {
-  # NB: we use overrideAttrs here so that our extra additions here do not end up
-  # invalidating any deps builds by being inherited. For example, we probably don't
-  # care about installing bins/libs from the deps only build, so there's no point to
-  # trying to build it with the install scripts in its build environment.
 
-  # Don't copy target dir by default since we are going to be installing bins/libs
-  doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
-
-  buildPhase = args.buildPhase or ''
-    runHook preBuild
-    cargo --version
-    ${buildPhaseCargoCommand}
-    runHook postBuild
-  '';
-
-  installPhase = args.installPhase or ''
-    runHook preInstall
-    ${installPhaseCommand}
-    runHook postInstall
-  '';
-
-  nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     installFromCargoBuildLogHook
     jq
     removeReferencesTo
