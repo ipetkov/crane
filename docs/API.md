@@ -487,16 +487,13 @@ Create a derivation which will run a `cargo tarpaulin` invocation in a cargo
 workspace.
 
 Except where noted below, all derivation attributes are delegated to
-`cargoBuild`, and can be used to influence its behavior.
+`mkCargoDerivation`, and can be used to influence its behavior.
 * `cargoArtifacts` will be instantiated via `buildDepsOnly` if not specified
   - `cargoTarpaulinExtraArgs` will be removed before delegating to `buildDepsOnly`
-* `cargoBuildCommand` will be set to run `cargo tarpaulin --profile release` in
+* `buildPhaseCargoCommand` will be set to run `cargo tarpaulin --profile release` in
   the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
     selected; setting it to `""` will omit specifying a profile altogether.
-* `cargoExtraArgs` will have `cargoTarpaulinExtraArgs` appended to it
-  - Default value: `""`
-* `doCheck` is disabled
 * `pnameSuffix` will be set to `"-tarpaulin"`
 
 #### Optional attributes
@@ -515,6 +512,7 @@ The following attributes will be removed before being lowered to
 `cargoBuild`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
+* `cargoExtraArgs`
 * `cargoTarpaulinExtraArgs`
 
 ### `lib.cleanCargoSource`
