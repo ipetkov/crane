@@ -1,4 +1,4 @@
-{ cargoBuild
+{ mkCargoDerivation
 }:
 
 { cargoArtifacts
@@ -7,13 +7,13 @@
 , ...
 }@origArgs:
 let
-  args = (builtins.removeAttrs origArgs [ "cargoDocExtraArgs" ]);
+  args = (builtins.removeAttrs origArgs [
+    "cargoDocExtraArgs"
+    "cargoExtraArgs"
+  ]);
 in
-cargoBuild (args // {
+mkCargoDerivation (args // {
   pnameSuffix = "-doc";
 
-  cargoBuildCommand = "cargoWithProfile doc";
-  cargoExtraArgs = "${cargoExtraArgs} ${cargoDocExtraArgs}";
-
-  doCheck = false; # We don't need to run tests to build docs
+  buildPhaseCargoCommand = "cargoWithProfile doc ${cargoExtraArgs} ${cargoDocExtraArgs}";
 })
