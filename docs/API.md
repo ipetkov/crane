@@ -709,9 +709,6 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - This can be prepared via `buildDepsOnly`
   - Alternatively, any cargo-based derivation which was built with
     `doInstallCargoArtifacts = true` will work as well
-* `checkPhaseCargoCommand`: A command (likely a cargo invocation) to run during
-  the derivation's check phase. Pre and post check hooks will automatically be
-  run.
 
 #### Optional attributes
 * `buildPhase`: the commands used by the build phase of the derivation
@@ -726,6 +723,10 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
 * `checkPhase`: the commands used by the check phase of the derivation
   - Default value: the check phase will run `preCheck` hooks, log and evaluate
     `checkPhaseCargoCommand`, and run `postCheck` hooks
+* `checkPhaseCargoCommand`: A command (likely a cargo invocation) to run during
+  the derivation's check phase. Pre and post check hooks will automatically be
+  run.
+  - Default value: `""`
 * `configurePhase`: the commands used by the configure phase of the derivation
   - Default value: the configure phase will run `preConfigureHooks` hooks, then
     run `postConfigure` hooks

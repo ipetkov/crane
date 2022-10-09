@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   is not defined
 * `mkCargoDerivation` now automatically populates `pname` and `version` (via
   `crateNameFromCargoToml`) if they are not specified
+* `mkCargoDerivation` now defaults to an empty `checkPhaseCargoCommand` if not
+  specified
 
 ### Fixed
 * Installing binaries now uses the same version of cargo as was used to build

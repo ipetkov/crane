@@ -20,7 +20,7 @@ args@{
 , buildPhaseCargoCommand
   # A command (likely a cargo invocation) to run during the derivation's check
   # phase. Pre and post check hooks will automatically be run.
-, checkPhaseCargoCommand
+, checkPhaseCargoCommand ? ""
   # A command  to run during the derivation's install
   # phase. Pre and post install hooks will automatically be run.
 , installPhaseCommand ? "mkdir -p $out"
