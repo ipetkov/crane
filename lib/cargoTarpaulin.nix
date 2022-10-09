@@ -1,5 +1,5 @@
 { buildDepsOnly
-, cargoBuild
+, mkCargoDerivation
 , cargo-tarpaulin
 }:
 
@@ -8,14 +8,15 @@
 , ...
 }@origArgs:
 let
-  args = builtins.removeAttrs origArgs [ "cargoTarpaulinExtraArgs" ];
+  args = builtins.removeAttrs origArgs [
+    "cargoExtraArgs"
+    "cargoTarpaulinExtraArgs"
+  ];
 in
-cargoBuild (args // {
+mkCargoDerivation (args // {
   cargoArtifacts = args.cargoArtifacts or (buildDepsOnly args);
-  cargoBuildCommand = "cargoWithProfile tarpaulin";
-  cargoExtraArgs = "${cargoExtraArgs} ${cargoTarpaulinExtraArgs}";
+  buildPhaseCargoCommand = "cargoWithProfile tarpaulin ${cargoExtraArgs} ${cargoTarpaulinExtraArgs}";
 
-  doCheck = false;
   pnameSuffix = "-tarpaulin";
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-tarpaulin ];
