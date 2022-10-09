@@ -138,17 +138,13 @@ environment variables during the build, you can bring them back via
 
 `buildPackage :: set -> drv`
 
-A(n opinionated) version of `cargoBuild` which will install to the output any
-binaries which were built by cargo in this invocation. All options understood by
-`cargoBuild` apply here as well, with the only difference being some additional
-book keeping necessary to log cargo's results and subsequently install from that
-log.
+A(n opinionated) version of `mkCargoDerivation` which will install to the output
+any binaries which were built by cargo in this invocation. All options
+understood by `mkCargoDerivation` apply here as well, with the only difference
+being some additional book keeping necessary to log cargo's results and
+subsequently install from that log.
 
 #### Optional attributes
-* `buildPhase`: the commands used by the build phase of the derivation
-  - Default value: the build phase will run `preBuild` hooks, print the cargo
-    version, log and evaluate `buildPhaseCargoCommand`, and run `postBuild`
-    hooks
 * `buildPhaseCargoCommand`: A command to run during the derivation's build
   phase. Pre and post build hooks will automatically be run.
   - Default value: `cargoBuildCommand` will be invoked along with
@@ -159,6 +155,11 @@ log.
     completely, make sure that cargo is run with `--message-format
     json-render-diagnostics` and the standard output captured and saved to a
     file. The `cargoBuildLog` shell variable should point to this log.
+* `cargoArtifacts`: A path (or derivation) which contains an existing cargo
+  `target` directory, which will be reused at the start of the derivation.
+  Useful for caching incremental cargo builds.
+  - Default value: the result of `buildDepsOnly` after applying the arguments
+    set (with the respective default values)
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
   phase
   - Default value: `"cargo build --profile release"`
@@ -168,13 +169,35 @@ log.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
+* `cargoTestCommand`: A cargo invocation to run during the derivation's check
+  phase
+  - Default value: `"cargo test --profile release"`
+    * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
+      is selected; setting it to `""` will omit specifying a profile
+      altogether.
+* `cargoTestExtraArgs`: additional flags to be passed in the `cargoTestCommand`
+  invocation (e.g. enabling specific tests)
+  - Default value: `""`
+* `doCheck`: whether the derivation's check phase should be run
+  - Default value: `true`
 * `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
   be copied as an output
   - Default value: `false`
-* `installPhase`: the commands used by the install phase of the derivation
-  - Default value: the install phase will run `preInstall` hooks, look for a
-    cargo build log and install all binary targets listed there, and run
-    `postInstall` hooks
+* `installPhaseCommand`: the command(s) which are expected to install the
+  derivation's outputs.
+  - Default value: will look for a cargo build log and install all binary
+    targets listed there
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`mkCargoDerivation`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+
+* `cargoBuildCommand`
+* `cargoExtraArgs`
+* `cargoTestCommand`
+* `cargoTestExtraArgs`
 
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
