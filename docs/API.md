@@ -484,13 +484,19 @@ workspace.
 
 Except where noted below, all derivation attributes are delegated to
 `mkCargoDerivation`, and can be used to influence its behavior.
-* `cargoArtifacts` will be instantiated via `buildDepsOnly` if not specified
-  - `cargoTarpaulinExtraArgs` will be removed before delegating to `buildDepsOnly`
 * `buildPhaseCargoCommand` will be set to run `cargo tarpaulin --profile release` in
   the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
     selected; setting it to `""` will omit specifying a profile altogether.
 * `pnameSuffix` will be set to `"-tarpaulin"`
+
+#### Required attributes
+* `cargoArtifacts`: A path (or derivation) which contains an existing cargo
+  `target` directory, which will be reused at the start of the derivation.
+  Useful for caching incremental cargo builds.
+  - This can be prepared via `buildDepsOnly`
+  - Alternatively, any cargo-based derivation which was built with
+    `doInstallCargoArtifacts = true` will work as well
 
 #### Optional attributes
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
