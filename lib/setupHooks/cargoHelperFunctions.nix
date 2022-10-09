@@ -4,4 +4,4 @@
 makeSetupHook
 {
   name = "cargoHelperFunctionsHook";
-} ./cargoHelperFunctions.sh
+} ./cargoHelperFunctionsHook.sh
