@@ -1,4 +1,4 @@
-{ cargoBuild
+{ mkCargoDerivation
 , rustfmt
 }:
 
@@ -7,16 +7,17 @@
 , ...
 }@origArgs:
 let
-  args = builtins.removeAttrs origArgs [ "rustFmtExtraArgs" ];
+  args = builtins.removeAttrs origArgs [
+    "cargoExtraArgs"
+    "rustFmtExtraArgs"
+  ];
 in
-cargoBuild (args // {
+mkCargoDerivation (args // {
   cargoArtifacts = null;
   cargoVendorDir = null;
-  doCheck = false;
   pnameSuffix = "-fmt";
 
-  cargoBuildCommand = "cargo fmt";
-  cargoExtraArgs = "${cargoExtraArgs} -- --check ${rustFmtExtraArgs}";
+  buildPhaseCargoCommand = "cargo fmt ${cargoExtraArgs} -- --check ${rustFmtExtraArgs}";
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ rustfmt ];
 
