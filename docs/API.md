@@ -712,7 +712,6 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
 * `checkPhaseCargoCommand`: A command (likely a cargo invocation) to run during
   the derivation's check phase. Pre and post check hooks will automatically be
   run.
-* `pname`: the package name used for the derivation
 
 #### Optional attributes
 * `buildPhase`: the commands used by the build phase of the derivation
@@ -742,10 +741,14 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - By default an output directory is created such that any other `postInstall`
     hooks can successfully run. Consider overriding this value with an
     appropriate installation commands for the package being built.
+* `pname`: the name of the derivation
+  - Default value: the package name listed in `Cargo.toml`
 * `pnameSuffix`: a suffix appended to `pname`
   - Default value: `""`
 * `stdenv`: the standard build environment to use for this derivation
   - Default value: `pkgs.stdenv`
+* `version`: the version of the derivation
+  - Default value: the version listed in `Cargo.toml`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to

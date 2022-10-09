@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   reference to a (possibly different) executable in the store.
 * `mkCargoDerivation` now automatically vendors dependencies if `cargoVendorDir`
   is not defined
+* `mkCargoDerivation` now automatically populates `pname` and `version` (via
+  `crateNameFromCargoToml`) if they are not specified
 
 ### Fixed
 * Installing binaries now uses the same version of cargo as was used to build

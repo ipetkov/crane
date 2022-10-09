@@ -2,6 +2,7 @@
 , cargoHelperFunctionsHook
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
+, crateNameFromCargoToml
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
 , lib
@@ -26,6 +27,7 @@ args@{
 , ...
 }:
 let
+  crateName = crateNameFromCargoToml args;
   chosenStdenv = args.stdenv or stdenv;
   cleanedArgs = builtins.removeAttrs args [
     "buildPhaseCargoCommand"
@@ -36,7 +38,8 @@ let
   ];
 in
 chosenStdenv.mkDerivation (cleanedArgs // {
-  pname = "${args.pname}${args.pnameSuffix or ""}";
+  pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
+  version = args.version or crateName.version;
 
   # Controls whether cargo's `target` directory should be copied as an output
   doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;
