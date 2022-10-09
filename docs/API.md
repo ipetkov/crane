@@ -190,14 +190,11 @@ Create a derivation which will run a `cargo audit` invocation in a cargo
 workspace.
 
 Except where noted below, all derivation attributes are delegated to
-`cargoBuild`, and can be used to influence its behavior.
-* `cargoArtifacts` will be set to `null` as they are not needed
-* `cargoBuildCommand` will be set to run `cargo audit -n -d ${advisory-db}` in
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `buildPhaseCargoCommand` will be set to run `cargo audit -n -d ${advisory-db}` in
   the workspace.
-* `cargoExtraArgs` will have `cargoAuditExtraArgs` appended to it
-  - Default value: `""`
+* `cargoArtifacts` will be set to `null` as they are not needed
 * `cargoVendorDir` will be set to `null` as it is not needed
-* `doCheck` is disabled
 * `doInstallCargoArtifacts` is disabled
 * `pnameSuffix` will be set to `"-audit"`
 * `src` will be filtered to only keep `Cargo.lock` files
@@ -233,6 +230,7 @@ The following attributes will be removed before being lowered to
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoAuditExtraArgs`
+* `cargoExtraArgs`
 
 ### `lib.cargoBuild`
 
