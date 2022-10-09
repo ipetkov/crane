@@ -5,9 +5,11 @@
 }:
 
 { cargoBuildCommand ? "cargoWithProfile build"
-, cargoCheckCommand ? "cargoWithProfile check --all-targets"
+, cargoCheckCommand ? "cargoWithProfile check"
+, cargoCheckExtraArgs ? "--all-targets"
 , cargoExtraArgs ? ""
 , cargoTestCommand ? "cargoWithProfile test"
+, cargoTestExtraArgs ? ""
 , ...
 }@args:
 let
@@ -15,8 +17,10 @@ let
   cleanedArgs = builtins.removeAttrs args [
     "cargoBuildCommand"
     "cargoCheckCommand"
+    "cargoCheckExtraArgs"
     "cargoExtraArgs"
     "cargoTestCommand"
+    "cargoTestExtraArgs"
     "dummySrc"
   ];
 
@@ -46,12 +50,12 @@ mkCargoDerivation (cleanedArgs // {
   # First we run `cargo check` to cache cargo's internal artifacts, fingerprints, etc. for all deps.
   # Then we run `cargo build` to actually compile the deps and cache the results
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
-    ${cargoCheckCommand} ${cargoExtraArgs}
+    ${cargoCheckCommand} ${cargoExtraArgs} ${cargoCheckExtraArgs}
     ${cargoBuildCommand} ${cargoExtraArgs}
   '';
 
   checkPhaseCargoCommand = args.checkPhaseCargoCommand or ''
-    ${cargoTestCommand} ${cargoExtraArgs}
+    ${cargoTestCommand} ${cargoExtraArgs} ${cargoTestExtraArgs}
   '';
 
   # Run tests by default to ensure we cache any dev-dependencies
