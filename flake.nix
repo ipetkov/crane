@@ -12,13 +12,11 @@
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
     let
-      mkMyPkgs = callPackage: import ./pkgs callPackage;
-      myPkgsFor = pkgs: mkMyPkgs pkgs.callPackage;
-
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
-        inherit mkMyPkgs;
       };
+
+      myPkgsFor = pkgs: import ./pkgs (mkLib pkgs);
     in
     {
       inherit mkLib;

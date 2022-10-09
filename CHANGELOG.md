@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Installing binaries now uses the same version of cargo as was used to build
   the package (instead of using whatever version is present in nixpkgs)
 
+### Deprecated
+* The `packages` flake output has been deprecated. All setup hooks can be
+  accessed via the `lib` flake output (or via the result of the `mkLib` flake
+  output)
+
 ## [0.7.0] - 2022-09-28
 
 ## Added
