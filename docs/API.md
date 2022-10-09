@@ -996,7 +996,7 @@ lib.writeTOML "foo.toml" { foo.bar = "baz"; }
 
 ## Hooks
 
-### `cargoHelperFunctionsHook`
+### `lib.cargoHelperFunctionsHook`
 
 Defines helper functions for internal use. It is probably not a great idea to
 depend on these directly as their behavior can change at any time, but it is
@@ -1013,7 +1013,7 @@ worth documenting them just in case:
     your derivation to change which profile is used, or set `CARGO_PROFILE =
     "";` to omit it altogether.
 
-### `configureCargoCommonVarsHook`
+### `lib.configureCargoCommonVarsHook`
 
 Defines `configureCargoCommonVars()` which will set various common cargo-related
 variables, such as honoring the amount of parallelism dictated by Nix, disabling
@@ -1029,7 +1029,7 @@ incremental artifacts, etc. More specifically:
 
 **Automatic behavior:** runs as a post-patch hook
 
-### `configureCargoVendoredDepsHook`
+### `lib.configureCargoVendoredDepsHook`
 
 Defines `configureCargoVendoredDeps()` which will prepare cargo to use a
 directory of vendored crate sources. It takes two positional arguments:
@@ -1050,7 +1050,7 @@ directory of vendored crate sources. It takes two positional arguments:
 `configureCargoVendoredDeps "$cargoVendorDir" "$CARGO_HOME/config.toml"` will be
 run as a pre configure hook.
 
-### `inheritCargoArtifactsHook`
+### `lib.inheritCargoArtifactsHook`
 
 Defines `inheritCargoArtifacts()` which will pre-populate cargo's artifact
 directory using a previous derivation. It takes two positional arguments:
@@ -1073,7 +1073,7 @@ post patch hook.
 
 **Required nativeBuildInputs**: assumes `zstd` is available on the `$PATH`
 
-### `installCargoArtifactsHook`
+### `lib.installCargoArtifactsHook`
 
 Defines `prepareAndInstallCargoArtifactsDir()` which handles installing cargo's
 artifact directory to the derivation's output. It takes two positional
@@ -1094,7 +1094,7 @@ post install hook.
 
 **Required nativeBuildInputs**: assumes `zstd` is available on the `$PATH`
 
-### `installFromCargoBuildLogHook`
+### `lib.installFromCargoBuildLogHook`
 
 Defines `installFromCargoBuildLog()` which will use a build log produced by
 cargo to find and install any binaries and libraries which have been built. It
@@ -1116,7 +1116,7 @@ takes two positional arguments:
 
 **Required nativeBuildInputs**: assumes `cargo` and `jq` are available on the `$PATH`
 
-### `removeReferencesToVendoredSourcesHook`
+### `lib.removeReferencesToVendoredSourcesHook`
 
 Defines `removeReferencesToVendoredSources()` which handles removing all
 references to vendored sources from the installed binaries, which ensures that
