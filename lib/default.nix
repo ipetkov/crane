@@ -21,6 +21,7 @@ in
   cargoHelperFunctionsHook = callPackage ./setupHooks/cargoHelperFunctions.nix { };
   cargoNextest = callPackage ./cargoNextest.nix { };
   cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };
+  cargoTest = callPackage ./cargoTest.nix { };
   cleanCargoSource = callPackage ./cleanCargoSource.nix { };
   cleanCargoToml = callPackage ./cleanCargoToml.nix { };
   configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `cargoTest` can now be used for only running the tests of a workspace
+
 ### Changed
 * **Breaking** (technically): build hooks now expect helper tools (like `cargo`,
   `jq`, `zstd`, etc.) to be present on the path instead of substituting a
