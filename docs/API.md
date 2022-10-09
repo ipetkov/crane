@@ -429,15 +429,12 @@ Create a derivation which will run a `cargo nextest` invocation in a cargo
 workspace.
 
 Except where noted below, all derivation attributes are delegated to
-`cargoBuild`, and can be used to influence its behavior.
-* `cargoTestCommand` will be set to run `cargo nextest run --profile release`
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `checkPhaseCargoCommand` will be set to run `cargo nextest run --profile release`
   for the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
     is selected; setting it to `""` will omit specifying a profile
     altogether.
-* `cargoExtraArgs` will have `cargoNextestExtraArgs` appended to it, along with
-  any additional flags needed for handling multiple partitions
-  - Default value: `""`
 * `pnameSuffix` will be set to `"-nextest"` and may include partition numbers
 
 #### Required attributes
@@ -473,6 +470,7 @@ The following attributes will be removed before being lowered to
 `cargoBuild`. If you absolutely need these attributes present as
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
+* `cargoExtraArgs`
 * `cargoNextestExtraArgs`
 * `partitions`
 * `partitionType`

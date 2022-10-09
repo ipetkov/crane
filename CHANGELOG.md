@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `cargoClippy` now delegates to `mkCargoDerivation` instead of `cargoBuild`
 * `cargoDoc` now delegates to `mkCargoDerivation` instead of `cargoBuild`
 * `cargoFmt` now delegates to `mkCargoDerivation` instead of `cargoBuild`
+* `cargoNextest` now delegates to `mkCargoDerivation` instead of `cargoBuild`
 * `cargoTarpaulin` now delegates to `mkCargoDerivation` instead of `cargoBuild`
 
 ### Fixed

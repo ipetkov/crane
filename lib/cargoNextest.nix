@@ -1,7 +1,7 @@
-{ cargoBuild
-, cargo-nextest
+{ cargo-nextest
 , lib
 , linkFarmFromDrvs
+, mkCargoDerivation
 , runCommand
 }:
 
@@ -15,6 +15,7 @@
 }@origArgs:
 let
   args = builtins.removeAttrs origArgs [
+    "cargoExtraArgs"
     "cargoNextestExtraArgs"
     "partitions"
     "partitionType"
@@ -23,14 +24,14 @@ let
   mkUpdatedArgs = { cmd ? "run", extraSuffix ? "", moreArgs ? "" }: args // {
     inherit cargoArtifacts;
     pnameSuffix = "-nextest${extraSuffix}";
+    doCheck = args.doCheck or true;
 
     buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
       mkdir -p $out
       cargo nextest --version
     '';
 
-    cargoTestCommand = "cargo nextest ${cmd} $" + "{CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE}";
-    cargoExtraArgs = "${cargoExtraArgs} ${cargoNextestExtraArgs} ${moreArgs}";
+    checkPhaseCargoCommand = "cargo nextest ${cmd} $" + "{CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE} ${cargoExtraArgs} ${cargoNextestExtraArgs} ${moreArgs}";
 
     nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-nextest ];
   };
@@ -38,11 +39,11 @@ in
 if partitions < 1 then
   throw "paritions must be at least 1 or greater"
 else if partitions == 1 then # Simple case do everything in one derivation
-  cargoBuild (mkUpdatedArgs { })
+  mkCargoDerivation (mkUpdatedArgs { })
 else # First build the tests in one derivation, then run each partition in another
   let
     mkArchiveArgs = root: "--archive-format tar-zst --archive-file ${root}/archive.tar.zst";
-    archive = cargoBuild (mkUpdatedArgs {
+    archive = mkCargoDerivation (mkUpdatedArgs {
       cmd = "archive";
       moreArgs = mkArchiveArgs "$out";
     });
@@ -50,7 +51,7 @@ else # First build the tests in one derivation, then run each partition in anoth
       let
         n = toString (nInt + 1);
       in
-      cargoBuild ((mkUpdatedArgs {
+      mkCargoDerivation ((mkUpdatedArgs {
         extraSuffix = "-p${toString n}";
         moreArgs = "${mkArchiveArgs archive} --partition ${partitionType}:${n}/${toString partitions}";
       }) // {
