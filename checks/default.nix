@@ -210,6 +210,13 @@ myPkgs // {
     ];
   };
 
+  runCargoTests = myLib.cargoTest {
+    src = ./simple;
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./simple;
+    };
+  };
+
   simple-nonflake = (import ../default.nix {
     inherit pkgs;
   }).buildPackage {

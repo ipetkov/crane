@@ -511,6 +511,35 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `cargoTarpaulinExtraArgs`
 
+### `lib.cargoTest`
+
+`cargoTest :: set -> drv`
+
+Create a derivation which will run a `cargo test` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+* `buildPhaseCargoCommand` will be set to run `cargo test --profile release` in
+  the workspace.
+  - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
+    selected; setting it to `""` will omit specifying a profile altogether.
+* `pnameSuffix` will be set to `"-test"`
+
+#### Optional attributes
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
+  - Default value: `""`
+* `cargoTestArgs`: additional flags to be passed in the cargo
+  invocation
+  - Default value: `""`
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`mkCargoDerivation`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `cargoExtraArgs`
+* `cargoTestExtraArgs`
+
 ### `lib.cleanCargoSource`
 
 `cleanCargoSource :: path or drv -> drv`
