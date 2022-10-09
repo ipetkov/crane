@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* **Breaking**: all setup hooks have been removed from the `packages` flake
+  output. They can still be accessed via the `lib` flake output.
+
 ## [0.8.0] - 2022-10-09
 
 ### Added

@@ -16,12 +16,17 @@
         inherit (pkgs) lib newScope;
       };
 
-      myPkgsFor = pkgs: import ./pkgs (mkLib pkgs);
+      myPkgsFor = { pkgs, myLib }: import ./pkgs {
+        inherit pkgs myLib;
+      };
     in
     {
       inherit mkLib;
 
-      overlays.default = final: prev: myPkgsFor final;
+      overlays.default = final: prev: myPkgsFor {
+        pkgs = final;
+        myLib = mkLib final;
+      };
 
       templates = rec {
         alt-registry = {
@@ -63,7 +68,10 @@
 
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
-        myPkgs = myPkgsFor pkgs;
+        myPkgs = myPkgsFor {
+          inherit pkgs;
+          myLib = lib;
+        };
 
         checks = pkgs.callPackages ./checks {
           inherit pkgs myPkgs;
