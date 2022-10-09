@@ -3,7 +3,8 @@
 , cargo-tarpaulin
 }:
 
-{ cargoExtraArgs ? ""
+{ cargoArtifacts
+, cargoExtraArgs ? ""
 , cargoTarpaulinExtraArgs ? "--skip-clean --out Xml --output-dir $out"
 , ...
 }@origArgs:
@@ -14,7 +15,6 @@ let
   ];
 in
 mkCargoDerivation (args // {
-  cargoArtifacts = args.cargoArtifacts or (buildDepsOnly args);
   buildPhaseCargoCommand = "cargoWithProfile tarpaulin ${cargoExtraArgs} ${cargoTarpaulinExtraArgs}";
 
   pnameSuffix = "-tarpaulin";

@@ -54,6 +54,9 @@ myPkgs // {
 
   cargoTarpaulin = lib.optionalAttrs x64Linux (myLib.cargoTarpaulin {
     src = ./simple;
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./simple;
+    };
   });
 
   compilesFresh = callPackage ./compilesFresh.nix { };
