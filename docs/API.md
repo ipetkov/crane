@@ -597,6 +597,16 @@ raised during evaluation.
 
 Extract a crate's name and version from its Cargo.toml file.
 
+The resulting `pname` attribute will be populated with the value of the
+Cargo.toml's `package.name` attribute, if present. Otherwise a placeholder value
+will be used.
+
+The resulting `version` attribute will be populated with the value of the
+Cargo.toml's (top-level) `package.version` attribute, if present and if the
+value is a string. Otherwise `workspace.package.version` will be used if it is
+present _and_ the value is a string. Otherwise a placeholder version field will
+be used.
+
 ```nix
 lib.crateNameFromCargoToml { cargoToml = ./Cargo.toml; }
 # { pname = "simple"; version = "0.1.0"; }
