@@ -1,4 +1,5 @@
-{}:
+{ lib
+}:
 
 args:
 let
@@ -14,5 +15,19 @@ let
 in
 {
   pname = toml.package.name or "cargo-package";
-  version = toml.package.version or "0.0.1";
+
+  # Now that cargo supports workspace inheritance we attempt to select a version
+  # string with the following priorities:
+  # - choose `[package.version]` if the value is present and a string
+  #   (i.e. it isn't `[package.version] = { workspace = "true" }`)
+  # - choose `[workspace.package.version]` if it is present (and a string for good measure)
+  # - otherwise, fall back to a placeholder
+  version =
+    let
+      packageVersion = toml.package.version or null;
+      workspacePackageVersion = toml.workspace.package.version or null;
+    in
+    if lib.isString packageVersion then packageVersion
+    else if lib.isString workspacePackageVersion then workspacePackageVersion
+    else "0.0.1";
 }

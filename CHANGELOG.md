@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   arguments just to the `cargo test` invocation
 * `buildPackage` now delegates to `mkCargoDerivation` instead of `cargoBuild`
 
+### Fixed
+* `crateNameFromCargoToml` now takes workspace inheritance into account. If a
+  crate does not specify `package.version` in its (root) Cargo.toml but does
+  specify `workspace.package.version` then the latter will be returned.
+
 ## [0.8.0] - 2022-10-09
 
 ### Added
