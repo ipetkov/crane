@@ -8,9 +8,13 @@
     };
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    rust-overlay.inputs.flake-utils.follows = "flake-utils";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
+  outputs = inputs@{ self, nixpkgs, flake-utils, rust-overlay, ... }:
     let
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
@@ -66,6 +70,11 @@
           inherit system;
         };
 
+        pkgsRustOverlay = import nixpkgs {
+          inherit system;
+          overlays = [rust-overlay.overlays.default];
+        };
+
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
         myPkgs = myPkgsFor {
@@ -74,7 +83,7 @@
         };
 
         checks = pkgs.callPackages ./checks {
-          inherit pkgs myPkgs;
+          inherit pkgs myPkgs pkgsRustOverlay;
           myLib = lib;
         };
       in

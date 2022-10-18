@@ -1,4 +1,4 @@
-{ pkgs, myLib, myPkgs }:
+{ pkgs, pkgsRustOverlay, myLib, myPkgs }:
 
 let
   inherit (pkgs) lib;
@@ -8,6 +8,14 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 let
   callPackage = self.newScope { };
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
+
+  noStdToolchain = pkgsRustOverlay.rust-bin.stable.latest.minimal.override {
+    targets = [
+      "thumbv6m-none-eabi"
+      "x86_64-unknown-none" 
+    ];
+  };
+  noStdLib = myLib.overrideToolchain noStdToolchain;
 in
 myPkgs // {
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
@@ -183,6 +191,19 @@ myPkgs // {
     extraDummyScript = ''
       cp -r ${./custom-dummy/.cargo} -T $out/.cargo
     '';
+  };
+
+  noStd = noStdLib.buildPackage {
+    src = noStdLib.cleanCargoSource ./no_std;
+    CARGO_BUILD_TARGET = "x86_64-unknown-none";
+    cargoCheckExtraArgs = "--lib --bins --examples";
+    doCheck = false;
+    cargoArtifacts = noStdLib.buildDepsOnly {
+      src = noStdLib.cleanCargoSource ./no_std;
+      CARGO_BUILD_TARGET = "x86_64-unknown-none";
+      cargoCheckExtraArgs = "--lib --bins --examples";
+      doCheck = false;
+    };
   };
 
   nextest = callPackage ./nextest.nix { };
