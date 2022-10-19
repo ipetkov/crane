@@ -8,14 +8,6 @@ onlyDrvs (lib.makeScope myLib.newScope (self:
 let
   callPackage = self.newScope { };
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
-
-  noStdToolchain = pkgs.rust-bin.stable.latest.minimal.override {
-    targets = [
-      "thumbv6m-none-eabi"
-      "x86_64-unknown-none" 
-    ];
-  };
-  noStdLib = myLib.overrideToolchain noStdToolchain;
 in
 {
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
@@ -193,18 +185,21 @@ in
     '';
   };
 
-  noStd = noStdLib.buildPackage {
+  noStd =
+  let
+    noStdLib = myLib.overrideToolchain (pkgs.rust-bin.stable.latest.minimal.override {
+      targets = [
+        "thumbv6m-none-eabi"
+        "x86_64-unknown-none"
+      ];
+    });
+  in
+  lib.optionalAttrs x64Linux (noStdLib.buildPackage {
     src = noStdLib.cleanCargoSource ./no_std;
     CARGO_BUILD_TARGET = "x86_64-unknown-none";
     cargoCheckExtraArgs = "--lib --bins --examples";
     doCheck = false;
-    cargoArtifacts = noStdLib.buildDepsOnly {
-      src = noStdLib.cleanCargoSource ./no_std;
-      CARGO_BUILD_TARGET = "x86_64-unknown-none";
-      cargoCheckExtraArgs = "--lib --bins --examples";
-      doCheck = false;
-    };
-  };
+  });
 
   nextest = callPackage ./nextest.nix { };
 
