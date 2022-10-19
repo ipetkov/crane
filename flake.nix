@@ -59,22 +59,24 @@
       };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
+        checks =
+          let
+            pkgsChecks = import nixpkgs {
+              inherit system;
+              overlays = [ rust-overlay.overlays.default ];
+            };
+          in
+          pkgsChecks.callPackages ./checks {
+            pkgs = pkgsChecks;
+            myLib = mkLib pkgsChecks;
+          };
+
         pkgs = import nixpkgs {
           inherit system;
         };
 
-        pkgsRustOverlay = import nixpkgs {
-          inherit system;
-          overlays = [ rust-overlay.overlays.default ];
-        };
-
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
-
-        checks = pkgs.callPackages ./checks {
-          inherit pkgs pkgsRustOverlay;
-          myLib = lib;
-        };
       in
       {
         inherit checks lib;

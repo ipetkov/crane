@@ -1,4 +1,4 @@
-{ pkgs, pkgsRustOverlay, myLib }:
+{ pkgs, myLib }:
 
 let
   inherit (pkgs) lib;
@@ -9,7 +9,7 @@ let
   callPackage = self.newScope { };
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
 
-  noStdToolchain = pkgsRustOverlay.rust-bin.stable.latest.minimal.override {
+  noStdToolchain = pkgs.rust-bin.stable.latest.minimal.override {
     targets = [
       "thumbv6m-none-eabi"
       "x86_64-unknown-none" 
