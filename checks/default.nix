@@ -1,4 +1,4 @@
-{ pkgs, myLib, myPkgs }:
+{ pkgs, myLib }:
 
 let
   inherit (pkgs) lib;
@@ -9,7 +9,7 @@ let
   callPackage = self.newScope { };
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
 in
-myPkgs // {
+{
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
   clippy = callPackage ./clippy { };
@@ -184,6 +184,22 @@ myPkgs // {
       cp -r ${./custom-dummy/.cargo} -T $out/.cargo
     '';
   };
+
+  noStd =
+  let
+    noStdLib = myLib.overrideToolchain (pkgs.rust-bin.stable.latest.minimal.override {
+      targets = [
+        "thumbv6m-none-eabi"
+        "x86_64-unknown-none"
+      ];
+    });
+  in
+  lib.optionalAttrs x64Linux (noStdLib.buildPackage {
+    src = noStdLib.cleanCargoSource ./no_std;
+    CARGO_BUILD_TARGET = "x86_64-unknown-none";
+    cargoCheckExtraArgs = "--lib --bins --examples";
+    doCheck = false;
+  });
 
   nextest = callPackage ./nextest.nix { };
 

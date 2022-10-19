@@ -8,25 +8,26 @@
     };
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
+  outputs = inputs@{ self, nixpkgs, flake-utils, rust-overlay, ... }:
     let
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
-      };
-
-      myPkgsFor = { pkgs, myLib }: import ./pkgs {
-        inherit pkgs myLib;
       };
     in
     {
       inherit mkLib;
 
-      overlays.default = final: prev: myPkgsFor {
-        pkgs = final;
-        myLib = mkLib final;
-      };
+      overlays.default = final: prev: { };
 
       templates = rec {
         alt-registry = {
@@ -62,26 +63,27 @@
       };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
+        checks =
+          let
+            pkgsChecks = import nixpkgs {
+              inherit system;
+              overlays = [ rust-overlay.overlays.default ];
+            };
+          in
+          pkgsChecks.callPackages ./checks {
+            pkgs = pkgsChecks;
+            myLib = mkLib pkgsChecks;
+          };
+
         pkgs = import nixpkgs {
           inherit system;
         };
 
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
-        myPkgs = myPkgsFor {
-          inherit pkgs;
-          myLib = lib;
-        };
-
-        checks = pkgs.callPackages ./checks {
-          inherit pkgs myPkgs;
-          myLib = lib;
-        };
       in
       {
         inherit checks lib;
-
-        packages = myPkgs;
 
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [

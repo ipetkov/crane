@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `crateNameFromCargoToml` now takes workspace inheritance into account. If a
   crate does not specify `package.version` in its (root) Cargo.toml but does
   specify `workspace.package.version` then the latter will be returned.
+* Freestanding (`#![no_std]`) targets are now supported
 
 ## [0.8.0] - 2022-10-09
 
