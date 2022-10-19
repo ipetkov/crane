@@ -19,18 +19,11 @@
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
       };
-
-      myPkgsFor = { pkgs, myLib }: import ./pkgs {
-        inherit pkgs myLib;
-      };
     in
     {
       inherit mkLib;
 
-      overlays.default = final: prev: myPkgsFor {
-        pkgs = final;
-        myLib = mkLib final;
-      };
+      overlays.default = final: prev: { };
 
       templates = rec {
         alt-registry = {
@@ -72,25 +65,19 @@
 
         pkgsRustOverlay = import nixpkgs {
           inherit system;
-          overlays = [rust-overlay.overlays.default];
+          overlays = [ rust-overlay.overlays.default ];
         };
 
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
-        myPkgs = myPkgsFor {
-          inherit pkgs;
-          myLib = lib;
-        };
 
         checks = pkgs.callPackages ./checks {
-          inherit pkgs myPkgs pkgsRustOverlay;
+          inherit pkgs pkgsRustOverlay;
           myLib = lib;
         };
       in
       {
         inherit checks lib;
-
-        packages = myPkgs;
 
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [

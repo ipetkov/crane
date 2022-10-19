@@ -1,4 +1,4 @@
-{ pkgs, pkgsRustOverlay, myLib, myPkgs }:
+{ pkgs, pkgsRustOverlay, myLib }:
 
 let
   inherit (pkgs) lib;
@@ -17,7 +17,7 @@ let
   };
   noStdLib = myLib.overrideToolchain noStdToolchain;
 in
-myPkgs // {
+{
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
   clippy = callPackage ./clippy { };
