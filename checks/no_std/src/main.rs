@@ -7,4 +7,6 @@ fn panic(_info: &::core::panic::PanicInfo<'_>) -> ! {
     loop {}
 }
 
-pub fn main() {}
+pub fn main() {
+    assert_eq!(u8::from(dep::FortyTwo::new()), 42);
+}
