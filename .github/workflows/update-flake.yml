@@ -1,0 +1,33 @@
+name: Update flake dependencies
+
+on:
+  workflow_dispatch: # for allowing manual triggers of the workflow
+
+permissions:
+  contents: read
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v17
+    - name: update flake.lock
+      run: nix flake update
+    - name: run test suite
+      uses: ./.github/workflows/test.yml
+
+    # Use the REST API to commit changes, so we get automatic commit signing
+    # https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
+    - name: Commit changes
+      permissions:
+        contents: write
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        FILE_TO_COMMIT: flake.lock
+      run: |
+        gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+          --field message="chore: update flake inputs" \
+          --field content=@<( base64 -i $FILE_TO_COMMIT ) \
+          --field branch="$GITHUB_REF" \
+          --field sha="$( git rev-parse $GITHUB_REF:$FILE_TO_COMMIT )"

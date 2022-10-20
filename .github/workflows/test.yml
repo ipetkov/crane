@@ -1,4 +1,4 @@
-name: "Test"
+name: "Run test suite"
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -6,6 +6,9 @@ on:
     branches:
       - 'master'
       - 'ci*' # Allow testing CI fixes without opening a PR
+
+permissions:
+  contents: read
 
 jobs:
   tests:
