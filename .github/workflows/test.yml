@@ -6,6 +6,7 @@ on:
     branches:
       - 'master'
       - 'ci*' # Allow testing CI fixes without opening a PR
+  workflow_call:
 
 permissions:
   contents: read
