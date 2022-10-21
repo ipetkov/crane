@@ -17,6 +17,8 @@ jobs:
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: update flake
+      run: nix flake update
     - name: run tests
       run: ./ci/run-tests.sh --locked
     # Use the REST API to commit changes, so we get automatic commit signing
