@@ -6,46 +6,41 @@ on:
     branches:
       - 'master'
       - 'ci*' # Allow testing CI fixes without opening a PR
-  workflow_call:
 
 permissions:
   contents: read
 
 jobs:
+  tests-pass:
+    name: all systems go
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
+    needs:
+      - tests
+
   tests:
     strategy:
       # Allow other jobs to finish building and cache properly before bailing
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - test_args: "--locked"
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
-          - os: ubuntu-latest
+          - test_args: "--stable"
             # The 22.05 branch ships with Nix 2.8.1
             install_url: https://releases.nixos.org/nix/nix-2.8.1/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-22.05"
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v17
+    - uses: cachix/install-nix-action@v18
       with:
         install_url: ${{ matrix.install_url }}
-    - uses: cachix/cachix-action@v10
+    - uses: cachix/cachix-action@v11
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: flake checks
-      run: nix flake check --keep-going --print-build-logs ${{ matrix.nixpkgs-override }}
-    - name: extra tests
-      run: nix develop ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
-    - name: validate examples
-      run: |
-        for f in $(find examples -maxdepth 1 -mindepth 1 -type d); do
-          pushd "${f}"
-          echo "validating ${f}"
-          nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
-          nix run --override-input crane ../.. ${{ matrix.nixpkgs-override }}
-          popd
-        done
+    - name: run tests
+      run: ./ci/run-tests.sh ${{ matrix.test_args }}

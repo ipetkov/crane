@@ -3,26 +3,22 @@ name: Update flake dependencies
 on:
   workflow_dispatch: # for allowing manual triggers of the workflow
 
-permissions:
-  contents: read
-
 jobs:
-  test-with-updated-dependencies:
+  update-and-push-deps:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v17
-    - name: update flake.lock
-      run: nix flake update
-    - name: run test suite
-      uses: ./.github/workflows/test.yml
-
-  push-updates:
     permissions:
       contents: write
-    runs-on: ubuntu-latest
-    needs: test-with-updated-dependencies
     steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v18
+      with:
+        install_url: ${{ matrix.install_url }}
+    - uses: cachix/cachix-action@v11
+      with:
+        name: crane
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: run tests
+      run: ./ci/run-tests.sh --locked
     # Use the REST API to commit changes, so we get automatic commit signing
     # https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
     - name: Commit changes
