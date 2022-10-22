@@ -2,6 +2,8 @@ name: Update flake dependencies
 
 on:
   workflow_dispatch: # for allowing manual triggers of the workflow
+  schedule:
+    - cron: '0 16 * * 5'
 
 jobs:
   update-and-push-deps:
