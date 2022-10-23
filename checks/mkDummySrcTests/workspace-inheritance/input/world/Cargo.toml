@@ -1,0 +1,4 @@
+[package]
+name = "world"
+version.workspace = true
+edition.workspace = true

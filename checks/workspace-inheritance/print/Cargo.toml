@@ -1,0 +1,8 @@
+[package]
+name = "print"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+hello = { version = "*", path = "../hello" }
+world = { version = "*", path = "../world" }
