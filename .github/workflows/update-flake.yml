@@ -3,35 +3,35 @@ name: Update flake dependencies
 on:
   workflow_dispatch: # for allowing manual triggers of the workflow
   schedule:
-    - cron: '0 16 * * 5'
+    - cron: '37 16 3 * *'
+
+permissions:
+  contents: read
 
 jobs:
   update-and-push-deps:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
-      with:
-        install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v11
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: update flake
-      run: nix flake update
-    - name: run tests
-      run: ./ci/run-tests.sh --locked
-    # Use the REST API to commit changes, so we get automatic commit signing
-    # https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
-    - name: Commit changes
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        FILE_TO_COMMIT: flake.lock
-      run: |
-        gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
-          --field message="chore: update flake inputs" \
-          --field content=@<( base64 -i $FILE_TO_COMMIT ) \
-          --field branch="$GITHUB_REF" \
-          --field sha="$( git rev-parse $GITHUB_REF:$FILE_TO_COMMIT )"
+    - name: Update flake.lock
+      id: flakeupdate
+      uses: DeterminateSystems/update-flake-lock@v14
+      with:
+        token: ${{ secrets.PAT_FLAKE_UPDATE }}
+        branch: "automation/flake-update"
+        pr-title: "Update flake.lock"
+        pr-labels: |
+          automated
+          dependencies
+          flake update
+
+    - uses: peter-evans/enable-pull-request-automerge@v2
+      with:
+        token: ${{ secrets.PAT_FLAKE_UPDATE }}
+        pull-request-number: ${{ steps.flakeupdate.outputs.pull-request-number }}
+        merge-method: "squash"
