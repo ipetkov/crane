@@ -20,7 +20,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
+  outputs = { nixpkgs, crane, flake-utils, rust-overlay, ... }:
     # NB: temporarily skip aarch64-darwin since QEMU can't build there on nixpkgs-unstable
     flake-utils.lib.eachSystem [ "aarch64-linux" "i686-linux" "x86_64-darwin" "x86_64-linux" ] (localSystem:
       let
@@ -48,8 +48,7 @@
         # Normally you can stick this function into its own file and pass
         # its path to `callPackage`.
         crateExpression =
-          { lib
-          , openssl
+          { openssl
           , pkg-config
           , qemu
           , stdenv

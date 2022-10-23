@@ -17,6 +17,7 @@ jobs:
     steps:
       - run: exit 0
     needs:
+      - check-dead-code
       - tests
 
   tests:
@@ -44,3 +45,14 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: run tests
       run: ./ci/run-tests.sh ${{ matrix.test_args }}
+
+  check-dead-code:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v18
+    - uses: cachix/cachix-action@v11
+      with:
+        name: deadnix
+    - name: check for dead code
+      run: nix run github:astro/deadnix -- .

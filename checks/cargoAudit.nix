@@ -1,6 +1,5 @@
 { cargoAudit
 , fetchFromGitHub
-, lib
 , linkFarmFromDrvs
 , runCommandLocal
 }:

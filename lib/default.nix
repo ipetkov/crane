@@ -7,7 +7,7 @@ let
   inherit (self) callPackage;
 in
 {
-  appendCrateRegistries = input: self.overrideScope' (final: prev: {
+  appendCrateRegistries = input: self.overrideScope' (_final: prev: {
     crateRegistries = prev.crateRegistries // (lib.foldl (a: b: a // b) { } input);
   });
 
@@ -43,7 +43,7 @@ in
   mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
   mkDummySrc = callPackage ./mkDummySrc.nix { };
 
-  overrideToolchain = toolchain: self.overrideScope' (final: prev: {
+  overrideToolchain = toolchain: self.overrideScope' (_final: _prev: {
     cargo = toolchain;
     clippy = toolchain;
     rustc = toolchain;

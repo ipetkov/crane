@@ -1,6 +1,5 @@
 { cargo-nextest
 , lib
-, linkFarmFromDrvs
 , mkCargoDerivation
 , runCommand
 }:

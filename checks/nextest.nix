@@ -1,7 +1,6 @@
 { cargo-nextest
 , cargoNextest
 , lib
-, linkFarmFromDrvs
 , runCommand
 }:
 

@@ -124,7 +124,7 @@ let
     (attrNames sources);
 
   configReplaceGitSources = mapAttrsToList
-    (hashedId: ps:
+    (_hashedId: ps:
       let
         p = head ps;
         extractAttr = attr:

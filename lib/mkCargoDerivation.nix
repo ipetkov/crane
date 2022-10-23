@@ -5,7 +5,6 @@
 , crateNameFromCargoToml
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
-, lib
 , stdenv
 , vendorCargoDeps
 , zstd
@@ -38,6 +37,8 @@ let
   ];
 in
 chosenStdenv.mkDerivation (cleanedArgs // {
+  inherit cargoArtifacts;
+
   pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
   version = args.version or crateName.version;
 

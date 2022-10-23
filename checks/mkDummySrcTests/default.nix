@@ -36,8 +36,6 @@ let
       filteredInput = lib.cleanSourceWith {
         src = input;
         filter = path: type:
-          let baseName = builtins.baseNameOf path;
-          in
           type == "directory" || lib.any (s: lib.hasPrefix s (builtins.baseNameOf path)) [
             "Cargo"
             "config"
