@@ -1,0 +1,9 @@
+[package]
+build = "cranespecific-dummy.rs"
+name = "hello"
+
+[package.edition]
+workspace = true
+
+[package.version]
+workspace = true

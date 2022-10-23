@@ -63,6 +63,7 @@ let
     # "default-members"
     # "exclude"
     # "members"
+    # "package"
   ];
 
   # https://doc.rust-lang.org/cargo/reference/manifest.html
