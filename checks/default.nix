@@ -111,7 +111,7 @@ in
 
   customCargoTargetDirectory =
     let
-      simple = self.simple.overrideAttrs (old: {
+      simple = self.simple.overrideAttrs (_old: {
         pname = "customCargoTargetDirectory";
         doInstallCargoArtifacts = false;
         CARGO_TARGET_DIR = "some/nested/custom-cargo-dir";

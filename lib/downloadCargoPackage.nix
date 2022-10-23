@@ -6,7 +6,6 @@
 { name
 , version
 , checksum
-, source
 , ...
 }@args:
 let

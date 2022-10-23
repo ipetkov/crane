@@ -20,7 +20,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
+  outputs = { nixpkgs, crane, flake-utils, rust-overlay, ... }:
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = import nixpkgs {

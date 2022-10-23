@@ -18,7 +18,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, rust-overlay, ... }:
+  outputs = { nixpkgs, flake-utils, rust-overlay, ... }:
     let
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
@@ -27,7 +27,7 @@
     {
       inherit mkLib;
 
-      overlays.default = final: prev: { };
+      overlays.default = _final: _prev: { };
 
       templates = rec {
         alt-registry = {

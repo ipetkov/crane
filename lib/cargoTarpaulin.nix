@@ -1,10 +1,8 @@
-{ buildDepsOnly
-, mkCargoDerivation
+{ mkCargoDerivation
 , cargo-tarpaulin
 }:
 
-{ cargoArtifacts
-, cargoExtraArgs ? ""
+{ cargoExtraArgs ? ""
 , cargoTarpaulinExtraArgs ? "--skip-clean --out Xml --output-dir $out"
 , ...
 }@origArgs:

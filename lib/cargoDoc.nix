@@ -1,8 +1,7 @@
 { mkCargoDerivation
 }:
 
-{ cargoArtifacts
-, cargoDocExtraArgs ? "--no-deps"
+{ cargoDocExtraArgs ? "--no-deps"
 , cargoExtraArgs ? ""
 , ...
 }@origArgs:

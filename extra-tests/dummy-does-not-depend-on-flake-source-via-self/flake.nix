@@ -5,7 +5,7 @@
     flake-utils.follows = "crane/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, crane }: flake-utils.lib.eachDefaultSystem
+  outputs = { self, flake-utils, crane, ... }: flake-utils.lib.eachDefaultSystem
     (system: {
       packages.dummy = crane.lib.${system}.mkDummySrc {
         src = self;

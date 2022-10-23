@@ -1,5 +1,4 @@
 { buildDepsOnly
-, cargoBuild
 , jq
 }:
 

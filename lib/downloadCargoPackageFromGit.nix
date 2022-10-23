@@ -9,7 +9,7 @@
 , rev
 , ref ? null
 , allRefs ? ref == null
-}@args:
+}:
 let
   maybeRef = lib.optionalAttrs (ref != null) { inherit ref; };
   repo = builtins.fetchGit (maybeRef // {

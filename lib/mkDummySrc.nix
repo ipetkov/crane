@@ -15,8 +15,7 @@ let
   inherit (builtins)
     dirOf
     concatStringsSep
-    hasAttr
-    pathExists;
+    hasAttr;
 
   inherit (lib)
     optionalString

@@ -6,7 +6,6 @@ let
   inherit (lib)
     flatten
     groupBy
-    lists
     mapAttrs
     mapAttrsToList;
 
