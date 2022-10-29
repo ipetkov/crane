@@ -5,15 +5,41 @@ inheritCargoArtifacts() {
   local cargoTargetDir="${2:-${CARGO_TARGET_DIR:-target}}"
 
   if [ -d "${preparedArtifacts}" ]; then
-    local preparedArtifacts="${preparedArtifacts}/target.tar.zst"
+    local candidateTarZst="${preparedArtifacts}/target.tar.zst"
+    local candidateTargetDir="${preparedArtifacts}/target"
+
+    if [ -f "${candidateTarZst}" ]; then
+      local preparedArtifacts="${candidateTarZst}"
+    elif [ -d "${candidateTargetDir}" ]; then
+      local preparedArtifacts="${candidateTargetDir}"
+    fi
   fi
 
+  mkdir -p "${cargoTargetDir}"
   if [ -f "${preparedArtifacts}" ]; then
-    mkdir -p "${cargoTargetDir}"
-    echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
-  
+    echo "decompressing cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
+
     zstd -d "${preparedArtifacts}" --stdout | \
       tar -x -C "${cargoTargetDir}" --strip-components=1
+  elif [ -d "${preparedArtifacts}" ]; then
+    echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
+
+    # NB: rustc doesn't like it when artifacts are either symlinks or hardlinks to the store
+    # (it tries to truncate files instead of unlinking and recreating them)
+    # so we're forced to do a full copy here :(
+    #
+    # Notes:
+    # - --no-target-directory to avoid nesting (i.e. `./target/target`)
+    # - preserve timestamps to avoid rebuilding
+    # - no-preserve mode to ensure copies are writable
+    cp -r "${preparedArtifacts}" \
+      --no-target-directory "${cargoTargetDir}" \
+      --preserve=timestamps \
+      --no-preserve=mode
+
+    # NB: cargo also doesn't like it if `.cargo-lock` files remain with a
+    # timestamp in the distant past so we need to delete them here
+    find "${cargoTargetDir}" -name '.cargo-lock' -delete
   else
     echo unable to copy cargo artifacts, \"${preparedArtifacts}\" looks invalid
     false

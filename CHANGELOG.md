@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* A new installation mode has been defined which symlinks identical cargo
+  artifacts against previously generated ones. This allows for linear space
+  usage in the Nix store across many chained derivations (as opposed to using a
+  zstd compressed tarball which uses quadratic space across many chained
+  derivations).
+
+### Changed
+* **Breaking**: all cargo-based derivations will now default to using symlinking
+  their installed artifacts together instead of using zstd compressed tarballs.
+  To get the old behavior back, set `installCargoArtifactsMode = "use-zstd";` in
+  the derivation.
+  - Note that `buildPackage` will continue to use zstd compressed tarballs while
+    building dependencies (unless either of `cargoArtifacts` or
+    `installCargoArtifactsMode` is defined, in which case they will be honored)
+
 ## [0.9.0] - 2022-10-29
 
 ### Changed
