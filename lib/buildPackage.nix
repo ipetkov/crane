@@ -35,7 +35,9 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
   doCheck = args.doCheck or true;
   doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
 
-  cargoArtifacts = args.cargoArtifacts or (buildDepsOnly args // memoizedArgs);
+  cargoArtifacts = args.cargoArtifacts or (buildDepsOnly (args // memoizedArgs // {
+    installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
+  }));
 
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
     cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)

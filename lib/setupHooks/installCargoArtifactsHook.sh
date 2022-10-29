@@ -1,23 +1,79 @@
+compressAndInstallCargoArtifactsDir() {
+  local dir="${1:?destination directory not defined}"
+  local cargoTargetDir="${2:?cargoTargetDir not defined}"
+
+  mkdir -p "${dir}"
+
+  local dest="${dir}/target.tar.zst"
+  echo "compressing ${cargoTargetDir} to ${dest}"
+  (
+    export SOURCE_DATE_EPOCH=1
+    tar --sort=name \
+      --mtime="@${SOURCE_DATE_EPOCH}" \
+      --owner=0 \
+      --group=0 \
+      --numeric-owner \
+      --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
+      -c "${cargoTargetDir}" | zstd -o "${dest}"
+  )
+}
+
+dedupAndInstallCargoArtifactsDir() {
+  local dest="${1:?destination directory not defined}"
+  local cargoTargetDir="${2:?cargoTargetDir not defined}"
+  local prevCargoTargetDir="${3:?prevCargoTargetDir not defined}"
+
+  mkdir -p "${dest}"
+
+  if [ -d "${prevCargoTargetDir}" ]; then
+    echo "symlinking duplicates in ${cargoTargetDir} to ${prevCargoTargetDir}"
+
+    while read -r fullTargetFile; do
+      # Strip the common prefix of the current target directory
+      local targetFile="${fullTargetFile#"${cargoTargetDir}"}"
+      # Join the path and ensure we don't have a duplicate `/` separator
+      local candidateOrigFile="${prevCargoTargetDir}/${targetFile#/}"
+
+      if cmp --silent "${candidateOrigFile}" "${fullTargetFile}"; then
+        ln --symbolic --force --logical "${candidateOrigFile}" "${fullTargetFile}"
+      fi
+    done < <(find "${cargoTargetDir}" -type f)
+  fi
+
+  echo installing "${cargoTargetDir}" to "${dest}"
+  mv "${cargoTargetDir}" --target-directory="${dest}"
+}
+
 prepareAndInstallCargoArtifactsDir() {
   # Allow for calling with customized parameters
   # or fall back to defaults if none are provided
   local dir="${1:-${out}}"
   local cargoTargetDir="${2:-${CARGO_TARGET_DIR:-target}}"
-  local dest="${dir}/target.tar.zst"
+  local mode="${3:-${installCargoArtifactsMode:-use-symlink}}"
 
-  echo "copying ${cargoTargetDir} to ${dest}"
-
-  export SOURCE_DATE_EPOCH=1
   mkdir -p "${dir}"
 
-  # See: https://reproducible-builds.org/docs/archives/
-  tar --sort=name \
-    --mtime="@${SOURCE_DATE_EPOCH}" \
-    --owner=0 \
-    --group=0 \
-    --numeric-owner \
-    --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-    -c "${cargoTargetDir}" | zstd -o "${dest}"
+  case "${mode}" in
+    "use-zstd")
+      compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}"
+      ;;
+
+    "use-symlink")
+      # Placeholder if previous artifacts aren't present
+      local prevCargoTargetDir="/dev/null"
+
+      if [ -n "${cargoArtifacts}" ] && [ -d "${cargoArtifacts}/target" ]; then
+        local prevCargoTargetDir="${cargoArtifacts}/target"
+      fi
+
+      dedupAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}" "${prevCargoTargetDir}"
+      ;;
+
+    *)
+      echo "unknown mode: \"${mode}\""
+      false
+      ;;
+  esac
 }
 
 if [ "1" = "${doInstallCargoArtifacts-}" ]; then

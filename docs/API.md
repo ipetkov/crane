@@ -168,7 +168,8 @@ subsequently install from that log.
   `target` directory, which will be reused at the start of the derivation.
   Useful for caching incremental cargo builds.
   - Default value: the result of `buildDepsOnly` after applying the arguments
-    set (with the respective default values)
+    set (with the respective default values). `installCargoArtifactsMode` will
+    be set to `"use-zstd"` if not specified.
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
   phase
   - Default value: `"cargo build --profile release"`
@@ -1095,7 +1096,14 @@ directory using a previous derivation. It takes two positional arguments:
    * If not specified, the value of `$cargoArtifacts` will be used
    * If `cargoArtifacts` is not specified, an error will be raised
    * If the specified path is a directory which contains a file called
-     `target.tar.zst`, then that file will be used during unpacking
+     `target.tar.zst`, then that file will be used as specified below
+   * If the specified path is a file (and not a directory) it is assumed that it
+     contains a zstd compressed tarball and will be decompressed and unpacked
+     into the specified cargo artifacts directory
+   * If the specified path is a directory which contains another directory
+     called `target`, then that directory will be used as specified below
+   * If the specified path is a directory, its contents will be copied into the
+     specified cargo artifacts directory
    * The previously prepared artifacts are expected to be a zstd compressed
      tarball
 1. the path to cargo's artifact directory, where the previously prepared
@@ -1112,18 +1120,56 @@ post patch hook.
 
 ### `lib.installCargoArtifactsHook`
 
-Defines `prepareAndInstallCargoArtifactsDir()` which handles installing cargo's
-artifact directory to the derivation's output. It takes two positional
-arguments:
+Defines `compressAndInstallCargoArtifactsDir()` which handles installing
+cargo's artifact directory to the derivation's output as a zstd compressed
+tarball. It takes two positional arguments:
 1. the installation directory for the output.
-   * If not specified, the value of `$out` will be used
+   * An error will be raised if not specified
    * Cargo's artifact directory will be compressed as a reproducible tarball
      with zstd compression. It will be written to this directory and named
      `target.tar.zstd`
 1. the path to cargo's artifact directory
+   * An error will be raised if not specified
+
+Defines `dedupAndInstallCargoArtifactsDir()` which handles installing
+cargo's artifact directory to the derivation's output after deduplicating
+identical files against a directory of previously prepared cargo artifacts.
+It takes three positional arguments:
+1. the installation directory for the output.
+   * An error will be raised if not specified
+   * If the specified path is a directory which exists then the current cargo
+     artifacts will be compared with the contents of said directory. Any files
+     whose contents and paths match will be symbolically linked together to
+     reduce the size of the data stored in the Nix store.
+1. the path to cargo's artifact directory
+   * An error will be raised if not specified
+1. a path to the previously prepared cargo artifacts
+   * An error will be raised if not specified
+   * `/dev/null` can be specified here if there is no previous directory to
+     deduplicate against
+
+Defines `prepareAndInstallCargoArtifactsDir()` which handles installing cargo's
+artifact directory to the derivation's output. It takes three positional
+arguments:
+1. the installation directory for the output.
+   * If not specified, the value of `$out` will be used
+   * Cargo's artifact directory will be installed based on the installation mode
+     selected below
+1. the path to cargo's artifact directory
    * If not specified, the value of `$CARGO_TARGET_DIR` will be used
    * If `CARGO_TARGET_DIR` is not set, cargo's default target location  (i.e.
      `./target`) will be used.
+1. the installation mode to apply
+   * If not specified, the value of `$installCargoArtifactsMode` will be used.
+     If `$installCargoArtifactsMode` is not specified, a default value of
+     `"use-symlink" will be used
+   * If set to "use-symlink" then `dedupAndInstallCargoArtifactsDir()` will be
+     used.
+     - If `$cargoArtifacts` is defined and `$cargoArtifacts/target` is a valid
+       directory, it will be used during file deduplication
+   * If set to "use-zstd" then `compressAndInstallCargoArtifactsDir()` will be
+     used.
+   * Otherwise an error will be raised if the mode is not recognized
 
 **Automatic behavior:** if `doInstallCargoArtifacts` is set to `1`, then
 `prepareAndInstallCargoArtifactsDir "$out" "$CARGO_TARGET_DIR"` will be run as a
