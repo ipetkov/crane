@@ -11,7 +11,10 @@ main() {
   runLocked="1"
 
   while [ $# -gt 0 ]; do
-    case "$1" in
+    local arg="$1";
+    shift
+
+    case "${arg}" in
       "--locked")
         runLocked="1"
         runStable=""
@@ -21,7 +24,7 @@ main() {
         runStable="1"
         ;;
       *)
-        echo "unrecognized option $1"
+        echo "unrecognized option ${arg}"
         exit 1
         ;;
     esac
@@ -58,4 +61,4 @@ runtests() {
   done
 }
 
-main
+main "$@"
