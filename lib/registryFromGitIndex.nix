@@ -9,6 +9,7 @@ let
   index = builtins.fetchGit {
     inherit rev;
     url = indexUrl;
+    shallow = true;
   };
 
   configPath = "${index}/config.json";

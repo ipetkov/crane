@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Note that `buildPackage` will continue to use zstd compressed tarballs while
     building dependencies (unless either of `cargoArtifacts` or
     `installCargoArtifactsMode` is defined, in which case they will be honored)
+* `registryFromGitIndex` now uses shallow checkouts for better performance
 
 ## [0.9.0] - 2022-10-29
 
