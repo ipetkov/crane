@@ -39,7 +39,7 @@ jobs:
     - uses: cachix/install-nix-action@v18
       with:
         install_url: ${{ matrix.install_url }}
-    - uses: cachix/cachix-action@v11
+    - uses: cachix/cachix-action@v12
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -51,7 +51,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
-    - uses: cachix/cachix-action@v11
+    - uses: cachix/cachix-action@v12
       with:
         name: deadnix
     - name: check for dead code
