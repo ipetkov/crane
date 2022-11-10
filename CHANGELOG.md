@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     `installCargoArtifactsMode` is defined, in which case they will be honored)
 * `registryFromGitIndex` now uses shallow checkouts for better performance
 
+### Fixed
+* Unpacking a git repository now ignores duplicate crates to match cargo's
+  behavior
+
 ## [0.9.0] - 2022-10-29
 
 ### Changed
