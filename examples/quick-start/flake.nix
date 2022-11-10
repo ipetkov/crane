@@ -24,21 +24,25 @@
           inherit system;
         };
 
-        inherit (pkgs) lib;
+        inherit (pkgs) lib stdenv;
 
         craneLib = crane.lib.${system};
         src = craneLib.cleanCargoSource ./.;
 
+        # If one needs to customize the build environment mostly only needed for
+        # macos dependencies or frameworks.
+        buildInputs = [ ] ++ lib.optionals stdenv.isDarwin (lib.attrVals [ "libiconv" ] pkgs);
+
         # Build *just* the cargo dependencies, so we can reuse
         # all of that work (e.g. via cachix) when running in CI
         cargoArtifacts = craneLib.buildDepsOnly {
-          inherit src;
+          inherit src buildInputs;
         };
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
         my-crate = craneLib.buildPackage {
-          inherit cargoArtifacts src;
+          inherit cargoArtifacts src buildInputs;
         };
       in
       {
@@ -53,7 +57,7 @@
           # we can block the CI if there are issues here, but not
           # prevent downstream consumers from building our crate by itself.
           my-crate-clippy = craneLib.cargoClippy {
-            inherit cargoArtifacts src;
+            inherit cargoArtifacts src buildInputs;
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
           };
 
@@ -75,7 +79,7 @@
           # Consider setting `doCheck = false` on `my-crate` if you do not want
           # the tests to run twice
           my-crate-nextest = craneLib.cargoNextest {
-            inherit cargoArtifacts src;
+            inherit cargoArtifacts src buildInputs;
             partitions = 1;
             partitionType = "count";
           };
