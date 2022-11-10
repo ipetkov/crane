@@ -10,7 +10,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       packages.cargo-git = crane.lib.x86_64-linux.downloadCargoPackageFromGit {
-        git = "git+https://github.com/rust-lang/cargo";
+        git = "https://github.com/rust-lang/cargo";
         rev = "17f8088d6eafd82349630a8de8cc6efe03abf5fb";
       };
     });
