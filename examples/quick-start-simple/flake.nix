@@ -22,6 +22,13 @@
         craneLib = crane.lib.${system};
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;
+
+          buildInputs = [
+            # Add additional build inputs here
+          ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+            # Additional darwin specific inputs can be set here
+            pkgs.libiconv
+          ];
         };
       in
       {

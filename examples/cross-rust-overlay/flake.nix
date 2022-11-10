@@ -74,7 +74,14 @@
             # Dependencies which need to be built for the platform on which
             # the binary will run. In this case, we need to compile openssl
             # so that it can be linked with our executable.
-            buildInputs = [ openssl ];
+            buildInputs = [
+              # Add additional build inputs here
+              openssl
+            ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+              # Additional darwin specific inputs can be set here
+              pkgs.libiconv
+            ];
+
 
             # Tell cargo about the linker and an optional emulater. So they can be used in `cargo build`
             # and `cargo run`.
