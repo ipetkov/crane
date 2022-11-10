@@ -9,10 +9,12 @@
 , ...
 }@args:
 let
+  pkgInfo = urlForCargoPackage args;
   tarball = fetchurl {
     name = "${name}-${version}";
     sha256 = checksum;
-    url = urlForCargoPackage args;
+    url = pkgInfo.url;
+    curlOptsList = pkgInfo.curlOptsList;
   };
 in
 runCommandLocal "cargo-package-${name}-${version}" { } ''
