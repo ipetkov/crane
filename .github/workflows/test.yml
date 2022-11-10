@@ -65,7 +65,7 @@ jobs:
             install_url: https://nixos.org/nix/install
             nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/nixpkgs-22.05-darwin"
 
-    runs-on: ${{ matix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
