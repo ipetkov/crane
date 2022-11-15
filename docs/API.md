@@ -710,7 +710,7 @@ Note that it is possible to compose source filters, especially if
 ```nix
 let
   # Only keeps markdown files
-  markdownFilter = path: _type: match ".*md$" path;
+  markdownFilter = path: _type: builtins.match ".*md$" path != null;
   markdownOrCargo = path: type:
     (markdownFilter path type) || (lib.filterCargoSources path type);
 in
