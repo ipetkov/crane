@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * Unpacking a git repository now ignores duplicate crates to match cargo's
   behavior
+* Sped up stripping references to source files
 
 ## [0.9.0] - 2022-10-29
 

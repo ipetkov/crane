@@ -20,10 +20,29 @@ removeReferencesToVendoredSources() {
 
   local installedFile
   while read installedFile; do
-    comm -1 -2 <(echo "$allSources") <(strings "${installedFile}" | \
-      grep --only-matching '\(@storeDir@/[^/]\+\)' | \
-      sort -u) | \
-      xargs --verbose -I REF remove-references-to -t REF "${installedFile}"
+    echo removing references to "${installedFile}"
+    time sed -i'' "${installedFile}" -f <(
+      echo -n 's!'
+
+      # Print all matches as one big regex
+      # We replace all newlines with pipes
+      # Then strip out the last pipe
+      # And finally escape all pipes
+      (
+        # NB: ensure we always have at least one entry in the regex
+        echo '@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        comm -1 -2 <(echo "$allSources") <(strings "${installedFile}" | \
+          grep --only-matching '\(@storeDir@/[^/]\+\)' | \
+          sort -u
+        )
+      ) | \
+        grep --only-matching '@storeDir@/[a-z0-9]\{32\}' | \
+        tr '\n' '|' | \
+        sed 's/|$//g' | \
+        sed 's/|/\\|/g'
+
+      echo -n '!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
+    )
   done < <(find "${installLocation}" -type f)
 }
 

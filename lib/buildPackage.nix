@@ -4,7 +4,6 @@
 , jq
 , lib
 , mkCargoDerivation
-, removeReferencesTo
 , removeReferencesToVendoredSourcesHook
 , vendorCargoDeps
 }:
@@ -72,7 +71,6 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     installFromCargoBuildLogHook
     jq
-    removeReferencesTo
     removeReferencesToVendoredSourcesHook
   ];
 })
