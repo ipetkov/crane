@@ -4,44 +4,27 @@ removeReferencesToVendoredSources() {
   local installLocation="${1:-${out:?not defined}}"
   local vendoredDir="${2:-${cargoVendorDir:?not defined}}"
 
-  echo "stripping references to cargoVendorDir"
-
-  local allSources=$(
-    (
-      # Include the root of the vendor dir itself
-      echo "${vendoredDir}"
-
-      # Include the individual crates themselves in case
-      # something else slips in a reference to them
-      find -L "${vendoredDir}" -mindepth 1 -maxdepth 1 -type d | \
-        xargs -I DIR find -H DIR -type l -exec readlink '{}' \;
-    ) | sort -u
-  )
-
   local installedFile
   while read installedFile; do
-    echo removing references to "${installedFile}"
+    echo stripping references to cargoVendorDir from "${installedFile}"
     time sed -i'' "${installedFile}" -f <(
-      echo -n 's!'
+      echo -n 's!@storeDir@/\(eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
-      # Print all matches as one big regex
-      # We replace all newlines with pipes
-      # Then strip out the last pipe
-      # And finally escape all pipes
-      (
-        # NB: ensure we always have at least one entry in the regex
-        echo '@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-        comm -1 -2 <(echo "$allSources") <(strings "${installedFile}" | \
-          grep --only-matching '\(@storeDir@/[^/]\+\)' | \
-          sort -u
-        )
-      ) | \
-        grep --only-matching '@storeDir@/[a-z0-9]\{32\}' | \
-        tr '\n' '|' | \
-        sed 's/|$//g' | \
-        sed 's/|/\\|/g'
+      while read crateSource; do
+        echo -n '\|'"${crateSource#@storeDir@/}";
+      done < <(
+        (
+          # Include the root of the vendor dir itself
+          echo "${vendoredDir}"
 
-      echo -n '!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
+          # Include the individual crates themselves in case
+          # something else slips in a reference to them
+          find -L "${vendoredDir}" -mindepth 1 -maxdepth 1 -type d | \
+            xargs -I DIR find -H DIR -type l -exec readlink '{}' \;
+        ) | grep --only-matching '@storeDir@/[a-z0-9]\{32\}'
+      )
+
+      echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
     )
   done < <(find "${installLocation}" -type f)
 }
