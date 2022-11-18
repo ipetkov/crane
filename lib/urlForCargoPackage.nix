@@ -43,6 +43,7 @@ let
   '');
 in
   {
+    inherit (registry) fetchurlExtraArgs;
     url = builtins.replaceStrings
       [
         "{crate}"
@@ -59,5 +60,4 @@ in
         checksum
       ]
       registry.downloadUrl;
-    curlOptsList = registry.curlOptsList;
   }

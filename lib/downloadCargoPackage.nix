@@ -10,12 +10,11 @@
 }@args:
 let
   pkgInfo = urlForCargoPackage args;
-  tarball = fetchurl {
+  tarball = fetchurl (pkgInfo.fetchurlExtraArgs // {
+    inherit (pkgInfo) url;
     name = "${name}-${version}";
     sha256 = checksum;
-    url = pkgInfo.url;
-    curlOptsList = pkgInfo.curlOptsList;
-  };
+  });
 in
 runCommandLocal "cargo-package-${name}-${version}" { } ''
   mkdir -p $out
