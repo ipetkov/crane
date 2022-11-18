@@ -213,7 +213,6 @@ environment variables during the build, you can bring them back via
 The following hooks are automatically added as native build inputs:
 * `installFromCargoBuildLogHook`
 * `jq`
-* `removeReferencesTo`
 * `removeReferencesToVendoredSourcesHook`
 
 ### `lib.cargoAudit`
@@ -1218,5 +1217,3 @@ sources themselves. It takes two positional arguments:
 `doNotRemoveReferencesToVendorDir` is not set, then
 `removeReferencesToVendoredSources "$out" "$cargoVendorDir"` will be run as a
 post install hook.
-
-**Required nativeBuildInputs**: assumes `remove-references-to` is available on the `$PATH`
