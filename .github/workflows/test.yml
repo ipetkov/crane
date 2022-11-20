@@ -18,6 +18,7 @@ jobs:
       - run: exit 0
     needs:
       - check-dead-code
+      - examples
       - tests
 
   tests:
@@ -26,13 +27,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - test_args: "--locked"
             # Latest and greatest release of Nix
-            install_url: https://nixos.org/nix/install
-          - test_args: "--stable"
+          - install_url: https://nixos.org/nix/install
             # The 22.05 branch ships with Nix 2.8.1
-            install_url: https://releases.nixos.org/nix/nix-2.8.1/install
-
+          - install_url: https://releases.nixos.org/nix/nix-2.8.1/install
+            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-22.05"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -43,8 +42,56 @@ jobs:
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: run tests
-      run: ./ci/run-tests.sh ${{ matrix.test_args }}
+    - name: flake checks
+      run: nix flake check --keep-going --print-build-logs ${{ matrix.nixpkgs-override }}
+    - name: extra tests
+      run: nix develop ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
+
+  examples:
+    strategy:
+      # Allow other jobs to finish building and cache properly before bailing
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            # Latest and greatest release of Nix
+            install_url: https://nixos.org/nix/install
+          - os: ubuntu-latest
+            # The 22.05 branch ships with Nix 2.8.1
+            install_url: https://releases.nixos.org/nix/nix-2.8.1/install
+            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-22.05"
+          - os: macos-12
+            # Latest and greatest release of Nix
+            install_url: https://nixos.org/nix/install
+            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/nixpkgs-22.05-darwin"
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v18
+      with:
+        install_url: ${{ matrix.install_url }}
+    - uses: cachix/cachix-action@v12
+      with:
+        name: crane
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: validate examples
+      run: |
+        for f in $(find examples -maxdepth 1 -mindepth 1 -type d); do
+          pushd "${f}"
+          echo "validating ${f}"
+          nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          popd
+        done
+    - name: run examples
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        for f in $(find examples -maxdepth 1 -mindepth 1 -type d); do
+          pushd "${f}"
+          echo "running ${f}"
+          nix run --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          popd
+        done
 
   check-dead-code:
     runs-on: ubuntu-latest

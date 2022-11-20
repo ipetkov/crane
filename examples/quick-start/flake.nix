@@ -24,14 +24,17 @@
           inherit system;
         };
 
-        inherit (pkgs) lib stdenv;
+        inherit (pkgs) lib;
 
         craneLib = crane.lib.${system};
         src = craneLib.cleanCargoSource ./.;
 
-        # If one needs to customize the build environment mostly only needed for
-        # macos dependencies or frameworks.
-        buildInputs = [ ] ++ lib.optionals stdenv.isDarwin (lib.attrVals [ "libiconv" ] pkgs);
+        buildInputs = [
+          # Add additional build inputs here
+        ] ++ lib.optionals pkgs.stdenv.isDarwin [
+          # Additional darwin specific inputs can be set here
+          pkgs.libiconv
+        ];
 
         # Build *just* the cargo dependencies, so we can reuse
         # all of that work (e.g. via cachix) when running in CI

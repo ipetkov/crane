@@ -22,7 +22,7 @@
 
   outputs = { nixpkgs, crane, flake-utils, rust-overlay, ... }:
     # NB: temporarily skip aarch64-darwin since QEMU can't build there on nixpkgs-unstable
-    flake-utils.lib.eachSystem [ "aarch64-linux" "i686-linux" "x86_64-darwin" "x86_64-linux" ] (localSystem:
+    flake-utils.lib.eachSystem [ "aarch64-linux" "x86_64-darwin" "x86_64-linux" ] (localSystem:
       let
         # Replace with the system you want to build for
         crossSystem = "aarch64-linux";
@@ -48,7 +48,10 @@
         # Normally you can stick this function into its own file and pass
         # its path to `callPackage`.
         crateExpression =
-          { openssl
+          { darwin
+          , openssl
+          , libiconv
+          , lib
           , pkg-config
           , qemu
           , stdenv
@@ -69,12 +72,23 @@
             # script can find the location of openssl. Note that we don't
             # need to specify the rustToolchain here since it was already
             # overridden above.
-            nativeBuildInputs = [ pkg-config ];
+            nativeBuildInputs = [
+              pkg-config
+            ] ++ lib.optionals stdenv.buildPlatform.isDarwin [
+              # Additional darwin specific inputs can be set here
+              # This should include nay libraries needed for linking proc macros
+              # since they run on the build platform itself
+              libiconv
+              darwin.apple_sdk.frameworks.Security
+            ];
 
             # Dependencies which need to be built for the platform on which
             # the binary will run. In this case, we need to compile openssl
             # so that it can be linked with our executable.
-            buildInputs = [ openssl ];
+            buildInputs = [
+              # Add additional build inputs here
+              openssl
+            ];
 
             # Tell cargo about the linker and an optional emulater. So they can be used in `cargo build`
             # and `cargo run`.
