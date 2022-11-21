@@ -1,0 +1,9 @@
+[package]
+name = "print"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hello = { version = "*", path = "../hello" }
+world = { version = "*", path = "../world" }
+my-workspace-hack = { version = "0.1", path = "../my-workspace-hack" }
