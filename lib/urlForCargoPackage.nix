@@ -43,7 +43,7 @@ let
   '');
 in
   {
-    inherit (registry) fetchurlExtraArgs;
+    fetchurlExtraArgs = registry.fetchurlExtraArgs or {};
     url = builtins.replaceStrings
       [
         "{crate}"

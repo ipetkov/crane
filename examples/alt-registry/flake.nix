@@ -35,6 +35,9 @@
           (craneLibOrig.registryFromGitIndex {
             indexUrl = "https://github.com/Hirevo/alexandrie-index";
             rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
+            fetchurlExtraArgs = {
+              # Extra parameters which will be passed to the fetchurl invocation for each crate
+            };
           })
 
           # As a more lightweight alternative, the `dl` endpoint of the registry's `config.json`
@@ -42,6 +45,9 @@
           # (craneLibOrig.registryFromDownloadUrl {
           #   indexUrl = "https://github.com/Hirevo/alexandrie-index";
           #   dl = "https://crates.polomack.eu/api/v1/crates/{crate}/{version}/download";
+          #   fetchurlExtraArgs = {
+          #     # Extra parameters which will be passed to the fetchurl invocation for each crate
+          #   };
           # })
         ];
 
