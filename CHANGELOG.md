@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Unpacking a git repository now ignores duplicate crates to match cargo's
   behavior
 * Sped up stripping references to source files
+* Dummy sources now import the `core` crate more robustly (playing more nicely
+  with `cargo-hakari`)
 
 ## [0.9.0] - 2022-10-29
 
