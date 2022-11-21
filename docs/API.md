@@ -44,12 +44,14 @@ newLib = lib.appendCrateRegistries [
   (lib.registryFromDownloadUrl {
     indexUrl = "https://github.com/rust-lang/crates.io-index";
     dl = "https://crates.io/api/v1/crates";
+    fetchurlExtraArgs = {};
   })
 
   # Or, alternatively
   (lib.registryFromGitIndex {
     indexUrl = "https://github.com/Hirevo/alexandrie-index";
     rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
+    fetchurlExtraArgs = {};
   })
 ];
 ```
@@ -648,6 +650,10 @@ raised during evaluation.
 Download a packaged cargo crate (e.g. from crates.io) and prepare it for
 vendoring.
 
+The registry's `fetchurlExtraArgs` will be passed through to `fetchurl` when
+downloading the crate, making it possible to influence interacting with the
+registry's API if necessary.
+
 #### Required input attributes
 * `checksum`: the (sha256) checksum recorded in the Cargo.lock file
 * `name`: the name of the crate
@@ -904,16 +910,29 @@ If the registry's download endpoint changes more frequently and you would like
 to infer the configuration directly from a git revision, consider using
 `registryFromGitIndex` as an alternative.
 
+If the registry needs a special way of accessing crate sources the
+`fetchurlExtraArgs` set can be used to influence the behavior of fetching the
+crate sources (e.g. by setting `curlOptsList`)
+
 #### Required attributes
 * `dl`: the value of the `dl` entry in the registry's `config.json` file
 * `indexUrl`: an HTTP URL to the index
+
+#### Optional attributes
+* `fetchurlExtraArgs`: a set of arguments which will be passed on to the
+  `fetchurl` for each crate being sourced from this registry
 
 ```nix
 lib.registryFromDownloadUrl {
   dl = "https://crates.io/api/v1/crates";
   indexUrl = "https://github.com/rust-lang/crates.io-index";
 }
-# { "registry+https://github.com/rust-lang/crates.io-index" = "https://crates.io/api/v1/crates/{crate}/{version}/download"; }
+# {
+#   "registry+https://github.com/rust-lang/crates.io-index" = {
+#     downloadUrl = "https://crates.io/api/v1/crates/{crate}/{version}/download";
+#     fetchurlExtraArgs = {};
+#   };
+# }
 ```
 
 ### `lib.registryFromGitIndex`
@@ -934,24 +953,42 @@ specified revision will be added to the Nix store during evaluation time, and
 that IFD will need to be enabled. If this is unsatisfactory, consider using
 `registryFromDownloadUrl` as a simpler alternative.
 
+If the registry needs a special way of accessing crate sources the
+`fetchurlExtraArgs` set can be used to influence the behavior of fetching the
+crate sources (e.g. by setting `curlOptsList`)
+
 #### Required attributes
 * `indexUrl`: an HTTP URL to the index
 * `rev`: any git revision which contains the latest `config.json` definition
+
+#### Optional attributes
+* `fetchurlExtraArgs`: a set of arguments which will be passed on to the
+  `fetchurl` for each crate being sourced from this registry
 
 ```nix
 lib.registryFromGitIndex {
   url = "https://github.com/Hirevo/alexandrie-index";
   rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
 }
-# { "registry+https://github.com/Hirevo/alexandrie-index" = "https://crates.polomack.eu/api/v1/crates/{crate}/{version}/download"; }
+# {
+#   "registry+https://github.com/Hirevo/alexandrie-index" = {
+#     downloadUrl = "https://crates.polomack.eu/api/v1/crates/{crate}/{version}/download";
+#     fetchurlExtraArgs = {};
+#   };
+# }
 ```
 
 ### `lib.urlForCargoPackage`
 
-`urlForCargoPackage :: set -> String`
+`urlForCargoPackage :: set -> set`
 
-Returns the URL for downloading a particular crate. For now, only crates.io is
-supported.
+Returns info pertaining to the URL for downloading a particular crate if the
+crate's registry is configured (an error will be thrown if it is not).
+
+The result will contain two attributes:
+- `url`: A string representing the URL at which the crate can be fetched
+- `fetchurlExtraArgs`: A set of attributes specific to this registry which will
+  be passed on to the `fetchurl` invocation.
 
 #### Required input attributes
 * `name`: the name of the crate

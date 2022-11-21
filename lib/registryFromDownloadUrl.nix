@@ -4,6 +4,7 @@
 # https://doc.rust-lang.org/cargo/reference/registries.html
 { dl
 , indexUrl
+, fetchurlExtraArgs ? {}
 }:
 let
   matches = m: builtins.match ".*${lib.escapeRegex m}.*" dl;
@@ -24,5 +25,8 @@ let
     else "${registryPrefix}${indexUrl}";
 in
 {
-  "${registryIndexUrl}" = fullDownloadUrl;
+  "${registryIndexUrl}" = {
+    inherit fetchurlExtraArgs;
+    downloadUrl = fullDownloadUrl;
+  };
 }

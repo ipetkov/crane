@@ -19,7 +19,7 @@ let
     else if nameLen == 3 then "3/${substr 0 1 name}"
     else "${substr 0 2 name}/${substr 2 4 name}";
 
-  dl = crateRegistries.${source} or (throw ''
+  registry = crateRegistries.${source} or (throw ''
     not sure how to download crates from ${source}.
     for example, this can be resolved with:
 
@@ -42,19 +42,22 @@ let
     }
   '');
 in
-builtins.replaceStrings
-  [
-    "{crate}"
-    "{version}"
-    "{prefix}"
-    "{lowerprefix}"
-    "{sha256-checksum}"
-  ]
-  [
-    name
-    version
-    prefix
-    (lib.toLower prefix)
-    checksum
-  ]
-  dl
+  {
+    fetchurlExtraArgs = registry.fetchurlExtraArgs or {};
+    url = builtins.replaceStrings
+      [
+        "{crate}"
+        "{version}"
+        "{prefix}"
+        "{lowerprefix}"
+        "{sha256-checksum}"
+      ]
+      [
+        name
+        version
+        prefix
+        (lib.toLower prefix)
+        checksum
+      ]
+      registry.downloadUrl;
+  }

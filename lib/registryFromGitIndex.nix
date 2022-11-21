@@ -3,6 +3,7 @@
 
 { indexUrl
 , rev
+, fetchurlExtraArgs ? {}
 }:
 
 let
@@ -26,5 +27,5 @@ let
   '');
 in
 registryFromDownloadUrl {
-  inherit dl indexUrl;
+  inherit dl indexUrl fetchurlExtraArgs;
 }

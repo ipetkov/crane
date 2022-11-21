@@ -21,7 +21,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Note that `buildPackage` will continue to use zstd compressed tarballs while
     building dependencies (unless either of `cargoArtifacts` or
     `installCargoArtifactsMode` is defined, in which case they will be honored)
+* **Breaking**: the format for defining crate registries has been changed: each
+  registry URL should map to a set containing a `downloadUrl` attribute. This
+  set may also define `fetchurlExtraArgs` (another set) which will be forwarded
+  to the
+  `fetchurl` invocations for crates for that registry.
 * `registryFromGitIndex` now uses shallow checkouts for better performance
+* `registryFromDownloadUrl` and `registryFromGitIndex` now allow specifying
+  `fetchurlExtraArgs` which will be forwarded to the `fetchurl` invocations for
+  crates for that registry
 
 ### Fixed
 * Unpacking a git repository now ignores duplicate crates to match cargo's
