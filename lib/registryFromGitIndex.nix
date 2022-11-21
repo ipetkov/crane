@@ -3,7 +3,7 @@
 
 { indexUrl
 , rev
-, fetchurlExtraArgs ? {}
+, fetchurlExtraArgs ? { }
 }:
 
 let

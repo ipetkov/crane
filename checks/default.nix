@@ -73,7 +73,8 @@ in
       "foo"
       "overlapping-targets"
     ])
-    myLib.cargoBuild {
+    myLib.cargoBuild
+    {
       src = ./overlapping-targets;
     };
   compilesFreshWithBuildScript = self.compilesFresh
@@ -89,7 +90,8 @@ in
         "with-build-script"
       ]);
     }
-    myLib.cargoBuild {
+    myLib.cargoBuild
+    {
       src = ./with-build-script;
     };
   compilesFreshWithBuildScriptCustom = self.compilesFresh
@@ -105,7 +107,8 @@ in
         "with-build-script-custom"
       ]);
     }
-    myLib.cargoBuild {
+    myLib.cargoBuild
+    {
       src = ./with-build-script-custom;
     };
 
@@ -186,20 +189,20 @@ in
   };
 
   noStd =
-  let
-    noStdLib = myLib.overrideToolchain (pkgs.rust-bin.stable.latest.minimal.override {
-      targets = [
-        "thumbv6m-none-eabi"
-        "x86_64-unknown-none"
-      ];
+    let
+      noStdLib = myLib.overrideToolchain (pkgs.rust-bin.stable.latest.minimal.override {
+        targets = [
+          "thumbv6m-none-eabi"
+          "x86_64-unknown-none"
+        ];
+      });
+    in
+    lib.optionalAttrs x64Linux (noStdLib.buildPackage {
+      src = noStdLib.cleanCargoSource ./no_std;
+      CARGO_BUILD_TARGET = "x86_64-unknown-none";
+      cargoCheckExtraArgs = "--lib --bins --examples";
+      doCheck = false;
     });
-  in
-  lib.optionalAttrs x64Linux (noStdLib.buildPackage {
-    src = noStdLib.cleanCargoSource ./no_std;
-    CARGO_BUILD_TARGET = "x86_64-unknown-none";
-    cargoCheckExtraArgs = "--lib --bins --examples";
-    doCheck = false;
-  });
 
   nextest = callPackage ./nextest.nix { };
 
@@ -247,19 +250,20 @@ in
 
   # https://github.com/ipetkov/crane/issues/119
   removeReferencesToVendorDirAndCrates =
-  let
-    crate = myLib.buildPackage {
-      src = ./grpcio-test;
-      nativeBuildInputs = [
-        pkgs.cmake
-      ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-        pkgs.gcc10
-      ];
-    };
-  in
-    pkgs.runCommand "removeReferencesToVendorDir" {
-      nativeBuildInputs = [ pkgs.binutils-unwrapped ];
-    } ''
+    let
+      crate = myLib.buildPackage {
+        src = ./grpcio-test;
+        nativeBuildInputs = [
+          pkgs.cmake
+        ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
+          pkgs.gcc10
+        ];
+      };
+    in
+    pkgs.runCommand "removeReferencesToVendorDir"
+      {
+        nativeBuildInputs = [ pkgs.binutils-unwrapped ];
+      } ''
       if strings ${crate}/bin/grpcio-test | \
         grep --only-matching '${builtins.storeDir}/[^/]\+' | \
         grep --invert-match 'glibc\|gcc' | \

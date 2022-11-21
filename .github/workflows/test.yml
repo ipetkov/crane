@@ -18,6 +18,7 @@ jobs:
       - run: exit 0
     needs:
       - check-dead-code
+      - check-fmt
       - examples
       - tests
 
@@ -103,3 +104,11 @@ jobs:
         name: deadnix
     - name: check for dead code
       run: nix run github:astro/deadnix -- .
+
+  check-fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v18
+    - name: check formatting
+      run: nix fmt -- --check .

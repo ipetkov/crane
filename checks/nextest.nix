@@ -32,7 +32,8 @@ let
     cargoArtifacts = null;
   };
 in
-runCommand "nextestTests" {
+runCommand "nextestTests"
+{
   buildInputs = [ nextestSimple ] ++ (lib.optionals nextestSupportsArchives [
     nextestPartitionsCount
     nextestPartitionsHash

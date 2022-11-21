@@ -64,8 +64,8 @@ else # First build the tests in one derivation, then run each partition in anoth
       });
   in
   # Allow for retaining the artifacts from the `archive` derivation
-  # if callers want to chain other derivations after it. We provide
-  # the actual `partition*` derivations as inputs to ensure they are run.
+    # if callers want to chain other derivations after it. We provide
+    # the actual `partition*` derivations as inputs to ensure they are run.
   runCommand "cargo-nextest-tests"
   {
     inherit doInstallCargoArtifacts;

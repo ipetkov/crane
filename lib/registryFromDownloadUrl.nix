@@ -4,7 +4,7 @@
 # https://doc.rust-lang.org/cargo/reference/registries.html
 { dl
 , indexUrl
-, fetchurlExtraArgs ? {}
+, fetchurlExtraArgs ? { }
 }:
 let
   matches = m: builtins.match ".*${lib.escapeRegex m}.*" dl;

@@ -85,6 +85,8 @@
       {
         inherit checks lib;
 
+        formatter = pkgs.nixpkgs-fmt;
+
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
             jq

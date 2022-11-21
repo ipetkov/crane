@@ -42,22 +42,22 @@ let
     }
   '');
 in
-  {
-    fetchurlExtraArgs = registry.fetchurlExtraArgs or {};
-    url = builtins.replaceStrings
-      [
-        "{crate}"
-        "{version}"
-        "{prefix}"
-        "{lowerprefix}"
-        "{sha256-checksum}"
-      ]
-      [
-        name
-        version
-        prefix
-        (lib.toLower prefix)
-        checksum
-      ]
-      registry.downloadUrl;
-  }
+{
+  fetchurlExtraArgs = registry.fetchurlExtraArgs or { };
+  url = builtins.replaceStrings
+    [
+      "{crate}"
+      "{version}"
+      "{prefix}"
+      "{lowerprefix}"
+      "{sha256-checksum}"
+    ]
+    [
+      name
+      version
+      prefix
+      (lib.toLower prefix)
+      checksum
+    ]
+    registry.downloadUrl;
+}
