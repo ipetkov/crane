@@ -94,13 +94,13 @@ to influence its behavior.
       altogether.
 * `cargoCheckCommand`: A cargo (check) invocation to run during the derivation's build
   phase (in order to cache additional artifacts)
-  - Default value: `"cargo check --profile release --all-targets"`
+  - Default value: `"cargo check --profile release ${cargoCheckExtraArgs}"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
       is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoCheckExtraArgs`: additional flags to be passed in the `cargoCheckCommand`
   invocation
-  - Default value: `"--all-targets"`
+  - Default value: `"--all-targets"` if `doCheck` is set to true, `""` otherwise
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`

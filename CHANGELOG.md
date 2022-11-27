@@ -24,8 +24,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking**: the format for defining crate registries has been changed: each
   registry URL should map to a set containing a `downloadUrl` attribute. This
   set may also define `fetchurlExtraArgs` (another set) which will be forwarded
-  to the
-  `fetchurl` invocations for crates for that registry.
+  to the `fetchurl` invocations for crates for that registry.
+* **Breaking** (technically): `buildDepsOnly` will now only default to running
+  `cargo check` with the `--all-targets` flag only if `doCheck = true;` is set on
+  the derivation (otherwise the flag is omitted). To get the previous behavior
+  back simply set `cargoCheckExtraArgs = "--all-targets";`.
 * `registryFromGitIndex` now uses shallow checkouts for better performance
 * `registryFromDownloadUrl` and `registryFromGitIndex` now allow specifying
   `fetchurlExtraArgs` which will be forwarded to the `fetchurl` invocations for
