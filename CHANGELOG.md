@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Sped up stripping references to source files
 * Dummy sources now import the `core` crate more robustly (playing more nicely
   with `cargo-hakari`)
+* Building a crate's dependencies automatically works for uefi targets
 
 ## [0.9.0] - 2022-10-29
 
