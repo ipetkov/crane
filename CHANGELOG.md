@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   usage in the Nix store across many chained derivations (as opposed to using a
   zstd compressed tarball which uses quadratic space across many chained
   derivations).
+* `mkDummySrc` optionally accepts a `dummyrs` argument which allows for
+  customizing the contents of the dummy Rust files that will be generated.
 
 ### Changed
 * **Breaking**: all cargo-based derivations will now default to using symlinking
@@ -24,8 +26,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking**: the format for defining crate registries has been changed: each
   registry URL should map to a set containing a `downloadUrl` attribute. This
   set may also define `fetchurlExtraArgs` (another set) which will be forwarded
-  to the
-  `fetchurl` invocations for crates for that registry.
+  to the `fetchurl` invocations for crates for that registry.
+* **Breaking** (technically): `buildDepsOnly` will now only default to running
+  `cargo check` with the `--all-targets` flag only if `doCheck = true;` is set on
+  the derivation (otherwise the flag is omitted). To get the previous behavior
+  back simply set `cargoCheckExtraArgs = "--all-targets";`.
 * `registryFromGitIndex` now uses shallow checkouts for better performance
 * `registryFromDownloadUrl` and `registryFromGitIndex` now allow specifying
   `fetchurlExtraArgs` which will be forwarded to the `fetchurl` invocations for
@@ -37,6 +42,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Sped up stripping references to source files
 * Dummy sources now import the `core` crate more robustly (playing more nicely
   with `cargo-hakari`)
+* Building a crate's dependencies automatically works for uefi targets
 
 ## [0.9.0] - 2022-10-29
 

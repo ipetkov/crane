@@ -94,13 +94,13 @@ to influence its behavior.
       altogether.
 * `cargoCheckCommand`: A cargo (check) invocation to run during the derivation's build
   phase (in order to cache additional artifacts)
-  - Default value: `"cargo check --profile release --all-targets"`
+  - Default value: `"cargo check --profile release ${cargoCheckExtraArgs}"`
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
       is selected; setting it to `""` will omit specifying a profile
       altogether.
 * `cargoCheckExtraArgs`: additional flags to be passed in the `cargoCheckCommand`
   invocation
-  - Default value: `"--all-targets"`
+  - Default value: `"--all-targets"` if `doCheck` is set to true, `""` otherwise
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
@@ -844,6 +844,11 @@ build caches. More specifically:
 #### Optional attributes
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
+* `dummyrs`: a path to a file which will be used in place of all dummy rust
+  files (e.g. `main.rs`, `lib.rs`, etc.). This can be useful to customize dummy
+  source files (e.g. enable certain lang features for a given target).
+  - Default value: an empty `fn main` declaration and conditionally enabled
+    `#![no_std]` if the `target_os` cfg is set to `"none"` or `"uefi"`.
 * `extraDummyScript`: additional shell script which will be run inside the builder
   verbatim. Useful for customizing what the dummy sources include by running any
   arbitrary commands.

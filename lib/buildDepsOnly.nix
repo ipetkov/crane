@@ -6,7 +6,6 @@
 
 { cargoBuildCommand ? "cargoWithProfile build"
 , cargoCheckCommand ? "cargoWithProfile check"
-, cargoCheckExtraArgs ? "--all-targets"
 , cargoExtraArgs ? ""
 , cargoTestCommand ? "cargoWithProfile test"
 , cargoTestExtraArgs ? ""
@@ -31,6 +30,11 @@ let
     - set `cargoArtifacts = null` to skip reusing cargo artifacts altogether
   '';
 
+  # Run tests by default to ensure we cache any dev-dependencies
+  doCheck = args.doCheck or true;
+
+  cargoCheckExtraArgs = args.cargoCheckExtraArgs or (if doCheck then "--all-targets" else "");
+
   path = args.src or throwMsg;
   cargoToml = path + "/Cargo.toml";
   dummySrc = args.dummySrc or
@@ -39,6 +43,8 @@ let
     else throwMsg);
 in
 mkCargoDerivation (cleanedArgs // {
+  inherit doCheck;
+
   src = dummySrc;
   pnameSuffix = "-deps";
   pname = args.pname or crateName.pname;
@@ -57,9 +63,6 @@ mkCargoDerivation (cleanedArgs // {
   checkPhaseCargoCommand = args.checkPhaseCargoCommand or ''
     ${cargoTestCommand} ${cargoExtraArgs} ${cargoTestExtraArgs}
   '';
-
-  # Run tests by default to ensure we cache any dev-dependencies
-  doCheck = args.doCheck or true;
 
   # No point in building this if not for the cargo artifacts
   doInstallCargoArtifacts = true;
