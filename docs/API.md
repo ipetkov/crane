@@ -844,6 +844,11 @@ build caches. More specifically:
 #### Optional attributes
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
+* `dummyrs`: a path to a file which will be used in place of all dummy rust
+  files (e.g. `main.rs`, `lib.rs`, etc.). This can be useful to customize dummy
+  source files (e.g. enable certain lang features for a given target).
+  - Default value: an empty `fn main` declaration and conditionally enabled
+    `#![no_std]` if the `target_os` cfg is set to `"none"` or `"uefi"`.
 * `extraDummyScript`: additional shell script which will be run inside the builder
   verbatim. Useful for customizing what the dummy sources include by running any
   arbitrary commands.

@@ -10,7 +10,7 @@
 , cargoLock ? null
 , extraDummyScript ? ""
 , ...
-}:
+}@args:
 let
   inherit (builtins)
     dirOf
@@ -119,7 +119,7 @@ let
         lib.any filter allUncleanFiles;
     };
 
-  dummyrs = writeText "dummy.rs" ''
+  dummyrs = args.dummyrs or (writeText "dummy.rs" ''
     #![allow(dead_code)]
     #![cfg_attr(any(target_os = "none", target_os = "uefi"), no_std)]
 
@@ -131,7 +131,7 @@ let
     }
 
     pub fn main() {}
-  '';
+  '');
 
   cpDummy = prefix: path: ''
     mkdir -p ${prefix}/${dirOf path}

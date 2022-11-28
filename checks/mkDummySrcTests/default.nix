@@ -2,6 +2,7 @@
 , linkFarmFromDrvs
 , mkDummySrc
 , runCommand
+, writeText
 }:
 
 let
@@ -47,7 +48,7 @@ let
       (cmpDummySrcRaw "${name}-filtered" expected filteredInput)
     ];
 
-  customizedDummy =
+  customized =
     let
       expected = ./customized/expected;
       input = ./customized/input;
@@ -59,6 +60,27 @@ let
         echo 'another additional file' >$out/another-custom-file.txt
       '';
     });
+
+  customizedDummyrs =
+    let
+      expected = ./custom-dummyrs/expected;
+      input = ./custom-dummyrs/input;
+    in
+    doCompare "customized-dummyrs" expected (mkDummySrc {
+      src = input;
+      dummyrs = writeText "dummy.rs" ''
+        #![feature(no_core, lang_items, start)]
+        #[no_std]
+        #[no_core]
+        // #[no_gods]
+        // #[no_masters]
+
+        #[start]
+        fn main(_: isize, _: *const *const u8) -> isize {
+            0
+        }
+      '';
+    });
 in
 linkFarmFromDrvs "cleanCargoToml" (lib.flatten [
   (cmpDummySrc "single" ./single)
@@ -66,5 +88,6 @@ linkFarmFromDrvs "cleanCargoToml" (lib.flatten [
   (cmpDummySrc "workspace" ./workspace)
   (cmpDummySrc "workspace-inheritance" ./workspace-inheritance)
 
-  customizedDummy
+  customized
+  customizedDummyrs
 ])

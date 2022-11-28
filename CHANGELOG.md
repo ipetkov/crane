@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   usage in the Nix store across many chained derivations (as opposed to using a
   zstd compressed tarball which uses quadratic space across many chained
   derivations).
+* `mkDummySrc` optionally accepts a `dummyrs` argument which allows for
+  customizing the contents of the dummy Rust files that will be generated.
 
 ### Changed
 * **Breaking**: all cargo-based derivations will now default to using symlinking
