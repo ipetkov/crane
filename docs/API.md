@@ -554,7 +554,7 @@ Cleans a source tree to omit things like version control directories as well
 omit any non-Rust/non-cargo related files. Useful to avoid rebuilding a project
 when unrelated files are changed (e.g. `flake.nix` or any other nix files).
 
-The final output will be cleaned by both `cleanSourcesFilter` (from nixpkgs) and
+The final output will be cleaned by both `cleanSource` (from nixpkgs) and
 `lib.filterCargoSources`. See each of them for more details on which files are
 kept.
 
