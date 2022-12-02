@@ -335,10 +335,10 @@ in
     pname = "workspace-hack";
   };
 
-  workspaceInheritance = lib.optionalAttrs (lib.versionAtLeast pkgs.cargo.version "1.64.0") (myLib.buildPackage {
+  workspaceInheritance = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-inheritance;
     pname = "workspace-inheritance";
-  });
+  };
 
   workspaceRoot = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-root;
