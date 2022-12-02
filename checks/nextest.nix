@@ -1,15 +1,8 @@
-{ cargo-nextest
-, cargoNextest
-, lib
+{ cargoNextest
 , runCommand
 }:
 
 let
-  # cargo-nextest version in the stable-22.05 branch is too old
-  nextestSupportsArchives = lib.versionAtLeast
-    cargo-nextest.version
-    "0.9.15";
-
   nextestSimple = cargoNextest {
     src = ./simple;
     pname = "nextest-simple";
@@ -34,10 +27,11 @@ let
 in
 runCommand "nextestTests"
 {
-  buildInputs = [ nextestSimple ] ++ (lib.optionals nextestSupportsArchives [
+  buildInputs = [
+    nextestSimple
     nextestPartitionsCount
     nextestPartitionsHash
-  ]);
+  ];
 } ''
   mkdir -p $out
 ''
