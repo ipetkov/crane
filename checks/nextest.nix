@@ -1,5 +1,5 @@
 { cargoNextest
-, linkFarmFromDrvs
+, runCommand
 }:
 
 let
@@ -25,8 +25,13 @@ let
     cargoArtifacts = null;
   };
 in
-linkFarmFromDrvs "nextestTests" [
-  nextestSimple
-  nextestPartitionsCount
-  nextestPartitionsHash
-]
+runCommand "nextestTests"
+{
+  buildInputs = [
+    nextestSimple
+    nextestPartitionsCount
+    nextestPartitionsHash
+  ];
+} ''
+  mkdir -p $out
+''
