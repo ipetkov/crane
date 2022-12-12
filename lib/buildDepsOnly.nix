@@ -36,7 +36,7 @@ let
   cargoCheckExtraArgs = args.cargoCheckExtraArgs or (if doCheck then "--all-targets" else "");
 
   path = args.src or throwMsg;
-  cargoToml = path + "/Cargo.toml";
+  cargoToml = args.cargoToml or (path + "/Cargo.toml");
   dummySrc = args.dummySrc or
     (if builtins.pathExists cargoToml
     then mkDummySrc args
