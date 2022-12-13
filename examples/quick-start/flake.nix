@@ -65,7 +65,7 @@
           };
 
           my-crate-doc = craneLib.cargoDoc {
-            inherit cargoArtifacts src;
+            inherit cargoArtifacts src buildInputs;
           };
 
           # Check formatting
