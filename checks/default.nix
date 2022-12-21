@@ -143,7 +143,7 @@ in
   depsOnlySourceName = myLib.buildPackage {
     src = ./highs-sys-test;
     stdenv = pkgs.clangStdenv;
-    LIBCLANG_PATH="${pkgs.llvmPackages.libclang.lib}/lib";
+    LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
     nativeBuildInputs = with pkgs; [
       cmake
     ];
