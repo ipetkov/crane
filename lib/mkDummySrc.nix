@@ -15,7 +15,10 @@ let
   inherit (builtins)
     dirOf
     concatStringsSep
-    hasAttr;
+    hasAttr
+    head
+    match
+    storeDir;
 
   inherit (lib)
     optionalString
@@ -210,8 +213,25 @@ let
     if cargoLock == null
     then ""
     else "cp ${cargoLock} $out/Cargo.lock";
+
+  # Note that the name we choose for the dummy source output is load bearing:
+  # some CMake projects will error out (thinking their caches are invalidated)
+  # if their full parent path changes between runs. The default generic builder
+  # will unpack sources by stripping their prefix (e.g. to something like
+  # `/build/whatever/...`) so by copying the portion of the name after the Nix hash,
+  # we can consistently unpack to the same path instead of unpacking to something like
+  # `/build/dummy-src/...`).
+  sourceName =
+    let
+      srcStorePath = removePrefix storeDir src;
+      nameWithoutHash = match "/[a-z0-9]+-(.*)" srcStorePath;
+    in
+    if (nameWithoutHash == null)
+    # Fall back to a static name if the matching fails for any reason
+    then "dummy-src"
+    else head nameWithoutHash;
 in
-runCommandLocal "dummy-src" { } ''
+runCommandLocal sourceName { } ''
   mkdir -p $out
   cp --recursive --no-preserve=mode,ownership ${cleanSrc}/. -t $out
   ${copyCargoLock}
