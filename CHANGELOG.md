@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   nixpkgs-unstable are fully supported
 * Zstd compression of cargo artifacts now defaults to using as many cores as
   `$NIX_BUILD_CORES` allows for (or all available cores if it isn't defined)
+* Dummy sources now attempt to use the same name as their original source (minus
+  the Nix store path and hash) to minimize errors with build scripts which
+  expect their full path to not change between runs
 
 ## [0.10.0] - 2022-12-01
 
