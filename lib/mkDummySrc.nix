@@ -223,7 +223,8 @@ let
   # `/build/dummy-src/...`).
   sourceName =
     let
-      srcStorePath = removePrefix storeDir src;
+      # NB: we just want to get the source's name but not depend on it
+      srcStorePath = builtins.unsafeDiscardStringContext (removePrefix storeDir src);
       nameWithoutHash = match "/[a-z0-9]+-(.*)" srcStorePath;
     in
     if (nameWithoutHash == null)
