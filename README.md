@@ -101,7 +101,6 @@ Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion by you, shall be licensed as MIT, without any additional terms or
 conditions.
 
-[API docs]: ./docs/API.md
 [cargo-audit]: https://rustsec.org/
 [cargo]: https://doc.rust-lang.org/cargo/
 [cargo-nextest]: https://nexte.st/
