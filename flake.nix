@@ -81,6 +81,8 @@
                 lib.any (prefix: lib.hasPrefix prefix relativePath) [
                   "/docs" # Build the docs directory
                   "/examples" # But also include examples as we cross-reference them
+                  "/README.md"
+                  "/CHANGELOG.md"
                 ];
             };
           in
