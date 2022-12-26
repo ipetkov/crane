@@ -1,4 +1,4 @@
-{ pkgs, myLib }:
+{ pkgs, myLib, myPkgs }:
 
 let
   inherit (pkgs) lib;
@@ -154,6 +154,8 @@ in
   };
 
   features = callPackage ./features { };
+
+  flakePackages = pkgs.linkFarmFromDrvs "flake-packages" (builtins.attrValues myPkgs);
 
   gitOverlappingRepo = myLib.buildPackage {
     src = ./git-overlapping;

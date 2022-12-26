@@ -63,6 +63,33 @@
       };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+
+        packages.book =
+          let
+            inherit (pkgs) lib;
+            root = ./.;
+            rootPrefix = toString root;
+            cleanedSrc = lib.cleanSourceWith {
+              src = root;
+              filter = path: type:
+                let
+                  relativePath = lib.removePrefix rootPrefix path;
+                in
+                lib.any (prefix: lib.hasPrefix prefix relativePath) [
+                  "/docs" # Build the docs directory
+                  "/examples" # But also include examples as we cross-reference them
+                  "/README.md"
+                  "/CHANGELOG.md"
+                ];
+            };
+          in
+          pkgs.runCommand "crane-book" { } ''
+            ${pkgs.mdbook}/bin/mdbook build --dest-dir $out ${cleanedSrc}/docs
+          '';
+
         checks =
           let
             pkgsChecks = import nixpkgs {
@@ -73,23 +100,21 @@
           pkgsChecks.callPackages ./checks {
             pkgs = pkgsChecks;
             myLib = mkLib pkgsChecks;
+            myPkgs = packages;
           };
-
-        pkgs = import nixpkgs {
-          inherit system;
-        };
 
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
       in
       {
-        inherit checks lib;
+        inherit checks lib packages;
 
         formatter = pkgs.nixpkgs-fmt;
 
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
             jq
+            mdbook
             nixpkgs-fmt
           ];
         };
