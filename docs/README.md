@@ -1,3 +1,5 @@
+# Crane
+
 A [Nix] library for building [cargo] projects.
 
 * **Source fetching**: automatically done using a Cargo.lock file
