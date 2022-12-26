@@ -457,6 +457,11 @@ Notably, it is possible to set:
 * `cargoExtraArgs = "--workspace --exclude qux";` to build the entire cargo
   workspace _except for the `qux` crate_.
 
+Consider setting `pname = "NAME_OF_THE_EXECUTABLE";` when building a single
+executable from the workspace. Having the name of the package match the
+executable name will allow the result to easily run via `nix run` without
+further configuration.
+
 ## License
 
 This project is licensed under the [MIT license].
