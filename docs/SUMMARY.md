@@ -1,7 +1,7 @@
 # Summary
 
-[Home](../README.md)
-[Changelog](../CHANGELOG.md)
+[Home](./README.md)
+[Changelog](./CHANGELOG.md)
 
 ---
 * [Introduction](./introduction.md)
