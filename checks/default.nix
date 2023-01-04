@@ -126,6 +126,17 @@ in
       touch $out
     '';
 
+  # https://github.com/ipetkov/crane/discussions/203
+  dependencyBuildScriptPerms = myLib.cargoClippy {
+    src = ./dependencyBuildScriptPerms;
+    cargoExtraArgs = "--all-features --all";
+    cargoClippyExtraArgs = "-- --deny warnings";
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./dependencyBuildScriptPerms;
+      # NB: explicitly build this with no feature flags
+    };
+  };
+
   docs = myLib.cargoDoc {
     src = ./simple;
     cargoArtifacts = myLib.buildDepsOnly {
