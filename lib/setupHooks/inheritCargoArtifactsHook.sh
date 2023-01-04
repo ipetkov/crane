@@ -31,11 +31,15 @@ inheritCargoArtifacts() {
     # Notes:
     # - --no-target-directory to avoid nesting (i.e. `./target/target`)
     # - preserve timestamps to avoid rebuilding
-    # - no-preserve mode to ensure copies are writable
+    # - no-preserve ownership (root) so we can make the files writable
     cp -r "${preparedArtifacts}" \
       --no-target-directory "${cargoTargetDir}" \
       --preserve=timestamps \
-      --no-preserve=mode
+      --no-preserve=ownership
+
+    # Keep existing permissions (e.g. exectuable), but also make things writable
+    # since the store is read-only and cargo would otherwise choke
+    chmod -R u+w "${cargoTargetDir}"
 
     # NB: cargo also doesn't like it if `.cargo-lock` files remain with a
     # timestamp in the distant past so we need to delete them here
