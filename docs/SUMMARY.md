@@ -14,6 +14,7 @@
   * [Alternative registry](./examples/alt-registry.md)
   * [Cross compiling](./examples/cross-rust-overlay.md)
   * [Cross compiling with musl](./examples/cross-musl.md)
+* [Source filtering](./source-filtering.md)
 ---
 - [API Reference](./API.md)
 ---
