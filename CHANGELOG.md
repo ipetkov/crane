@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* Documented and made it easier to build a cargo workspace located in a
+  subdirectory of the source root
+
 ### Fixed
 * Previously compiled build scripts now maintain their executable bit when
   inherited
