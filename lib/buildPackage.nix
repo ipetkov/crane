@@ -10,6 +10,7 @@
 
 { cargoBuildCommand ? "cargoWithProfile build"
 , cargoExtraArgs ? ""
+, cargoMetadataExtraArgs ? ""
 , cargoTestCommand ? "cargoWithProfile test"
 , cargoTestExtraArgs ? ""
 , ...
@@ -19,6 +20,7 @@ let
   cleanedArgs = builtins.removeAttrs args [
     "cargoBuildCommand"
     "cargoExtraArgs"
+    "cargoMetadataExtraArgs"
     "cargoTestCommand"
     "cargoTestExtraArgs"
   ];
@@ -49,7 +51,7 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
 
   installPhaseCommand = args.installPhaseCommand or ''
     if [ -n "$cargoBuildLog" -a -f "$cargoBuildLog" ]; then
-      installFromCargoBuildLog "$out" "$cargoBuildLog"
+      installFromCargoBuildLog "$out" "$cargoBuildLog" ${cargoMetadataExtraArgs}
     else
       echo ${lib.strings.escapeShellArg ''
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

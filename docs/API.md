@@ -104,6 +104,9 @@ to influence its behavior.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
+* `cargoMetadataExtraArgs`: additional flags to be passed in the `cargo metadata`
+  invocation (e.g. specifying `--manifest-path`)
+  - Default value: `""`
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
   - Default value: `"cargo test --profile release"`

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `buildPackage` now accepts `cargoManifestExtraArgs` for passing additional
+  arguments just to the `cargo manifest` invocation
+
 ### Fixed
 * Previously compiled build scripts now maintain their executable bit when
   inherited

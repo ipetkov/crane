@@ -31,7 +31,7 @@ function installFromCargoBuildLog() (
 
   jq -r <"${log}" "${select_bins}" | installArtifacts "${dest}/bin"
 
-  command cargo metadata --format-version 1 | jq '.workspace_members[]' | (
+  command cargo metadata --format-version 1 "${@:3}" | jq '.workspace_members[]' | (
     while IFS= read -r ws_member; do
       local select_member_libs="select(.package_id == ${ws_member}) | ${select_lib_files}"
       jq -r <"${log}" "${select_member_libs}" | installArtifacts "${dest}/lib"
