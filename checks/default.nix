@@ -363,6 +363,14 @@ in
     pname = "workspace-inheritance";
   };
 
+  # https://github.com/ipetkov/crane/issues/209
+  workspaceRootNotAtSourceRoot = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./workspace-not-at-root;
+    sourceRoot = "source/workspace";
+    cargoLock = ./workspace-not-at-root/workspace/Cargo.lock;
+    cargoToml = ./workspace-not-at-root/workspace/Cargo.toml;
+  };
+
   workspaceRoot = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-root;
     pname = "workspace-root";

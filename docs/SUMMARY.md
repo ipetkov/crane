@@ -27,3 +27,4 @@
   * [Building a subset of a workspace](./faq/build-workspace-subset.md)
   * [Trouble building when using `include_str!` (or including other non-rust files)](./faq/building-with-non-rust-includes.md)
   * [Dealing with sandbox-unfriendly build scripts](./faq/sandbox-unfriendly-build-scripts.md)
+  * [Cargo.toml is not at the source root](./faq/workspace-not-at-source-root.md)

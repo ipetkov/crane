@@ -23,24 +23,12 @@ let
     "dummySrc"
   ];
 
-  throwMsg = throw ''
-    unable to find Cargo.toml and Cargo.lock at ${path}. please ensure one of the following:
-    - a Cargo.toml and Cargo.lock exists at the root of the source directory of the derivation
-    - set `cargoArtifacts = buildDepsOnly { src = ./some/path/to/cargo/root; }`
-    - set `cargoArtifacts = null` to skip reusing cargo artifacts altogether
-  '';
-
   # Run tests by default to ensure we cache any dev-dependencies
   doCheck = args.doCheck or true;
 
   cargoCheckExtraArgs = args.cargoCheckExtraArgs or (if doCheck then "--all-targets" else "");
 
-  path = args.src or throwMsg;
-  cargoToml = path + "/Cargo.toml";
-  dummySrc = args.dummySrc or
-    (if builtins.pathExists cargoToml
-    then mkDummySrc args
-    else throwMsg);
+  dummySrc = args.dummySrc or (mkDummySrc args);
 in
 mkCargoDerivation (cleanedArgs // {
   inherit doCheck;
