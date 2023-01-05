@@ -25,3 +25,4 @@
   * [Building upstream cargo crate with no `Cargo.lock`](./faq/no-cargo-lock.md)
   * [Patching `Cargo.lock` during build](./faq/patching-cargo-lock.md)
   * [Building a subset of a workspace](./faq/build-workspace-subset.md)
+  * [Trouble building when using `include_str!` (or including other non-rust files)](./faq/building-with-non-rust-includes.md)
