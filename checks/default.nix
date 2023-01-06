@@ -366,7 +366,10 @@ in
   # https://github.com/ipetkov/crane/issues/209
   workspaceRootNotAtSourceRoot = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-not-at-root;
-    sourceRoot = "source/workspace";
+    postUnpack = ''
+      cd $sourceRoot/workspace
+      sourceRoot="."
+    '';
     cargoLock = ./workspace-not-at-root/workspace/Cargo.lock;
     cargoToml = ./workspace-not-at-root/workspace/Cargo.toml;
   };
