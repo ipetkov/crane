@@ -27,7 +27,7 @@ buildPackage {
   # other attributes omtited
   postPatch = ''
     mkdir -p "$TMPDIR/nix-vendor"
-    cp -r "$cargoVendorDir" "$TMPDIR/nix-vendor"
+    cp -r "$cargoVendorDir" -T "$TMPDIR/nix-vendor"
     chmod -R +w "$TMPDIR/nix-vendor"
     cargoVendorDir="$TMPDIR/nix-vendor"
   '';
