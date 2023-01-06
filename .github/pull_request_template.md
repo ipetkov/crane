@@ -11,5 +11,5 @@ Fill out what you can and feel free to ask for help with anything
 -->
 - [ ] added tests to verify new behavior
 - [ ] added an example template or updated an existing one
-- [ ] updated `docs/API.md` with changes
+- [ ] updated `docs/API.md` (or general documentation) with changes
 - [ ] updated `CHANGELOG.md`
