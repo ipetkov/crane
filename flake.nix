@@ -45,6 +45,11 @@
           path = ./examples/cross-rust-overlay;
         };
 
+        cross-windows = {
+          description = "Cross compiling a rust program for windows";
+          path = ./examples/cross-windows;
+        };
+
         custom-toolchain = {
           description = "Build a cargo project with a custom toolchain";
           path = ./examples/custom-toolchain;
