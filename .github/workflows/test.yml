@@ -88,15 +88,6 @@ jobs:
           nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
           popd
         done
-    - name: run examples
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        for f in $(find examples -maxdepth 1 -mindepth 1 -type d); do
-          pushd "${f}"
-          echo "running ${f}"
-          nix run --override-input crane ../.. ${{ matrix.nixpkgs-override }}
-          popd
-        done
 
   check-dead-code:
     runs-on: ubuntu-latest

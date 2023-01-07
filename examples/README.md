@@ -7,6 +7,7 @@ This directory contains several different ways of configuring a project:
 * **cross-musl**: build a cargo project with musl to crate statically linked
   binaries
 * **cross-rust-overlay**: cross compile a rust project using rust-overlay
+* **cross-windows**: cross compile a rust project for windows
 * **custom-toolchain**: build a cargo project with a custom toolchain (e.g. WASM
   builds)
 * **quick-start**: build a cargo project with a comprehensive test suite
