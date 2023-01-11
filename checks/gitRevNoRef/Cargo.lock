@@ -12,8 +12,8 @@ checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 name = "git-rev-no-ref"
 version = "0.1.0"
 dependencies = [
- "tokio 1.13.1",
- "tokio 1.14.1",
+ "tokio 1.18.4",
+ "tokio 1.20.3",
 ]
 
 [[package]]
@@ -24,17 +24,16 @@ checksum = "e0a7ae3ac2f1173085d398531c705756c94a4c56843785df85a60c1a0afac116"
 
 [[package]]
 name = "tokio"
-version = "1.13.1"
-source = "git+https://github.com/tokio-rs/tokio?rev=2a3c803dd1c487868eabcef547066952cc07624e#2a3c803dd1c487868eabcef547066952cc07624e"
+version = "1.18.4"
+source = "git+https://github.com/tokio-rs/tokio?rev=9241c3eddf4a6a218681b088d71f7191513e2376#9241c3eddf4a6a218681b088d71f7191513e2376"
 dependencies = [
- "autocfg",
  "pin-project-lite",
 ]
 
 [[package]]
 name = "tokio"
-version = "1.14.1"
-source = "git+https://github.com/tokio-rs/tokio?branch=tokio-1.14.x#b4077a5c27aaf5d07fc04635e9d6b224e3f5326f"
+version = "1.20.3"
+source = "git+https://github.com/tokio-rs/tokio?branch=tokio-1.20.x#ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3"
 dependencies = [
  "autocfg",
  "pin-project-lite",

@@ -6,10 +6,10 @@ edition = "2021"
 [dependencies.tokio]
 version = "*"
 git = "https://github.com/tokio-rs/tokio.git"
-rev = "d416b1d1d683f6bc9032516242f5d40fb4543d0a"
+rev = "ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3"
 features = ["rt", "macros"]
 
 [dependencies.tokio-util]
 version = "*"
 git = "https://github.com/tokio-rs/tokio.git"
-rev = "d416b1d1d683f6bc9032516242f5d40fb4543d0a"
+rev = "ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3"
