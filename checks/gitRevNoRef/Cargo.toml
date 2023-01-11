@@ -6,9 +6,9 @@ edition = "2021"
 
 [dependencies.tokio]
 git = "https://github.com/tokio-rs/tokio"
-branch = "tokio-1.14.x"
+branch = "tokio-1.20.x"
 
 [dependencies.tokio2]
 git = "https://github.com/tokio-rs/tokio"
-rev = "2a3c803dd1c487868eabcef547066952cc07624e" # Coming from tokio-1.13.x
+rev = "9241c3eddf4a6a218681b088d71f7191513e2376" # Coming from tokio-1.18.4
 package = "tokio"
