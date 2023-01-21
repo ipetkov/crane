@@ -41,6 +41,7 @@ struct CargoMetadata {
 fn resolve_and_print_cargo_toml(cargo_toml: &Path) -> anyhow::Result<()> {
     let root_toml = Command::new("cargo")
         .arg("metadata")
+        .arg("--no-deps")
         .arg("--format-version")
         .arg("1")
         .stdin(Stdio::null())
@@ -64,7 +65,7 @@ fn resolve_and_print_cargo_toml(cargo_toml: &Path) -> anyhow::Result<()> {
     }
 
     let mut cargo_toml = parse_toml(cargo_toml)?;
-    merge(&mut cargo_toml, parse_toml(&root_toml.join("Cargo.toml"))?);
+    merge(&mut cargo_toml, &parse_toml(&root_toml.join("Cargo.toml"))?);
 
     toml::to_vec(&cargo_toml)
         .context("failed to serialize updated Cargo.toml")
@@ -85,47 +86,52 @@ fn parse_toml(path: &Path) -> anyhow::Result<toml::Value> {
     toml::from_slice(&buf).with_context(|| format!("cannot parse {}", path.display()))
 }
 
-fn merge(cargo_toml: &mut toml::Value, root: toml::Value) {
+fn merge(cargo_toml: &mut toml::Value, root: &toml::Value) {
     let toml::Value::Table(t) = cargo_toml else {
         // cargo_toml is malformed, bail
         return;
     };
 
-    let toml::Value::Table(mut rt) = root else {
+    let toml::Value::Table(rt) = root else {
         // workspace root is malformed, bail
         return;
     };
 
-    let Some(toml::Value::Table(w)) = rt.get_mut("workspace") else {
+    let Some(toml::Value::Table(w)) = rt.get("workspace") else {
         // no "workspace" entry, nothing to merge
         return;
     };
 
     // https://doc.rust-lang.org/cargo/reference/workspaces.html#workspaces
-    for key in ["package", "dependencies"] {
+    for (key, ws_key) in [
+        ("package", "package"),
+        ("dependencies", "dependencies"),
+        ("dev-dependencies", "dependencies"),
+        ("build-dependencies", "dependencies"),
+    ] {
         if let (Some(toml::Value::Table(p)), Some(toml::Value::Table(wp))) =
-            (t.get_mut(key), w.remove(key))
+            (t.get_mut(key), w.get(ws_key))
         {
             merge_tables(p, wp);
         };
     }
 }
 
-fn merge_tables(cargo_toml: &mut Table, mut root: Table) {
+fn merge_tables(cargo_toml: &mut Table, root: &Table) {
     cargo_toml.iter_mut().for_each(|(k, v)| {
         let toml::Value::Table(t) = v else {
             // Only consider child tables as that is how `workspace = true;` will show up
             return;
         };
 
-        let Some(root_val) = root.remove(k) else {
+        let Some(root_val) = root.get(k) else {
             // If the workspace root doesn't have this key, bail
             return;
         };
 
         if let Some(toml::Value::Boolean(true)) = t.get("workspace") {
             t.remove("workspace");
-            let orig_val = mem::replace(v, root_val);
+            let orig_val = mem::replace(v, root_val.clone());
             merge_into(v, orig_val);
         }
     });
@@ -207,6 +213,26 @@ mod tests {
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
+
+            [dev-dependencies]
+            foo.workspace = true
+            bar.workspace = true
+            baz.workspace = true
+            qux = { workspace = true, features = ["qux-additional"] }
+            corge = { workspace = true, version = "corge-vers-override" }
+            grault = { version = "grault-vers" }
+            garply = "garply-vers"
+            waldo = "waldo-vers"
+
+            [build-dependencies]
+            foo.workspace = true
+            bar.workspace = true
+            baz.workspace = true
+            qux = { workspace = true, features = ["qux-additional"] }
+            corge = { workspace = true, version = "corge-vers-override" }
+            grault = { version = "grault-vers" }
+            garply = "garply-vers"
+            waldo = "waldo-vers"
         "#,
         )
         .unwrap();
@@ -273,11 +299,31 @@ mod tests {
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
+
+            [dev-dependencies]
+            foo = { version = "foo-vers" }
+            bar = { version = "bar-vers", default-features = false }
+            baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+            qux = { version = "qux-vers", features = ["qux-feat", "qux-additional"] }
+            corge = { version = "corge-vers-override", features = ["qux-feat"] }
+            grault = { version = "grault-vers" }
+            garply = "garply-vers"
+            waldo = "waldo-vers"
+
+            [build-dependencies]
+            foo = { version = "foo-vers" }
+            bar = { version = "bar-vers", default-features = false }
+            baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+            qux = { version = "qux-vers", features = ["qux-feat", "qux-additional"] }
+            corge = { version = "corge-vers-override", features = ["qux-feat"] }
+            grault = { version = "grault-vers" }
+            garply = "garply-vers"
+            waldo = "waldo-vers"
         "#,
         )
         .unwrap();
 
-        super::merge(&mut cargo_toml, root_toml);
+        super::merge(&mut cargo_toml, &root_toml);
 
         assert_eq!(expected_toml, cargo_toml);
     }
