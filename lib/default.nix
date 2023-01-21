@@ -26,6 +26,7 @@ in
   cleanCargoToml = callPackage ./cleanCargoToml.nix { };
   configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
   configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
+  craneUtils = callPackage ../pkgs/crane-utils { };
   crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix { };
 
   crateRegistries = self.registryFromDownloadUrl {
