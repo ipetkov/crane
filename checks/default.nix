@@ -166,7 +166,14 @@ in
 
   features = callPackage ./features { };
 
-  flakePackages = pkgs.linkFarmFromDrvs "flake-packages" (builtins.attrValues myPkgs);
+  flakePackages =
+    let
+      pkgDrvs = builtins.attrValues myPkgs;
+      extraChecks = lib.flatten (map builtins.attrValues
+        (map (p: onlyDrvs (p.passthru.checks or {})) pkgDrvs)
+      );
+    in
+    pkgs.linkFarmFromDrvs "flake-packages" (pkgDrvs ++ extraChecks);
 
   gitOverlappingRepo = myLib.buildPackage {
     src = ./git-overlapping;
