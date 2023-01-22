@@ -87,17 +87,16 @@ fn parse_toml(path: &Path) -> anyhow::Result<toml::Value> {
 }
 
 fn merge(cargo_toml: &mut toml::Value, root: &toml::Value) {
-    let toml::Value::Table(t) = cargo_toml else {
-        // cargo_toml is malformed, bail
-        return;
+    let (t, rt) = match (cargo_toml, root) {
+        (toml::Value::Table(t), toml::Value::Table(rt)) => (t, rt),
+
+        // Bail if cargo_toml or workspace root are malformed
+        _ => return,
     };
 
-    let toml::Value::Table(rt) = root else {
-        // workspace root is malformed, bail
-        return;
-    };
-
-    let Some(toml::Value::Table(w)) = rt.get("workspace") else {
+    let w = if let Some(toml::Value::Table(w)) = rt.get("workspace") {
+        w
+    } else {
         // no "workspace" entry, nothing to merge
         return;
     };
@@ -119,14 +118,12 @@ fn merge(cargo_toml: &mut toml::Value, root: &toml::Value) {
 
 fn merge_tables(cargo_toml: &mut Table, root: &Table) {
     cargo_toml.iter_mut().for_each(|(k, v)| {
-        let toml::Value::Table(t) = v else {
-            // Only consider child tables as that is how `workspace = true;` will show up
-            return;
-        };
-
-        let Some(root_val) = root.get(k) else {
-            // If the workspace root doesn't have this key, bail
-            return;
+        // Bail if:
+        // - cargo_toml isn't a table (otherwise `workspace = true` can't show up
+        // - the workspace root doesn't have this key
+        let (t, root_val) = match (&mut *v, root.get(k)) {
+            (toml::Value::Table(t), Some(root_val)) => (t, root_val),
+            _ => return,
         };
 
         if let Some(toml::Value::Boolean(true)) = t.get("workspace") {
