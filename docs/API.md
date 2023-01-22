@@ -155,6 +155,11 @@ understood by `mkCargoDerivation` apply here as well, with the only difference
 being some additional book keeping necessary to log cargo's results and
 subsequently install from that log.
 
+Note that only `bin`, `staticlib`, and `cdylib` targets will be installed by
+default (namely `rlib` targets will be ignored), though it is possible to adjust
+the behavior by changing the `installPhaseCommand` or registering additional
+install hooks.
+
 #### Optional attributes
 * `buildPhaseCargoCommand`: A command to run during the derivation's build
   phase. Pre and post build hooks will automatically be run.
