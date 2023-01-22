@@ -30,8 +30,8 @@ jobs:
         include:
             # Latest and greatest release of Nix
           - install_url: https://nixos.org/nix/install
-            # The 22.11 branch ships with Nix 2.11.0
-          - install_url: https://releases.nixos.org/nix/nix-2.11.0/install
+            # The 22.11 branch ships with Nix 2.11.1
+          - install_url: https://releases.nixos.org/nix/nix-2.11.1/install
             nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-22.11"
     runs-on: ubuntu-latest
     steps:
@@ -60,8 +60,8 @@ jobs:
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
           - os: ubuntu-latest
-            # The 22.11 branch ships with Nix 2.11.0
-            install_url: https://releases.nixos.org/nix/nix-2.11.0/install
+            # The 22.11 branch ships with Nix 2.11.1
+            install_url: https://releases.nixos.org/nix/nix-2.11.1/install
             nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-22.11"
           - os: macos-12
             # Latest and greatest release of Nix
