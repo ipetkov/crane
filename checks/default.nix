@@ -170,7 +170,7 @@ in
     let
       pkgDrvs = builtins.attrValues myPkgs;
       extraChecks = lib.flatten (map builtins.attrValues
-        (map (p: onlyDrvs (p.passthru.checks or {})) pkgDrvs)
+        (map (p: onlyDrvs (p.passthru.checks or { })) pkgDrvs)
       );
     in
     pkgs.linkFarmFromDrvs "flake-packages" (pkgDrvs ++ extraChecks);
