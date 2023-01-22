@@ -1,0 +1,8 @@
+[package]
+name = "simple-git-workspace-inheritance"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.print]
+version = "*"
+git = "https://github.com/ipetkov/crane-test-repo.git"

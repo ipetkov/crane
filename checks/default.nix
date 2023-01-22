@@ -166,7 +166,14 @@ in
 
   features = callPackage ./features { };
 
-  flakePackages = pkgs.linkFarmFromDrvs "flake-packages" (builtins.attrValues myPkgs);
+  flakePackages =
+    let
+      pkgDrvs = builtins.attrValues myPkgs;
+      extraChecks = lib.flatten (map builtins.attrValues
+        (map (p: onlyDrvs (p.passthru.checks or { })) pkgDrvs)
+      );
+    in
+    pkgs.linkFarmFromDrvs "flake-packages" (pkgDrvs ++ extraChecks);
 
   gitOverlappingRepo = myLib.buildPackage {
     src = ./git-overlapping;
@@ -234,6 +241,9 @@ in
   };
   simpleGit = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git;
+  };
+  simpleGitWorkspaceInheritance = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./simple-git-workspace-inheritance;
   };
   simpleCustomProfile = myLib.buildPackage {
     src = ./simple;
@@ -307,6 +317,9 @@ in
   smoke = callPackage ./smoke.nix { };
   smokeSimple = self.smoke [ "simple" ] self.simple;
   smokeSimpleGit = self.smoke [ "simple-git" ] self.simpleGit;
+  smokeSimpleGitWorkspaceInheritance = self.smoke
+    [ "simple-git-workspace-inheritance" ]
+    self.simpleGitWorkspaceInheritance;
   smokeAltRegistry = self.smoke [ "alt-registry" ] (
     let
       myLibWithRegistry = myLib.appendCrateRegistries [

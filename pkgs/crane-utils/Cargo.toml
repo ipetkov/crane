@@ -1,0 +1,14 @@
+[package]
+name = "crane-utils"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+anyhow = "1"
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+toml = { version = "0.5.11", features = ["preserve_order"] }
+
+[dev-dependencies]
+pretty_assertions = "1.3.0"
