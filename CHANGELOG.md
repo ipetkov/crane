@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.11.1] - 2023-01-21
+
 ### Changed
 * Documented and made it easier to build a cargo workspace located in a
   subdirectory of the source root
@@ -326,6 +328,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.11.1]: https://github.com/ipetkov/crane/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/ipetkov/crane/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/ipetkov/crane/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/ipetkov/crane/compare/v0.8.0...v0.9.0
