@@ -2,7 +2,6 @@
 , craneUtils
 , jq
 , lib
-, remarshal
 , runCommandLocal
 }:
 

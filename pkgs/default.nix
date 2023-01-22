@@ -8,7 +8,7 @@
       rootPrefix = toString root;
       cleanedSrc = lib.cleanSourceWith {
         src = root;
-        filter = path: type:
+        filter = path: _:
           let
             relativePath = lib.removePrefix rootPrefix path;
           in
