@@ -10,21 +10,21 @@ checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
 name = "bytes"
-version = "1.3.0"
+version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dfb24e866b15a1af2a1b663f10c6b6b8f397a84aadb828f12e5b289ec23a3a3c"
+checksum = "89b2fd2a0dcf38d7971e2194b6b6eebab45ae01067456a7fd93d5547a61b70be"
 
 [[package]]
 name = "futures-core"
-version = "0.3.25"
+version = "0.3.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "04909a7a7e4633ae6c4a9ab280aeb86da1236243a77b694a49eacd659a4bd3ac"
+checksum = "ec90ff4d0fe1f57d600049061dc6bb68ed03c7d2fbd697274c41805dcb3f8608"
 
 [[package]]
 name = "futures-sink"
-version = "0.3.25"
+version = "0.3.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "39c15cf1a4aa79df40f1bb462fb39676d0ad9e366c2a33b590d7c66f4f81fcf9"
+checksum = "f310820bb3e8cfd46c80db4d7fb8353e15dfff853a127158425f31e0be6c8364"
 
 [[package]]
 name = "git-repo-with-many-crates"
@@ -42,9 +42,9 @@ checksum = "e0a7ae3ac2f1173085d398531c705756c94a4c56843785df85a60c1a0afac116"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.49"
+version = "1.0.51"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57a8eca9f9c4ffde41714334dee777596264c7825420f521abc92b5b5deb63a5"
+checksum = "5d727cae5b39d21da60fa540906919ad737832fe0b1c165da3a34d6548c849d6"
 dependencies = [
  "unicode-ident",
 ]
@@ -71,8 +71,8 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.20.3"
-source = "git+https://github.com/tokio-rs/tokio.git?rev=ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3#ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3"
+version = "1.20.4"
+source = "git+https://github.com/tokio-rs/tokio.git?rev=f3ce29a0038c04094c39915c0221c8e428fe7ac3#f3ce29a0038c04094c39915c0221c8e428fe7ac3"
 dependencies = [
  "autocfg",
  "pin-project-lite",
@@ -82,7 +82,7 @@ dependencies = [
 [[package]]
 name = "tokio-macros"
 version = "1.8.0"
-source = "git+https://github.com/tokio-rs/tokio.git?rev=ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3#ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3"
+source = "git+https://github.com/tokio-rs/tokio.git?rev=f3ce29a0038c04094c39915c0221c8e428fe7ac3#f3ce29a0038c04094c39915c0221c8e428fe7ac3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -92,7 +92,7 @@ dependencies = [
 [[package]]
 name = "tokio-util"
 version = "0.7.3"
-source = "git+https://github.com/tokio-rs/tokio.git?rev=ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3#ba81945ffc2695b71f2bbcadbfb5e46ec55aaef3"
+source = "git+https://github.com/tokio-rs/tokio.git?rev=f3ce29a0038c04094c39915c0221c8e428fe7ac3#f3ce29a0038c04094c39915c0221c8e428fe7ac3"
 dependencies = [
  "bytes",
  "futures-core",

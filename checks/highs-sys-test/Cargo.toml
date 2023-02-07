@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-highs-sys = "1.2.2"
+highs-sys = "=1.2.2"
