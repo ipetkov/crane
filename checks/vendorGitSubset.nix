@@ -22,7 +22,7 @@ let
 
   checkSubset = runCommand "vendorGitSubsetAsExpected" { } ''
     cat >expected <<EOF
-    tokio-1.20.3
+    tokio-1.20.4
     tokio-macros-1.8.0
     tokio-util-0.7.3
     EOF

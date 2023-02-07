@@ -25,7 +25,7 @@ checksum = "201de327520df007757c1f0adce6e827fe8562fbc28bfd9c15571c66ca1f5f79"
 [[package]]
 name = "libc"
 version = "0.2.139"
-source = "git+https://github.com/rust-lang/libc.git?branch=master#8176272ef9974d6b7da98f129033b3d9ac417226"
+source = "git+https://github.com/rust-lang/libc.git?branch=master#7349741e84fd409930bd3498e636e5c094dd249f"
 
 [[package]]
 name = "num_cpus"

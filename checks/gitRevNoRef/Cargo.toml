@@ -10,5 +10,5 @@ branch = "tokio-1.20.x"
 
 [dependencies.tokio2]
 git = "https://github.com/tokio-rs/tokio"
-rev = "9241c3eddf4a6a218681b088d71f7191513e2376" # Coming from tokio-1.18.4
+rev = "171ce0ff8d38b87a39c1e6a16fedc9a2373720e0" # Coming from tokio-1.18.5
 package = "tokio"
