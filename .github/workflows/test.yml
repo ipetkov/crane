@@ -36,11 +36,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
+    - uses: cachix/install-nix-action@v19
       with:
         install_url: ${{ matrix.install_url }}
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
     - uses: cachix/cachix-action@v12
       with:
         name: crane
@@ -71,11 +69,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
+    - uses: cachix/install-nix-action@v19
       with:
         install_url: ${{ matrix.install_url }}
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
     - uses: cachix/cachix-action@v12
       with:
         name: crane
@@ -93,10 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
-      with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - uses: cachix/install-nix-action@v19
     - uses: cachix/cachix-action@v12
       with:
         name: deadnix
@@ -107,6 +100,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
+    - uses: cachix/install-nix-action@v19
     - name: check formatting
       run: nix fmt -- --check .
