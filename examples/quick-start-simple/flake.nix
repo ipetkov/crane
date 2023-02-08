@@ -29,6 +29,9 @@
             # Additional darwin specific inputs can be set here
             pkgs.libiconv
           ];
+
+          # Additional environment variables can be set directly
+          # MY_CUSTOM_VAR = "some value";
         };
       in
       {

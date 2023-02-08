@@ -29,24 +29,27 @@
         craneLib = crane.lib.${system};
         src = craneLib.cleanCargoSource ./.;
 
-        buildInputs = [
-          # Add additional build inputs here
-        ] ++ lib.optionals pkgs.stdenv.isDarwin [
-          # Additional darwin specific inputs can be set here
-          pkgs.libiconv
-        ];
+        # Common arguments can be set here to avoid repeating them later
+        commonArgs = {
+          inherit src;
+
+          buildInputs = [
+            # Add additional build inputs here
+          ] ++ lib.optionals pkgs.stdenv.isDarwin [
+            # Additional darwin specific inputs can be set here
+            pkgs.libiconv
+          ];
+        };
 
         # Build *just* the cargo dependencies, so we can reuse
         # all of that work (e.g. via cachix) when running in CI
-        cargoArtifacts = craneLib.buildDepsOnly {
-          inherit src buildInputs;
-        };
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
-        my-crate = craneLib.buildPackage {
-          inherit cargoArtifacts src buildInputs;
-        };
+        my-crate = craneLib.buildPackage (commonArgs // {
+          inherit cargoArtifacts;
+        });
       in
       {
         checks = {
@@ -59,14 +62,14 @@
           # Note that this is done as a separate derivation so that
           # we can block the CI if there are issues here, but not
           # prevent downstream consumers from building our crate by itself.
-          my-crate-clippy = craneLib.cargoClippy {
-            inherit cargoArtifacts src buildInputs;
+          my-crate-clippy = craneLib.cargoClippy (commonArgs // {
+            inherit cargoArtifacts;
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-          };
+          });
 
-          my-crate-doc = craneLib.cargoDoc {
-            inherit cargoArtifacts src buildInputs;
-          };
+          my-crate-doc = craneLib.cargoDoc (commonArgs // {
+            inherit cargoArtifacts;
+          });
 
           # Check formatting
           my-crate-fmt = craneLib.cargoFmt {
@@ -81,17 +84,17 @@
           # Run tests with cargo-nextest
           # Consider setting `doCheck = false` on `my-crate` if you do not want
           # the tests to run twice
-          my-crate-nextest = craneLib.cargoNextest {
-            inherit cargoArtifacts src buildInputs;
+          my-crate-nextest = craneLib.cargoNextest (commonArgs // {
+            inherit cargoArtifacts;
             partitions = 1;
             partitionType = "count";
-          };
+          });
         } // lib.optionalAttrs (system == "x86_64-linux") {
           # NB: cargo-tarpaulin only supports x86_64 systems
           # Check code coverage (note: this will not upload coverage anywhere)
-          my-crate-coverage = craneLib.cargoTarpaulin {
-            inherit cargoArtifacts src;
-          };
+          my-crate-coverage = craneLib.cargoTarpaulin (commonArgs // {
+            inherit cargoArtifacts;
+          });
         };
 
         packages.default = my-crate;
