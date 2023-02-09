@@ -737,7 +737,8 @@ cleanSourceWith {
 A thin wrapper around `stdenv.mkDerivation` which includes common hooks for
 building a derivation using cargo. Except where noted below, all derivation
 attributes are passed straight through, so any common derivation behavior can be
-used as expected.
+used as expected: namely all key-value pairs will be set as environment
+variables for the derivation's build script.
 
 This is a fairly low-level abstraction, so consider using `buildPackage` or
 `cargoBuild` if they fit your needs.
