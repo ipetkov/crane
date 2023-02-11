@@ -126,6 +126,22 @@ in
       touch $out
     '';
 
+  # https://github.com/ipetkov/crane/pull/234
+  nonJsonCargoBuildLog =
+    let
+      nonJson = ''
+        db_id attr "field_id" Attribute { pound_token: Pound, style: Outer, bracket_token: Bracket, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident { ident: "db_id", span: #0 bytes(8250..8255) }, arguments: None }] }, tokens: TokenStream [] }
+      '';
+    in
+    myLib.buildPackage {
+      src = myLib.cleanCargoSource ./simple;
+      buildPhaseCargoCommand = ''
+        cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)
+        cargoWithProfile build --message-format json-render-diagnostics >"$cargoBuildLog"
+        echo "${nonJson}" >>"$cargoBuildLog"
+      '';
+    };
+
   # https://github.com/ipetkov/crane/discussions/203
   dependencyBuildScriptPerms = myLib.cargoClippy {
     src = ./dependencyBuildScriptPerms;

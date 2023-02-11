@@ -9,6 +9,9 @@ function installFromCargoBuildLog() (
 
   echo searching for bins/libs to install from cargo build log at ${log}
 
+  local logs
+  logs=$(jq -R 'fromjson?' <"${log}")
+
   local select_non_test='select(.reason == "compiler-artifact" and .profile.test == false)'
   local select_bins="${select_non_test} | .executable | select(.!= null)"
   local select_lib_files="${select_non_test}"'
@@ -29,12 +32,12 @@ function installFromCargoBuildLog() (
     rmdir --ignore-fail-on-non-empty "${loc}"
   }
 
-  jq -r <"${log}" "${select_bins}" | installArtifacts "${dest}/bin"
+  echo "${logs}" | jq -r "${select_bins}" | installArtifacts "${dest}/bin"
 
   command cargo metadata --format-version 1 | jq '.workspace_members[]' | (
     while IFS= read -r ws_member; do
       local select_member_libs="select(.package_id == ${ws_member}) | ${select_lib_files}"
-      jq -r <"${log}" "${select_member_libs}" | installArtifacts "${dest}/lib"
+      echo "${logs}" | jq -r "${select_member_libs}" | installArtifacts "${dest}/lib"
     done
   )
 
