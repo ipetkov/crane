@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* `buildPackage` is more tolerant of misbehaving proc macros which write to
+  stdout during the build
+
 ## [0.11.1] - 2023-01-21
 
 ### Changed

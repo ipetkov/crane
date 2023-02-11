@@ -126,6 +126,7 @@ in
       touch $out
     '';
 
+  # https://github.com/ipetkov/crane/pull/234
   nonJsonCargoBuildLog =
     let
       nonJson = ''
