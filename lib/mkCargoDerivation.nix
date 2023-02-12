@@ -5,6 +5,7 @@
 , crateNameFromCargoToml
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
+, lib
 , stdenv
 , vendorCargoDeps
 , zstd

@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* A warning will now be emitted if a derivation's `pname` or `version`
+  attributes are not set and the value cannot be loaded from the derivation's
+  root `Cargo.toml`. To resolve it consider setting `pname = "...";` or `version
+  = "...";` explicitly on the derivation.
+
 ## [0.11.2] - 2023-02-11
 
 ### Fixed

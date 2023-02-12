@@ -380,11 +380,13 @@ in
   workspace = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace;
     pname = "workspace";
+    version = "0.0.1";
   };
 
   workspaceHack = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-hack;
     pname = "workspace-hack";
+    version = "0.0.1";
   };
 
   workspaceInheritance = myLib.buildPackage {
@@ -394,6 +396,8 @@ in
 
   # https://github.com/ipetkov/crane/issues/209
   workspaceRootNotAtSourceRoot = myLib.buildPackage {
+    pname = "workspaceRootNotAtSourceRoot";
+    version = "0.0.1";
     src = myLib.cleanCargoSource ./workspace-not-at-root;
     postUnpack = ''
       cd $sourceRoot/workspace
@@ -411,6 +415,7 @@ in
   workspaceGit = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-git;
     pname = "workspace-git";
+    version = "0.0.1";
   };
 })
 )
