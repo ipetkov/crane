@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `cargoBench` can now be used to run cargo benchmarks
+
 ### Changed
 * A warning will now be emitted if a derivation's `pname` or `version`
   attributes are not set and the value cannot be loaded from the derivation's
