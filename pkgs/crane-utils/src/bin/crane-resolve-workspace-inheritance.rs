@@ -20,16 +20,13 @@ fn main() {
         .expect("please specify a path to a Cargo.toml file");
     let cargo_toml = Path::new(&cargo_toml);
 
-    args.for_each(|arg| eprintln!("ignoring argument: {}", arg));
+    args.for_each(|arg| eprintln!("ignoring argument: {arg}"));
 
     env::set_current_dir(cargo_toml.parent().expect("can't cd into Cargo.toml dir"))
         .expect("can't cd into Cargo.toml dir");
 
     if let Err(err) = resolve_and_print_cargo_toml(cargo_toml) {
-        eprintln!(
-            "ignoring error in resolving workspace inheritance: {:?}",
-            err
-        );
+        eprintln!("ignoring error in resolving workspace inheritance: {err:?}");
     }
 }
 
