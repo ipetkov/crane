@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.11.3] - 2023-02-19
+
 ### Fixed
 * Fixed an unintentional cache invalidation whenever `buildDepsOnly` would run
   on an unfiltered source (like `src = ./.;`).
@@ -346,6 +348,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.11.3]: https://github.com/ipetkov/crane/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/ipetkov/crane/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/ipetkov/crane/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/ipetkov/crane/compare/v0.10.0...v0.11.0
