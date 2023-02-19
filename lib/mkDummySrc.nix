@@ -16,11 +16,11 @@ let
     dirOf
     concatStringsSep
     hasAttr
-    head
     match
     storeDir;
 
   inherit (lib)
+    last
     optionalString
     recursiveUpdate
     removePrefix;
@@ -225,12 +225,14 @@ let
     let
       # NB: we just want to get the source's name but not depend on it
       srcStorePath = builtins.unsafeDiscardStringContext (removePrefix storeDir src);
-      nameWithoutHash = match "/[a-z0-9]+-(.*)" srcStorePath;
+      # NB: skip all potential hash sequences sometimes there can be two!
+      # https://github.com/ipetkov/crane/issues/242
+      nameWithoutHash = match "/([a-z0-9]{32}-)+(.*)" srcStorePath;
     in
     if (nameWithoutHash == null)
     # Fall back to a static name if the matching fails for any reason
     then "dummy-src"
-    else head nameWithoutHash;
+    else last nameWithoutHash;
 in
 runCommandLocal sourceName { } ''
   mkdir -p $out

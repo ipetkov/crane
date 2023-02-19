@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* Fixed an unintentional cache invalidation whenever `buildDepsOnly` would run
+  on an unfiltered source (like `src = ./.;`).
+
 ### Changed
 * A warning will now be emitted if a derivation's `pname` or `version`
   attributes are not set and the value cannot be loaded from the derivation's
