@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   attributes are not set and the value cannot be loaded from the derivation's
   root `Cargo.toml`. To resolve it consider setting `pname = "...";` or `version
   = "...";` explicitly on the derivation.
+* A warning will now be emitted if `src` and `dummySrc` are passed to
+  `buildDepsOnly` as `dummySrc` will take priority
 
 ## [0.11.2] - 2023-02-11
 
