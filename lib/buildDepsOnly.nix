@@ -1,4 +1,5 @@
 { crateNameFromCargoToml
+, lib
 , mkCargoDerivation
 , mkDummySrc
 , vendorCargoDeps
@@ -28,7 +29,14 @@ let
 
   cargoCheckExtraArgs = args.cargoCheckExtraArgs or (if doCheck then "--all-targets" else "");
 
-  dummySrc = args.dummySrc or (mkDummySrc args);
+  dummySrc =
+    if args ? dummySrc then
+      lib.warnIf
+        (args ? src && args.src != null)
+        "buildDepsOnly will ignore `src` when `dummySrc` is specified"
+        args.dummySrc
+    else
+      mkDummySrc args;
 in
 mkCargoDerivation (cleanedArgs // {
   inherit doCheck;
