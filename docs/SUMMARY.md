@@ -16,6 +16,9 @@
   * [Cross compiling with musl](./examples/cross-musl.md)
   * [Cross compiling to windows](./examples/cross-windows.md)
 * [Source filtering](./source-filtering.md)
+* [Local development](./local_development.md)
+* [Custom cargo commands](./custom_cargo_commands.md)
+* [Customizing builds](./customizing_builds.md)
 ---
 - [API Reference](./API.md)
 ---
