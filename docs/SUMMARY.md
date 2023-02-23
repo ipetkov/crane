@@ -16,6 +16,7 @@
   * [Cross compiling with musl](./examples/cross-musl.md)
   * [Cross compiling to windows](./examples/cross-windows.md)
 * [Source filtering](./source-filtering.md)
+* [Local development](./local_development.md)
 ---
 - [API Reference](./API.md)
 ---
