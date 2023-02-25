@@ -69,7 +69,7 @@
         };
 
         devShells.default = pkgs.mkShell {
-          inputsFrom = builtins.attrValues self.checks;
+          inputsFrom = builtins.attrValues self.checks.${system};
 
           # Extra inputs can be added here
           nativeBuildInputs = with pkgs; [
