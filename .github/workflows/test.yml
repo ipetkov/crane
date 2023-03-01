@@ -14,8 +14,9 @@ jobs:
   tests-pass:
     name: all systems go
     runs-on: ubuntu-latest
+    if: ${{ always() && contains(needs.*.result, 'failure') }}
     steps:
-      - run: exit 0
+      - run: exit 1
     needs:
       - check-dead-code
       - check-fmt
