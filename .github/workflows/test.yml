@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v19
+    - uses: cachix/install-nix-action@v20
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v12
@@ -69,7 +69,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v19
+    - uses: cachix/install-nix-action@v20
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v12
@@ -89,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v19
+    - uses: cachix/install-nix-action@v20
     - uses: cachix/cachix-action@v12
       with:
         name: deadnix
@@ -100,6 +100,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v19
+    - uses: cachix/install-nix-action@v20
     - name: check formatting
       run: nix fmt -- --check .

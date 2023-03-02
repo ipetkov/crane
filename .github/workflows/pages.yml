@@ -14,7 +14,7 @@ jobs:
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
+    - uses: cachix/install-nix-action@v20
     - uses: cachix/cachix-action@v12
       with:
         name: crane
