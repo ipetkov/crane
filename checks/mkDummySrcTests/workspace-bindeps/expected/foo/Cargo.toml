@@ -1,0 +1,10 @@
+[dependencies]
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[package]
+build = "cranespecific-dummy.rs"
+edition = "2021"
+name = "foo"
+version = "0.1.0"

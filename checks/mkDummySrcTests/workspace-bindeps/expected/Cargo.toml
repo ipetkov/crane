@@ -1,0 +1,12 @@
+[dependencies.foo]
+workspace = true
+
+[package]
+build = "cranespecific-dummy.rs"
+name = "workspace-bindeps"
+version = "0.1.0"
+
+[workspace.dependencies.foo]
+artifact = "cdylib"
+path = "./foo"
+target = "wasm32-unknown-unknown"

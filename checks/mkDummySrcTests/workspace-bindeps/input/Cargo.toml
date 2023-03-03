@@ -1,0 +1,10 @@
+[package]
+name = "workspace-bindeps"
+version = "0.1.0"
+
+[dependencies]
+foo = { workspace = true }
+
+[workspace.dependencies]
+foo = { path = "./foo", target = "wasm32-unknown-unknown", artifact = "cdylib" }
+
