@@ -86,6 +86,7 @@ linkFarmFromDrvs "cleanCargoToml" (lib.flatten [
   (cmpDummySrc "single" ./single)
   (cmpDummySrc "single-alt" ./single-alt)
   (cmpDummySrc "workspace" ./workspace)
+  (cmpDummySrc "workspace-bindeps" ./workspace-bindeps)
   (cmpDummySrc "workspace-inheritance" ./workspace-inheritance)
 
   customized

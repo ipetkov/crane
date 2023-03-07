@@ -250,6 +250,22 @@ in
       doCheck = false;
     });
 
+  bindeps =
+    let
+      bindepsLib = myLib.overrideToolchain (pkgs.rust-bin.nightly.latest.minimal.override {
+        targets = [
+          "wasm32-unknown-unknown"
+          "x86_64-unknown-none"
+        ];
+      });
+    in
+    lib.optionalAttrs x64Linux (bindepsLib.buildPackage {
+      src = bindepsLib.cleanCargoSource ./bindeps;
+      CARGO_BUILD_TARGET = "x86_64-unknown-none";
+      cargoCheckExtraArgs = "--lib --bins --examples";
+      doCheck = false;
+    });
+
   nextest = callPackage ./nextest.nix { };
 
   simple = myLib.buildPackage {
