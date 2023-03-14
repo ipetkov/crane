@@ -17,6 +17,7 @@ in case a crate is used as `bin` artifact dependency.
 ### Fixed
 * Fixed an unintentional cache invalidation whenever `buildDepsOnly` would run
   on an unfiltered source (like `src = ./.;`).
+* Fixed support for projects depending on crates utilising per-target workspace dependencies.
 
 ### Changed
 * A warning will now be emitted if a derivation's `pname` or `version`
