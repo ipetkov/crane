@@ -112,6 +112,13 @@ let
       nameValuePair (hash id) (runCommandLocal "linkLockedDeps" { } ''
         mkdir -p $out
         ${linkPsInLock}
+        for f in $(find ${extractedPackages} -type f -name '*.wit'); do
+          local path=$(realpath --relative-to=${extractedPackages} $f)
+          mkdir -p $out/$(dirname $path)
+          if [ ! -f $out/$path ]; then
+            cp $f $out/$path;
+          fi
+        done
       '')
     )
     lockedGitGroups;

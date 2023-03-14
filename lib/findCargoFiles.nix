@@ -6,6 +6,7 @@ let
   inherit (lib)
     flatten
     groupBy
+    hasSuffix
     mapAttrs
     mapAttrsToList;
 
@@ -17,6 +18,7 @@ let
         cur = dir + "/${name}";
         isConfig = parentIsDotCargo && (name == "config" || name == "config.toml");
         isCargoToml = name == "Cargo.toml";
+        isWit = hasSuffix ".wit" name;
       in
       if type == "directory"
       then listFilesRecursive (name == ".cargo") cur
@@ -24,6 +26,8 @@ let
       then [{ path = cur; type = "cargoTomls"; }]
       else if isConfig
       then [{ path = cur; type = "cargoConfigs"; }]
+      else if isWit
+      then [{ path = cur; type = "wits"; }]
       else [ ]
     )
     (builtins.readDir dir));
@@ -36,6 +40,7 @@ let
   default = {
     cargoTomls = [ ];
     cargoConfigs = [ ];
+    wits = [ ];
   };
 in
 default // cleaned

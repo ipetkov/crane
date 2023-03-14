@@ -29,6 +29,11 @@ in
 runCommandLocal "cargo-git" deps ''
   mkdir -p $out
   existing_crates=()
+  for f in $(find ${repo} -type f -name '*.wit'); do
+    local path=$(realpath --relative-to=${repo} $f)
+    mkdir -p $out/$(dirname $path)
+    cp -L --copy-contents $f $out/$path;
+  done
   while read -r cargoToml; do
     local crate=$(
       cargo metadata --format-version 1 --no-deps --manifest-path "$cargoToml" |
