@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Add a stubbed binary target to each "dummy" crate generated to support
 ["artifact dependencies" nightly feature](https://doc.rust-lang.org/cargo/reference/unstable.html#artifact-dependencies)
 in case a crate is used as `bin` artifact dependency.
+* Add `cargoLlvmCov` to run `cargo llvm-cov`
 
 ## [0.11.3] - 2023-02-19
 
