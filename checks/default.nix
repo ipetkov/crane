@@ -7,6 +7,12 @@ in
 onlyDrvs (lib.makeScope myLib.newScope (self:
 let
   callPackage = self.newScope { };
+  llvmToolsLib = myLib.overrideToolchain
+    (pkgs.fenix.complete.withComponents [
+      "cargo"
+      "llvm-tools"
+      "rustc"
+    ]);
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
 in
 {
@@ -34,6 +40,22 @@ in
   };
 
   cargoAuditTests = callPackage ./cargoAudit.nix { };
+
+  cargoLlvmCov = llvmToolsLib.cargoLlvmCov {
+    src = ./simple;
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./simple;
+    };
+  };
+
+  cargoLlvmCovNextest = llvmToolsLib.cargoLlvmCov {
+    src = ./simple;
+    cargoLlvmCovCommand = "nextest";
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./simple;
+    };
+    nativeBuildInputs = [ pkgs.cargo-nextest ];
+  };
 
   # NB: explicitly using a github release (not crates.io release)
   # which lacks a Cargo.lock file, so we can test adding our own
