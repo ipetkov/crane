@@ -19,6 +19,7 @@ in
   cargoDoc = callPackage ./cargoDoc.nix { };
   cargoFmt = callPackage ./cargoFmt.nix { };
   cargoHelperFunctionsHook = callPackage ./setupHooks/cargoHelperFunctions.nix { };
+  cargoLlvmCov = callPackage ./cargoLlvmCov.nix { };
   cargoNextest = callPackage ./cargoNextest.nix { };
   cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };
   cargoTest = callPackage ./cargoTest.nix { };
