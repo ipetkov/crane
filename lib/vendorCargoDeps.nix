@@ -39,4 +39,5 @@ in
 vendorMultipleCargoDeps ({
   inherit cargoConfigs;
   cargoLockParsedList = [ lock ];
+  outputHashes = args.outputHashes or { };
 } // optionalAttrs (args ? registries) { inherit (args) registries; })

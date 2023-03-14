@@ -2,21 +2,30 @@
 , craneUtils
 , jq
 , lib
+, fetchgit
 , runCommandLocal
 }:
 
 { git
 , rev
 , ref ? null
+, sha256 ? null
 , allRefs ? ref == null
 }:
 let
   maybeRef = lib.optionalAttrs (ref != null) { inherit ref; };
-  repo = builtins.fetchGit (maybeRef // {
-    inherit allRefs rev;
-    url = git;
-    submodules = true;
-  });
+  repo = if sha256 == null then
+    builtins.fetchGit (maybeRef // {
+      inherit allRefs rev;
+      url = git;
+      submodules = true;
+    })
+  else
+    fetchgit {
+      inherit rev sha256;
+      url = git;
+      fetchSubmodules = true;
+    };
 
   deps = {
     nativeBuildInputs = [

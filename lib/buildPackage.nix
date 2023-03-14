@@ -23,6 +23,7 @@ let
     "cargoExtraArgs"
     "cargoTestCommand"
     "cargoTestExtraArgs"
+    "outputHashes"
   ];
 
   # Avoid recomputing values when passing args down
