@@ -43,7 +43,7 @@ let
     '')
     (attrNames sources);
 
-  lock = builtins.fromTOML cargoLockContents;
+  lock = args.cargoLockParsed or (builtins.fromTOML cargoLockContents);
   lockPackages = lock.package or (throw "Cargo.lock missing [[package]] definitions");
 
   vendoredRegistries = vendorCargoRegistries {

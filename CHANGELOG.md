@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ["artifact dependencies" nightly feature](https://doc.rust-lang.org/cargo/reference/unstable.html#artifact-dependencies)
 in case a crate is used as `bin` artifact dependency.
 
+* Add `cargoLockParsed` option to `vendorCargoDeps` to support `Cargo.lock`
+files parsed as nix attribute sets.
+
 ## [0.11.3] - 2023-02-19
 
 ### Fixed

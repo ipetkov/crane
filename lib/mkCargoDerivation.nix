@@ -31,6 +31,7 @@ let
   chosenStdenv = args.stdenv or stdenv;
   cleanedArgs = builtins.removeAttrs args [
     "buildPhaseCargoCommand"
+    "cargoLockParsed"
     "checkPhaseCargoCommand"
     "installPhaseCommand"
     "pnameSuffix"
