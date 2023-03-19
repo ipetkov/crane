@@ -7,12 +7,9 @@ in
 onlyDrvs (lib.makeScope myLib.newScope (self:
 let
   callPackage = self.newScope { };
-  llvmToolsLib = myLib.overrideToolchain
-    (pkgs.fenix.complete.withComponents [
-      "cargo"
-      "llvm-tools"
-      "rustc"
-    ]);
+  myLibLlvmTools = myLib.overrideToolchain (pkgs.rust-bin.stable.latest.minimal.override {
+    extensions = [ "llvm-tools" ];
+  });
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
 in
 {
@@ -41,14 +38,14 @@ in
 
   cargoAuditTests = callPackage ./cargoAudit.nix { };
 
-  cargoLlvmCov = llvmToolsLib.cargoLlvmCov {
+  cargoLlvmCov = myLibLlvmTools.cargoLlvmCov {
     src = ./simple;
     cargoArtifacts = myLib.buildDepsOnly {
       src = ./simple;
     };
   };
 
-  cargoLlvmCovNextest = llvmToolsLib.cargoLlvmCov {
+  cargoLlvmCovNextest = myLibLlvmTools.cargoLlvmCov {
     src = ./simple;
     cargoLlvmCovCommand = "nextest";
     cargoArtifacts = myLib.buildDepsOnly {

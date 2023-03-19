@@ -2,14 +2,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        rust-analyzer-src.follows = "";
-      };
-    };
-
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -26,7 +18,7 @@
     };
   };
 
-  outputs = { nixpkgs, fenix, flake-utils, rust-overlay, ... }:
+  outputs = { nixpkgs, flake-utils, rust-overlay, ... }:
     let
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
@@ -93,7 +85,6 @@
             pkgsChecks = import nixpkgs {
               inherit system;
               overlays = [
-                fenix.overlays.default
                 rust-overlay.overlays.default
               ];
             };
