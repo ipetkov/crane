@@ -110,6 +110,16 @@ fn merge(cargo_toml: &mut toml::Value, root: &toml::Value) {
         {
             merge_tables(p, wp);
         };
+
+        if let Some(toml::Value::Table(targets)) = t.get_mut("target") {
+            for (_, tp) in targets {
+                if let (Some(toml::Value::Table(p)), Some(toml::Value::Table(wp))) =
+                    (tp.get_mut(key), w.get(ws_key))
+                {
+                    merge_tables(p, wp);
+                };
+            }
+        }
     }
 }
 
@@ -208,6 +218,9 @@ mod tests {
             garply = "garply-vers"
             waldo = "waldo-vers"
 
+            [target.'cfg(unix)'.dependencies]
+            unix = { workspace = true, features = ["some"] }
+
             [dev-dependencies]
             foo.workspace = true
             bar.workspace = true
@@ -259,6 +272,7 @@ mod tests {
             corge = { version = "corge-vers", features = ["qux-feat"] }
             garply = "garply-workspace-vers"
             waldo = { version = "waldo-workspace-vers" }
+            unix = { version = "unix-vers" }
 
         "#,
         )
@@ -293,6 +307,9 @@ mod tests {
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
+
+            [target.'cfg(unix)'.dependencies]
+            unix = { version = "unix-vers", features = ["some"] }
 
             [dev-dependencies]
             foo = { version = "foo-vers" }
