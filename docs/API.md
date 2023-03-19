@@ -804,6 +804,9 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 
 * `buildPhaseCargoCommand`
+* `cargoLock`
+* `cargoLockContents`
+* `cargoLockParsed`
 * `checkPhaseCargoCommand`
 * `installPhaseCommand`
 * `pnameSuffix`
