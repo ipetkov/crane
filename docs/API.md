@@ -426,6 +426,56 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `rustFmtExtraArgs`
 
+### `lib.cargoLlvmCov`
+
+`cargoLlvmCov :: set -> drv`
+
+Create a derivation which will run a `cargo llvm-cov` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `buildPhaseCargoCommand` will be set to run `cargo llvm-cov test --release` in
+  the workspace.
+* `installPhaseCommand` will be set to `""`, as the default settings creates
+  a file instead of directory at `$out`.
+* `doInstallCargoArtifacts` will be set to `false` for the same reason as
+  `installPhaseCommand`
+* `pnameSuffix` will be set to `"-llvm-cov"`
+
+#### Required attributes
+* `cargoArtifacts`: A path (or derivation) which contains an existing cargo
+  `target` directory, which will be reused at the start of the derivation.
+  Useful for caching incremental cargo builds.
+  - This can be prepared via `buildDepsOnly`
+  - Alternatively, any cargo-based derivation which was built with
+    `doInstallCargoArtifacts = true` will work as well
+
+#### Optional attributes
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
+  - Default value: `""`
+* `cargoLlvmCovCommand`: cargo-llvm-cov command to run
+  - Default value: `"test"`
+* `cargoLlvmCovExtraArgs`: additional flags to be passed in the cargo
+  llvm-cov invocation
+  - Default value: `"--lcov --output-path $out"`
+
+#### Native build dependencies
+The `cargo-llvm-cov` package is automatically appended as a native build input to any
+other `nativeBuildInputs` specified by the caller.
+
+Note that this would require the `llvm-tools-preview` component for the Rust toolchain,
+which you would need to provide yourself using fenix or rust-overlay.
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`mkCargoDerivation`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `cargoExtraArgs`
+* `cargoLlvmCovCommand`
+* `cargoLlvmCovExtraArgs`
+
 ### `lib.cargoNextest`
 
 `cargoNextest :: set -> drv`
