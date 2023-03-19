@@ -435,7 +435,7 @@ workspace.
 
 Except where noted below, all derivation attributes are delegated to
 `mkCargoDerivation`, and can be used to influence its behavior.
-* `buildPhaseCargoCommand` will be set to run `cargo llvm-cov test --profile release` in
+* `buildPhaseCargoCommand` will be set to run `cargo llvm-cov test --release` in
   the workspace.
 * `installPhaseCommand` will be set to `""`, as the default settings creates
   a file instead of directory at `$out`.
@@ -452,16 +452,13 @@ Except where noted below, all derivation attributes are delegated to
     `doInstallCargoArtifacts = true` will work as well
 
 #### Optional attributes
-* `CARGO_PROFILE`: the cargo profile to use, setting it to `""` will omit the
-  `--profile` flag
-  - Default value: `""`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
   - Default value: `""`
 * `cargoLlvmCovCommand`: cargo-llvm-cov command to run
   - Default value: `"test"`
 * `cargoLlvmCovExtraArgs`: additional flags to be passed in the cargo
   llvm-cov invocation
-  - Default value: `"--skip-clean --out Xml --output-path $out"`
+  - Default value: `"--lcov --output-path $out"`
 
 #### Native build dependencies
 The `cargo-llvm-cov` package is automatically appended as a native build input to any

@@ -26,6 +26,9 @@ in case a crate is used as `bin` artifact dependency.
   = "...";` explicitly on the derivation.
 * A warning will now be emitted if `src` and `dummySrc` are passed to
   `buildDepsOnly` as `dummySrc` will take priority
+* cargo is now invoked with `--release` when `$CARGO_PROFILE == release` instead
+  of passing in `--profile release` to better support tools which do not
+  understand the latter
 
 ## [0.11.2] - 2023-02-11
 
