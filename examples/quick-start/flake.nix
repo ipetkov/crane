@@ -51,7 +51,7 @@
           # MY_CUSTOM_VAR = "some value";
         };
 
-        llvmToolsLib = craneLib.overrideToolchain
+        craneLibLLvmTools = craneLib.overrideToolchain
           (fenix.packages.${system}.complete.withComponents [
             "cargo"
             "llvm-tools"
@@ -116,7 +116,7 @@
 
         packages = {
           default = my-crate;
-          my-crate-llvm-coverage = llvmToolsLib.cargoLlvmCov (commonArgs // {
+          my-crate-llvm-coverage = craneLibLLvmTools.cargoLlvmCov (commonArgs // {
             inherit cargoArtifacts;
           });
         };
