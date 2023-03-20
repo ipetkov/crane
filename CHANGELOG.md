@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.12.0] - 2023-03-19
+
 ### Added
 
 * Add a stubbed binary target to each "dummy" crate generated to support
@@ -375,6 +377,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.12.0]: https://github.com/ipetkov/crane/compare/v0.11.3...v0.12.0
 [0.11.3]: https://github.com/ipetkov/crane/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/ipetkov/crane/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/ipetkov/crane/compare/v0.11.0...v0.11.1
