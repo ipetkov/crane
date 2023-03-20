@@ -24,9 +24,11 @@ it across all of nixpkgs, consider using `overrideScope'`:
 To overlay an entire rust toolchain (e.g. `cargo`, `rustc`, `clippy`, `rustfmt`,
 etc.) consider using `overrideToolchain`.
 
-## `lib`
+## `craneLib`
 
-### `lib.appendCrateRegistries`
+`craneLib` represents an instantiated value crated by `mkLib` above.
+
+### `craneLib.appendCrateRegistries`
 
 `appendCrateRegistries :: [registry mapping] -> new lib`
 
@@ -40,15 +42,15 @@ use when downloading crate sources. Each entry can be defined using:
 See the documentation on each function for more specifics.
 
 ```nix
-newLib = lib.appendCrateRegistries [
-  (lib.registryFromDownloadUrl {
+newLib = craneLib.appendCrateRegistries [
+  (craneLib.registryFromDownloadUrl {
     indexUrl = "https://github.com/rust-lang/crates.io-index";
     dl = "https://crates.io/api/v1/crates";
     fetchurlExtraArgs = {};
   })
 
   # Or, alternatively
-  (lib.registryFromGitIndex {
+  (craneLib.registryFromGitIndex {
     indexUrl = "https://github.com/Hirevo/alexandrie-index";
     rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
     fetchurlExtraArgs = {};
@@ -56,7 +58,7 @@ newLib = lib.appendCrateRegistries [
 ];
 ```
 
-### `lib.buildDepsOnly`
+### `craneLib.buildDepsOnly`
 
 `buildDepsOnly :: set -> drv`
 
@@ -145,7 +147,7 @@ environment variables during the build, you can bring them back via
 * `cargoTestExtraArgs`
 * `dummySrc`
 
-### `lib.buildPackage`
+### `craneLib.buildPackage`
 
 `buildPackage :: set -> drv`
 
@@ -222,7 +224,7 @@ The following hooks are automatically added as native build inputs:
 * `jq`
 * `removeReferencesToVendoredSourcesHook`
 
-### `lib.cargoAudit`
+### `craneLib.cargoAudit`
 `cargoAudit :: set -> drv`
 
 Create a derivation which will run a `cargo audit` invocation in a cargo
@@ -271,7 +273,7 @@ environment variables during the build, you can bring them back via
 * `cargoAuditExtraArgs`
 * `cargoExtraArgs`
 
-### `lib.cargoBuild`
+### `craneLib.cargoBuild`
 
 `cargoBuild :: set -> drv`
 
@@ -309,7 +311,7 @@ environment variables during the build, you can bring them back via
 
 * `cargoExtraArgs`
 
-### `lib.cargoClippy`
+### `craneLib.cargoClippy`
 
 `cargoClippy :: set -> drv`
 
@@ -353,7 +355,7 @@ environment variables during the build, you can bring them back via
 * `cargoClippyExtraArgs`
 * `cargoExtraArgs`
 
-### `lib.cargoDoc`
+### `craneLib.cargoDoc`
 
 `cargoDoc :: set -> drv`
 
@@ -393,7 +395,7 @@ environment variables during the build, you can bring them back via
 * `cargoDocExtraArgs`
 * `cargoExtraArgs`
 
-### `lib.cargoFmt`
+### `craneLib.cargoFmt`
 
 `cargoFmt :: set -> drv`
 
@@ -426,7 +428,7 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `rustFmtExtraArgs`
 
-### `lib.cargoLlvmCov`
+### `craneLib.cargoLlvmCov`
 
 `cargoLlvmCov :: set -> drv`
 
@@ -476,7 +478,7 @@ environment variables during the build, you can bring them back via
 * `cargoLlvmCovCommand`
 * `cargoLlvmCovExtraArgs`
 
-### `lib.cargoNextest`
+### `craneLib.cargoNextest`
 
 `cargoNextest :: set -> drv`
 
@@ -530,7 +532,7 @@ environment variables during the build, you can bring them back via
 * `partitions`
 * `partitionType`
 
-### `lib.cargoTarpaulin`
+### `craneLib.cargoTarpaulin`
 
 `cargoTarpaulin :: set -> drv`
 
@@ -572,7 +574,7 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `cargoTarpaulinExtraArgs`
 
-### `lib.cargoTest`
+### `craneLib.cargoTest`
 
 `cargoTest :: set -> drv`
 
@@ -601,7 +603,7 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `cargoTestExtraArgs`
 
-### `lib.cleanCargoSource`
+### `craneLib.cleanCargoSource`
 
 `cleanCargoSource :: path or drv -> drv`
 
@@ -610,18 +612,18 @@ omit any non-Rust/non-cargo related files. Useful to avoid rebuilding a project
 when unrelated files are changed (e.g. `flake.nix` or any other nix files).
 
 The final output will be cleaned by both `cleanSource` (from nixpkgs) and
-`lib.filterCargoSources`. See each of them for more details on which files are
+`craneLib.filterCargoSources`. See each of them for more details on which files are
 kept.
 
 If it is necessary to customize which files are kept, a custom filter can be
-written (which may want to also call `lib.filterCargoSources`) to achieve the
+written (which may want to also call `craneLib.filterCargoSources`) to achieve the
 desired behavior.
 
 ```nix
-lib.cleanCargoSource (lib.path ./.)
+craneLib.cleanCargoSource (craneLib.path ./.)
 ```
 
-### `lib.cleanCargoToml`
+### `craneLib.cleanCargoToml`
 
 `cleanCargoToml :: set -> set`
 
@@ -637,7 +639,7 @@ In general, the following types of attributes are kept from the original input:
 * anything pertaining to project structure (like bin/lib targets, tests, etc.)
 
 ```nix
-lib.cleanCargoToml { cargoToml = ./Cargo.toml; }
+craneLib.cleanCargoToml { cargoToml = ./Cargo.toml; }
 # { dependencies = { byteorder = "*"; }; package = { edition = "2021"; name = "simple"; version = "0.1.0"; }; }
 ```
 
@@ -648,7 +650,7 @@ lib.cleanCargoToml { cargoToml = ./Cargo.toml; }
 At least one of the above attributes must be specified, or an error will be
 raised during evaluation.
 
-### `lib.crateNameFromCargoToml`
+### `craneLib.crateNameFromCargoToml`
 
 `crateNameFromCargoToml :: set -> set`
 
@@ -667,11 +669,11 @@ present _and_ the value is a string. Otherwise a placeholder version field will
 be used.
 
 ```nix
-lib.crateNameFromCargoToml { cargoToml = ./Cargo.toml; }
+craneLib.crateNameFromCargoToml { cargoToml = ./Cargo.toml; }
 # { pname = "simple"; version = "0.1.0"; }
 ```
 
-### `lib.crateRegistries`
+### `craneLib.crateRegistries`
 
 `crateRegistries :: set`
 
@@ -700,7 +702,7 @@ raised during evaluation.
   - Default value: `"0.0.1"` if the specified Cargo.toml file did not
     include a version
 
-### `lib.downloadCargoPackage`
+### `craneLib.downloadCargoPackage`
 
 `downloadCargoPackage :: set -> drv`
 
@@ -717,7 +719,7 @@ registry's API if necessary.
 * `source`: the source key recorded in the Cargo.lock file
 * `version`: the version of the crate
 
-### `lib.downloadCargoPackageFromGit`
+### `craneLib.downloadCargoPackageFromGit`
 
 `downloadCargoPackageFromGit :: set -> drv`
 
@@ -737,7 +739,7 @@ any crates it contains for vendoring.
   specified `rev`
   - Default value: `true` if `ref` is set to `null`, `false` otherwise
 
-### `lib.findCargoFiles`
+### `craneLib.findCargoFiles`
 
 `findCargoFiles :: path -> set of lists`
 
@@ -745,11 +747,11 @@ Given a path, recursively search it for any `Cargo.toml`, `.cargo/config` or
 `.cargo/config.toml` files.
 
 ```nix
-lib.findCargoFiles ./src
+craneLib.findCargoFiles ./src
 # { cargoTomls = [ "..." ]; cargoConfigs = [ "..." ]; }
 ```
 
-### `lib.filterCargoSources`
+### `craneLib.filterCargoSources`
 
 `filterCargoSources :: path -> string -> bool`
 
@@ -761,8 +763,8 @@ will retain the following files from a given source:
 
 ```nix
 cleanSourceWith {
-  src = lib.path ./.;
-  filter = lib.filterCargoSources;
+  src = craneLib.path ./.;
+  filter = craneLib.filterCargoSources;
 }
 ```
 
@@ -774,15 +776,15 @@ let
   # Only keeps markdown files
   markdownFilter = path: _type: builtins.match ".*md$" path != null;
   markdownOrCargo = path: type:
-    (markdownFilter path type) || (lib.filterCargoSources path type);
+    (markdownFilter path type) || (craneLib.filterCargoSources path type);
 in
 cleanSourceWith {
-  src = lib.path ./.;
+  src = craneLib.path ./.;
   filter = markdownOrCargo;
 }
 ```
 
-### `lib.mkCargoDerivation`
+### `craneLib.mkCargoDerivation`
 
 `mkCargoDerivation :: set -> drv`
 
@@ -873,7 +875,7 @@ hooks:
 * `installCargoArtifactsHook`
 * `zstd`
 
-### `lib.mkDummySrc`
+### `craneLib.mkDummySrc`
 
 `mkDummySrc :: set -> drv`
 
@@ -928,7 +930,7 @@ build caches. More specifically:
     mkDummySrc {
       # The _entire_ source of the project. mkDummySrc will automatically
       # filter out irrelevant files as described above
-      src = lib.path ./.;
+      src = craneLib.path ./.;
 
       # Note that here we scope the path to just `./.cargo` and not any other
       # directories which may exist at the root of the project. Also note that
@@ -946,7 +948,7 @@ build caches. More specifically:
     ```
 
 
-### `lib.overrideToolchain`
+### `craneLib.overrideToolchain`
 
 `overrideToolchain :: drv -> set`
 
@@ -956,10 +958,10 @@ single derivation which contains all the tools as binaries. For example, this
 can be the output of `oxalica/rust-overlay`.
 
 ```nix
-crane.lib.${system}.overrideToolchain myCustomToolchain
+craneLib.overrideToolchain myCustomToolchain
 ```
 
-### `lib.path`
+### `craneLib.path`
 
 `path :: path -> drv`
 
@@ -975,25 +977,25 @@ path [will depend on the name of the parent
 directory](https://nix.dev/anti-patterns/language#reproducibility-referencing-top-level-directory-with) which may cause unnecessary rebuilds.
 
 ```nix
-crane.lib.${system}.path ./.
+craneLib.path ./.
 # "/nix/store/wbhf6c7wiw9z53hsn487a8wswivwdw81-source"
 ```
 
 ```nix
-lib.path ./checks/simple
+craneLib.path ./checks/simple
 # "/nix/store/s9scn97c86kqskf7yv5n2k85in5y5cmy-simple"
 ```
 
 It is also possible to use as a drop in replacement for `builtins.path`:
 ```nix
-lib.path {
+craneLib.path {
   path = ./.;
   name = "asdf";
 }
 # "/nix/store/23zy3c68v789cg8sysgba0rbgbfcjfhn-asdf"
 ```
 
-### `lib.registryFromDownloadUrl`
+### `craneLib.registryFromDownloadUrl`
 
 `registryFromDownloadUrl :: set -> set`
 
@@ -1023,7 +1025,7 @@ crate sources (e.g. by setting `curlOptsList`)
   `fetchurl` for each crate being sourced from this registry
 
 ```nix
-lib.registryFromDownloadUrl {
+craneLib.registryFromDownloadUrl {
   dl = "https://crates.io/api/v1/crates";
   indexUrl = "https://github.com/rust-lang/crates.io-index";
 }
@@ -1035,7 +1037,7 @@ lib.registryFromDownloadUrl {
 # }
 ```
 
-### `lib.registryFromGitIndex`
+### `craneLib.registryFromGitIndex`
 
 `registryFromGitIndex :: set -> set`
 
@@ -1066,7 +1068,7 @@ crate sources (e.g. by setting `curlOptsList`)
   `fetchurl` for each crate being sourced from this registry
 
 ```nix
-lib.registryFromGitIndex {
+craneLib.registryFromGitIndex {
   url = "https://github.com/Hirevo/alexandrie-index";
   rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
 }
@@ -1078,7 +1080,7 @@ lib.registryFromGitIndex {
 # }
 ```
 
-### `lib.urlForCargoPackage`
+### `craneLib.urlForCargoPackage`
 
 `urlForCargoPackage :: set -> set`
 
@@ -1095,7 +1097,7 @@ The result will contain two attributes:
 * `source`: the source key recorded in the Cargo.lock file
 * `version`: the version of the crate
 
-### `lib.vendorCargoDeps`
+### `craneLib.vendorCargoDeps`
 
 `vendorCargoDeps :: set -> drv`
 
@@ -1118,7 +1120,7 @@ the vendored directories (i.e. this configuration can be appended to the
 At least one of the above attributes must be specified, or an error will be
 raised during evaluation.
 
-### `lib.vendorCargoRegistries`
+### `craneLib.vendorCargoRegistries`
 
 `vendorCargoRegistries :: set -> set`
 
@@ -1138,7 +1140,7 @@ cargo can use for subsequent builds without needing network access.
 * `sources`: an attribute set of all the newly created cargo sources' names to
   their location in the Nix store
 
-### `lib.vendorGitDeps`
+### `craneLib.vendorGitDeps`
 
 `vendorGitDeps :: set -> set`
 
@@ -1157,7 +1159,7 @@ access.
 * `sources`: an attribute set of all the newly created cargo sources' names to
   their location in the Nix store
 
-### `lib.writeTOML`
+### `craneLib.writeTOML`
 
 `writeTOML :: String -> String -> drv`
 
@@ -1165,13 +1167,13 @@ Takes a file name and an attribute set, converts the set to a TOML document and
 writes it to a file with the given name.
 
 ```nix
-lib.writeTOML "foo.toml" { foo.bar = "baz"; }
+craneLib.writeTOML "foo.toml" { foo.bar = "baz"; }
 # «derivation /nix/store/...-foo.toml.drv»
 ```
 
 ## Hooks
 
-### `lib.cargoHelperFunctionsHook`
+### `craneLib.cargoHelperFunctionsHook`
 
 Defines helper functions for internal use. It is probably not a great idea to
 depend on these directly as their behavior can change at any time, but it is
@@ -1188,7 +1190,7 @@ worth documenting them just in case:
     your derivation to change which profile is used, or set `CARGO_PROFILE =
     "";` to omit it altogether.
 
-### `lib.configureCargoCommonVarsHook`
+### `craneLib.configureCargoCommonVarsHook`
 
 Defines `configureCargoCommonVars()` which will set various common cargo-related
 variables, such as honoring the amount of parallelism dictated by Nix, disabling
@@ -1204,7 +1206,7 @@ incremental artifacts, etc. More specifically:
 
 **Automatic behavior:** runs as a post-patch hook
 
-### `lib.configureCargoVendoredDepsHook`
+### `craneLib.configureCargoVendoredDepsHook`
 
 Defines `configureCargoVendoredDeps()` which will prepare cargo to use a
 directory of vendored crate sources. It takes two positional arguments:
@@ -1225,7 +1227,7 @@ directory of vendored crate sources. It takes two positional arguments:
 `configureCargoVendoredDeps "$cargoVendorDir" "$CARGO_HOME/config.toml"` will be
 run as a pre configure hook.
 
-### `lib.inheritCargoArtifactsHook`
+### `craneLib.inheritCargoArtifactsHook`
 
 Defines `inheritCargoArtifacts()` which will pre-populate cargo's artifact
 directory using a previous derivation. It takes two positional arguments:
@@ -1255,7 +1257,7 @@ post patch hook.
 
 **Required nativeBuildInputs**: assumes `zstd` is available on the `$PATH`
 
-### `lib.installCargoArtifactsHook`
+### `craneLib.installCargoArtifactsHook`
 
 Defines `compressAndInstallCargoArtifactsDir()` which handles installing
 cargo's artifact directory to the derivation's output as a zstd compressed
@@ -1314,7 +1316,7 @@ post install hook.
 
 **Required nativeBuildInputs**: assumes `zstd` is available on the `$PATH`
 
-### `lib.installFromCargoBuildLogHook`
+### `craneLib.installFromCargoBuildLogHook`
 
 Defines `installFromCargoBuildLog()` which will use a build log produced by
 cargo to find and install any binaries and libraries which have been built. It
@@ -1336,7 +1338,7 @@ takes two positional arguments:
 
 **Required nativeBuildInputs**: assumes `cargo` and `jq` are available on the `$PATH`
 
-### `lib.removeReferencesToVendoredSourcesHook`
+### `craneLib.removeReferencesToVendoredSourcesHook`
 
 Defines `removeReferencesToVendoredSources()` which handles removing all
 references to vendored sources from the installed binaries, which ensures that
@@ -1349,7 +1351,7 @@ sources themselves. It takes two positional arguments:
    * If not specified, the value of `$cargoVendorDir` will be used
    * If `cargoVendorDir` is not specified, an error will be raised
    * Note: it is expected that this directory has the exact structure as would
-     be produced by `lib.vendorCargoDeps`
+     be produced by `craneLib.vendorCargoDeps`
 
 **Automatic behavior:** if `cargoVendorDir` is set and
 `doNotRemoveReferencesToVendorDir` is not set, then
