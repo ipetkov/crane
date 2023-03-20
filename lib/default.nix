@@ -5,6 +5,8 @@
 lib.makeScope newScope (self:
 let
   inherit (self) callPackage;
+
+  internalCrateNameFromCargoToml = callPackage ./internalCrateNameFromCargoToml.nix { };
 in
 {
   appendCrateRegistries = input: self.overrideScope' (_final: prev: {
@@ -28,7 +30,10 @@ in
   configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
   configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
   craneUtils = callPackage ../pkgs/crane-utils { };
-  crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix { };
+
+  crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix {
+    inherit internalCrateNameFromCargoToml;
+  };
 
   crateRegistries = self.registryFromDownloadUrl {
     dl = "https://crates.io/api/v1/crates";
@@ -51,6 +56,10 @@ in
     rustc = toolchain;
     rustfmt = toolchain;
   });
+
+  path = callPackage ./path.nix {
+    inherit internalCrateNameFromCargoToml;
+  };
 
   registryFromDownloadUrl = callPackage ./registryFromDownloadUrl.nix { };
   registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };

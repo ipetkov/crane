@@ -14,6 +14,9 @@ in case a crate is used as `bin` artifact dependency.
 * Add `cargoLlvmCov` to run `cargo llvm-cov`
 * Add `cargoLockParsed` option to `vendorCargoDeps` to support `Cargo.lock`
 files parsed as nix attribute sets.
+* `craneLib.path` can now be used as a convenience wrapper on (or drop in
+  replacement of) `builtins.path` to ensure reproducible results whenever paths
+  like `./.` or `./..` are used directly.
 
 ## [0.11.3] - 2023-02-19
 

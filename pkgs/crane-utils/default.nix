@@ -3,10 +3,11 @@
 , cargoClippy
 , cargoFmt
 , cleanCargoSource
+, path
 }:
 
 let
-  src = cleanCargoSource ./.;
+  src = cleanCargoSource (path ./.);
 
   cargoArtifacts = buildDepsOnly {
     inherit src;

@@ -41,7 +41,7 @@ following contents at the root of your cargo workspace:
       in
     {
       packages.default = craneLib.buildPackage {
-        src = craneLib.cleanCargoSource ./.;
+        src = craneLib.cleanCargoSource (craneLib.path ./.);
 
         # Add extra inputs here or any other derivation settings
         # doCheck = true;

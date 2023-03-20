@@ -4,7 +4,7 @@
   book =
     let
       inherit (pkgs) lib;
-      root = ./..;
+      root = myLib.path ./..;
       rootPrefix = toString root;
       cleanedSrc = lib.cleanSourceWith {
         src = root;

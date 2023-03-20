@@ -618,7 +618,7 @@ written (which may want to also call `lib.filterCargoSources`) to achieve the
 desired behavior.
 
 ```nix
-lib.cleanCargoSource ./.
+lib.cleanCargoSource (lib.path ./.)
 ```
 
 ### `lib.cleanCargoToml`
@@ -761,7 +761,7 @@ will retain the following files from a given source:
 
 ```nix
 cleanSourceWith {
-  src = ./.;
+  src = lib.path ./.;
   filter = lib.filterCargoSources;
 }
 ```
@@ -777,7 +777,7 @@ let
     (markdownFilter path type) || (lib.filterCargoSources path type);
 in
 cleanSourceWith {
-  src = ./.;
+  src = lib.path ./.;
   filter = markdownOrCargo;
 }
 ```
@@ -928,7 +928,7 @@ build caches. More specifically:
     mkDummySrc {
       # The _entire_ source of the project. mkDummySrc will automatically
       # filter out irrelevant files as described above
-      src = ./.;
+      src = lib.path ./.;
 
       # Note that here we scope the path to just `./.cargo` and not any other
       # directories which may exist at the root of the project. Also note that
@@ -957,6 +957,40 @@ can be the output of `oxalica/rust-overlay`.
 
 ```nix
 crane.lib.${system}.overrideToolchain myCustomToolchain
+```
+
+### `lib.path`
+
+`path :: path -> drv`
+
+`path :: set -> drv`
+
+A convenience wrapper around `builtins.path` which will automatically set the
+path's `name` to the workspace's package name (or a placeholder value of
+`"source"` if a name cannot be determined).
+
+It should be used anywhere a relative path like `./.` or `./..` is needed so
+that the result is reproducible and caches can be reused. Otherwise the store
+path [will depend on the name of the parent
+directory](https://nix.dev/anti-patterns/language#reproducibility-referencing-top-level-directory-with) which may cause unnecessary rebuilds.
+
+```nix
+crane.lib.${system}.path ./.
+# "/nix/store/wbhf6c7wiw9z53hsn487a8wswivwdw81-source"
+```
+
+```nix
+lib.path ./checks/simple
+# "/nix/store/s9scn97c86kqskf7yv5n2k85in5y5cmy-simple"
+```
+
+It is also possible to use as a drop in replacement for `builtins.path`:
+```nix
+lib.path {
+  path = ./.;
+  name = "asdf";
+}
+# "/nix/store/23zy3c68v789cg8sysgba0rbgbfcjfhn-asdf"
 ```
 
 ### `lib.registryFromDownloadUrl`
