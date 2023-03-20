@@ -84,7 +84,9 @@
           let
             pkgsChecks = import nixpkgs {
               inherit system;
-              overlays = [ rust-overlay.overlays.default ];
+              overlays = [
+                rust-overlay.overlays.default
+              ];
             };
           in
           pkgsChecks.callPackages ./checks {

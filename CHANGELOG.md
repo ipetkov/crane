@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Add a stubbed binary target to each "dummy" crate generated to support
 ["artifact dependencies" nightly feature](https://doc.rust-lang.org/cargo/reference/unstable.html#artifact-dependencies)
 in case a crate is used as `bin` artifact dependency.
+* Add `cargoLlvmCov` to run `cargo llvm-cov`
 * Add `cargoLockParsed` option to `vendorCargoDeps` to support `Cargo.lock`
 files parsed as nix attribute sets.
 
@@ -19,6 +20,7 @@ files parsed as nix attribute sets.
 ### Fixed
 * Fixed an unintentional cache invalidation whenever `buildDepsOnly` would run
   on an unfiltered source (like `src = ./.;`).
+* Fixed support for projects depending on crates utilising per-target workspace dependencies.
 
 ### Changed
 * **Breaking** (technically): `mkCargoDerivation` will remove the following
@@ -32,6 +34,9 @@ files parsed as nix attribute sets.
   = "...";` explicitly on the derivation.
 * A warning will now be emitted if `src` and `dummySrc` are passed to
   `buildDepsOnly` as `dummySrc` will take priority
+* cargo is now invoked with `--release` when `$CARGO_PROFILE == release` instead
+  of passing in `--profile release` to better support tools which do not
+  understand the latter
 
 ## [0.11.2] - 2023-02-11
 
