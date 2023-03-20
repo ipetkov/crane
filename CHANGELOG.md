@@ -18,28 +18,34 @@ files parsed as nix attribute sets.
   replacement of) `builtins.path` to ensure reproducible results whenever paths
   like `./.` or `./..` are used directly.
 
-## [0.11.3] - 2023-02-19
-
-### Fixed
-* Fixed an unintentional cache invalidation whenever `buildDepsOnly` would run
-  on an unfiltered source (like `src = ./.;`).
-* Fixed support for projects depending on crates utilising per-target workspace dependencies.
-
 ### Changed
 * **Breaking** (technically): `mkCargoDerivation` will remove the following
   attributes before lowering to `mkDerivation`: `cargoLock`, `cargoLockContents`
   and `cargoLockParsed`. If your derivation needs these values to be present
   they can be explicitly passed through via `.overrideAttrs`
   `buildDepsOnly` as `dummySrc` will take priority
+* The API docs have been updated to refer to `craneLib` (instead of just `lib`)
+  to avoid ambiguities with `pkgs.lib`.
+* cargo is now invoked with `--release` when `$CARGO_PROFILE == release` instead
+  of passing in `--profile release` to better support tools which do not
+  understand the latter
+
+### Fixed
+* Fixed support for projects depending on crates utilising per-target workspace dependencies.
+
+## [0.11.3] - 2023-02-19
+
+### Fixed
+* Fixed an unintentional cache invalidation whenever `buildDepsOnly` would run
+  on an unfiltered source (like `src = ./.;`).
+
+### Changed
 * A warning will now be emitted if a derivation's `pname` or `version`
   attributes are not set and the value cannot be loaded from the derivation's
   root `Cargo.toml`. To resolve it consider setting `pname = "...";` or `version
   = "...";` explicitly on the derivation.
 * A warning will now be emitted if `src` and `dummySrc` are passed to
   `buildDepsOnly` as `dummySrc` will take priority
-* cargo is now invoked with `--release` when `$CARGO_PROFILE == release` instead
-  of passing in `--profile release` to better support tools which do not
-  understand the latter
 
 ## [0.11.2] - 2023-02-11
 
