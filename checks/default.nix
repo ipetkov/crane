@@ -56,20 +56,33 @@ in
 
   # NB: explicitly using a github release (not crates.io release)
   # which lacks a Cargo.lock file, so we can test adding our own
-  cargoLockOverride = myLib.buildPackage rec {
-    pname = "cargo-llvm-cov";
-    version = "0.4.14";
+  cargoLockOverride =
+    let
+      cargoLock = ./testCargoLockOverride.lock;
+      cargoLockContents = builtins.readFile cargoLock;
+      cargoLockParsed = builtins.fromTOML cargoLockContents;
+    in
+    pkgs.linkFarmFromDrvs "cargoLockOverride-tests" (map
+      (args:
+        myLib.buildPackage (args // rec {
+          pname = "cargo-llvm-cov";
+          version = "0.4.14";
 
-    src = pkgs.fetchFromGitHub {
-      owner = "taiki-e";
-      repo = pname;
-      rev = "v${version}";
-      sha256 = "sha256-sNwizxYVUNyv5InR8HS+CyUsroA79h/FpouS+fMWJUI=";
-    };
+          src = pkgs.fetchFromGitHub {
+            owner = "taiki-e";
+            repo = pname;
+            rev = "v${version}";
+            sha256 = "sha256-sNwizxYVUNyv5InR8HS+CyUsroA79h/FpouS+fMWJUI=";
+          };
 
-    doCheck = false; # Tests need llvm-tools installed
-    cargoLock = ./testCargoLockOverride.lock;
-  };
+          doCheck = false; # Tests need llvm-tools installed
+        }))
+      [
+        { inherit cargoLock; }
+        { inherit cargoLockContents; }
+        { inherit cargoLockParsed; }
+      ]
+    );
 
   cargoTarpaulin = lib.optionalAttrs x64Linux (myLib.cargoTarpaulin {
     src = ./simple;

@@ -5,7 +5,6 @@
 , crateNameFromCargoToml
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
-, lib
 , stdenv
 , vendorCargoDeps
 , zstd
@@ -31,6 +30,9 @@ let
   chosenStdenv = args.stdenv or stdenv;
   cleanedArgs = builtins.removeAttrs args [
     "buildPhaseCargoCommand"
+    "cargoLock"
+    "cargoLockContents"
+    "cargoLockParsed"
     "checkPhaseCargoCommand"
     "installPhaseCommand"
     "pnameSuffix"

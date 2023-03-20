@@ -854,6 +854,9 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 
 * `buildPhaseCargoCommand`
+* `cargoLock`
+* `cargoLockContents`
+* `cargoLockParsed`
 * `checkPhaseCargoCommand`
 * `installPhaseCommand`
 * `pnameSuffix`
@@ -1076,6 +1079,7 @@ the vendored directories (i.e. this configuration can be appended to the
 * `src`: a directory which includes a Cargo.lock file at its root.
 * `cargoLock`: a path to a Cargo.lock file
 * `cargoLockContents`: the contents of a Cargo.lock file as a string
+* `cargoLockParsed`: the parsed contents of Cargo.lock as an attribute set
 
 At least one of the above attributes must be specified, or an error will be
 raised during evaluation.

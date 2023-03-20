@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ["artifact dependencies" nightly feature](https://doc.rust-lang.org/cargo/reference/unstable.html#artifact-dependencies)
 in case a crate is used as `bin` artifact dependency.
 * Add `cargoLlvmCov` to run `cargo llvm-cov`
+* Add `cargoLockParsed` option to `vendorCargoDeps` to support `Cargo.lock`
+files parsed as nix attribute sets.
 
 ## [0.11.3] - 2023-02-19
 
@@ -21,6 +23,11 @@ in case a crate is used as `bin` artifact dependency.
 * Fixed support for projects depending on crates utilising per-target workspace dependencies.
 
 ### Changed
+* **Breaking** (technically): `mkCargoDerivation` will remove the following
+  attributes before lowering to `mkDerivation`: `cargoLock`, `cargoLockContents`
+  and `cargoLockParsed`. If your derivation needs these values to be present
+  they can be explicitly passed through via `.overrideAttrs`
+  `buildDepsOnly` as `dummySrc` will take priority
 * A warning will now be emitted if a derivation's `pname` or `version`
   attributes are not set and the value cannot be loaded from the derivation's
   root `Cargo.toml`. To resolve it consider setting `pname = "...";` or `version
