@@ -18,6 +18,10 @@ files parsed as nix attribute sets.
   replacement of) `builtins.path` to ensure reproducible results whenever paths
   like `./.` or `./..` are used directly.
 
+### Changed
+* The API docs have been updated to refer to `craneLib` (instead of just `lib`)
+  to avoid ambiguities with `pkgs.lib`.
+
 ## [0.11.3] - 2023-02-19
 
 ### Fixed
