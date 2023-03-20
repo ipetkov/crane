@@ -6,6 +6,11 @@ let
     sha256 = locked.narHash;
   };
 
-  flake = import compat { src = ./.; };
+  flake = import compat {
+    src = builtins.path {
+      path = ./.;
+      name = "crane";
+    };
+  };
 in
 flake.shellNix

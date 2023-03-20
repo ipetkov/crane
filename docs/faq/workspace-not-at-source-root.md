@@ -13,7 +13,7 @@ deeper directory:
 # ./nested/Cargo.lock
 # ./nested/src/*.rs
 craneLib.buildPackage {
- src = myLib.cleanCargoSource ./.;
+ src = myLib.cleanCargoSource (craneLib.path ./.);
  cargoLock = ./nested/Cargo.lock;
  cargoToml = ./nested/Cargo.toml;
  # Use a postUnpack hook to jump into our nested directory. This will work

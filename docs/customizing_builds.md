@@ -34,7 +34,7 @@ and hooks to customize a particular build:
 
 ```nix
 craneLib.buildPackage {
-  src = craneLib.cleanCargoSource ./.;
+  src = craneLib.cleanCargoSource (craneLib.path ./.);
 
   # Define a list of function names to execute before the `configurePhase` runs
   preConfigurePhases = [

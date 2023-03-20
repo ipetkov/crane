@@ -26,7 +26,7 @@ build.
         craneLib = crane.lib.${system};
         # Common derivation arguments used for all builds
         commonArgs = {
-          src = craneLib.cleanCargoSource ./.;
+          src = craneLib.cleanCargoSource (craneLib.path ./.);
 
           buildInputs = with pkgs; [
             # Add extra build inputs here, etc.

@@ -35,7 +35,7 @@ Here's how we can set up our flake to achieve our goals:
 
         # Common derivation arguments used for all builds
         commonArgs = {
-          src = craneLib.cleanCargoSource ./.;
+          src = craneLib.cleanCargoSource (craneLib.path ./.);
 
           buildInputs = with pkgs; [
             # Add extra build inputs here, etc.

@@ -1,4 +1,5 @@
-{ lib
+{ internalCrateNameFromCargoToml
+, lib
 }:
 
 args:
@@ -29,35 +30,10 @@ let
   traceMsg = tomlName: drvName: placeholder: lib.trivial.warn
     "crane cannot find ${tomlName} attribute in ${debugPath}, consider setting `${drvName} = \"...\";` explicitly"
     placeholder;
+
+  internalName = internalCrateNameFromCargoToml toml;
 in
 {
-  # Now that cargo supports workspace inheritance we attempt to select a name
-  # with the following priorities:
-  # - choose `[package.name]` if the value is present and a string
-  #   (i.e. it isn't `[package.name] = { workspace = "true" }`)
-  # - choose `[workspace.package.name]` if it is present (and a string for good measure)
-  # - otherwise, fall back to a placeholder
-  pname =
-    let
-      packageName = toml.package.name or null;
-      workspacePackageName = toml.workspace.package.name or null;
-    in
-    if lib.isString packageName then packageName
-    else if lib.isString workspacePackageName then workspacePackageName
-    else traceMsg "name" "pname" "cargo-package";
-
-  # Now that cargo supports workspace inheritance we attempt to select a version
-  # string with the following priorities:
-  # - choose `[package.version]` if the value is present and a string
-  #   (i.e. it isn't `[package.version] = { workspace = "true" }`)
-  # - choose `[workspace.package.version]` if it is present (and a string for good measure)
-  # - otherwise, fall back to a placeholder
-  version =
-    let
-      packageVersion = toml.package.version or null;
-      workspacePackageVersion = toml.workspace.package.version or null;
-    in
-    if lib.isString packageVersion then packageVersion
-    else if lib.isString workspacePackageVersion then workspacePackageVersion
-    else traceMsg "version" "version" "0.0.1";
+  pname = internalName.pname or (traceMsg "name" "pname" "cargo-package");
+  version = internalName.version or (traceMsg "version" "version" "0.0.1");
 }

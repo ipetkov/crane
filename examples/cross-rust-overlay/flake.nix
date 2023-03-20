@@ -57,7 +57,7 @@
           , stdenv
           }:
           craneLib.buildPackage {
-            src = craneLib.cleanCargoSource ./.;
+            src = craneLib.cleanCargoSource (craneLib.path ./.);
 
             # Build-time tools which are target agnostic. build = host = target = your-machine.
             # Emulators should essentially also go `nativeBuildInputs`. But with some packaging issue,

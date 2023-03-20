@@ -35,7 +35,7 @@
       in
       {
         packages.default = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource ./.;
+          src = craneLib.cleanCargoSource (craneLib.path ./.);
 
           strictDeps = true;
           doCheck = false;
