@@ -16,6 +16,8 @@ let
     concatMapStrings
     escapeShellArg;
 
+  cargoConfigs = if args ? src then (findCargoFiles args.src).cargoConfigs else [ ];
+
   src = args.src or (throw ''
     unable to find `src` attribute. consider one of the following:
     - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
@@ -47,8 +49,9 @@ let
   lockPackages = lock.package or (throw "Cargo.lock missing [[package]] definitions");
 
   vendoredRegistries = vendorCargoRegistries {
-    inherit lockPackages;
-    cargoConfigs = (findCargoFiles src).cargoConfigs;
+    inherit
+      cargoConfigs
+      lockPackages;
   };
   vendoredGit = vendorGitDeps {
     inherit lockPackages;

@@ -414,6 +414,23 @@ in
   smokeWorkspace = self.smoke [ "print" ] self.workspace;
   smokeWorkspaceRoot = self.smoke [ "print" ] self.workspaceRoot;
 
+  vendorCargoDeps =
+    let
+      src = ./workspace;
+      cargoLock = ./workspace/Cargo.lock;
+      cargoLockContents = builtins.readFile cargoLock;
+      cargoLockParsed = builtins.fromTOML cargoLockContents;
+    in
+    pkgs.linkFarmFromDrvs "vendorCargoDeps-tests" (map
+      myLib.vendorCargoDeps
+      [
+        { inherit src; }
+        { inherit cargoLock; }
+        { inherit cargoLockContents; }
+        { inherit cargoLockParsed; }
+      ]
+    );
+
   vendorGitSubset = callPackage ./vendorGitSubset.nix { };
 
   # https://github.com/ipetkov/crane/issues/117
