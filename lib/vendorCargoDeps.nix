@@ -16,7 +16,7 @@ let
     concatMapStrings
     escapeShellArg;
 
-  cargoConfigs = if args ? src then (findCargoFiles args.src).cargoConfigs else [];
+  cargoConfigs = if args ? src then (findCargoFiles args.src).cargoConfigs else [ ];
 
   src = args.src or (throw ''
     unable to find `src` attribute. consider one of the following:
