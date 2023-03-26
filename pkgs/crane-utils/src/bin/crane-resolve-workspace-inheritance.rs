@@ -64,23 +64,23 @@ fn resolve_and_print_cargo_toml(cargo_toml: &Path) -> anyhow::Result<()> {
     let mut cargo_toml = parse_toml(cargo_toml)?;
     merge(&mut cargo_toml, &parse_toml(&root_toml.join("Cargo.toml"))?);
 
-    toml::to_vec(&cargo_toml)
+    toml::to_string(&cargo_toml)
         .context("failed to serialize updated Cargo.toml")
-        .and_then(|bytes| {
+        .and_then(|string| {
             stdout()
-                .write_all(&bytes)
+                .write_all(string.as_bytes())
                 .context("failed to print updated Cargo.toml")
                 .map(drop)
         })
 }
 
 fn parse_toml(path: &Path) -> anyhow::Result<toml::Value> {
-    let mut buf = Vec::new();
+    let mut buf = String::new();
     File::open(path)
-        .and_then(|mut file| file.read_to_end(&mut buf))
+        .and_then(|mut file| file.read_to_string(&mut buf))
         .with_context(|| format!("cannot read {}", path.display()))?;
 
-    toml::from_slice(&buf).with_context(|| format!("cannot parse {}", path.display()))
+    toml::from_str(&buf).with_context(|| format!("cannot parse {}", path.display()))
 }
 
 fn merge(cargo_toml: &mut toml::Value, root: &toml::Value) {
