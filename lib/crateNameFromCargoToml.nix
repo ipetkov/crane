@@ -27,9 +27,14 @@ let
     then "provided Cargo.toml contents"
     else cargoToml;
 
-  traceMsg = tomlName: drvName: placeholder: lib.trivial.warn
-    "crane cannot find ${tomlName} attribute in ${debugPath}, consider setting `${drvName} = \"...\";` explicitly"
-    placeholder;
+  traceMsg = tomlName: drvName: placeholder: lib.flip lib.trivial.warn placeholder ''
+    crane will use a placeholder value since `${tomlName}` cannot be found in ${debugPath}
+    to silence this warning consider one of the following:
+    - setting `${drvName} = "...";` in the derivation arguments explicitly
+    - setting `package.${tomlName} = "..."` or `workspace.package.${tomlName} = "..."` in the root Cargo.toml
+    - explicitly looking up the values from a different Cargo.toml via 
+      `craneLib.crateNameFromCargoToml { cargoToml = ./path/to/Cargo.toml; }`
+  '';
 
   internalName = internalCrateNameFromCargoToml toml;
 in
