@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* `vendorCargoRegistries` now accepts a `registries` parameter from the caller.
+  If not specified, it will be computed via `cargoConfigs`. Also `cargoConfigs`
+  is now an optional parameter which will default to `[]` if not specified.
+
 ### Fixed
 * `vendorCargoDeps` correctly accepts arguments which have _not_ set `src`, so
   long as one of `cargoLock`, `cargoLockContents`, or `cargoLockParsed` is set

@@ -1129,10 +1129,18 @@ referenced by a `Cargo.lock` file, and prepare the vendored directories which
 cargo can use for subsequent builds without needing network access.
 
 #### Input attributes
-* `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
-  appear in the project
 * `lockPackages`: a list of all `[[package]]` entries found in the project's
   `Cargo.lock` file (parsed via `builtins.fromTOML`)
+
+#### Optional attributes
+* `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
+  appear in the project
+  - Default value: `[]`
+* `registries`: an attrset of registry names to their index URL. The default
+  ("crates-io") registry need not be specified, as it will automatically be
+  available, but it can be overridden if required.
+  - Default value: if not specified, `cargoConfigs` will be used to identify any
+    configured registries
 
 #### Output attributes
 * `config`: the configuration entires needed to point cargo to the vendored

@@ -3,9 +3,10 @@
 , runCommandLocal
 }:
 
-{ cargoConfigs
+{ cargoConfigs ? [ ]
 , lockPackages
-}:
+, ...
+}@args:
 let
   inherit (builtins)
     attrNames
@@ -30,6 +31,8 @@ let
     mapAttrsToList
     nameValuePair;
 
+  inherit (lib.lists) unique;
+
   hash = hashString "sha256";
 
   # Local crates will show up in the lock file with no checksum/source,
@@ -46,8 +49,8 @@ let
     '') packages}
   '';
 
-  parsedCargoTomls = map (p: builtins.fromTOML (readFile p)) cargoConfigs;
-  allCargoRegistries = flatten (map (c: c.registries or [ ]) parsedCargoTomls);
+  parsedCargoConfigTomls = map (p: builtins.fromTOML (readFile p)) cargoConfigs;
+  allCargoRegistries = flatten (map (c: c.registries or [ ]) parsedCargoConfigTomls);
   allCargoRegistryPairs = flatten (map (mapAttrsToList (name: value: { inherit name value; })) allCargoRegistries);
   allCargoRegistryPairsWithIndex = filter (r: r ? value.index) allCargoRegistryPairs;
   configuredRegistries = mapAttrs (_: map (r: r.value.index)) (groupBy (x: x.name) allCargoRegistryPairsWithIndex);
@@ -55,7 +58,11 @@ let
   # Append the default crates.io registry, but allow it to be overridden
   registries = {
     "crates-io" = [ "https://github.com/rust-lang/crates.io-index" ];
-  } // configuredRegistries;
+  } // (
+    if args ? registires
+    then mapAttrs (_: val: [ val ]) args.registries
+    else configuredRegistries
+  );
 
   sources = mapAttrs'
     (url: packages: nameValuePair (hash url) (vendorSingleRegistry packages))
@@ -71,7 +78,7 @@ let
   configReplaceRegistries = mapAttrsToList
     (name: urls:
       let
-        actuallyConfigured = filter (u: hasAttr "registry+${u}" lockedRegistryGroups) urls;
+        actuallyConfigured = unique (filter (u: hasAttr "registry+${u}" lockedRegistryGroups) urls);
         numConfigured = length actuallyConfigured;
       in
       if numConfigured == 0 then ""
