@@ -433,6 +433,45 @@ in
 
   vendorGitSubset = callPackage ./vendorGitSubset.nix { };
 
+  vendorMultipleCargoDeps =
+    let
+      cargoLockList = [
+        ./simple-git/Cargo.lock
+        ./simple-git-workspace-inheritance/Cargo.lock
+      ];
+
+      cargoLockContentsList = map builtins.readFile cargoLockList;
+      cargoLockParsedList = map builtins.fromTOML cargoLockContentsList;
+    in
+    pkgs.linkFarmFromDrvs "vendorMultipleCargoDeps-tests" (map
+      myLib.vendorMultipleCargoDeps
+      [
+        { inherit cargoLockList; }
+        { inherit cargoLockContentsList; }
+        { inherit cargoLockParsedList; }
+      ]
+    );
+
+  vendorMultipleCargoDepsAndBuild =
+    let
+      cargoVendorDir = myLib.vendorMultipleCargoDeps {
+        cargoLockList = [
+          ./simple-git/Cargo.lock
+          ./simple-git-workspace-inheritance/Cargo.lock
+        ];
+      };
+    in
+    pkgs.linkFarmFromDrvs "vendorMultipleCargoDepsAndBuild-tests" [
+      (myLib.buildPackage {
+        inherit cargoVendorDir;
+        src = myLib.cleanCargoSource ./simple-git;
+      })
+      (myLib.buildPackage {
+        inherit cargoVendorDir;
+        src = myLib.cleanCargoSource ./simple-git-workspace-inheritance;
+      })
+    ];
+
   # https://github.com/ipetkov/crane/issues/117
   withBuildScript = myLib.buildPackage {
     src = ./with-build-script;

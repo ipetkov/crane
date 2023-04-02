@@ -12,6 +12,7 @@
   * [Quick start (simple)](./examples/quick-start-simple.md)
   * [Custom toolchain](./examples/custom-toolchain.md)
   * [Alternative registry](./examples/alt-registry.md)
+  * [Building standard library crates](./examples/build-std.md)
   * [Cross compiling](./examples/cross-rust-overlay.md)
   * [Cross compiling with musl](./examples/cross-musl.md)
   * [Cross compiling to windows](./examples/cross-windows.md)

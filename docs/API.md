@@ -1129,10 +1129,18 @@ referenced by a `Cargo.lock` file, and prepare the vendored directories which
 cargo can use for subsequent builds without needing network access.
 
 #### Input attributes
-* `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
-  appear in the project
 * `lockPackages`: a list of all `[[package]]` entries found in the project's
   `Cargo.lock` file (parsed via `builtins.fromTOML`)
+
+#### Optional attributes
+* `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
+  appear in the project. Ignored if `registries` is set.
+  - Default value: `[]`
+* `registries`: an attrset of registry names to their index URL. The default
+  ("crates-io") registry need not be specified, as it will automatically be
+  available, but it can be overridden if required.
+  - Default value: if not specified, `cargoConfigs` will be used to identify any
+    configured registries
 
 #### Output attributes
 * `config`: the configuration entires needed to point cargo to the vendored
@@ -1158,6 +1166,42 @@ access.
   sources. This is intended to be appended to `$CARGO_HOME/config.toml` verbatim
 * `sources`: an attribute set of all the newly created cargo sources' names to
   their location in the Nix store
+
+### `craneLib.vendorMultipleCargoDeps`
+
+`vendorMultipleCargoDeps :: set -> drv`
+
+Creates a derivation which will download all crates referenced by several
+`Cargo.lock` files, and prepare a vendored directory which cargo can use for
+subsequent builds without needing network access. Duplicate packages listed in
+different `Cargo.lock` files will automatically be filtered out.
+
+Each unique crate index will be vendored as its own subdirectory within the
+output of the derivation. A `config.toml` file will also be placed at the root
+of the output which will contain the necessary configurations to point cargo to
+the vendored directories (i.e. this configuration can be appended to the
+`.cargo/config.toml` definition of the project).
+
+#### Optional attributes
+* `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
+  appear in the project. Ignored if `registries` is set.
+  - Default value: `[]`
+* `cargoLockContentsList`: a list of strings representing the contents of
+  different `Cargo.lock` files to be included while vendoring. The strings will
+  automatically be parsed during evaluation.
+  - Default value: `[]`
+* `cargoLockList`: a list of paths to different `Cargo.lock` files to be
+  included while vendoring. The paths will automatically be read and parsed
+  during evaluation.
+  - Default value: `[]`
+* `cargoLockParsedList`: a list of attrsets representing the parsed contents of
+  different `Cargo.lock` files to be included while vendoring.
+  - Default value: `[]`
+* `registries`: an attrset of registry names to their index URL. The default
+  ("crates-io") registry need not be specified, as it will automatically be
+  available, but it can be overridden if required.
+  - Default value: if not specified, `cargoConfigs` will be used to identify any
+    configured registries
 
 ### `craneLib.writeTOML`
 
