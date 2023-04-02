@@ -24,5 +24,5 @@
       ${pkgs.mdbook}/bin/mdbook build --dest-dir $out ${cleanedSrc}/docs
     '';
 
-  crate-utils = myLib.callPackage ./crane-utils { };
+  crane-utils = myLib.callPackage ./crane-utils { };
 }
