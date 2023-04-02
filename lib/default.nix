@@ -66,6 +66,7 @@ in
   removeReferencesToVendoredSourcesHook = callPackage ./setupHooks/removeReferencesToVendoredSources.nix { };
   urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
   vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
+  vendorMultipleCargoDeps = callPackage ./vendorMultipleCargoDeps.nix { };
   vendorCargoRegistries = callPackage ./vendorCargoRegistries.nix { };
   vendorGitDeps = callPackage ./vendorGitDeps.nix { };
   writeTOML = callPackage ./writeTOML.nix { };

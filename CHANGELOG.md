@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `vendorMultipleCargoDeps` can now be used to vendor crates from multiple
+  distinct `Cargo.lock` files. Notably this allows for building the standard
+  library (via `-Z build-std` or equivalent) since both the project's
+  and the Rust toolchain's `Cargo.lock` files can be vendored together
+
 ### Changed
 * `vendorCargoRegistries` now accepts a `registries` parameter from the caller.
   If not specified, it will be computed via `cargoConfigs`. Also `cargoConfigs`

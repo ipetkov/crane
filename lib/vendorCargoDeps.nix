@@ -1,20 +1,15 @@
 { findCargoFiles
 , lib
-, runCommandLocal
-, vendorCargoRegistries
-, vendorGitDeps
+, vendorMultipleCargoDeps
 }:
 
 args:
 let
   inherit (builtins)
-    attrNames
     pathExists
     readFile;
 
-  inherit (lib)
-    concatMapStrings
-    escapeShellArg;
+  inherit (lib.attrsets) optionalAttrs;
 
   cargoConfigs = if args ? src then (findCargoFiles args.src).cargoConfigs else [ ];
 
@@ -39,31 +34,9 @@ let
       ''
   );
 
-  linkSources = sources: concatMapStrings
-    (name: ''
-      ln -s ${escapeShellArg sources.${name}} $out/${escapeShellArg name}
-    '')
-    (attrNames sources);
-
   lock = args.cargoLockParsed or (builtins.fromTOML cargoLockContents);
-  lockPackages = lock.package or (throw "Cargo.lock missing [[package]] definitions");
-
-  vendoredRegistries = vendorCargoRegistries {
-    inherit
-      cargoConfigs
-      lockPackages;
-  };
-  vendoredGit = vendorGitDeps {
-    inherit lockPackages;
-  };
 in
-runCommandLocal "vendor-cargo-deps" { } ''
-  mkdir -p $out
-  cat >>$out/config.toml <<EOF
-  ${vendoredRegistries.config}
-  ${vendoredGit.config}
-  EOF
-
-  ${linkSources vendoredRegistries.sources}
-  ${linkSources vendoredGit.sources}
-''
+vendorMultipleCargoDeps ({
+  inherit cargoConfigs;
+  cargoLockParsedList = [ lock ];
+} // optionalAttrs (args ? registries) { inherit (args) registries; })
