@@ -22,6 +22,7 @@ let
     escapeShellArg;
 
   inherit (lib.attrsets)
+    filterAttrs
     optionalAttrs;
 
   inherit (lib.lists)
@@ -30,9 +31,25 @@ let
 
   cargoLocksParsed = (map fromTOML ((map readFile cargoLockList) ++ cargoLockContentsList))
     ++ cargoLockParsedList;
+
+  # Extract all packages from all Cargo.locks and trim any unused attributes from the parsed
+  # data so we do not get any faux duplicates
+  allowedAttrs = {
+    name = true;
+    version = true;
+    source = true;
+    checksum = true;
+  };
+  allPackagesTrimmed = map
+    (l: map
+      (filterAttrs (k: _: allowedAttrs.${k} or false))
+      (l.package or [ ])
+    )
+    cargoLocksParsed;
+
   lockPackages = flatten (map unique (attrValues (groupBy
     (p: "${p.name}:${p.version}:${p.source or "local-path"}")
-    (flatten (map (l: l.package or [ ]) cargoLocksParsed))
+    (flatten allPackagesTrimmed)
   )));
 
   vendoredRegistries = vendorCargoRegistries ({
