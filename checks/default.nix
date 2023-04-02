@@ -472,6 +472,13 @@ in
       })
     ];
 
+  vendorMultipleCargoDepsReqwestAndStd = myLib.vendorMultipleCargoDeps {
+    cargoLockList = [
+      ./vendorMultiple/Cargo-lock-from-reqwest.lock
+      ./vendorMultiple/Cargo-lock-from-std.lock
+    ];
+  };
+
   # https://github.com/ipetkov/crane/issues/117
   withBuildScript = myLib.buildPackage {
     src = ./with-build-script;
