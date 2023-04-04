@@ -21,8 +21,7 @@
   };
 
   outputs = { nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    # NB: temporarily skip aarch64-darwin since QEMU can't build there on nixpkgs-unstable
-    flake-utils.lib.eachSystem [ "aarch64-linux" "x86_64-darwin" "x86_64-linux" ] (localSystem:
+    flake-utils.lib.eachDefaultSystem (localSystem:
       let
         # Replace with the system you want to build for
         crossSystem = "aarch64-linux";
