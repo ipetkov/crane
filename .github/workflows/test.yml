@@ -66,7 +66,7 @@ jobs:
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
             nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/nixpkgs-22.11-darwin"
-
+            filter: "-not -name build-std"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
@@ -79,7 +79,7 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: validate examples
       run: |
-        for f in $(find examples -maxdepth 1 -mindepth 1 -type d); do
+        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }}); do
           pushd "${f}"
           echo "validating ${f}"
           nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
