@@ -46,7 +46,7 @@ mkCargoDerivation (cleanedArgs // {
   pname = args.pname or crateName.pname;
   version = args.version or crateName.version;
 
-  cargoArtifacts = null;
+  cargoArtifacts = args.cargoArtifacts or null;
   cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
   # First we run `cargo check` to cache cargo's internal artifacts, fingerprints, etc. for all deps.
