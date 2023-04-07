@@ -76,8 +76,6 @@ easily updated to suit your needs. By default all artifacts from running `cargo
 In addition to all default and overridden values being set as documented below,
 all derivation attributes are delegated to `mkCargoDerivation`, and can be used
 to influence its behavior.
-* `cargoArtifacts`: set to `null` since this is our entry point for generating
-  cargo artifacts
 * `doInstallCargoArtifacts`: set to `true`
 * `pnameSuffix`: set to `"-deps"`
 * `src`: set to the result of `mkDummySrc` after applying the arguments set.
@@ -88,6 +86,10 @@ to influence its behavior.
 * `buildPhaseCargoCommand`: A command to run during the derivation's build
   phase. Pre and post build hooks will automatically be run.
   - Default value: `"${cargoCheckCommand} ${cargoExtraArgs}\n${cargoBuildCommand} ${cargoExtraArgs}"`
+* `cargoArtifacts`: A path (or derivation) which contains an existing cargo
+  `target` directory, which will be reused at the start of the derivation.
+  Useful for caching incremental cargo builds.
+  - Default value: `null` since this is our entry point for generating cargo artifacts.
 * `cargoBuildCommand`: A cargo (build) invocation to run during the derivation's build
   phase
   - Default value: `"cargo build --profile release"`

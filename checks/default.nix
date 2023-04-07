@@ -528,5 +528,35 @@ in
     pname = "workspace-git";
     version = "0.0.1";
   };
+
+  pathDepLibReuse =
+    let
+      subdirArgs = pname: {
+        src = ./path-dep-lib-reuse;
+        cargoLock = ./path-dep-lib-reuse/${pname}/Cargo.lock;
+        cargoToml = ./path-dep-lib-reuse/${pname}/Cargo.toml;
+        postUnpack = ''
+          cd $sourceRoot/${pname}
+          sourceRoot="."
+        '';
+      };
+      printArgs = subdirArgs "print";
+      printArtifacts = myLib.buildDepsOnly printArgs;
+      helloArgs = subdirArgs "hello";
+      worldArgs = subdirArgs "world";
+    in
+    pkgs.linkFarmFromDrvs "pathDepLibReuse-tests" (map
+      (args:
+        myLib.buildPackage (args
+          // {
+          cargoArtifacts = myLib.buildDepsOnly (args
+            // {
+            cargoArtifacts = printArtifacts;
+          });
+        }))
+      [
+        worldArgs
+        helloArgs
+      ]);
 })
 )
