@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### [0.12.1] - 2023-04-10
 
+### Changed
+* **Breaking**: When setting a default value for `cargoArtifacts`,
+  `buildPackage` will now ignore `installPhase` and `installPhaseCommand` when
+  calling `buildPackage`. To bring back the old behavior, please specify
+  `cargoArtifacts` explicitly
+
 ### Added
 * `vendorMultipleCargoDeps` can now be used to vendor crates from multiple
   distinct `Cargo.lock` files. Notably this allows for building the standard
