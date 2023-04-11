@@ -15,8 +15,10 @@
 , ...
 }@args:
 let
+  inherit (builtins) removeAttrs;
+
   crateName = crateNameFromCargoToml args;
-  cleanedArgs = builtins.removeAttrs args [
+  cleanedArgs = removeAttrs args [
     "cargoBuildCommand"
     "cargoExtraArgs"
     "cargoTestCommand"
@@ -34,9 +36,14 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
   doCheck = args.doCheck or true;
   doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
 
-  cargoArtifacts = args.cargoArtifacts or (buildDepsOnly (args // memoizedArgs // {
-    installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
-  }));
+  cargoArtifacts = args.cargoArtifacts or (
+    let
+      depsArgs = args // memoizedArgs // {
+        installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
+      };
+    in
+    buildDepsOnly (removeAttrs depsArgs [ "installPhase" "installPhaseCommand" ])
+  );
 
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
     cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)
