@@ -13,12 +13,17 @@ function installFromCargoBuildLog() (
   logs=$(jq -R 'fromjson?' <"${log}")
 
   local select_non_test='select(.reason == "compiler-artifact" and .profile.test == false)'
-  local select_bins="${select_non_test} | .executable | select(.!= null)"
+  local select_non_dep='select(contains("/deps/")| not)'
+  local select_bins="${select_non_test}"'| .executable | select(.!= null) | '"${select_non_dep}"
   local select_lib_files="${select_non_test}"'
-    | select(.target.kind | contains(["staticlib"]) or contains(["cdylib"]))
+    | select(.target.kind
+        | contains(["cdylib"])
+        or contains(["dylib"])
+        or contains(["staticlib"])
+    )
     | .filenames[]
     | select(endswith(".rlib") | not)
-  '
+    | '"${select_non_dep}"
 
   function installArtifacts() {
     local loc=${1?:missing}
@@ -32,12 +37,11 @@ function installFromCargoBuildLog() (
     rmdir --ignore-fail-on-non-empty "${loc}"
   }
 
-  echo "${logs}" | jq -r "${select_bins}" | installArtifacts "${dest}/bin"
-
   command cargo metadata --format-version 1 | jq '.workspace_members[]' | (
     while IFS= read -r ws_member; do
-      local select_member_libs="select(.package_id == ${ws_member}) | ${select_lib_files}"
-      echo "${logs}" | jq -r "${select_member_libs}" | installArtifacts "${dest}/lib"
+      local select_member="select(.package_id == ${ws_member})"
+      echo "${logs}" | jq -r "${select_member} | ${select_lib_files}" | installArtifacts "${dest}/lib"
+      echo "${logs}" | jq -r "${select_member} | ${select_bins}" | installArtifacts "${dest}/bin"
     done
   )
 

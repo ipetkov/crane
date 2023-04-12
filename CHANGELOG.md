@@ -21,6 +21,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `buildTrunkPackage` will now strip references to store files by default
 * `buildTrunkPackage` will now set the right `wasm-opt` version
 
+### Added
+
+* Support for building `dylib` crates
+
+### Fixed
+
+* **Breaking** When `bindeps` feature is used, the binaries built as dependencies 
+  will not be installed by default anymore
+
 ### [0.12.1] - 2023-04-10
 
 ### Changed
