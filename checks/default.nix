@@ -249,6 +249,7 @@ in
     liball_types.a
     liball_types.so
     libonly_cdylib.so
+    libonly_dylib.so
     libonly_staticlib.a
     EOF
 
