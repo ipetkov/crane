@@ -23,6 +23,7 @@ A [Nix] library for building [cargo] projects.
 * [cargo-audit] for vulnerability scanning
 * [cargo-nextest] a next-generation test runner
 * [cargo-tarpaulin] for code coverage
+* [trunk] for wasm frontend apps
 
 ## Getting Started
 
@@ -72,3 +73,4 @@ conditions.
 [Nix]: https://nixos.org/
 [rustfmt]: https://github.com/rust-lang/rustfmt
 [Semantic Versioning]: http://semver.org/spec/v2.0.0.html
+[Trunk]: https://trunkrs.dev/

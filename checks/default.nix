@@ -414,6 +414,10 @@ in
   smokeWorkspace = self.smoke [ "print" ] self.workspace;
   smokeWorkspaceRoot = self.smoke [ "print" ] self.workspaceRoot;
 
+  trunk = callPackage ./trunk.nix {
+    inherit myLib;
+  };
+
   vendorCargoDeps =
     let
       src = ./workspace;

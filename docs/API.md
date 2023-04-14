@@ -226,6 +226,25 @@ The following hooks are automatically added as native build inputs:
 * `jq`
 * `removeReferencesToVendoredSourcesHook`
 
+### `craneLib.buildTrunkPackage`
+`buildTrunkPackage :: set -> drv`
+
+Create a derivation which will build a distributable directory for a WASM application.
+
+Except where noted below, all derivation attributes are delegated to
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `cargoArtifactsWasm`: A path (or derivation) which contains an existing cargo
+  `target` directory, which will be reused at the start of the derivation.
+  Useful for caching incremental cargo builds.
+  - This can be prepared via `buildDepsOnly`
+  - Alternatively, any cargo-based derivation which was built with
+    `doInstallCargoArtifacts = true` will work as well
+  - For this to be usefull it must have the dependencies
+    built for the `wasm32-unknown-unknown` target
+* `indexPath` A path to the index.html of your trunk project
+* `trunkExtraArgs` pass additional arguments to `trunk`, empty by default
+* `trunkExtraBuildArgs` pass additional arguments to `trunk build`, empty by default
+
 ### `craneLib.cargoAudit`
 `cargoAudit :: set -> drv`
 
