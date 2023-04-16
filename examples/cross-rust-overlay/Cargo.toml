@@ -5,11 +5,3 @@ edition = "2021"
 
 [dependencies]
 openssl-sys = "*"
-
-[dependencies.sqlx]
-version = "0.5.9"
-default-features = false
-features = [
-  "runtime-tokio-rustls",
-  "sqlite",
-]
