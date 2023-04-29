@@ -6,8 +6,7 @@
 , wasm-bindgen-cli
 }:
 
-{ cargoArtifacts ? null
-, trunkExtraArgs ? ""
+{ trunkExtraArgs ? ""
 , trunkExtraBuildArgs ? ""
 , trunkIndexPath ? "./index.html"
 , ...
@@ -43,7 +42,7 @@ mkCargoDerivation (args // {
     echo "TRUNK_TOOLS_WASM_OPT=''${TRUNK_TOOLS_WASM_OPT}"
   '';
 
-  buildPhaseCargoCommand = ''
+  buildPhaseCargoCommand = args.buildPhaseCommand or ''
     local profileArgs=""
     if [[ "$CARGO_PROFILE" == "release" ]]; then
       profileArgs="--release"
@@ -52,16 +51,16 @@ mkCargoDerivation (args // {
     trunk ${trunkExtraArgs} build $profileArgs ${trunkExtraBuildArgs} "${trunkIndexPath}"
   '';
 
-  installPhase = ''
+  installPhase = args.installPhase or ''
     cp -r "$(dirname "${trunkIndexPath}")/dist" $out
   '';
 
-  buildInputs = (args.buildInputs or [ ]) ++ [
-    trunk
-    wasm-bindgen-cli
+  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     binaryen
     # dart-sass compiled to javascript
     # TODO: replace with a native version when it comes to nixpkgs
     nodePackages.sass
+    trunk
+    wasm-bindgen-cli
   ];
 })
