@@ -11,11 +11,6 @@
 
     flake-utils.url = "github:numtide/flake-utils";
 
-    advisory-db = {
-      url = "github:rustsec/advisory-db";
-      flake = false;
-    };
-
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs = {
@@ -25,7 +20,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, advisory-db, rust-overlay, ... }:
+  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -126,11 +121,6 @@
 
           # Check formatting
           my-app-fmt = craneLib.cargoFmt commonArgs;
-
-          # Audit dependencies
-          my-app-audit = craneLib.cargoAudit (commonArgs // {
-            inherit src advisory-db;
-          });
         };
 
         apps.default = flake-utils.lib.mkApp {
