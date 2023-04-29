@@ -44,7 +44,12 @@ mkCargoDerivation (args // {
   '';
 
   buildPhaseCargoCommand = ''
-    trunk ${trunkExtraArgs} build --release ${trunkExtraBuildArgs} "${trunkIndexPath}"
+    local profileArgs=""
+    if [[ "$CARGO_PROFILE" == "release" ]]; then
+      profileArgs="--release"
+    fi
+
+    trunk ${trunkExtraArgs} build $profileArgs ${trunkExtraBuildArgs} "${trunkIndexPath}"
   '';
 
   installPhase = ''
