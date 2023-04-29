@@ -1,54 +1,49 @@
-{ mkCargoDerivation
+{ binaryen
 , buildDepsOnly
+, mkCargoDerivation
+, nodePackages
 , trunk
 , wasm-bindgen-cli
-, binaryen
-, nodePackages
 }:
 
 { cargoArtifacts ? null
-, trunkIndexPath ? "./index.html"
 , trunkExtraArgs ? ""
 , trunkExtraBuildArgs ? ""
+, trunkIndexPath ? "./index.html"
 , ...
 }@origArgs:
 let
   args = builtins.removeAttrs origArgs [
-    "trunkIndexPath"
+    "installPhase"
+    "installPhaseCommand"
     "trunkExtraArgs"
     "trunkExtraBuildArgs"
+    "trunkIndexPath"
   ];
-
-  depsArgs = args // {
-    installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
-    doCheck = args.doCheck or false;
-  };
-
-  generatedCargoArtifacts = buildDepsOnly (
-    removeAttrs depsArgs [ "installPhase" "installPhaseCommand" ]
-  );
 in
 mkCargoDerivation (args // {
   pnameSuffix = "-trunk";
 
-  cargoArtifacts = (args.cargoArtifacts or generatedCargoArtifacts).overrideAttrs (old: {
-    CARGO_BUILD_TARGET = old.CARGO_BUILD_TARGET or "wasm32-unknown-unknown";
-  });
+  cargoArtifacts = args.cargoArtifacts or (buildDepsOnly (args // {
+    CARGO_BUILD_TARGET = args.CARGO_BUILD_TARGET or "wasm32-unknown-unknown";
+    installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
+    doCheck = args.doCheck or false;
+  }));
 
-  # Force trunk to not download dependencies
-  TRUNK_TOOLS_SASS = nodePackages.sass.version;
-  TRUNK_TOOLS_WASM_BINDGEN = wasm-bindgen-cli.version;
-  TRUNK_TOOLS_WASM_OPT = "version_${binaryen.version}";
+  # Force trunk to not download dependencies, but set the version with
+  # whatever tools actually make it into the builder's PATH
+  preConfigure = ''
+    echo configuring trunk tools
+    export TRUNK_TOOLS_SASS=$(sass --version | cut -d' ' -f1)
+    export TRUNK_TOOLS_WASM_BINDGEN=$(wasm-bindgen --version | cut -d' ' -f2)
+    export TRUNK_TOOLS_WASM_OPT=$(wasm-opt --version | cut -d' ' -f3)
+
+    echo "TRUNK_TOOLS_SASS=''${TRUNK_TOOLS_SASS}"
+    echo "TRUNK_TOOLS_WASM_BINDGEN=''${TRUNK_TOOLS_WASM_BINDGEN}"
+    echo "TRUNK_TOOLS_WASM_OPT=''${TRUNK_TOOLS_WASM_OPT}"
+  '';
 
   buildPhaseCargoCommand = ''
-    (
-      set -x
-      trunk --version
-      wasm-bindgen --version
-      wasm-opt --version
-      sass --version
-    )
-
     trunk ${trunkExtraArgs} build --release ${trunkExtraBuildArgs} "${trunkIndexPath}"
   '';
 
