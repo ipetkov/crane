@@ -226,6 +226,58 @@ The following hooks are automatically added as native build inputs:
 * `jq`
 * `removeReferencesToVendoredSourcesHook`
 
+### `craneLib.buildTrunkPackage`
+`buildTrunkPackage :: set -> drv`
+
+Create a derivation which will build a distributable directory for a WASM application.
+
+Except where noted below, all derivation attributes are delegated to
+`mkCargoDerivation`, and can be used to influence its behavior.
+
+#### Optional attributes
+* `buildPhaseCargoCommand`: A command to run during the derivation's build
+  phase. Pre and post build hooks will automatically be run.
+  - Default value: `trunk build` will be invoked along with `trunkExtraArgs`,
+    `trunkExtraBuildArgs`, and `trunkIndexpath` passed in. If `$CARGO_PROFILE`
+    is set to `release` then the `--release` flag will also be set for the build
+* `cargoArtifacts`: A path (or derivation) which contains an existing cargo
+  `target` directory, which will be reused at the start of the derivation.
+  Useful for caching incremental cargo builds.
+  - Default value: the result of `buildDepsOnly` after applying the arguments
+    set (with the respective default values).
+  - `CARGO_BUILD_TARGET` will be set to `"wasm32-unknown-unknown"` if not specified.
+  - `doCheck` will be set to `false` if not specified.
+  - `installCargoArtifactsMode` will be set to `"use-zstd"` if not specified.
+  - `installPhase` and `installPhaseCommand` will be removed (in favor of their
+    default values provided by `buildDepsOnly`)
+* `installPhaseCommand`: the command(s) which are expected to install the
+  derivation's outputs.
+  - Default value: will install trunk's `dist` output directory
+* `trunkExtraArgs` pass additional arguments to `trunk`
+  - Default value: `""`
+* `trunkExtraBuildArgs` pass additional arguments to `trunk build`
+  - Default value: `""`
+* `trunkIndexPath` A path to the index.html of your trunk project
+  - Default value: `"./index.html"`
+
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`mkCargoDerivation`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+
+* `trunkExtraArgs`
+* `trunkExtraBuildArgs`
+* `trunkIndexPath`
+
+#### Native build dependencies and included hooks
+The following hooks are automatically added as native build inputs:
+* `binaryen`
+* `nodePackages.sass`
+* `trunk`
+* `wasm-bindgen-cli`
+
 ### `craneLib.cargoAudit`
 `cargoAudit :: set -> drv`
 

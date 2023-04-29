@@ -20,6 +20,12 @@ nix flake init -t github:ipetkov/crane#cross-rust-overlay
 
 # For statically linked binaries using musl
 nix flake init -t github:ipetkov/crane#cross-musl
+
+# If you are building a WASM webapp with trunk
+nix flake init -t github:ipetkov/crane#trunk
+
+# If you are building a workspace with trunk member
+nix flake init -t github:ipetkov/crane#trunk-workspace
 ```
 
 For an even more lean, no frills set up, create a `flake.nix` file with the

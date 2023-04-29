@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* Added support for the [Trunk](https://trunkrs.dev) wasm app build tool
+
 ### [0.12.1] - 2023-04-10
 
 ### Changed
