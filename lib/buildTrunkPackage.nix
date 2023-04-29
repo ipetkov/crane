@@ -1,8 +1,10 @@
 { binaryen
 , buildDepsOnly
+, crateNameFromCargoToml
 , mkCargoDerivation
 , nodePackages
 , trunk
+, vendorCargoDeps
 , wasm-bindgen-cli
 }:
 
@@ -12,13 +14,22 @@
 , ...
 }@origArgs:
 let
-  args = builtins.removeAttrs origArgs [
+  cleanedArgs = builtins.removeAttrs origArgs [
     "installPhase"
     "installPhaseCommand"
     "trunkExtraArgs"
     "trunkExtraBuildArgs"
     "trunkIndexPath"
   ];
+
+  crateName = crateNameFromCargoToml cleanedArgs;
+
+  # Avoid recomputing values when passing args down
+  args = cleanedArgs // {
+    pname = cleanedArgs.pname or crateName.pname;
+    version = cleanedArgs.version or crateName.version;
+    cargoVendorDir = cleanedArgs.cargoVendorDir or (vendorCargoDeps cleanedArgs);
+  };
 in
 mkCargoDerivation (args // {
   pnameSuffix = "-trunk";
