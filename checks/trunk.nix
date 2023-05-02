@@ -30,6 +30,7 @@ let
 in
 runCommand "trunkTests" { } ''
   test -f ${trunkSimple}/*.wasm
+  test -f ${trunkSimple}/*.css
   test -f ${trunkSimpleNoArtifacts}/*.wasm
   mkdir -p $out
 ''
