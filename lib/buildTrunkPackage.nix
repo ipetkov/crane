@@ -44,7 +44,7 @@ mkCargoDerivation (args // {
   # whatever tools actually make it into the builder's PATH
   preConfigure = ''
     echo configuring trunk tools
-    export TRUNK_TOOLS_SASS=$(sass --version | cut -d' ' -f1)
+    export TRUNK_TOOLS_SASS=$(sass --version | head -n1)
     export TRUNK_TOOLS_WASM_BINDGEN=$(wasm-bindgen --version | cut -d' ' -f2)
     export TRUNK_TOOLS_WASM_OPT=$(wasm-opt --version | cut -d' ' -f3)
 
