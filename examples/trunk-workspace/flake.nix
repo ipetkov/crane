@@ -62,10 +62,8 @@
 
         # Native packages
 
-        # We can avoid building our client's dependencies for the native target.
         nativeArgs = commonArgs // {
           pname = "trunk-workspace-native";
-          cargoExtraArgs = "--workspace --exclude=client";
         };
 
         # Build *just* the cargo dependencies, so we can reuse
@@ -87,6 +85,7 @@
         wasmArgs = commonArgs // {
           pname = "trunk-workspace-wasm";
           cargoExtraArgs = "--package=client";
+          CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
         };
 
         cargoArtifactsWasm = craneLib.buildDepsOnly (wasmArgs // {

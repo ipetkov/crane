@@ -17,7 +17,7 @@ let
 
   # default build
   cargoArtifacts = myLibWasm.buildDepsOnly (defaultArgs // {
-    cargoExtraArgs = "--target=wasm32-unknown-unknown";
+    CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
   });
   trunkSimple = myLibWasm.buildTrunkPackage (defaultArgs // {
     inherit cargoArtifacts;
