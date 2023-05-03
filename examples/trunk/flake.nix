@@ -54,7 +54,7 @@
         commonArgs = {
           inherit src;
           # We must force the target, otherwise cargo will attempt to use your native target
-          cargoExtraArgs = "--target=wasm32-unknown-unknown";
+          CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
         };
 
         # Build *just* the cargo dependencies, so we can reuse
