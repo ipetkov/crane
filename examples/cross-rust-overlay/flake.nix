@@ -47,8 +47,7 @@
         # Normally you can stick this function into its own file and pass
         # its path to `callPackage`.
         crateExpression =
-          { darwin
-          , openssl
+          { openssl
           , libiconv
           , lib
           , pkg-config
@@ -73,12 +72,6 @@
             # overridden above.
             nativeBuildInputs = [
               pkg-config
-            ] ++ lib.optionals stdenv.buildPlatform.isDarwin [
-              # Additional darwin specific inputs can be set here
-              # This should include nay libraries needed for linking proc macros
-              # since they run on the build platform itself
-              libiconv
-              darwin.apple_sdk.frameworks.Security
             ];
 
             # Dependencies which need to be built for the platform on which
