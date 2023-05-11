@@ -24,18 +24,36 @@ inheritCargoArtifacts() {
   elif [ -d "${preparedArtifacts}" ]; then
     echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
-    # NB: rustc doesn't like it when artifacts are either symlinks or hardlinks to the store
-    # (it tries to truncate files instead of unlinking and recreating them)
-    # so we're forced to do a full copy here :(
-    #
-    # Notes:
-    # - --no-target-directory to avoid nesting (i.e. `./target/target`)
-    # - preserve timestamps to avoid rebuilding
-    # - no-preserve ownership (root) so we can make the files writable
-    cp -r "${preparedArtifacts}" \
-      --no-target-directory "${cargoTargetDir}" \
-      --preserve=timestamps \
-      --no-preserve=ownership
+    # copy target dir but ignore crate build artifacts
+    rsync -r --chmod=Du=rwx,Dg=rx,Do=rx --exclude "release/build" --exclude "release/deps" --exclude "*/release/build" --exclude "*/release/deps" "${preparedArtifacts}/" "${cargoTargetDir}/"
+
+    link_build_artifacts() {
+      local artifacts="$1"
+      local target="$2"
+
+      if [ -d "${artifacts}/release/deps" ]; then
+        mkdir -p "${target}/release/deps"
+        for dep in $(ls "${artifacts}/release/deps"); do
+          ln -fs "${artifacts}/release/deps/$dep" "${target}/release/deps/$dep"
+        done
+      fi
+
+      if [ -d "${artifacts}/release/build" ]; then
+        mkdir -p "${target}/release/build"
+        for build in $(ls "${artifacts}/release/build"); do
+          ln -fs "${artifacts}/release/build/$build" "${target}/release/build/$build"
+        done
+      fi
+    }
+
+    # symlink crate build artifacts
+    link_build_artifacts "${preparedArtifacts}" "${cargoTargetDir}"
+
+    # for each build target as well
+    # all other directories are ignored in `link_build_artifacts`
+    for target in $(ls "${preparedArtifacts}"); do
+      link_build_artifacts "${preparedArtifacts}/$target" "${cargoTargetDir}/$target"
+    done
 
     # Keep existing permissions (e.g. exectuable), but also make things writable
     # since the store is read-only and cargo would otherwise choke
