@@ -39,7 +39,7 @@ let
 
       # Or even
       (lib.registryFromSparse {
-        url = "https://index.crates.io/";
+        indexUrl = "https://index.crates.io/";
         sha256 = "d16740883624df970adac38c70e35cf077a2a105faa3862f8f99a65da96b14a3";
       })
     ];
