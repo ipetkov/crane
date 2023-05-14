@@ -38,7 +38,7 @@ let
   # Local crates will show up in the lock file with no checksum/source,
   # so should filter them out without trying to download them
   lockedPackagesFromRegistry = filter
-    (p: p ? checksum && hasPrefix "registry" (p.source or ""))
+    (p: p ? checksum && ((hasPrefix "registry" (p.source or "")) || (hasPrefix "sparse" (p.source or ""))))
     lockPackages;
   lockedRegistryGroups = groupBy (p: p.source) lockedPackagesFromRegistry;
 
@@ -59,7 +59,7 @@ let
   registries = {
     "crates-io" = [ "https://github.com/rust-lang/crates.io-index" ];
   } // (
-    if args ? registires
+    if args ? registries
     then mapAttrs (_: val: [ val ]) args.registries
     else configuredRegistries
   );
@@ -74,11 +74,20 @@ let
       directory = "${placeholder "out"}/${hashedUrl}"
     '')
     (attrNames sources);
+  
+  # e.g. hasSparse x if either has sparse+x, or x starts with sparse+ and has x.
+  hasRegistryWithProtocol = (lrg: protocol: u:
+    (hasAttr "${protocol}+${u}" lrg) || ((lib.hasPrefix protocol u) && (hasAttr u lrg))
+  );
+  hasSparseRegistry = hasRegistryWithProtocol lockedRegistryGroups "sparse";
+  hasLegacyRegistry = hasRegistryWithProtocol lockedRegistryGroups "registry";
+
+  hasRegistry = (u: (hasSparseRegistry u) || (hasLegacyRegistry u));
 
   configReplaceRegistries = mapAttrsToList
     (name: urls:
       let
-        actuallyConfigured = unique (filter (u: hasAttr "registry+${u}" lockedRegistryGroups) urls);
+        actuallyConfigured = unique (filter hasRegistry urls);
         numConfigured = length actuallyConfigured;
       in
       if numConfigured == 0 then ""
@@ -92,7 +101,10 @@ let
       else
         let
           url = head actuallyConfigured;
-          hashed = hash "registry+${url}";
+          prefix = if hasSparseRegistry url then "sparse+" else "registry+";
+          no_prefix = lib.strings.removePrefix prefix url;
+          prefixed = "${prefix}${no_prefix}";
+          hashed = hash prefixed;
         in
         ''
           [source.${name}]

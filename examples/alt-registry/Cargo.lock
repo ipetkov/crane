@@ -7,6 +7,7 @@ name = "alt-registry"
 version = "0.1.0"
 dependencies = [
  "byteorder",
+ "bytes 1.4.0 (sparse+https://index.crates.io/)",
  "epitech_api",
 ]
 
@@ -59,6 +60,12 @@ checksum = "0e4cec68f03f32e44924783795810fa50a7035d8c8ebe78580ad7e6c703fba38"
 name = "bytes"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "89b2fd2a0dcf38d7971e2194b6b6eebab45ae01067456a7fd93d5547a61b70be"
+
+[[package]]
+name = "bytes"
+version = "1.4.0"
+source = "sparse+https://index.crates.io/"
 checksum = "89b2fd2a0dcf38d7971e2194b6b6eebab45ae01067456a7fd93d5547a61b70be"
 
 [[package]]
@@ -360,7 +367,7 @@ version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bd6effc99afb63425aff9b05836f029929e345a6148a14b7ecd5ab67af944482"
 dependencies = [
- "bytes 1.4.0",
+ "bytes 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "fnv",
  "itoa 1.0.6",
 ]

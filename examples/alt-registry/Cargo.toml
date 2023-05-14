@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 byteorder = { version = "*" }
+bytes = { version = "*", registry = "sparse-crates" }
 epitech_api = { version = "*", registry = "alexandrie" }

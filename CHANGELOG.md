@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 * Added support for the [Trunk](https://trunkrs.dev) wasm app build tool
+* Added support for sparse registries
 
 ### [0.12.1] - 2023-04-10
 
