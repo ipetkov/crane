@@ -1,5 +1,4 @@
-{ registryFromDownloadUrl
-}:
+{ registryFromDownloadUrl }:
 
 { indexUrl
 , sha256
