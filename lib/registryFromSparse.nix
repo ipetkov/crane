@@ -1,14 +1,15 @@
-{ registryFromDownloadUrl }:
+{ registryFromDownloadUrl, lib }:
 
 { indexUrl
-, sha256
+, configSha256
 , fetchurlExtraArgs ? { }
 }:
 
 let
+  slashTerminatedIndexUrl = if lib.hasSuffix "/" indexUrl then indexUrl else "${indexUrl}/";
   configContents = builtins.readFile "${builtins.fetchurl {
-    inherit sha256;
-    url = "${indexUrl}config.json";
+    url = "${slashTerminatedIndexUrl}config.json";
+    sha256 = configSha256;
   }}";
 
   config = builtins.fromJSON configContents;
@@ -18,6 +19,7 @@ let
   '');
 in
 registryFromDownloadUrl {
-  inherit dl indexUrl fetchurlExtraArgs;
+  inherit dl fetchurlExtraArgs;
   registryPrefix = "sparse+";
+  indexUrl = slashTerminatedIndexUrl;
 }

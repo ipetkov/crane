@@ -19,10 +19,12 @@ let
 
   fullDownloadUrl = if hasMarker then dl else "${dl}/{crate}/{version}/download";
 
+  slashTerminatedIndexUrl = if lib.hasSuffix "/" indexUrl then indexUrl else "${indexUrl}/";
+
   registryIndexUrl =
-    if lib.hasPrefix registryPrefix indexUrl
-    then indexUrl
-    else "${registryPrefix}${indexUrl}";
+    if lib.hasPrefix registryPrefix slashTerminatedIndexUrl
+    then slashTerminatedIndexUrl
+    else "${registryPrefix}${slashTerminatedIndexUrl}";
 in
 {
   "${registryIndexUrl}" = {

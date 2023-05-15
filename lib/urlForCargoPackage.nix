@@ -19,10 +19,10 @@ let
     else if nameLen == 3 then "3/${substr 0 1 name}"
     else "${substr 0 2 name}/${substr 2 4 name}";
 
-  knownRegistries = lib.concatStringsSep " " (builtins.attrNames crateRegistries);
+  knownRegistries = "\n  " + lib.concatStringsSep "\n  " (builtins.attrNames crateRegistries) + "\n";
   registry = crateRegistries.${source} or (throw ''
     not sure how to download crates from ${source}.
-    known registries are ${knownRegistries}.
+    known registries are: ${knownRegistries}
     for example, this can be resolved with:
 
     craneLib = crane.lib.''${system}.appendCrateRegistries [
@@ -40,7 +40,7 @@ let
       # Or even
       (lib.registryFromSparse {
         indexUrl = "https://index.crates.io/";
-        sha256 = "d16740883624df970adac38c70e35cf077a2a105faa3862f8f99a65da96b14a3";
+        configSha256 = "d16740883624df970adac38c70e35cf077a2a105faa3862f8f99a65da96b14a3";
       })
     ];
 
