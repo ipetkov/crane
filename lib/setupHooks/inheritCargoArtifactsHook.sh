@@ -24,36 +24,15 @@ inheritCargoArtifacts() {
   elif [ -d "${preparedArtifacts}" ]; then
     echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
-    # copy target dir but ignore crate build artifacts
-    rsync -r --chmod=Du=rwx,Dg=rx,Do=rx --exclude "release/build" --exclude "release/deps" --exclude "*/release/build" --exclude "*/release/deps" "${preparedArtifacts}/" "${cargoTargetDir}/"
+    # copy target dir but ignore content-addressed build artifacts
+    rsync -r --chmod=Du=rwx --exclude "*/build/*" --exclude "*/deps/*" --exclude "*/*/build/*" --exclude "*/*/deps/*" "${preparedArtifacts}/" "${cargoTargetDir}/"
 
-    link_build_artifacts() {
-      local artifacts="$1"
-      local target="$2"
-
-      if [ -d "${artifacts}/release/deps" ]; then
-        mkdir -p "${target}/release/deps"
-        for dep in $(ls "${artifacts}/release/deps"); do
-          ln -fs "${artifacts}/release/deps/$dep" "${target}/release/deps/$dep"
-        done
-      fi
-
-      if [ -d "${artifacts}/release/build" ]; then
-        mkdir -p "${target}/release/build"
-        for build in $(ls "${artifacts}/release/build"); do
-          ln -fs "${artifacts}/release/build/$build" "${target}/release/build/$build"
-        done
-      fi
-    }
-
-    # symlink crate build artifacts
-    link_build_artifacts "${preparedArtifacts}" "${cargoTargetDir}"
-
-    # for each build target as well
-    # all other directories are ignored in `link_build_artifacts`
-    for target in $(ls "${preparedArtifacts}"); do
-      link_build_artifacts "${preparedArtifacts}/$target" "${cargoTargetDir}/$target"
-    done
+    # symlink all remaining content-addressed artifacts
+    pushd "${cargoTargetDir}"
+      for d in $(ls -d */{deps,build} */*/{deps,build}); do
+          ls "${preparedArtifacts}/${d}" | xargs -P 100 -I '##{}##' ln -fs "${preparedArtifacts}/${d}/##{}##" "${d}/##{}##"
+      done
+    popd
 
     # Keep existing permissions (e.g. exectuable), but also make things writable
     # since the store is read-only and cargo would otherwise choke
