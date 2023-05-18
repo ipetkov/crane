@@ -24,7 +24,6 @@ let
     "publish"
     "readme"
     "repository"
-    "resolver"
     "rust-version"
 
     # Additional package attributes which are expressly kept in

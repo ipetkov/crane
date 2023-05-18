@@ -73,6 +73,7 @@ path = "src/lib.rs"
 [package]
 edition = "2021"
 name = "some name"
+resolver = "2"
 version = "1.2.3"
 workspace = "some/path/to/workspace"
 
