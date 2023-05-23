@@ -6,6 +6,7 @@
 , trunk
 , vendorCargoDeps
 , wasm-bindgen-cli
+, removeReferencesToVendoredSourcesHook
 }:
 
 { trunkExtraArgs ? ""
@@ -62,9 +63,12 @@ mkCargoDerivation (args // {
     trunk ${trunkExtraArgs} build $profileArgs ${trunkExtraBuildArgs} "${trunkIndexPath}"
   '';
 
-  installPhase = args.installPhase or ''
+  installPhaseCommand = args.installPhase or ''
     cp -r "$(dirname "${trunkIndexPath}")/dist" $out
   '';
+
+  # Installing artifacts on a distributable dir does not make much sense
+  doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     binaryen
@@ -73,5 +77,7 @@ mkCargoDerivation (args // {
     nodePackages.sass
     trunk
     wasm-bindgen-cli
+    # Store references are certainly false positives
+    removeReferencesToVendoredSourcesHook
   ];
 })
