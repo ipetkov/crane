@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * `resolver` key is no longer cleaned from Cargo.toml
 
+### Fixed
+* `buildTrunkPackage` will now strip references to store files by default
+
 ### [0.12.1] - 2023-04-10
 
 ### Changed
