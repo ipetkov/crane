@@ -3,10 +3,10 @@
 , crateNameFromCargoToml
 , mkCargoDerivation
 , nodePackages
+, removeReferencesToVendoredSourcesHook
 , trunk
 , vendorCargoDeps
 , wasm-bindgen-cli
-, removeReferencesToVendoredSourcesHook
 }:
 
 { trunkExtraArgs ? ""
@@ -63,7 +63,7 @@ mkCargoDerivation (args // {
     trunk ${trunkExtraArgs} build $profileArgs ${trunkExtraBuildArgs} "${trunkIndexPath}"
   '';
 
-  installPhaseCommand = args.installPhase or ''
+  installPhaseCommand = args.installPhaseCommand or ''
     cp -r "$(dirname "${trunkIndexPath}")/dist" $out
   '';
 
