@@ -42,7 +42,7 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
         installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
       };
     in
-    buildDepsOnly (removeAttrs depsArgs [ "installPhase" "installPhaseCommand" ])
+    buildDepsOnly (removeAttrs depsArgs [ "installPhase" "installPhaseCommand" "preInstall" "postInstall" ])
   );
 
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
