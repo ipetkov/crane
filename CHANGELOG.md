@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+* **Breaking** (technically): if `buildPackage` is called _without_ setting
+  `cargoArtifacts`, the default `buildDepsOnly` invocation will now stop running
+  any installation hooks
 
 ### Added
 * Added support for the [Trunk](https://trunkrs.dev) wasm app build tool
