@@ -5,6 +5,7 @@
 , crateNameFromCargoToml
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
+, rsync
 , stdenv
 , vendorCargoDeps
 , zstd
@@ -59,6 +60,7 @@ chosenStdenv.mkDerivation (cleanedArgs // {
     configureCargoVendoredDepsHook
     inheritCargoArtifactsHook
     installCargoArtifactsHook
+    rsync
     zstd
   ];
 
