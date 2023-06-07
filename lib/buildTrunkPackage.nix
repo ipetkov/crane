@@ -47,7 +47,7 @@ mkCargoDerivation (args // {
     echo configuring trunk tools
     export TRUNK_TOOLS_SASS=$(sass --version | head -n1)
     export TRUNK_TOOLS_WASM_BINDGEN=$(wasm-bindgen --version | cut -d' ' -f2)
-    export TRUNK_TOOLS_WASM_OPT=$(wasm-opt --version | cut -d' ' -f3)
+    export TRUNK_TOOLS_WASM_OPT="version_$(wasm-opt --version | cut -d' ' -f3)"
 
     echo "TRUNK_TOOLS_SASS=''${TRUNK_TOOLS_SASS}"
     echo "TRUNK_TOOLS_WASM_BINDGEN=''${TRUNK_TOOLS_WASM_BINDGEN}"

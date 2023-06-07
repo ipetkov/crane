@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 * `buildTrunkPackage` will now strip references to store files by default
+* `buildTrunkPackage` will now set the right `wasm-opt` version
 
 ### [0.12.1] - 2023-04-10
 
