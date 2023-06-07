@@ -179,8 +179,8 @@ install hooks.
   - Default value: the result of `buildDepsOnly` after applying the arguments
     set (with the respective default values).
   - `installCargoArtifactsMode` will be set to `"use-zstd"` if not specified.
-  - `installPhase` and `installPhaseCommand` will be removed (in favor of their
-    default values provided by `buildDepsOnly`)
+  - `installPhase` and `installPhaseCommand` will be removed, and no
+    installation hooks will be run
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
   phase
   - Default value: `"cargo build --profile release"`
