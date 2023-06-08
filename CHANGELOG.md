@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `cargoArtifacts`, the default `buildDepsOnly` invocation will now stop running
   any installation hooks
 
+### Changed
+* **Breaking**: dropped compatibility for Nix versions below 2.13.3
+* **Breaking**: dropped compatibility for nixpkgs-22.05. nixpkgs-23.05 and
+
 ### [0.12.2] - 2023-06-06
 
 ### Added
