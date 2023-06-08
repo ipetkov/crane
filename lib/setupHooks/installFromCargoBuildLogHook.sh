@@ -15,7 +15,11 @@ function installFromCargoBuildLog() (
   local select_non_test='select(.reason == "compiler-artifact" and .profile.test == false)'
   local select_bins="${select_non_test} | .executable | select(.!= null)"
   local select_lib_files="${select_non_test}"'
-    | select(.target.kind | contains(["staticlib"]) or contains(["cdylib"]))
+    | select(.target.kind
+        | contains(["cdylib"])
+        or contains(["dylib"])
+        or contains(["staticlib"])
+    )
     | .filenames[]
     | select(endswith(".rlib") | not)
   '
