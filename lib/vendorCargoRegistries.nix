@@ -35,10 +35,12 @@ let
 
   hash = hashString "sha256";
 
+  hasRegistryProtocolPrefix = s: hasPrefix "registry+" s || hasPrefix "sparse+" s;
+
   # Local crates will show up in the lock file with no checksum/source,
   # so should filter them out without trying to download them
   lockedPackagesFromRegistry = filter
-    (p: p ? checksum && ((hasPrefix "registry" (p.source or "")) || (hasPrefix "sparse" (p.source or ""))))
+    (p: p ? checksum && hasRegistryProtocolPrefix (p.source or ""))
     lockPackages;
   lockedRegistryGroups = groupBy (p: p.source) lockedPackagesFromRegistry;
 
@@ -74,7 +76,7 @@ let
       directory = "${placeholder "out"}/${hashedUrl}"
     '')
     (attrNames sources);
-  
+
   # e.g. hasSparse x if either has sparse+x, or x starts with sparse+ and has x.
   hasRegistryWithProtocol = (lrg: protocol: u:
     (hasAttr "${protocol}+${u}" lrg) || ((lib.hasPrefix protocol u) && (hasAttr u lrg))
@@ -101,10 +103,8 @@ let
       else
         let
           url = head actuallyConfigured;
-          prefix = if hasSparseRegistry url then "sparse+" else "registry+";
-          no_prefix = lib.strings.removePrefix prefix url;
-          prefixed = "${prefix}${no_prefix}";
-          hashed = hash prefixed;
+          prefixedUrl = if hasRegistryProtocolPrefix url then url else "registry+${url}";
+          hashed = hash prefixedUrl;
         in
         ''
           [source.${name}]
