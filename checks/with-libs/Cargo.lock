@@ -17,6 +17,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "only-dylib"
+version = "0.1.0"
+dependencies = [
+ "some-dep",
+]
+
+[[package]]
 name = "only-staticlib"
 version = "0.1.0"
 dependencies = [

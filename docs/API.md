@@ -165,7 +165,7 @@ understood by `mkCargoDerivation` apply here as well, with the only difference
 being some additional book keeping necessary to log cargo's results and
 subsequently install from that log.
 
-Note that only `bin`, `staticlib`, and `cdylib` targets will be installed by
+Note that only `bin`, `cdylib`, `dylib`, and `staticlib`, targets will be installed by
 default (namely `rlib` targets will be ignored), though it is possible to adjust
 the behavior by changing the `installPhaseCommand` or registering additional
 install hooks.
@@ -187,8 +187,8 @@ install hooks.
   - Default value: the result of `buildDepsOnly` after applying the arguments
     set (with the respective default values).
   - `installCargoArtifactsMode` will be set to `"use-zstd"` if not specified.
-  - `installPhase` and `installPhaseCommand` will be removed (in favor of their
-    default values provided by `buildDepsOnly`)
+  - `installPhase` and `installPhaseCommand` will be removed, and no
+    installation hooks will be run
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
   phase
   - Default value: `"cargo build --profile release"`

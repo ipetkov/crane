@@ -7,8 +7,29 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-* Added support for the [Trunk](https://trunkrs.dev) wasm app build tool
+* `buildPackage` now supports installing `dylib` targets
 * Added support for sparse registries
+
+### Changed
+* **Breaking** (technically): if `buildPackage` is called _without_ setting
+  `cargoArtifacts`, the default `buildDepsOnly` invocation will now stop running
+  any installation hooks
+
+### Changed
+* **Breaking**: dropped compatibility for Nix versions below 2.13.3
+* **Breaking**: dropped compatibility for nixpkgs-22.05. nixpkgs-23.05 and
+
+### [0.12.2] - 2023-06-06
+
+### Added
+* Added support for the [Trunk](https://trunkrs.dev) wasm app build tool
+
+### Changed
+* `resolver` key is no longer cleaned from Cargo.toml
+
+### Fixed
+* `buildTrunkPackage` will now strip references to store files by default
+* `buildTrunkPackage` will now set the right `wasm-opt` version
 
 ### [0.12.1] - 2023-04-10
 
@@ -404,6 +425,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.12.2]: https://github.com/ipetkov/crane/compare/v0.12.1...v0.12.2
 [0.12.1]: https://github.com/ipetkov/crane/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/ipetkov/crane/compare/v0.11.3...v0.12.0
 [0.11.3]: https://github.com/ipetkov/crane/compare/v0.11.2...v0.11.3

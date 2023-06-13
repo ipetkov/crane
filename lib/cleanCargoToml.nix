@@ -24,13 +24,13 @@ let
     "publish"
     "readme"
     "repository"
-    "resolver"
     "rust-version"
 
     # Additional package attributes which are expressly kept in
     # (but listed here for audit purposes)
     # "edition"      # Influences cargo behavior
     # "name"         # Required
+    # "resolver"     # Influences cargo behavior when edition != 2021
     # "version"      # Required
     # "workspace"    # Keep project structure as is
   ];

@@ -10,7 +10,7 @@ git = "https://github.com/BurntSushi/byteorder.git"
 [dependencies.libc]
 version = "*"
 git = "https://github.com/rust-lang/libc.git"
-branch = "master"
+branch = "main"
 
 [dependencies.num_cpus]
 version = "*"

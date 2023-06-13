@@ -22,11 +22,9 @@
 
   outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
     let
-      # Import from derivation has some issues in Nix 2.11 which were fixed with 2.12
-      isValidNixVersion = (builtins.compareVersions builtins.nixVersion "2.12") >= 0;
       optionalList = cond: list: if cond then list else [ ];
     in
-    flake-utils.lib.eachSystem (optionalList isValidNixVersion [ "x86_64-linux" ]) (system:
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = import nixpkgs {
           inherit system;
