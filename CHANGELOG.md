@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 * `buildPackage` now supports installing `dylib` targets
+* Added support for sparse registries
 
 ### Changed
 * **Breaking** (technically): if `buildPackage` is called _without_ setting

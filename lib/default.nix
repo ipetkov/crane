@@ -64,6 +64,7 @@ in
 
   registryFromDownloadUrl = callPackage ./registryFromDownloadUrl.nix { };
   registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
+  registryFromSparse = callPackage ./registryFromSparse.nix { };
   removeReferencesToVendoredSourcesHook = callPackage ./setupHooks/removeReferencesToVendoredSources.nix { };
   urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
   vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };

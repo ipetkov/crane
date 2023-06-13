@@ -38,6 +38,8 @@ use when downloading crate sources. Each entry can be defined using:
   registry's `config.json` file
 * `registryFromGitIndex`: if you would like the download URL to be inferred from
   the index's source directly.
+* `registryFromSparse`: if you would like the download URL to be inferred from
+  the index's source directly, and the index is a sparse index.
 
 See the documentation on each function for more specifics.
 
@@ -54,6 +56,12 @@ newLib = craneLib.appendCrateRegistries [
     indexUrl = "https://github.com/Hirevo/alexandrie-index";
     rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
     fetchurlExtraArgs = {};
+  })
+
+  # Or even
+  (lib.registryFromSparse {
+    url = "https://index.crates.io/";
+    sha256 = "d16740883624df970adac38c70e35cf077a2a105faa3862f8f99a65da96b14a3";
   })
 ];
 ```
