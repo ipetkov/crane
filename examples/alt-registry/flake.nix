@@ -41,14 +41,14 @@
           })
 
           # If the registry in question is a sparse index, instead configure as
-          (craneLibOrig.registryFromSparse {
-            indexUrl = "https://index.crates.io";
-            configSha256 = "d16740883624df970adac38c70e35cf077a2a105faa3862f8f99a65da96b14a3";
-            fetchurlExtraArgs = {
-              # Extra parameters which will be passed to the fetchurl invocation for each crate
-            };
-          })
-          # where the sha256 is the sha256 of https://index.crates.io/config.json.
+          #(craneLibOrig.registryFromSparse {
+          #  indexUrl = "https://index.crates.io";
+          #  # where the sha256 is the sha256 of https://index.crates.io/config.json.
+          #  configSha256 = "d16740883624df970adac38c70e35cf077a2a105faa3862f8f99a65da96b14a3";
+          #  fetchurlExtraArgs = {
+          #    # Extra parameters which will be passed to the fetchurl invocation for each crate
+          #  };
+          #})
 
           # As a more lightweight alternative, the `dl` endpoint of the registry's `config.json`
           # file can be copied here to avoid needing to copy the index to the Nix store.
