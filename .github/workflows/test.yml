@@ -31,9 +31,9 @@ jobs:
         include:
             # Latest and greatest release of Nix
           - install_url: https://nixos.org/nix/install
-            # The 22.11 branch ships with Nix 2.11.1
-          - install_url: https://releases.nixos.org/nix/nix-2.11.1/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-22.11"
+            # The 23.05 branch ships with Nix 2.13.3
+          - install_url: https://releases.nixos.org/nix/nix-2.13.3/install
+            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-23.05"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -59,13 +59,13 @@ jobs:
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
           - os: ubuntu-latest
-            # The 22.11 branch ships with Nix 2.11.1
-            install_url: https://releases.nixos.org/nix/nix-2.11.1/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-22.11"
+            # The 23.05 branch ships with Nix 2.11.1
+            install_url: https://releases.nixos.org/nix/nix-2.13.3/install
+            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-23.05"
           - os: macos-12
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/nixpkgs-22.11-darwin"
+            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/nixpkgs-23.05-darwin"
             filter: "-not -name build-std"
     runs-on: ${{ matrix.os }}
     steps:

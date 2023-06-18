@@ -5,9 +5,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+### Added
+* `buildPackage` now supports installing `dylib` targets
+* Added support for sparse registries
+
+### Changed
 * **Breaking** (technically): if `buildPackage` is called _without_ setting
   `cargoArtifacts`, the default `buildDepsOnly` invocation will now stop running
   any installation hooks
+* **Breaking** (technically): `buildPackage` no longer installs cargo binary
+  dependencies (i.e. when the `bindeps` feature is used) by default
+
+### Changed
+* **Breaking**: dropped compatibility for Nix versions below 2.13.3
+* **Breaking**: dropped compatibility for nixpkgs-22.05. nixpkgs-23.05 and
 
 ### [0.12.2] - 2023-06-06
 
@@ -20,15 +32,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * `buildTrunkPackage` will now strip references to store files by default
 * `buildTrunkPackage` will now set the right `wasm-opt` version
-
-### Added
-
-* Support for building `dylib` crates
-
-### Fixed
-
-* **Breaking** When `bindeps` feature is used, the binaries built as dependencies 
-  will not be installed by default anymore
 
 ### [0.12.1] - 2023-04-10
 
