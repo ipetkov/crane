@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v21
+    - uses: cachix/install-nix-action@v22
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v12
@@ -45,9 +45,9 @@ jobs:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: flake checks
-      run: nix flake check --keep-going --print-build-logs ${{ matrix.nixpkgs-override }}
+      run: nix flake check --accept-flake-config --keep-going --print-build-logs ${{ matrix.nixpkgs-override }}
     - name: extra tests
-      run: nix develop ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
+      run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
 
   examples:
     strategy:
@@ -70,7 +70,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v21
+    - uses: cachix/install-nix-action@v22
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v12
@@ -82,7 +82,7 @@ jobs:
         for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }}); do
           pushd "${f}"
           echo "validating ${f}"
-          nix flake check --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          nix flake check --accept-flake-config --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
           popd
         done
 
@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v21
+    - uses: cachix/install-nix-action@v22
     - uses: cachix/cachix-action@v12
       with:
         name: deadnix
@@ -101,6 +101,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v21
+    - uses: cachix/install-nix-action@v22
     - name: check formatting
-      run: nix fmt -- --check .
+      run: nix fmt --accept-flake-config -- --check .
