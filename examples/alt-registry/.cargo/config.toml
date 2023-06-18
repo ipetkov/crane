@@ -1,5 +1,2 @@
 [registries.alexandrie]
 index = "https://github.com/Hirevo/alexandrie-index"
-
-[registries.sparse-crates]
-index = "sparse+https://index.crates.io/"
