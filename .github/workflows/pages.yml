@@ -22,7 +22,7 @@ jobs:
     - name: mdbook build
       run: |
         mkdir output
-        nix build .#book --out-link result --print-build-logs
+        nix build --accept-flake-config .#book --out-link result --print-build-logs
         rsync -r -L ./result/ ./output
     - name: git commit
       working-directory: output
