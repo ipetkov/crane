@@ -12,9 +12,22 @@ function installFromCargoBuildLog() (
   local logs
   logs=$(jq -R 'fromjson?' <"${log}")
 
-  local select_non_test='select(.reason == "compiler-artifact" and .profile.test == false)'
-  local select_bins="${select_non_test} | .executable | select(.!= null)"
-  local select_lib_files="${select_non_test}"'
+  # We automatically ignore any bindeps artifacts as installation candidates.
+  # Note that if the same binary is built both as a bindep artifact for something else and as a
+  # "regular build", cargo will emit a log entry for each, meaning that we will never accidentally
+  # ignore installing a binary that the derivation was intending to build!
+  local select_non_deps_artifact='select(contains("/deps/artifact/") | not)'
+
+  # Only install binaries and libraries from the current workspace as a sanity check
+  local members="$(command cargo metadata --format-version 1 | jq -c '.workspace_members')"
+  local select_non_test_members='select(.reason == "compiler-artifact" and .profile.test == false)
+    | select(.package_id as $pid
+      | '"${members}"'
+      | contains([$pid])
+    )'
+
+  local select_bins="${select_non_test_members}| .executable | select(.!= null) | ${select_non_deps_artifact}"
+  local select_lib_files="${select_non_test_members}"'
     | select(.target.kind
         | contains(["cdylib"])
         or contains(["dylib"])
@@ -22,7 +35,7 @@ function installFromCargoBuildLog() (
     )
     | .filenames[]
     | select(endswith(".rlib") | not)
-  '
+    | '"${select_non_deps_artifact}"
 
   function installArtifacts() {
     local loc=${1?:missing}
@@ -36,14 +49,8 @@ function installFromCargoBuildLog() (
     rmdir --ignore-fail-on-non-empty "${loc}"
   }
 
+  echo "${logs}" | jq -r "${select_lib_files}" | installArtifacts "${dest}/lib"
   echo "${logs}" | jq -r "${select_bins}" | installArtifacts "${dest}/bin"
-
-  command cargo metadata --format-version 1 | jq '.workspace_members[]' | (
-    while IFS= read -r ws_member; do
-      local select_member_libs="select(.package_id == ${ws_member}) | ${select_lib_files}"
-      echo "${logs}" | jq -r "${select_member_libs}" | installArtifacts "${dest}/lib"
-    done
-  )
 
   echo searching for bins/libs complete
 )

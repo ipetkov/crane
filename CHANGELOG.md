@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking** (technically): if `buildPackage` is called _without_ setting
   `cargoArtifacts`, the default `buildDepsOnly` invocation will now stop running
   any installation hooks
+* **Breaking** (technically): `buildPackage` no longer installs cargo binary
+  dependencies (i.e. when the `bindeps` feature is used) by default
 
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.13.3
