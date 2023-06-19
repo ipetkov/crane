@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `inheritCargoArtifactsHook` will now symlink dependency `.rlib` and `.rmeta`
   files. This means that derivations which reuse existing cargo artifacts will
   run faster as fewer files (and bytes!) need to be copied around
+* `cargoTarpaulin`'s default `cargoTarpaulinExtraArgs` no longer include
+  `--skip-clean`
 
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.13.3
