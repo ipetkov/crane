@@ -3,7 +3,7 @@
 }:
 
 { cargoExtraArgs ? ""
-, cargoTarpaulinExtraArgs ? "--out Xml --output-dir $out"
+, cargoTarpaulinExtraArgs ? "--skip-clean --out Xml --output-dir $out"
 , ...
 }@origArgs:
 let
