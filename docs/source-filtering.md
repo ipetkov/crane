@@ -32,7 +32,7 @@ let
   # Only keeps markdown files
   markdownFilter = path: _type: builtins.match ".*md$" path != null;
   markdownOrCargo = path: type:
-    (markdownFilter path type) || (lib.filterCargoSources path type);
+    (markdownFilter path type) || (craneLib.filterCargoSources path type);
 in
 craneLib.buildPackage {
   # other attributes omitted

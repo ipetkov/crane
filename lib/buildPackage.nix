@@ -37,12 +37,11 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
   doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
 
   cargoArtifacts = args.cargoArtifacts or (
-    let
-      depsArgs = args // memoizedArgs // {
-        installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
-      };
-    in
-    buildDepsOnly (removeAttrs depsArgs [ "installPhase" "installPhaseCommand" ])
+    buildDepsOnly (args // memoizedArgs // {
+      installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
+      # NB: we intentionally don't run any hooks here since we don't want to actually install
+      installPhase = "mkdir -p $out";
+    })
   );
 
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''

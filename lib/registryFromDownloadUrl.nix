@@ -4,6 +4,7 @@
 # https://doc.rust-lang.org/cargo/reference/registries.html
 { dl
 , indexUrl
+, registryPrefix ? "registry+"
 , fetchurlExtraArgs ? { }
 }:
 let
@@ -18,7 +19,6 @@ let
 
   fullDownloadUrl = if hasMarker then dl else "${dl}/{crate}/{version}/download";
 
-  registryPrefix = "registry+";
   registryIndexUrl =
     if lib.hasPrefix registryPrefix indexUrl
     then indexUrl
