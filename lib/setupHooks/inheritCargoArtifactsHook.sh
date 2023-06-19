@@ -24,18 +24,15 @@ inheritCargoArtifacts() {
   elif [ -d "${preparedArtifacts}" ]; then
     echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
-    # NB: rustc doesn't like it when artifacts are either symlinks or hardlinks to the store
-    # (it tries to truncate files instead of unlinking and recreating them)
-    # so we're forced to do a full copy here :(
-    #
-    # Notes:
-    # - --no-target-directory to avoid nesting (i.e. `./target/target`)
-    # - preserve timestamps to avoid rebuilding
-    # - no-preserve ownership (root) so we can make the files writable
-    cp -r "${preparedArtifacts}" \
-      --no-target-directory "${cargoTargetDir}" \
-      --preserve=timestamps \
-      --no-preserve=ownership
+    # copy target dir but ignore content-addressed build artifacts
+    rsync -r --chmod=Du=rwx --exclude "*/build/*" --exclude "*/deps/*" --exclude "*/*/build/*" --exclude "*/*/deps/*" "${preparedArtifacts}/" "${cargoTargetDir}/"
+
+    # symlink all remaining content-addressed artifacts
+    pushd "${cargoTargetDir}"
+      for d in $(ls -d */{deps,build} */*/{deps,build}); do
+          ls "${preparedArtifacts}/${d}" | xargs -P 100 -I '##{}##' ln -fs "${preparedArtifacts}/${d}/##{}##" "${d}/##{}##"
+      done
+    popd
 
     # Keep existing permissions (e.g. exectuable), but also make things writable
     # since the store is read-only and cargo would otherwise choke
