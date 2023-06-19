@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 * Added support for the [Trunk](https://trunkrs.dev) wasm app build tool
 
+### Changed
+* `inheritCargoArtifactsHook` will now symlink dependency `.rlib` and `.rmeta`
+  files. This means that derivations which reuse existing cargo artifacts will
+  run faster as fewer files (and bytes!) need to be copied around
+
 ### [0.12.1] - 2023-04-10
 
 ### Changed

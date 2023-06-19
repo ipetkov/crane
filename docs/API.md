@@ -927,6 +927,7 @@ hooks:
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
+* `rsync`
 * `zstd`
 
 ### `craneLib.mkDummySrc`
