@@ -1,4 +1,5 @@
 { makeSetupHook
+, rsync
 }:
 
 makeSetupHook

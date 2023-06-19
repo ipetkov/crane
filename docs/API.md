@@ -622,7 +622,7 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `""`
 * `cargoTarpaulinExtraArgs`: additional flags to be passed in the cargo
   tarpaulin invocation
-  - Default value: `"--skip-clean --out Xml --output-dir $out"`
+  - Default value: `"--out Xml --output-dir $out"`
 
 #### Native build dependencies
 The `cargo-tarpaulin` package is automatically appended as a native build input to any
@@ -935,6 +935,7 @@ hooks:
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
+* `rsync`
 * `zstd`
 
 ### `craneLib.mkDummySrc`
