@@ -622,7 +622,8 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `""`
 * `cargoTarpaulinExtraArgs`: additional flags to be passed in the cargo
   tarpaulin invocation
-  - Default value: `"--out Xml --output-dir $out"`
+  - Default value: `"--skip-clean --out Xml --output-dir $out"`
+* `doNotLinkInheritedArtifacts` will be set to `true` if not specified.
 
 #### Native build dependencies
 The `cargo-tarpaulin` package is automatically appended as a native build input to any
@@ -1357,6 +1358,11 @@ directory using a previous derivation. It takes two positional arguments:
    * If not specified, the value of `$CARGO_TARGET_DIR` will be used
    * If `CARGO_TARGET_DIR` is not set, cargo's default target location  (i.e.
      `./target`) will be used.
+
+Note that as an optimization, some dependency artifacts will be symlinked
+instead of (deeply) copied to `$CARGO_TARGET_DIR`. To disable this behavior set
+`doNotLinkInheritedArtifacts`, and all artifacts will be copied as plain,
+writable files.
 
 **Automatic behavior:** if `cargoArtifacts` is set, then
 `inheritCargoArtifacts "$cargoArtifacts" "$CARGO_TARGET_DIR"` will be run as a
