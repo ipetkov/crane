@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   this behavior, set `doNotLinkInheritedArtifacts = true;`.
 * `cargoTarpaulin` will now set `doNotLinkInheritedArtifacts = true;` unless
   otherwise specified
+* `cargoNextest` will now set `doNotLinkInheritedArtifacts = true;` unless
+  otherwise specified
 
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.13.3

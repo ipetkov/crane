@@ -579,6 +579,7 @@ Except where noted below, all derivation attributes are delegated to
 * `partitionType`: The kind of nextest partition to run (e.g. `"count"` or
   `"hash"` based).
   - Default value: `"count"`
+* `doNotLinkInheritedArtifacts` will be set to `true` if not specified.
 
 #### Native build dependencies
 The `cargo-nextest` package is automatically appended as a native build input to any

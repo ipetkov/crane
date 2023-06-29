@@ -25,6 +25,9 @@ let
     pnameSuffix = "-nextest${extraSuffix}";
     doCheck = args.doCheck or true;
 
+    # cargo-nextest tries to mutate dependency files in place
+    doNotLinkInheritedArtifacts = args.doNotLinkInheritedArtifacts or true;
+
     buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
       mkdir -p $out
       cargo nextest --version
