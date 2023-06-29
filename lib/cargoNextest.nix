@@ -52,7 +52,11 @@ else # First build the tests in one derivation, then run each partition in anoth
       in
       mkCargoDerivation ((mkUpdatedArgs {
         extraSuffix = "-p${toString n}";
-        moreArgs = "${mkArchiveArgs archive} --partition ${partitionType}:${n}/${toString partitions}";
+        moreArgs = builtins.concatStringsSep " " [
+          "${mkArchiveArgs archive}"
+          "--workspace-remap ."
+          "--partition ${partitionType}:${n}/${toString partitions}"
+        ];
       }) // {
         # Everything we need is already in the archive
         cargoArtifacts = null;

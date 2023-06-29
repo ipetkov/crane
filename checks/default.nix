@@ -2,6 +2,7 @@
 
 let
   inherit (pkgs) lib;
+  inherit (pkgs.stdenv) isDarwin;
   onlyDrvs = lib.filterAttrs (_: lib.isDerivation);
 in
 onlyDrvs (lib.makeScope myLib.newScope (self:
@@ -76,6 +77,9 @@ in
           };
 
           doCheck = false; # Tests need llvm-tools installed
+          buildInputs = lib.optionals isDarwin [
+            pkgs.libiconv
+          ];
         }))
       [
         { inherit cargoLock; }
@@ -182,7 +186,13 @@ in
     cargoArtifacts = myLib.buildDepsOnly {
       src = ./dependencyBuildScriptPerms;
       # NB: explicitly build this with no feature flags
+      buildInputs = lib.optionals isDarwin [
+        pkgs.libiconv
+      ];
     };
+    buildInputs = lib.optionals isDarwin [
+      pkgs.libiconv
+    ];
   };
 
   docs = myLib.cargoDoc {
@@ -205,6 +215,9 @@ in
     LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
     nativeBuildInputs = with pkgs; [
       cmake
+    ];
+    buildInputs = lib.optionals isDarwin [
+      pkgs.libiconv
     ];
   };
 
@@ -244,18 +257,22 @@ in
     cargoArtifacts = null;
   };
 
-  manyLibsInstalledAsExpected = pkgs.runCommand "manyLibsInstalledAsExpected" { } ''
-    cat >expected <<EOF
-    liball_types.a
-    liball_types.so
-    libonly_cdylib.so
-    libonly_dylib.so
-    libonly_staticlib.a
-    EOF
+  manyLibsInstalledAsExpected =
+    let
+      ext = if isDarwin then "dylib" else "so";
+    in
+    pkgs.runCommand "manyLibsInstalledAsExpected" { } ''
+      cat >expected <<EOF
+      liball_types.a
+      liball_types.${ext}
+      libonly_cdylib.${ext}
+      libonly_dylib.${ext}
+      libonly_staticlib.a
+      EOF
 
-    diff ./expected <(ls -1 ${self.manyLibs}/lib)
-    touch $out
-  '';
+      diff ./expected <(ls -1 ${self.manyLibs}/lib)
+      touch $out
+    '';
 
   mkDummySrcTests = callPackage ./mkDummySrcTests { };
 
@@ -306,6 +323,9 @@ in
   };
   simpleGit = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git;
+    buildInputs = lib.optionals isDarwin [
+      pkgs.libiconv
+    ];
   };
   simpleGitWorkspaceInheritance = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git-workspace-inheritance;
@@ -356,7 +376,17 @@ in
         ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
           pkgs.gcc10
         ];
+        buildInputs = lib.optionals isDarwin [
+          pkgs.libiconv
+        ];
       };
+
+      extraAllowed = builtins.concatStringsSep "\\|" (lib.optionals isDarwin [
+        ""
+        "libiconv"
+        "libcxx"
+        "apple-framework-CoreFoundation"
+      ]);
     in
     pkgs.runCommand "removeReferencesToVendorDir"
       {
@@ -364,7 +394,7 @@ in
       } ''
       if strings ${crate}/bin/grpcio-test | \
         grep --only-matching '${builtins.storeDir}/[^/]\+' | \
-        grep --invert-match 'glibc\|gcc' | \
+        grep --invert-match 'glibc\|gcc${extraAllowed}' | \
         grep --invert-match '${builtins.storeDir}/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' --count
       then
         echo found references to /nix/store sources
@@ -377,6 +407,9 @@ in
   # Test building a real world example
   ripgrep = myLib.buildPackage {
     inherit (pkgs.ripgrep) pname src version;
+    buildInputs = lib.optionals isDarwin [
+      pkgs.libiconv
+    ];
   };
 
   smoke = callPackage ./smoke.nix { };
@@ -403,6 +436,10 @@ in
       nativeBuildInputs = with pkgs; [
         pkg-config
         openssl
+      ];
+      buildInputs = lib.optionals isDarwin [
+        pkgs.libiconv
+        pkgs.darwin.apple_sdk.frameworks.Security
       ];
     }
   );
@@ -474,10 +511,16 @@ in
       (myLib.buildPackage {
         inherit cargoVendorDir;
         src = myLib.cleanCargoSource ./simple-git;
+        buildInputs = lib.optionals isDarwin [
+          pkgs.libiconv
+        ];
       })
       (myLib.buildPackage {
         inherit cargoVendorDir;
         src = myLib.cleanCargoSource ./simple-git-workspace-inheritance;
+        buildInputs = lib.optionals isDarwin [
+          pkgs.libiconv
+        ];
       })
     ];
 

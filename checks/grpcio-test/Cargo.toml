@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies.grpcio]
 default-features = false
-version = "0.8"
+version = "0.12"
