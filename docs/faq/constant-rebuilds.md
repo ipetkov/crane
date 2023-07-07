@@ -21,7 +21,7 @@ In certain (especially non-trivial) crane-based workflows, it's possible that
 a change to a given file might trigger rebuilds of certain seemingly unrelated derivations.
 This is most often caused by a subtle bug introducing undesired derivation inputs.
 
-## Debugging with nix-diff
+### Debugging with nix-diff
 An efficient way to debug such problems is to use [`nix-diff`] to compare the derivation build plans:
 
 ```sh
@@ -33,7 +33,7 @@ nix show-derivation .#affectedOutput | nix run nixpkgs#jq -- -r 'keys[0]' > afte
 nix run nixpkgs#nix-diff "$(cat before_drv)" "$(cat after_drv)"
 ```
 
-## Debugging with just `nix`
+### Debugging with just `nix`
 Another way to debug such problems is to use `nix derivation show -r` to compare the derivation build plans:
 
 ```sh
@@ -47,3 +47,62 @@ The difference in the highest-level derivation should point to a direct cause of
 
 [`nix-diff`]: https://github.com/Gabriella439/nix-diff
 [source cleaning]: https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-sources
+
+## I've used a source filter but cargo is still rebuilding all dependencies from scratch!
+
+Another source of artifact invalidation is if
+* A different set of dependency crates are being built between derivations
+```nix
+let
+  src = ...;
+in
+craneLib.buildPackage {
+  inherit src;
+
+  cargoArtifacts = craneLib.buildDepsOnly {
+    inherit src;
+    cargoExtraArgs = "-p foo"; # Only build the `foo` crate
+  };
+
+  # Oops, we're only building the `bar` crate now
+  # any dependency crates used by `bar` but not by `foo`
+  # will get built from scratch!
+  cargoExtraArgs = "-p bar";
+}
+```
+* Another reason could be using different feature flags between derivations,
+  which result in setting _different_ feature flags for dependency crates
+  themselves and causing a rebuild
+```nix
+let
+  src = ...;
+in
+craneLib.buildPackage {
+  inherit src;
+
+  cargoArtifacts = craneLib.buildDepsOnly {
+    inherit src;
+    cargoExtraArgs = "--no-default-features"; # Don't use any workspace features
+  };
+
+  # Oops, we're now building with an additional downstream feature flag which
+  # needs to build more crates which we do not have cached!
+  cargoExtraArgs = "--features feature-which-enables-downstream-feature";
+}
+```
+
+If in doubt, double check that the same set of `-p`/`--package` and
+`--features`/`--no-default-features`/`--all-features` flags are used between all
+`buildDepsOnly`/`cargoBuild`/`cargoClippy`/`buildPackage` derivations.
+
+### Mixing `[package]` and `[workspace]` definitions in the top-level `Cargo.toml`
+
+Another potential pitfall is defining both `[package]` and `[workspace]` in the
+project's top-level `Cargo.toml` file. Although cargo allows _both_ to be
+defined, doing so results in cargo only operating on that package by default
+(unless the `--workspace` flag is passed in).
+
+Any subsequent derivations which attempt to build with `-p another-crate` might
+not have their dependencies fully cached. Our recommendation is to only define
+`[package]` in the top-level `Cargo.toml` if the workspace contains a single
+crate; otherwise only `[workspace]` should be defined.
