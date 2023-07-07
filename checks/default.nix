@@ -98,12 +98,12 @@ in
   # https://github.com/ipetkov/crane/issues/356
   cargoTarpaulinAfterClippy = lib.optionalAttrs x64Linux (myLib.cargoTarpaulin {
     src = ./simple;
-      cargoArtifacts = myLib.cargoClippy {
+    cargoArtifacts = myLib.cargoClippy {
+      src = ./simple;
+      cargoArtifacts = myLib.buildDepsOnly {
         src = ./simple;
-        cargoArtifacts = myLib.buildDepsOnly {
-          src = ./simple;
-        };
       };
+    };
   });
 
   compilesFresh = callPackage ./compilesFresh.nix { };
