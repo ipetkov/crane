@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Added support for sparse registries
 
 ### Changed
+* **Breaking**: dropped compatibility for Nix versions below 2.13.3
+* **Breaking**: dropped compatibility for nixpkgs-22.05. nixpkgs-23.05 and
 * **Breaking** (technically): if `buildPackage` is called _without_ setting
   `cargoArtifacts`, the default `buildDepsOnly` invocation will now stop running
   any installation hooks
@@ -23,10 +25,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `cargoTarpaulin` will now set `doNotLinkInheritedArtifacts = true;` unless
   otherwise specified
 * Update `crane-utils` dependencies for successful build in nightly Rust (2023-06-28)
-
-### Changed
-* **Breaking**: dropped compatibility for Nix versions below 2.13.3
-* **Breaking**: dropped compatibility for nixpkgs-22.05. nixpkgs-23.05 and
 
 ### [0.12.2] - 2023-06-06
 
