@@ -28,10 +28,12 @@ inheritCargoArtifacts() {
       echo 'will deep copy artifacts (instead of symlinking) as requested'
 
       # Notes:
+      # - --dereference to follow and deeply resolve any symlinks
       # - --no-target-directory to avoid nesting (i.e. `./target/target`)
       # - preserve timestamps to avoid rebuilding
       # - no-preserve ownership (root) so we can make the files writable
       cp -r "${preparedArtifacts}" \
+        --dereference \
         --no-target-directory "${cargoTargetDir}" \
         --preserve=timestamps \
         --no-preserve=ownership
