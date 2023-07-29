@@ -341,10 +341,11 @@ in
   simpleGitWithHashes = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git;
     outputHashes = {
-      "https://github.com/BurntSushi/byteorder.git" = "sha256-lbSaR262gwth3JRm9P3sp011heqsc5NKKKgVP87NtZw=";
-      "https://github.com/dtolnay/rustversion.git?rev=2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb" = "sha256-deS6eoNuWPZ1V3XO9UzR07vLHZjT9arAYL0xEJCoU6E=";
-      "https://github.com/rust-lang/libc.git?branch=main" = "sha256-EqOlAfqiZdSaruwqWHNT7rR1ADZBCzQVryouhC4liMc=";
-      "https://github.com/seanmonstar/num_cpus.git?tag=v1.13.1" = "sha256-mNMxS/WXjNokO9mFXQSwyuIpIp/n94EQ9Ni0Bl40es8";
+      "git+https://github.com/BurntSushi/byteorder.git#fc27443508f305a7d2effed85558cc6755334d83" = "sha256-lbSaR262gwth3JRm9P3sp011heqsc5NKKKgVP87NtZw=";
+      "git+https://github.com/dtolnay/rustversion.git?rev=2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb#2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb" = "sha256-deS6eoNuWPZ1V3XO9UzR07vLHZjT9arAYL0xEJCoU6E=";
+      "git+https://github.com/rust-lang/libc.git?branch=main#e0ef91094dede9643ddab15abaed699f8aec06df" = "sha256-EqOlAfqiZdSaruwqWHNT7rR1ADZBCzQVryouhC4liMc=";
+      "git+https://github.com/seanmonstar/num_cpus.git?tag=v1.13.1#5f1b03332000b4c4274b5bd35fac516049ff1c6b" = "sha256-mNMxS/WXjNokO9mFXQSwyuIpIp/n94EQ9Ni0Bl40es8";
+
     };
     buildInputs = lib.optionals isDarwin [
       pkgs.libiconv

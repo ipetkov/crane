@@ -92,7 +92,11 @@ let
           inherit (p) git;
           inherit ref;
           rev = p.lockedRev;
-          sha256 = outputHashes.${p.id} or (lib.warnIf (outputHashes != { }) "No output hash provided for ${p.id}" null);
+          sha256 = outputHashes.${p.package.source} or (lib.warnIf
+            (outputHashes != { })
+            "No output hash provided for ${p.package.source}"
+            null
+          );
         };
 
         # NB: we filter out any crates NOT in the lock file
