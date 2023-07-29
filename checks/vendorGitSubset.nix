@@ -5,7 +5,7 @@
 , linkFarmFromDrvs
 , runCommand
 , vendorGitDeps
-, outputHashes ? {}
+, outputHashes ? { }
 }:
 
 let

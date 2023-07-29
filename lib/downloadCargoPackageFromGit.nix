@@ -14,18 +14,20 @@
 }:
 let
   maybeRef = lib.optionalAttrs (ref != null) { inherit ref; };
-  repo = if sha256 == null then
-    builtins.fetchGit (maybeRef // {
-      inherit allRefs rev;
-      url = git;
-      submodules = true;
-    })
-  else
-    fetchgit {
-      inherit rev sha256;
-      url = git;
-      fetchSubmodules = true;
-    };
+  repo =
+    if sha256 == null then
+      builtins.fetchGit
+        (maybeRef // {
+          inherit allRefs rev;
+          url = git;
+          submodules = true;
+        })
+    else
+      fetchgit {
+        inherit rev sha256;
+        url = git;
+        fetchSubmodules = true;
+      };
 
   deps = {
     nativeBuildInputs = [
