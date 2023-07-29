@@ -338,6 +338,18 @@ in
       pkgs.libiconv
     ];
   };
+  simpleGitWithHashes = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./simple-git;
+    outputHashes = {
+      "https://github.com/BurntSushi/byteorder.git" = "sha256-lbSaR262gwth3JRm9P3sp011heqsc5NKKKgVP87NtZw=";
+      "https://github.com/dtolnay/rustversion.git?rev=2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb" = "sha256-deS6eoNuWPZ1V3XO9UzR07vLHZjT9arAYL0xEJCoU6E=";
+      "https://github.com/rust-lang/libc.git?branch=main" = "sha256-EqOlAfqiZdSaruwqWHNT7rR1ADZBCzQVryouhC4liMc=";
+      "https://github.com/seanmonstar/num_cpus.git?tag=v1.13.1" = "sha256-mNMxS/WXjNokO9mFXQSwyuIpIp/n94EQ9Ni0Bl40es8";
+    };
+    buildInputs = lib.optionals isDarwin [
+      pkgs.libiconv
+    ];
+  };
   simpleGitWorkspaceInheritance = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git-workspace-inheritance;
   };
