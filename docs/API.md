@@ -282,7 +282,7 @@ environment variables during the build, you can bring them back via
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
 * `binaryen`
-* `nodePackages.sass`
+* `dart-sass`
 * `trunk`
 * `wasm-bindgen-cli`
 
