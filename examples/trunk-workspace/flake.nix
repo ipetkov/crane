@@ -114,6 +114,12 @@
           pname = "trunk-workspace-client";
           cargoArtifacts = cargoArtifactsWasm;
           trunkIndexPath = "client/index.html";
+          # The version of wasm-bindgen-cli here must match the one from Cargo.lock.
+          wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
+            version = "0.2.87";
+            hash = "sha256-0u9bl+FkXEK2b54n7/l9JOCtKo+pb42GF9E1EnAUQa0=";
+            cargoHash = "sha256-AsZBtE2qHJqQtuCt/wCAgOoxYMfvDh8IzBPAOkYSYko=";
+          };
         });
       in
       {
