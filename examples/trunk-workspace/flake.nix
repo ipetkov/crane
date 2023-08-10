@@ -66,6 +66,13 @@
           inherit src;
           pname = "trunk-workspace";
           version = "0.1.0";
+
+          buildInputs = [
+            # Add additional build inputs here
+          ] ++ lib.optionals pkgs.stdenv.isDarwin [
+            # Additional darwin specific inputs can be set here
+            pkgs.libiconv
+          ];
         };
 
         # Native packages
