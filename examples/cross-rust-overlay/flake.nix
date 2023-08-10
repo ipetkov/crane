@@ -62,7 +62,11 @@
             # currently it would cause some rebuild.
             # We put them here just for a workaround.
             # See: https://github.com/NixOS/nixpkgs/pull/146583
-            depsBuildBuild = [ qemu ];
+            depsBuildBuild = [
+              qemu
+            ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
+              libiconv
+            ];
 
             # Dependencies which need to be build for the current platform
             # on which we are doing the cross compilation. In this case,
@@ -80,8 +84,6 @@
             buildInputs = [
               # Add additional build inputs here
               openssl
-            ] ++ lib.optionals stdenv.isDarwin [
-              libiconv
             ];
 
             # Tell cargo about the linker and an optional emulater. So they can be used in `cargo build`
