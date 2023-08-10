@@ -80,6 +80,8 @@
             buildInputs = [
               # Add additional build inputs here
               openssl
+            ] ++ lib.optionals stdenv.isDarwin [
+              libiconv
             ];
 
             # Tell cargo about the linker and an optional emulater. So they can be used in `cargo build`
