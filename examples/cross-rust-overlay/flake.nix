@@ -64,8 +64,6 @@
             # See: https://github.com/NixOS/nixpkgs/pull/146583
             depsBuildBuild = [
               qemu
-            ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
-              libiconv
             ];
 
             # Dependencies which need to be build for the current platform
@@ -76,6 +74,8 @@
             # overridden above.
             nativeBuildInputs = [
               pkg-config
+            ] ++ lib.optionals stdenv.buildPlatform.isDarwin [
+              libiconv
             ];
 
             # Dependencies which need to be built for the platform on which
