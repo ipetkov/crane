@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* `buildTrunkPackage` will now use `dart-sass` instead of `nodePackages.sass`
+
 ## [0.13.0] - 2023-08-07
 
 ### Added
@@ -27,7 +30,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `cargoTarpaulin` will now set `doNotLinkInheritedArtifacts = true;` unless
   otherwise specified
 * Update `crane-utils` dependencies for successful build in nightly Rust (2023-06-28)
-* `buildTrunkPackage` will now use `dart-sass` instead of `nodePackages.sass`
 
 ## [0.12.2] - 2023-06-06
 
