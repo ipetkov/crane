@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+    # The version of wasm-bindgen-cli needs to match the version in Cargo.lock
+    # Update this to include the version you need
+    nixpkgs-for-wasm-bindgen.url = "github:NixOS/nixpkgs/4e6868b1aa3766ab1de169922bb3826143941973";
+
     crane = {
       url = "github:ipetkov/crane";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +24,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
+  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, nixpkgs-for-wasm-bindgen, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -35,7 +39,11 @@
           # wasm32-unknown-unknown is required for trunk
           targets = [ "wasm32-unknown-unknown" ];
         };
-        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+        craneLib = ((crane.mkLib pkgs).overrideToolchain rustToolchain).overrideScope' (final: prev: {
+          # The version of wasm-bindgen-cli needs to match the version in Cargo.lock. You
+          # can unpin this if your nixpkgs commit contains the appropriate wasm-bindgen-cli version
+          inherit (import nixpkgs-for-wasm-bindgen { inherit system; }) wasm-bindgen-cli;
+        });
 
         # When filtering sources, we want to allow assets other than .rs files
         src = lib.cleanSourceWith {
@@ -55,6 +63,13 @@
           inherit src;
           # We must force the target, otherwise cargo will attempt to use your native target
           CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
+
+          buildInputs = [
+            # Add additional build inputs here
+          ] ++ lib.optionals pkgs.stdenv.isDarwin [
+            # Additional darwin specific inputs can be set here
+            pkgs.libiconv
+          ];
         };
 
         # Build *just* the cargo dependencies, so we can reuse

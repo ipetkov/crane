@@ -13,14 +13,14 @@ name = "git-rev-no-ref"
 version = "0.1.0"
 dependencies = [
  "tokio 1.18.5",
- "tokio 1.20.4",
+ "tokio 1.20.5",
 ]
 
 [[package]]
 name = "pin-project-lite"
-version = "0.2.9"
+version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0a7ae3ac2f1173085d398531c705756c94a4c56843785df85a60c1a0afac116"
+checksum = "2c516611246607d0c04186886dbb3a754368ef82c79e9827a802c6d836dd111c"
 
 [[package]]
 name = "tokio"
@@ -32,8 +32,8 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.20.4"
-source = "git+https://github.com/tokio-rs/tokio?branch=tokio-1.20.x#f3ce29a0038c04094c39915c0221c8e428fe7ac3"
+version = "1.20.5"
+source = "git+https://github.com/tokio-rs/tokio?branch=tokio-1.20.x#edd172cd3257e36cdfb2925716cdfddb91c4c038"
 dependencies = [
  "autocfg",
  "pin-project-lite",
