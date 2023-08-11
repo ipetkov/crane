@@ -42,7 +42,7 @@ runCommandLocal "cargo-git" deps ''
       fi
 
       local dest="$out/$crate"
-      cp -r "$(dirname "$cargoToml")" "$dest"
+      cp -rL "$(dirname "$cargoToml")" "$dest"
       chmod +w "$dest"
       echo '{"files":{}, "package":null}' > "$dest/.cargo-checksum.json"
 
