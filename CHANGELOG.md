@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 * `buildTrunkPackage` will now use `dart-sass` instead of `nodePackages.sass`
+* Vendoring git dependencies will now always resolve symlinks inside of a
+  crate's directory. This allows for symlinks inside of a crate's directory to
+  possibly refer to files at the root of the git repo itself (via symlink) and
+  have those contents preserved during vendoring.
 
 ## [0.13.0] - 2023-08-07
 
