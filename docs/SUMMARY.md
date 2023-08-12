@@ -18,6 +18,7 @@
   * [Cross compiling to windows](./examples/cross-windows.md)
   * [Building Trunk projects](./examples/trunk.md)
   * [Workspace with Trunk](./examples/trunk-workspace.md)
+  * [End-to-End Testing](./examples/end-to-end-testing.md)
 * [Source filtering](./source-filtering.md)
 * [Local development](./local_development.md)
 * [Custom cargo commands](./custom_cargo_commands.md)

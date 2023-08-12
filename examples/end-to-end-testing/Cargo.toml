@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "server",
+    "e2e_tests",
+]
