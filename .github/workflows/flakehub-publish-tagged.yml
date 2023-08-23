@@ -1,4 +1,6 @@
+name: flakehub publish
 on:
+  workflow_dispatch: # for allowing manual triggers of the workflow
   push:
     tags:
       - "v*.*.*"
