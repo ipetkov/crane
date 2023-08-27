@@ -103,6 +103,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-darwin": {
+      "locked": {
+        "lastModified": 1693142236,
+        "narHash": "sha256-ooBPuu7YbHNuNJPVaeUoFSLXPWGujRK0CIV3LLF9tgU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "b80cef7eb8a9bc5b4f94172ebf4749c8ee3d770c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-23.05-darwin",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1693142236,
@@ -141,6 +157,7 @@
         "fenix": "fenix",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
+        "nixpkgs-darwin": "nixpkgs-darwin",
         "nixpkgs-stable": "nixpkgs-stable",
         "rust-overlay": "rust-overlay"
       }

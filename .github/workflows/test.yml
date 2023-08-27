@@ -18,22 +18,23 @@ jobs:
     steps:
       - run: exit 1
     needs:
+      - check-darwin
       - check-dead-code
       - check-fmt
-      - examples
       - tests
 
   tests:
     strategy:
       # Allow other jobs to finish building and cache properly before bailing
       fail-fast: false
+      # Reuse the cache as much as possible, older versions of Nix should evaluate the same
+      max-parallel: 1
       matrix:
         include:
             # Latest and greatest release of Nix
           - install_url: https://nixos.org/nix/install
             # The 23.05 branch ships with Nix 2.13.3
           - install_url: https://releases.nixos.org/nix/nix-2.13.3/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-23.05"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -44,47 +45,21 @@ jobs:
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: flake checks
-      run: nix flake check --accept-flake-config --keep-going --print-build-logs ${{ matrix.nixpkgs-override }}
-    - name: extra tests
-      run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
+    - name: all tests
+      run: nix develop --accept-flake-config --command bash -c 'nixci && ./extra-tests/test.sh'
 
-  examples:
-    strategy:
-      # Allow other jobs to finish building and cache properly before bailing
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            # Latest and greatest release of Nix
-            install_url: https://nixos.org/nix/install
-          - os: ubuntu-latest
-            # The 23.05 branch ships with Nix 2.11.1
-            install_url: https://releases.nixos.org/nix/nix-2.13.3/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-23.05"
-          - os: macos-12
-            # Latest and greatest release of Nix
-            install_url: https://nixos.org/nix/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/nixpkgs-23.05-darwin"
-            filter: "-not -name build-std"
-    runs-on: ${{ matrix.os }}
+  check-darwin:
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v22
-      with:
-        install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v12
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: validate examples
-      run: |
-        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }}); do
-          pushd "${f}"
-          echo "validating ${f}"
-          nix flake check --accept-flake-config --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
-          popd
-        done
+    - run: sed -i'' 's/nixci.nix/nixci-darwin.nix/g' flake.nix
+    - name: examples
+      run: nix develop --accept-flake-config --command nixci
 
   check-dead-code:
     runs-on: ubuntu-latest
