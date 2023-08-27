@@ -7,7 +7,7 @@
 
 { cargoBuildCommand ? "cargoWithProfile build"
 , cargoCheckCommand ? "cargoWithProfile check"
-, cargoExtraArgs ? ""
+, cargoExtraArgs ? "--locked"
 , cargoTestCommand ? "cargoWithProfile test"
 , cargoTestExtraArgs ? ""
 , ...

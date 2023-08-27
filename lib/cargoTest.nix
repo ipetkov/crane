@@ -2,7 +2,7 @@
 }:
 
 { cargoArtifacts
-, cargoExtraArgs ? ""
+, cargoExtraArgs ? "--locked"
 , cargoTestExtraArgs ? ""
 , ...
 }@origArgs:
