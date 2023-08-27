@@ -76,6 +76,7 @@ in
             sha256 = "sha256-sNwizxYVUNyv5InR8HS+CyUsroA79h/FpouS+fMWJUI=";
           };
 
+          cargoExtraArgs = "--offline";
           doCheck = false; # Tests need llvm-tools installed
           buildInputs = lib.optionals isDarwin [
             pkgs.libiconv
@@ -576,6 +577,7 @@ in
     postUnpack = ''
       cd $sourceRoot/workspace
       sourceRoot="."
+      [[ -f Cargo.lock ]] || ln ../Cargo.lock
     '';
     cargoLock = ./workspace-not-at-root/workspace/Cargo.lock;
     cargoToml = ./workspace-not-at-root/workspace/Cargo.toml;

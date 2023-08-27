@@ -4,7 +4,7 @@
 
 { cargoArtifacts
 , cargoClippyExtraArgs ? "--all-targets"
-, cargoExtraArgs ? ""
+, cargoExtraArgs ? "--locked"
 , ...
 }@origArgs:
 let

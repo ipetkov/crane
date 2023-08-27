@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* **Breaking** (technically): `buildDepsOnly`, `buildPackage`, `cargoBuild`,
+  `cargoClippy`, `cargoDoc`, `cargoLlvmCov`, and `cargoTest`'s defaults have
+  been changed such that if `cargoExtraArgs` have not been set, a default value
+  of `--locked` will be used. This ensures that a project's committed
+  `Cargo.lock` is exactly what is expected (without implicit changes at build
+  time) but this may end up rejecting builds which were previously passing. To
+  get the old behavior back, set `cargoExtraArgs = "";`
+
 ## [0.13.1] - 2023-08-22
 
 ### Changed

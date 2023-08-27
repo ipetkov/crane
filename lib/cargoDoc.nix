@@ -2,7 +2,7 @@
 }:
 
 { cargoDocExtraArgs ? "--no-deps"
-, cargoExtraArgs ? ""
+, cargoExtraArgs ? "--locked"
 , ...
 }@origArgs:
 let

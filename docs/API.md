@@ -113,7 +113,7 @@ to influence its behavior.
   - Default value: `"--all-targets"` if `doCheck` is set to true, `""` otherwise
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
   - Default value: `"cargo test --profile release"`
@@ -197,7 +197,7 @@ install hooks.
       altogether.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
   - Default value: `"cargo test --profile release"`
@@ -363,7 +363,7 @@ Except where noted below, all derivation attributes are delegated to
 #### Optional attributes
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -403,7 +403,7 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `"--all-targets"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 
 #### Native build dependencies
 The `clippy` package is automatically appended as a native build input to any
@@ -447,7 +447,7 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `"--no-deps"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -517,7 +517,7 @@ Except where noted below, all derivation attributes are delegated to
 
 #### Optional attributes
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
-  - Default value: `""`
+  - Default value: `"--locked"`
 * `cargoLlvmCovCommand`: cargo-llvm-cov command to run
   - Default value: `"test"`
 * `cargoLlvmCovExtraArgs`: additional flags to be passed in the cargo
@@ -653,7 +653,7 @@ Except where noted below, all derivation attributes are delegated to
 
 #### Optional attributes
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
-  - Default value: `""`
+  - Default value: `"--locked"`
 * `cargoTestArgs`: additional flags to be passed in the cargo
   invocation
   - Default value: `""`

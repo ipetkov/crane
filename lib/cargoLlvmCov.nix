@@ -2,7 +2,7 @@
 , cargo-llvm-cov
 }:
 
-{ cargoExtraArgs ? ""
+{ cargoExtraArgs ? "--locked"
 , cargoLlvmCovCommand ? "test"
 , cargoLlvmCovExtraArgs ? "--lcov --output-path $out"
 , ...
