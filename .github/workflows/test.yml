@@ -45,12 +45,8 @@ jobs:
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix eval .#nixci --json || echo could not eval
     - name: all tests
-      #run: nix develop --accept-flake-config --command bash -c 'nixci && ./extra-tests/test.sh'
-      run: nix develop --accept-flake-config --command nixci --verbose
-    - name: extra tests
-      run: nix develop --accept-flake-config --command ./extra-tests/test.sh
+      run: nix develop --accept-flake-config --command bash -c 'nixci && ./extra-tests/test.sh'
 
   check-darwin:
     runs-on: macos-12
@@ -62,9 +58,8 @@ jobs:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix develop --accept-flake-config --command sed -i'' 's/nixci.nix/nixci-darwin.nix/g' flake.nix
-    - run: nix eval .#nixci --json || echo could not eval
     - name: examples
-      run: nix develop --accept-flake-config --command nixci --verbose
+      run: nix develop --accept-flake-config --command nixci
 
   check-dead-code:
     runs-on: ubuntu-latest
