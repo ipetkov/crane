@@ -9,7 +9,7 @@ let
       inherit (locked) type owner repo rev narHash;
     in
     builtins.fetchTarball {
-      url = "${type}:${owner}:${repo}/${rev}";
+      url = "https://github.com/${owner}/${repo}/archive/${rev}.tar.gz";
       sha256 = narHash;
     };
 
