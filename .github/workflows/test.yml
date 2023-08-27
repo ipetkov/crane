@@ -57,7 +57,7 @@ jobs:
       with:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: sed -i'' 's/nixci.nix/nixci-darwin.nix/g' flake.nix
+    - run: nix develop --accept-flake-config --command sed -i'' 's/nixci.nix/nixci-darwin.nix/g' flake.nix
     - name: examples
       run: nix develop --accept-flake-config --command nixci
 

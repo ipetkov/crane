@@ -119,6 +119,7 @@
             jq
             mdbook
             nixpkgs-fmt
+            gnused
           ] ++ (if pkgs ? nixci then [ pkgs.nixci ] else [ ]);
         };
       });
