@@ -23,7 +23,7 @@
     extra-trusted-public-keys = [ "crane.cachix.org-1:8Scfpmn9w+hGdXH/Q9tTLiYAE/2dnJYRJP7kl80GuRk=" ];
   };
 
-  outputs = { nixpkgs, flake-utils, rust-overlay, ... }:
+  outputs = inputs@{ nixpkgs, flake-utils, rust-overlay, ... }:
     let
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
@@ -33,6 +33,10 @@
       inherit mkLib;
 
       overlays.default = _final: _prev: { };
+
+      nixci = import ./nixci.nix {
+        inherit inputs;
+      };
 
       templates = rec {
         alt-registry = {
@@ -120,7 +124,7 @@
             jq
             mdbook
             nixpkgs-fmt
-          ];
+          ] ++ (if pkgs ? nixci then [ pkgs.nixci ] else [ ]);
         };
       });
 }
