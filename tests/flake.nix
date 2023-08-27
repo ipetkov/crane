@@ -19,5 +19,5 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = _: {};
+  outputs = _: { };
 }
