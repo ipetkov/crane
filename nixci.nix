@@ -8,10 +8,7 @@ let
       locked = nodes.${node}.locked;
       inherit (locked) type owner repo rev narHash;
     in
-    builtins.fetchTarball {
-      url = "https://github.com/${owner}/${repo}/archive/${rev}.tar.gz";
-      sha256 = narHash;
-    };
+    "${type}:${owner}/${repo}/${rev}";
 
   nixpkgs-unstable = getTarball
     (builtins.fromJSON (builtins.readFile ./flake.lock)).nodes

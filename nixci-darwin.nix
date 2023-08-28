@@ -9,10 +9,7 @@ let
       locked = nodes.${node}.locked;
       inherit (locked) type owner repo rev narHash;
     in
-    builtins.fetchTarball {
-      url = "https://github.com/${owner}/${repo}/archive/${rev}.tar.gz";
-      sha256 = narHash;
-    };
+    "${type}:${owner}/${repo}/${rev}";
 
   nixpkgs-darwin = getTarball "nixpkgs-darwin";
   testInputs = lib.flip lib.mapAttrs nodes.root.inputs (_: getTarball);
