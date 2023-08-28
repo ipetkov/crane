@@ -46,7 +46,10 @@ jobs:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: all tests
-      run: nix develop --accept-flake-config --command bash -c 'nixci && ./extra-tests/test.sh'
+      # FIXME: unpin this after 0.1.4+ is available in nixpkgs
+      run: nix run github:srid/nixci/0cbdbd4f7a8c82dbb61217e0447d39dd6f4024ad#nixci -- . -- -L
+    - name: extra tests
+      run: nix develop --accept-flake-config --command ./extra-tests/test.sh
 
   check-darwin:
     runs-on: macos-12
@@ -59,7 +62,8 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix develop --accept-flake-config --command sed -i'' 's/nixci.nix/nixci-darwin.nix/g' flake.nix
     - name: examples
-      run: nix develop --accept-flake-config --command nixci
+      # FIXME: unpin this after 0.1.4+ is available in nixpkgs
+      run: nix run github:srid/nixci/0cbdbd4f7a8c82dbb61217e0447d39dd6f4024ad#nixci -- . -- -L
 
   check-dead-code:
     runs-on: ubuntu-latest
