@@ -47,7 +47,7 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: all tests
       # FIXME: unpin this after 0.1.4+ is available in nixpkgs
-      run: nix run github:srid/nixci/0cbdbd4f7a8c82dbb61217e0447d39dd6f4024ad#nixci -- . -- -L
+      run: nix run github:srid/nixci/0cbdbd4f7a8c82dbb61217e0447d39dd6f4024ad#default -- . -- -L
     - name: extra tests
       run: nix develop --accept-flake-config --command ./extra-tests/test.sh
 
@@ -63,7 +63,7 @@ jobs:
     - run: nix develop --accept-flake-config --command sed -i'' 's/nixci.nix/nixci-darwin.nix/g' flake.nix
     - name: examples
       # FIXME: unpin this after 0.1.4+ is available in nixpkgs
-      run: nix run github:srid/nixci/0cbdbd4f7a8c82dbb61217e0447d39dd6f4024ad#nixci -- . -- -L
+      run: nix run github:srid/nixci/0cbdbd4f7a8c82dbb61217e0447d39dd6f4024ad#default -- . -- -L
 
   check-dead-code:
     runs-on: ubuntu-latest
