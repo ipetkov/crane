@@ -30,11 +30,11 @@ jobs:
       matrix:
         include:
             # Latest and greatest release of Nix
-          - install_url: https://nixos.org/nix/install
-            nixci: '.#nixci-checks'
+          - nixci: '.#nixci-checks'
+            install_url: https://nixos.org/nix/install
             # The 23.05 branch ships with Nix 2.13.3
-          - install_url: https://releases.nixos.org/nix/nix-2.13.3/install
-            nixci: '.#nixci-checks-stable'
+          - nixci: '.#nixci-checks-stable'
+            install_url: https://releases.nixos.org/nix/nix-2.13.3/install
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
