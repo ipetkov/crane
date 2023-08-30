@@ -2,6 +2,7 @@
 
 let
   lib = inputs.nixpkgs.lib;
+  inherit (lib.attrsets) unionOfDisjoint;
 
   getTarball = nodes: node:
     let
@@ -33,16 +34,25 @@ let
         };
       };
     });
-in
-lib.foldl lib.attrsets.unionOfDisjoint
-{
-  checks.dir = ".";
-  checks-stable = {
+
+  nixci-examples = lib.fold unionOfDisjoint {} [
+    (examples true)
+    (examples false)
+  ];
+
+  nixci-checks.checks.dir = ".";
+  nixci-checks-stable.checks-stable = {
     dir = ".";
     overrideInputs.nixpkgs = testInputs.nixpkgs-stable;
   };
+
+  combined = {
+    inherit
+      nixci-checks
+      nixci-checks-stable
+      nixci-examples;
+    };
+in
+unionOfDisjoint combined {
+  nixci = lib.foldl unionOfDisjoint {} (builtins.attrValues combined);
 }
-  [
-    (examples true)
-    (examples false)
-  ]

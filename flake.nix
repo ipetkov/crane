@@ -23,15 +23,15 @@
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
       };
+
+      nixci-configs = import ./nixci.nix {
+        inherit inputs;
+      };
     in
-    {
+    (nixpkgs.lib.attrsets.unionOfDisjoint nixci-configs {
       inherit mkLib;
 
       overlays.default = _final: _prev: { };
-
-      nixci = import ./nixci.nix {
-        inherit inputs;
-      };
 
       templates = rec {
         alt-registry = {
@@ -80,7 +80,7 @@
           path = ./examples/trunk-workspace;
         };
       };
-    } // flake-utils.lib.eachDefaultSystem (system:
+    }) // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
