@@ -4,55 +4,48 @@ let
   lib = inputs.nixpkgs.lib;
   inherit (lib.attrsets) unionOfDisjoint;
 
-  getTarball = nodes: node:
+  getFlakeRefFrom = nodes: node:
     let
       locked = nodes.${node}.locked;
       inherit (locked) type owner repo rev narHash;
     in
     "${type}:${owner}/${repo}/${rev}";
 
-  nixpkgs-unstable = getTarball
+  nixpkgs-unstable = getFlakeRefFrom
     (builtins.fromJSON (builtins.readFile ./flake.lock)).nodes
     "nixpkgs";
 
-  testInputs =
-    let
-      nodes = (builtins.fromJSON (builtins.readFile ./tests/flake.lock)).nodes;
-    in
-    lib.flip lib.mapAttrs nodes.root.inputs (_: getTarball nodes);
+  nodes = (builtins.fromJSON (builtins.readFile ./tests/flake.lock)).nodes;
+  getFlakeRef = getFlakeRefFrom nodes;
+  testInputs = lib.flip lib.mapAttrs nodes.root.inputs (_: getFlakeRef);
 
-  examples = stable: lib.flip lib.mapAttrs'
+  examples = suffix: nixpkgs: lib.flip lib.mapAttrs'
     (lib.filterAttrs (_: t: t == "directory") (builtins.readDir ./examples))
     (name: _: {
-      name = "example-${name}${lib.optionalString stable "-stable"}";
+      name = "example-${name}${suffix}";
       value = {
         dir = "examples/${name}";
-        overrideInputs = testInputs // lib.optionalAttrs (!stable) {
-          nixpkgs = nixpkgs-unstable;
+        overrideInputs = testInputs // lib.optionalAttrs (nixpkgs != null) {
+          inherit nixpkgs;
         } // {
           crane = ./.;
         };
       };
     });
 
-  nixci-examples = lib.fold unionOfDisjoint {} [
-    (examples true)
-    (examples false)
-  ];
-
-  nixci-checks.checks.dir = ".";
-  nixci-checks-stable.checks-stable = {
-    dir = ".";
-    overrideInputs.nixpkgs = testInputs.nixpkgs-stable;
-  };
-
   combined = {
-    inherit
-      nixci-checks
-      nixci-checks-stable
-      nixci-examples;
+    nixci-examples = lib.fold unionOfDisjoint { } [
+      (examples "-stable" null)
+      (examples "" nixpkgs-unstable)
+    ];
+    nixci-examples-darwin = examples "-darwin" (getFlakeRef "nixpkgs-darwin");
+    nixci-checks.checks.dir = ".";
+    nixci-checks-stable.checks-stable = {
+      dir = ".";
+      overrideInputs.nixpkgs = testInputs.nixpkgs-stable;
     };
+  };
 in
 unionOfDisjoint combined {
-  nixci = lib.foldl unionOfDisjoint {} (builtins.attrValues combined);
+  nixci = lib.foldl unionOfDisjoint { } (builtins.attrValues combined);
 }
