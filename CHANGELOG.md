@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `Cargo.lock` is exactly what is expected (without implicit changes at build
   time) but this may end up rejecting builds which were previously passing. To
   get the old behavior back, set `cargoExtraArgs = "";`
+* Fixed a bug when testing proc macro crates with `cargoNextest` on macO. ([#376](https://github.com/ipetkov/crane/pull/376))
 
 ## [0.13.1] - 2023-08-22
 
