@@ -24,6 +24,12 @@ let
     partitionType = "hash";
     cargoArtifacts = null;
   };
+
+  nextestProcMacro = cargoNextest {
+    src = ./proc-macro;
+    pname = "nextest-proc-macro";
+    cargoArtifacts = null;
+  };
 in
 runCommand "nextestTests"
 {
@@ -31,6 +37,7 @@ runCommand "nextestTests"
     nextestSimple
     nextestPartitionsCount
     nextestPartitionsHash
+    nextestProcMacro
   ];
 } ''
   mkdir -p $out

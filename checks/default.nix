@@ -330,6 +330,10 @@ in
 
   nextest = callPackage ./nextest.nix { };
 
+  procMacro = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./proc-macro;
+  };
+
   simple = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple;
   };
