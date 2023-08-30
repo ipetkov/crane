@@ -1,5 +1,7 @@
 { cargo-nextest
+, rustc
 , lib
+, stdenv
 , mkCargoDerivation
 , runCommand
 }:
@@ -28,6 +30,11 @@ let
     buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
       mkdir -p $out
       cargo nextest --version
+    '';
+
+    # Work around Nextest bug: https://github.com/nextest-rs/nextest/issues/267
+    preCheck = (args.preCheck or "") + lib.optionalString stdenv.isDarwin ''
+      export DYLD_FALLBACK_LIBRARY_PATH=$(${rustc}/bin/rustc --print sysroot)/lib
     '';
 
     checkPhaseCargoCommand = "cargo nextest ${cmd} $" + "{CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE} ${cargoExtraArgs} ${cargoNextestExtraArgs} ${moreArgs}";
