@@ -142,18 +142,17 @@
           drv = myServer;
         };
 
-        devShells.default = pkgs.mkShell {
-          inputsFrom = builtins.attrValues self.checks;
+        devShells.default = craneLib.devShell {
+          # Inherit inputs from checks.
+          checks = self.checks.${system};
 
           shellHook = ''
             export CLIENT_DIST=$PWD/client/dist;
           '';
 
-          # Extra inputs can be added here
-          nativeBuildInputs = with pkgs; [
-            cargo
-            rustc
-            trunk
+          # Extra inputs can be added here; cargo and rustc are provided by default.
+          packages = [
+            pkgs.trunk
           ];
         };
       });

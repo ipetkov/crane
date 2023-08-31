@@ -5,11 +5,13 @@ shells)](https://nix.dev/tutorials/ad-hoc-developer-environments) are extremely
 powerful when it comes to locally developing with the exact same dependencies
 used when building packages.
 
-To get started, declare a default devShell in `flake.nix` and run `nix develop`
-in the project directory. Then, you can use something like
+To get started, declare a default `devShell` in `flake.nix` using
+[`craneLib.devShell`](API.md#cranelibdevshell) and run `nix develop` in the
+project directory. Then, you can use something like
 [`direnv`](https://direnv.net) or
 [`nix-direnv`](https://github.com/nix-community/nix-direnv) to automatically
-enter and exit a development shell when you enter or exit the project directory!
+enter and exit a development shell when you enter or exit the project
+directory!
 
 Sample `flake.nix`:
 ```nix
@@ -50,7 +52,7 @@ Sample `flake.nix`:
       {
         packages.default = my-crate;
 
-        devShells.default = pkgs.mkShell {
+        devShells.default = craneLib.devShell {
           # Additional dev-shell environment variables can be set directly
           MY_CUSTOM_DEV_URL = "http://localhost:3000";
 
@@ -58,13 +60,10 @@ Sample `flake.nix`:
           inputsFrom = [ my-crate ];
 
           # Extra inputs (only used for interactive development)
-          # can be added here
-          nativeBuildInputs = with pkgs; [
-            cargo
-            rustc
-
-            cargo-audit
-            cargo-watch
+          # can be added here; cargo and rustc are provided by default.
+          packages = [
+            pkgs.cargo-audit
+            pkgs.cargo-watch
           ];
         };
       });
