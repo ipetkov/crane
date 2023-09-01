@@ -16,7 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   get the old behavior back, set `cargoExtraArgs = "";`
 * **Breaking**: `cargoDoc` will no longer install cargo artifacts by default.
   Set `doInstallCargoArtifacts = true;` to get the old behavior back.
-* Fixed a bug when testing proc macro crates with `cargoNextest` on macO. ([#376](https://github.com/ipetkov/crane/pull/376))
+* `cargoDoc` will now install generated documentation in `$out/share/doc`
+* Fixed a bug when testing proc macro crates with `cargoNextest` on macOS.
+  ([#376](https://github.com/ipetkov/crane/pull/376))
 
 ## [0.13.1] - 2023-08-22
 
