@@ -72,9 +72,10 @@
           # Inherit inputs from checks.
           checks = self.checks.${system};
 
-          # Extra inputs can be added here; cargo and rustc are provided by default.
+          # Extra inputs can be added here; cargo and rustc are provided by default
+          # from the toolchain that was specified earlier.
           packages = [
-            pkgs.rustWithWasiTarget
+            # rustWithWasiTarget
           ];
         };
       });
