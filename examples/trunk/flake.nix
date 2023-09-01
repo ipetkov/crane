@@ -122,7 +122,7 @@
 
         devShells.default = craneLib.devShell {
           # Inherit inputs from checks.
-          checks = builtins.attrValues self.checks.${system};
+          checks = self.checks.${system};
 
           # Additional dev-shell environment variables can be set directly
           # MY_CUSTOM_DEVELOPMENT_VAR = "something else";
