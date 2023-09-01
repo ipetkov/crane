@@ -785,9 +785,6 @@ will be set as environment variables in the resulting shell.
   these packages are _not_ added to the result environment; use
   `packages` for that.
 * `packages`: A list of extra packages to add to the created shell environment.
-* `rust-analyzer`: The [`rust-analyzer`](https://rust-analyzer.github.io/)
-  language server. If set to `null`, `rust-analyzer` is not included in the
-  created shell environment.
 * `shellHook`: A string of bash statements that will be executed when the shell
   is entered with `nix develop`.
 
@@ -804,10 +801,6 @@ craneLib.devShell {
 
   # Set a `cargo-nextest` profile:
   NEXTEST_PROFILE = "local";
-
-  # `rust-analyzer` is included by default;
-  # disable it by setting it to `null`:
-  rust-analyzer = null;
 }
 ```
 

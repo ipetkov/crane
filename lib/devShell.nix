@@ -3,16 +3,11 @@
 , rustPlatform
 , cargo
 , rustc
-, rust-analyzer
 }:
-let
-  default-rust-analyzer = rust-analyzer;
 
-in
 { checks ? { }
 , inputsFrom ? [ ]
 , packages ? [ ]
-, rust-analyzer ? default-rust-analyzer
 , ...
 }@args:
 let
@@ -22,7 +17,6 @@ let
     "checks"
     "inputsFrom"
     "nativeBuildInputs"
-    "rust-analyzer"
   ];
 in
 mkShell (cleanedArgs // {
@@ -33,9 +27,5 @@ mkShell (cleanedArgs // {
       rustc
       cargo
     ]
-    ++ lib.optional (rust-analyzer != null) rust-analyzer
     ++ packages;
-}
-  // lib.optionalAttrs (rust-analyzer != null) {
-  RUST_SRC_PATH = rustPlatform.rustLibSrc;
 })
