@@ -15,4 +15,6 @@ mkCargoDerivation (args // {
   pnameSuffix = "-doc";
 
   buildPhaseCargoCommand = "cargoWithProfile doc ${cargoExtraArgs} ${cargoDocExtraArgs}";
+
+  doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
 })

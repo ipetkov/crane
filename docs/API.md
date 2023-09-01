@@ -431,6 +431,7 @@ Except where noted below, all derivation attributes are delegated to
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
     is selected; setting it to `""` will omit specifying a profile
     altogether.
+* `doInstallCargoArtifacts` will default to `false` if not specified
 * `pnameSuffix` will be set to `"-doc"`
 
 #### Required attributes
