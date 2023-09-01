@@ -6,9 +6,9 @@
 , pkgs
 }:
 
-{ checks ? {}
-, inputsFrom ? []
-, packages ? []
+{ checks ? { }
+, inputsFrom ? [ ]
+, packages ? [ ]
 , rust-analyzer ? pkgs.rust-analyzer
 , ...
 }@args:
@@ -33,6 +33,6 @@ mkShell (cleanedArgs // {
     ++ lib.optional (rust-analyzer != null) rust-analyzer
     ++ packages;
 }
-// lib.optionalAttrs (rust-analyzer != null) {
+  // lib.optionalAttrs (rust-analyzer != null) {
   RUST_SRC_PATH = rustPlatform.rustLibSrc;
 })
