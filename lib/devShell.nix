@@ -3,13 +3,16 @@
 , rustPlatform
 , cargo
 , rustc
-, pkgs
+, rust-analyzer
 }:
+let
+  default-rust-analyzer = rust-analyzer;
 
+in
 { checks ? { }
 , inputsFrom ? [ ]
 , packages ? [ ]
-, rust-analyzer ? pkgs.rust-analyzer
+, rust-analyzer ? default-rust-analyzer
 , ...
 }@args:
 let
