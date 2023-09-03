@@ -1,7 +1,7 @@
 { cargoAudit
 , fetchFromGitHub
 , linkFarmFromDrvs
-, runCommandLocal
+, runCommand
 }:
 
 let
@@ -17,7 +17,7 @@ let
 
   simpleWithAuditToml = (auditWith "simple-with-audit-toml" ./simple-with-audit-toml);
 
-  containsAuditTomlInSrc = runCommandLocal "containsAuditTomlInSrc" { } ''
+  containsAuditTomlInSrc = runCommand "containsAuditTomlInSrc" { } ''
     if [[ -f ${simpleWithAuditToml.src}/.cargo/audit.toml ]]; then
       touch $out
     else

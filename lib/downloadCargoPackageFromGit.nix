@@ -2,7 +2,7 @@
 , craneUtils
 , jq
 , lib
-, runCommandLocal
+, runCommand
 }:
 
 { git
@@ -26,7 +26,7 @@ let
     ];
   };
 in
-runCommandLocal "cargo-git" deps ''
+runCommand "cargo-git" deps ''
   mkdir -p $out
   existing_crates=()
   while read -r cargoToml; do
