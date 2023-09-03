@@ -766,6 +766,55 @@ raised during evaluation.
   - Default value: `"0.0.1"` if the specified Cargo.toml file did not
     include a version
 
+### `craneLib.devShell`
+
+`devShell :: set -> drv`
+
+A thin wrapper around
+[`pkgs.mkShell`](https://nixos.org/manual/nixpkgs/stable/#sec-pkgs-mkShell) for
+creating development shells for use with `nix develop` (see [“Local
+Development”](local_development.md)). Except where noted below, all derivation
+attributes are passed straight through, so any `mkShell` behavior can be used
+as expected: namely, all key-value pairs other than those `mkShell` consumes
+will be set as environment variables in the resulting shell.
+
+#### Optional attributes
+* `checks`: A set of checks to inherit inputs from, typically
+  `self.checks.${system}`. Build inputs from the values in this attribute set
+  are added to the created shell environment for interactive use.
+* `inputsFrom`: A list of extra packages to inherit inputs from. Note that
+  these packages are _not_ added to the result environment; use
+  `packages` for that.
+* `packages`: A list of extra packages to add to the created shell environment.
+* `shellHook`: A string of bash statements that will be executed when the shell
+  is entered with `nix develop`.
+
+See the [quick start example](examples/quick-start.md) for usage in a
+`flake.nix` file.
+
+```nix
+craneLib.devShell {
+  checks = self.checks.${system};
+
+  packages = [
+    pkgs.ripgrep
+  ];
+
+  # Set a `cargo-nextest` profile:
+  NEXTEST_PROFILE = "local";
+}
+```
+
+```nix
+craneLib.devShell {
+  checks = {
+    my-package-clippy = craneLib.cargoClippy commonArgs;
+    my-package-doc = craneLib.cargoDoc commonArgs;
+    my-package-nextest = craneLib.cargoNextest commonArgs;
+  };
+}
+```
+
 ### `craneLib.downloadCargoPackage`
 
 `downloadCargoPackage :: set -> drv`

@@ -124,16 +124,16 @@
           drv = my-crate;
         };
 
-        devShells.default = pkgs.mkShell {
-          inputsFrom = builtins.attrValues self.checks.${system};
+        devShells.default = craneLib.devShell {
+          # Inherit inputs from checks.
+          checks = self.checks.${system};
 
           # Additional dev-shell environment variables can be set directly
           # MY_CUSTOM_DEVELOPMENT_VAR = "something else";
 
-          # Extra inputs can be added here
-          nativeBuildInputs = with pkgs; [
-            cargo
-            rustc
+          # Extra inputs can be added here; cargo and rustc are provided by default.
+          packages = [
+            # pkgs.ripgrep
           ];
         };
       });

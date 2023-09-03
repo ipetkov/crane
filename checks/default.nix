@@ -237,6 +237,14 @@ in
     src = ./various-targets;
   };
 
+  devShell = myLib.devShell {
+    checks = {
+      simple = myLib.buildPackage {
+        src = ./simple;
+      };
+    };
+  };
+
   features = callPackage ./features { };
 
   flakePackages =

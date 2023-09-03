@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* Added `devShell`, a thin wrapper around `pkgs.mkShell` which automatically
+  provides `cargo` and `rustc`.
+
 ### Changed
 * **Breaking** (technically): `buildDepsOnly`, `buildPackage`, `cargoBuild`,
   `cargoClippy`, `cargoDoc`, `cargoLlvmCov`, and `cargoTest`'s defaults have
