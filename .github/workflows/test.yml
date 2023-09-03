@@ -47,7 +47,7 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: all tests
       # FIXME: unpin this after 0.1.4+ is available in nixpkgs
-      run: nix run github:ipetkov/nixci/170eb563bd58b22803654971321c41d41ef7f03e#default -- --uncached '${{ matrix.nixci }}' -- -L
+      run: nix run github:ipetkov/nixci/b1573f3b27f07e6416932ec6100430c1dfb83e14#default -- --uncached '${{ matrix.nixci }}' -- -L
     - name: extra tests
       run: nix develop --accept-flake-config --command ./extra-tests/test.sh
 
@@ -62,7 +62,7 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: examples
       # FIXME: unpin this after 0.1.4+ is available in nixpkgs
-      run: nix run github:ipetkov/nixci/170eb563bd58b22803654971321c41d41ef7f03e#default -- --uncached .#nixci-darwin -- -L
+      run: nix run github:ipetkov/nixci/b1573f3b27f07e6416932ec6100430c1dfb83e14#default -- --uncached .#nixci-darwin -- -L
 
   check-dead-code:
     runs-on: ubuntu-latest
