@@ -1439,16 +1439,15 @@ identical files against a directory of previously prepared cargo artifacts.
 It takes three positional arguments:
 1. the installation directory for the output.
    * An error will be raised if not specified
-   * If the specified path is a directory which exists then the current cargo
-     artifacts will be compared with the contents of said directory. Any files
-     whose contents and paths match will be symbolically linked together to
-     reduce the size of the data stored in the Nix store.
 1. the path to cargo's artifact directory
    * An error will be raised if not specified
 1. a path to the previously prepared cargo artifacts
    * An error will be raised if not specified
    * `/dev/null` can be specified here if there is no previous directory to
      deduplicate against
+
+'symlinks.tar' will be created in the output directory in this case. It contains
+symlinks to all of the dep files in this output, simplifying the untar behaviour.
 
 Defines `prepareAndInstallCargoArtifactsDir()` which handles installing cargo's
 artifact directory to the derivation's output. It takes three positional
