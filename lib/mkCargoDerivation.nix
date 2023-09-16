@@ -8,6 +8,7 @@
 , rsync
 , stdenv
 , vendorCargoDeps
+, writeShellApplication
 , zstd
 }:
 
@@ -39,12 +40,54 @@ let
     "pnameSuffix"
     "stdenv"
   ];
+
+  rustcWrapper = writeShellApplication {
+    name = "rustc-wrapper";
+    text = ''
+      set -euo pipefail
+
+      args=("$@")
+
+      temp_dir=$(mktemp -d)
+      trap 'rm -rf -- "$temp_dir"' EXIT
+
+      for i in "''${!args[@]}"; do
+        if [[ "''${args[i]}" == --out-dir=* ]]; then
+          current_out_dir="''${args[i]#--out-dir=}"
+          args[i]="--out-dir=$temp_dir"
+          break
+        elif [[ "''${args[i]}" == --out-dir ]]; then
+          current_out_dir="''${args[i+1]}"
+          args[i+1]="$temp_dir"
+          break
+        fi
+      done
+
+      if [[ -v current_out_dir ]]; then
+        stderr="$temp_dir/crane_stderr"
+        set +e
+        stdout=$("''${args[@]}" 2>"$stderr")
+        exit_code=$?
+        set -e
+        stderr_text=$(cat "$stderr")
+        rm "$stderr"
+        cp -r "$temp_dir/." "$current_out_dir"
+        echo -n "$stdout"
+        echo -n "$stderr_text" >&2
+        exit $exit_code
+      else
+        exec "$@"
+      fi
+    '';
+  };
 in
 chosenStdenv.mkDerivation (cleanedArgs // {
   inherit cargoArtifacts;
 
   pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
   version = args.version or crateName.version;
+
+  RUSTC_WRAPPER="${rustcWrapper}/bin/rustc-wrapper";
 
   # Controls whether cargo's `target` directory should be copied as an output
   doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;

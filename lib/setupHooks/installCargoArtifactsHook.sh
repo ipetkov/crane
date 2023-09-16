@@ -25,23 +25,16 @@ dedupAndInstallCargoArtifactsDir() {
 
   mkdir -p "${dest}"
 
-  if [ -d "${prevCargoTargetDir}" ]; then
-    echo "symlinking duplicates in ${cargoTargetDir} to ${prevCargoTargetDir}"
-
-    while read -r fullTargetFile; do
-      # Strip the common prefix of the current target directory
-      local targetFile="${fullTargetFile#"${cargoTargetDir}"}"
-      # Join the path and ensure we don't have a duplicate `/` separator
-      local candidateOrigFile="${prevCargoTargetDir}/${targetFile#/}"
-
-      if cmp --silent "${candidateOrigFile}" "${fullTargetFile}"; then
-        ln --symbolic --force --logical "${candidateOrigFile}" "${fullTargetFile}"
-      fi
-    done < <(find "${cargoTargetDir}" -type f)
-  fi
-
   echo installing "${cargoTargetDir}" to "${dest}"
   mv "${cargoTargetDir}" --target-directory="${dest}"
+
+  local symlinksDir="$(mktemp -d)"
+  cp -Rs "${dir}/target" "${symlinksDir}"
+  if test -n "$(shopt -s nullglob; echo $symlinksDir/target/*/deps)"; then
+    pushd "$symlinksDir"
+    tar -cf "${dir}/symlinks.tar" target/*/deps
+    popd
+  fi
 }
 
 prepareAndInstallCargoArtifactsDir() {

@@ -50,10 +50,9 @@ inheritCargoArtifacts() {
       # being built (since changing `Cargo.lock` would rebuild everything anyway), which makes them
       # good candidates for symlinking (esp. since they can make up 60-70% of the artifact directory
       # on most projects). Thus we ignore them when copying all other artifacts below as we will
-      # symlink them afterwards. Note that we scope these checks to the `/deps` subdirectory; the
-      # workspace's own .rlib and .rmeta files appear one directory up (and these may require being
-      # writable depending on how the actual workspace build is being invoked, so we'll leave them
-      # alone).
+      # symlink them afterwards. Note that we scope these checks to the `/deps` subdirectory, as
+      # this directory contains only rustc output. We have a rustc wrapper which ensures that any
+      # writes to these symlinks do not try to change the (immutable) symlink targets.
       #
       # NB: keep the executable bit only if set on the original file
       # but make all files writable as sometimes read-only files will make the build choke
@@ -66,27 +65,15 @@ inheritCargoArtifacts() {
         --times \
         --chmod=u+w \
         --executability \
-        --exclude 'deps/*.rlib' \
-        --exclude 'deps/*.rmeta' \
+        --exclude '*/deps/*' \
         --exclude '.cargo-lock' \
         "${preparedArtifacts}/" \
         "${cargoTargetDir}/"
-
-      local linkCandidates=$(mktemp linkCandidatesXXXX.txt)
-      find "${preparedArtifacts}" \
-        '(' -path '*/deps/*.rlib' -or -path '*/deps/*.rmeta' ')' \
-        -printf "%P\n" \
-        >"${linkCandidates}"
-
-      # Next create any missing directories up front so we can avoid redundant checks later
-      cat "${linkCandidates}" \
-        | xargs --no-run-if-empty -n1 dirname \
-        | sort -u \
-        | (cd "${cargoTargetDir}"; xargs --no-run-if-empty mkdir -p)
-
-      # Lastly do the actual symlinking
-      cat "${linkCandidates}" \
-        | xargs -P ${NIX_BUILD_CORES} -I '##{}##' ln -s "${preparedArtifacts}/##{}##" "${cargoTargetDir}/##{}##"
+      
+      symlinks="${cargoArtifacts}/symlinks.tar"
+      if [[ -f "${symlinks}" ]]; then
+        tar -xf "${symlinks}" -C "${cargoTargetDir}" --strip-components=1
+      fi
     fi
   else
     echo unable to copy cargo artifacts, \"${preparedArtifacts}\" looks invalid

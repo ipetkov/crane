@@ -19,5 +19,7 @@ mkCargoDerivation (args // {
 
   buildPhaseCargoCommand = "cargoWithProfile clippy ${cargoExtraArgs} ${cargoClippyExtraArgs}";
 
+  doInstallCargoArtifacts = false;
+
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ clippy ];
 })
