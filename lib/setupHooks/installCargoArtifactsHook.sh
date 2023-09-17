@@ -18,6 +18,38 @@ compressAndInstallCargoArtifactsDir() {
   )
 }
 
+compressAndInstallCargoArtifactsDirIncremental() {
+  local dir="${1:?destination directory not defined}"
+  local cargoTargetDir="${2:?cargoTargetDir not defined}"
+
+  mkdir -p "${dir}"
+
+  local dest="${dir}/target.tar.zst"
+  echo "compressing ${cargoTargetDir} to ${dest}"
+  (
+    export SOURCE_DATE_EPOCH=1
+    touch -d @${SOURCE_DATE_EPOCH} "${TMPDIR}/.crane.source-date-epoch"
+
+    find "${cargoTargetDir}" \
+      -newer "${TMPDIR}/.crane.source-date-epoch" \
+      -print0 \
+      | tar \
+      --null \
+      --no-recursion \
+      --sort=name \
+      --mtime="@${SOURCE_DATE_EPOCH}" \
+      --owner=0 \
+      --group=0 \
+      --numeric-owner \
+      --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
+      -c -f - -T - \
+      | zstd "-T${NIX_BUILD_CORES:-0}" -o "${dest}"
+     if [ -e "${cargoTargetDir}/.crane-previous-archive" ]; then
+       cp -a "${cargoTargetDir}/.crane-previous-archive" "${dest}.prev"
+     fi
+   )
+}
+
 dedupAndInstallCargoArtifactsDir() {
   local dest="${1:?destination directory not defined}"
   local cargoTargetDir="${2:?cargoTargetDir not defined}"
@@ -55,6 +87,10 @@ prepareAndInstallCargoArtifactsDir() {
 
   case "${mode}" in
     "use-zstd")
+      compressAndInstallCargoArtifactsDirIncremental "${dir}" "${cargoTargetDir}"
+      ;;
+
+    "use-zstd-no-incr")
       compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}"
       ;;
 

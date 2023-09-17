@@ -17,10 +17,18 @@ inheritCargoArtifacts() {
 
   mkdir -p "${cargoTargetDir}"
   if [ -f "${preparedArtifacts}" ]; then
+
+    if [ -f "${preparedArtifacts}.prev" ]; then
+      inheritCargoArtifacts "$(readlink -f "${preparedArtifacts}.prev")" "$cargoTargetDir"
+    fi
+
     echo "decompressing cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
     zstd -d "${preparedArtifacts}" --stdout | \
       tar -x -C "${cargoTargetDir}" --strip-components=1
+    rm -f "${cargoTargetDir}/.crane-previous-archive"
+    ln -s "${preparedArtifacts}" "${cargoTargetDir}/.crane-previous-archive"
+
   elif [ -d "${preparedArtifacts}" ]; then
     echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
