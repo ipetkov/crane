@@ -33,6 +33,6 @@ jobs:
           dependencies
           flake update
     - name: Enable Pull Request Automerge
-      run: gh pr merge --squash --delete --auto ${{ steps.flakeupdate.outputs.pull-request-number }}
+      run: gh pr merge --squash --delete-branch --auto ${{ steps.flakeupdate.outputs.pull-request-number }}
       env:
         GH_TOKEN: ${{ secrets.PAT_FLAKE_UPDATE }}
