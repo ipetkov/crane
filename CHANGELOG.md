@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 * Added `devShell`, a thin wrapper around `pkgs.mkShell` which automatically
   provides `cargo` and `rustc`.
+* `use-zstd` mode uses a chained, incremental approach to avoid redundancy.
+  Old behavior (taking a full snapshot of the cargo artifacts can be achieved
+  by setting `installCargoArtifactsMode = "use-zstd-full"`.
+  ([#387](https://github.com/ipetkov/crane/pull/387))
 
 ### Changed
 * **Breaking** (technically): `buildDepsOnly`, `buildPackage`, `cargoBuild`,
