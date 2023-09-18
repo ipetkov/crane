@@ -86,11 +86,11 @@ prepareAndInstallCargoArtifactsDir() {
   mkdir -p "${dir}"
 
   case "${mode}" in
-    "use-zstd")
+    "use-zstd"|"use-zstd-diff")
       compressAndInstallCargoArtifactsDirIncremental "${dir}" "${cargoTargetDir}"
       ;;
 
-    "use-zstd-no-incr")
+    "use-zstd-full")
       compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}"
       ;;
 
