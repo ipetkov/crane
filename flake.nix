@@ -1,4 +1,6 @@
 {
+  description = "A Nix library for building cargo projects. Never build twice thanks to incremental artifact caching.";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
