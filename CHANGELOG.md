@@ -48,6 +48,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   offline evaluations. The `outputHashes` attribute can now be optionally
   specified in `vendorCargoDeps`, `vendorGitDeps`, `vendorMultipleCargoDeps`, or
   anything else which delegates to them.
+* `use-zstd` mode uses a chained, incremental approach to avoid redundancy.
+  Old behavior (taking a full snapshot of the cargo artifacts can be achieved
+  by setting `installCargoArtifactsMode = "use-zstd-full"`.
+  ([#387](https://github.com/ipetkov/crane/pull/387))
 
 ### Changed
 * **Breaking** (technically): `buildDepsOnly`, `buildPackage`, `cargoBuild`,
