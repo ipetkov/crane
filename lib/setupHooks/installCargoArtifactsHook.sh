@@ -88,7 +88,15 @@ prepareAndInstallCargoArtifactsDir() {
 
   case "${mode}" in
     "use-zstd"|"use-zstd-diff")
-      compressAndInstallCargoArtifactsDirIncremental "${dir}" "${cargoTargetDir}"
+
+      # If no artifcats were inherited in the first place,
+      # it's both faster and safer (mtime handlings bugs), to use
+      # a full snapshot.
+      if [ -n "${cargoArtifacts}" ];then
+        compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}"
+      else
+        compressAndInstallCargoArtifactsDirIncremental "${dir}" "${cargoTargetDir}"
+      fi
       ;;
 
     "use-zstd-full")
