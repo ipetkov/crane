@@ -1,11 +1,11 @@
-compressAndInstallCargoArtifactsDir() {
+compressAndInstallCargoArtifactsDirFull() {
   local dir="${1:?destination directory not defined}"
   local cargoTargetDir="${2:?cargoTargetDir not defined}"
 
   mkdir -p "${dir}"
 
   local dest="${dir}/target.tar.zst"
-  echo "compressing ${cargoTargetDir} to ${dest}"
+  echo "compressing full content of ${cargoTargetDir} to ${dest}"
   (
     export SOURCE_DATE_EPOCH=1
     tar --sort=name \
@@ -19,14 +19,14 @@ compressAndInstallCargoArtifactsDir() {
   )
 }
 
-compressAndInstallCargoArtifactsDirIncremental() {
+compressAndInstallCargoArtifactsDirDiff() {
   local dir="${1:?destination directory not defined}"
   local cargoTargetDir="${2:?cargoTargetDir not defined}"
 
   mkdir -p "${dir}"
 
   local dest="${dir}/target.tar.zst"
-  echo "compressing ${cargoTargetDir} to ${dest}"
+  echo "compressing new content of ${cargoTargetDir} to ${dest}"
   (
     export SOURCE_DATE_EPOCH=1
     touch -d @${SOURCE_DATE_EPOCH} "${TMPDIR}/.crane.source-date-epoch"
@@ -92,15 +92,15 @@ prepareAndInstallCargoArtifactsDir() {
       # If no artifcats were inherited in the first place,
       # it's both faster and safer (mtime handlings bugs), to use
       # a full snapshot.
-      if [ -n "${cargoArtifacts}" ];then
-        compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}"
+      if [ -z "${cargoArtifacts}" ];then
+        compressAndInstallCargoArtifactsDirFull "${dir}" "${cargoTargetDir}"
       else
-        compressAndInstallCargoArtifactsDirIncremental "${dir}" "${cargoTargetDir}"
+        compressAndInstallCargoArtifactsDirDiff "${dir}" "${cargoTargetDir}"
       fi
       ;;
 
     "use-zstd-full")
-      compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}"
+      compressAndInstallCargoArtifactsDirFull "${dir}" "${cargoTargetDir}"
       ;;
 
     "use-symlink")
