@@ -1,7 +1,7 @@
 { cleanCargoToml
 , findCargoFiles
 , lib
-, runCommandLocal
+, runCommand
 , writeText
 , writeTOML
 }:
@@ -236,7 +236,7 @@ let
     then "dummy-src"
     else last nameWithoutHash;
 in
-runCommandLocal sourceName { } ''
+runCommand sourceName { } ''
   mkdir -p $out
   cp --recursive --no-preserve=mode,ownership ${cleanSrc}/. -t $out
   ${copyCargoLock}

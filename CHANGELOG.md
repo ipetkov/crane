@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
+* Added `devShell`, a thin wrapper around `pkgs.mkShell` which automatically
+  provides `cargo` and `rustc`.
+
+### Changed
+* **Breaking** (technically): `buildDepsOnly`, `buildPackage`, `cargoBuild`,
+  `cargoClippy`, `cargoDoc`, `cargoLlvmCov`, and `cargoTest`'s defaults have
+  been changed such that if `cargoExtraArgs` have not been set, a default value
+  of `--locked` will be used. This ensures that a project's committed
+  `Cargo.lock` is exactly what is expected (without implicit changes at build
+  time) but this may end up rejecting builds which were previously passing. To
+  get the old behavior back, set `cargoExtraArgs = "";`
+* **Breaking**: `cargoDoc` will no longer install cargo artifacts by default.
+  Set `doInstallCargoArtifacts = true;` to get the old behavior back.
+* `cargoDoc` will now install generated documentation in `$out/share/doc`
+* Fixed a bug when testing proc macro crates with `cargoNextest` on macOS.
+  ([#376](https://github.com/ipetkov/crane/pull/376))
+* Replaced various internal usages of `runCommandLocal` with `runCommand` for
+  more optimal behavior when downloading cached artifacts
+
+## [0.13.1] - 2023-08-22
+
+### Changed
+* `buildTrunkPackage` will now use `dart-sass` instead of `nodePackages.sass`
+* Vendoring git dependencies will now always resolve symlinks inside of a
+  crate's directory. This allows for symlinks inside of a crate's directory to
+  possibly refer to files at the root of the git repo itself (via symlink) and
+  have those contents preserved during vendoring.
+
+## [0.13.0] - 2023-08-07
+
+### Added
 * `buildPackage` now supports installing `dylib` targets
 * Added support for sparse registries
 
@@ -26,7 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   otherwise specified
 * Update `crane-utils` dependencies for successful build in nightly Rust (2023-06-28)
 
-### [0.12.2] - 2023-06-06
+## [0.12.2] - 2023-06-06
 
 ### Added
 * Added support for the [Trunk](https://trunkrs.dev) wasm app build tool
@@ -38,7 +69,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `buildTrunkPackage` will now strip references to store files by default
 * `buildTrunkPackage` will now set the right `wasm-opt` version
 
-### [0.12.1] - 2023-04-10
+## [0.12.1] - 2023-04-10
 
 ### Changed
 * **Breaking**: When setting a default value for `cargoArtifacts`,
@@ -432,6 +463,8 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.13.1]: https://github.com/ipetkov/crane/compare/v0.13.0...v0.13.1
+[0.13.0]: https://github.com/ipetkov/crane/compare/v0.12.2...v0.13.0
 [0.12.2]: https://github.com/ipetkov/crane/compare/v0.12.1...v0.12.2
 [0.12.1]: https://github.com/ipetkov/crane/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/ipetkov/crane/compare/v0.11.3...v0.12.0

@@ -9,7 +9,7 @@
 }:
 
 { cargoBuildCommand ? "cargoWithProfile build"
-, cargoExtraArgs ? ""
+, cargoExtraArgs ? "--locked"
 , cargoTestCommand ? "cargoWithProfile test"
 , cargoTestExtraArgs ? ""
 , ...

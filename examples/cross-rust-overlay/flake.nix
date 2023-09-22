@@ -62,7 +62,9 @@
             # currently it would cause some rebuild.
             # We put them here just for a workaround.
             # See: https://github.com/NixOS/nixpkgs/pull/146583
-            depsBuildBuild = [ qemu ];
+            depsBuildBuild = [
+              qemu
+            ];
 
             # Dependencies which need to be build for the current platform
             # on which we are doing the cross compilation. In this case,
@@ -72,6 +74,8 @@
             # overridden above.
             nativeBuildInputs = [
               pkg-config
+            ] ++ lib.optionals stdenv.buildPlatform.isDarwin [
+              libiconv
             ];
 
             # Dependencies which need to be built for the platform on which

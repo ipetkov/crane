@@ -113,7 +113,7 @@ to influence its behavior.
   - Default value: `"--all-targets"` if `doCheck` is set to true, `""` otherwise
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
   - Default value: `"cargo test --profile release"`
@@ -198,7 +198,7 @@ install hooks.
       altogether.
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 * `cargoTestCommand`: A cargo invocation to run during the derivation's check
   phase
   - Default value: `"cargo test --profile release"`
@@ -284,7 +284,7 @@ environment variables during the build, you can bring them back via
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
 * `binaryen`
-* `nodePackages.sass`
+* `dart-sass`
 * `trunk`
 * `wasm-bindgen-cli`
 
@@ -365,7 +365,7 @@ Except where noted below, all derivation attributes are delegated to
 #### Optional attributes
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -405,7 +405,7 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `"--all-targets"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 
 #### Native build dependencies
 The `clippy` package is automatically appended as a native build input to any
@@ -433,6 +433,7 @@ Except where noted below, all derivation attributes are delegated to
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
     is selected; setting it to `""` will omit specifying a profile
     altogether.
+* `doInstallCargoArtifacts` will default to `false` if not specified
 * `pnameSuffix` will be set to `"-doc"`
 
 #### Required attributes
@@ -449,7 +450,7 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `"--no-deps"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
-  - Default value: `""`
+  - Default value: `"--locked"`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -519,7 +520,7 @@ Except where noted below, all derivation attributes are delegated to
 
 #### Optional attributes
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
-  - Default value: `""`
+  - Default value: `"--locked"`
 * `cargoLlvmCovCommand`: cargo-llvm-cov command to run
   - Default value: `"test"`
 * `cargoLlvmCovExtraArgs`: additional flags to be passed in the cargo
@@ -655,7 +656,7 @@ Except where noted below, all derivation attributes are delegated to
 
 #### Optional attributes
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
-  - Default value: `""`
+  - Default value: `"--locked"`
 * `cargoTestArgs`: additional flags to be passed in the cargo
   invocation
   - Default value: `""`
@@ -766,6 +767,55 @@ raised during evaluation.
 * `version`: the version of the crate
   - Default value: `"0.0.1"` if the specified Cargo.toml file did not
     include a version
+
+### `craneLib.devShell`
+
+`devShell :: set -> drv`
+
+A thin wrapper around
+[`pkgs.mkShell`](https://nixos.org/manual/nixpkgs/stable/#sec-pkgs-mkShell) for
+creating development shells for use with `nix develop` (see [“Local
+Development”](local_development.md)). Except where noted below, all derivation
+attributes are passed straight through, so any `mkShell` behavior can be used
+as expected: namely, all key-value pairs other than those `mkShell` consumes
+will be set as environment variables in the resulting shell.
+
+#### Optional attributes
+* `checks`: A set of checks to inherit inputs from, typically
+  `self.checks.${system}`. Build inputs from the values in this attribute set
+  are added to the created shell environment for interactive use.
+* `inputsFrom`: A list of extra packages to inherit inputs from. Note that
+  these packages are _not_ added to the result environment; use
+  `packages` for that.
+* `packages`: A list of extra packages to add to the created shell environment.
+* `shellHook`: A string of bash statements that will be executed when the shell
+  is entered with `nix develop`.
+
+See the [quick start example](examples/quick-start.md) for usage in a
+`flake.nix` file.
+
+```nix
+craneLib.devShell {
+  checks = self.checks.${system};
+
+  packages = [
+    pkgs.ripgrep
+  ];
+
+  # Set a `cargo-nextest` profile:
+  NEXTEST_PROFILE = "local";
+}
+```
+
+```nix
+craneLib.devShell {
+  checks = {
+    my-package-clippy = craneLib.cargoClippy commonArgs;
+    my-package-doc = craneLib.cargoDoc commonArgs;
+    my-package-nextest = craneLib.cargoNextest commonArgs;
+  };
+}
+```
 
 ### `craneLib.downloadCargoPackage`
 

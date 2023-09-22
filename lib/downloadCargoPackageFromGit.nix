@@ -3,7 +3,7 @@
 , jq
 , lib
 , fetchgit
-, runCommandLocal
+, runCommand
 }:
 
 { git
@@ -37,7 +37,7 @@ let
     ];
   };
 in
-runCommandLocal "cargo-git" deps ''
+runCommand "cargo-git" deps ''
   mkdir -p $out
   existing_crates=()
   while read -r cargoToml; do
@@ -53,7 +53,7 @@ runCommandLocal "cargo-git" deps ''
       fi
 
       local dest="$out/$crate"
-      cp -r "$(dirname "$cargoToml")" "$dest"
+      cp -rL "$(dirname "$cargoToml")" "$dest"
       chmod +w "$dest"
       echo '{"files":{}, "package":null}' > "$dest/.cargo-checksum.json"
 

@@ -2,7 +2,7 @@
 , buildDepsOnly
 , crateNameFromCargoToml
 , mkCargoDerivation
-, nodePackages
+, dart-sass
 , removeReferencesToVendoredSourcesHook
 , trunk
 , vendorCargoDeps
@@ -72,9 +72,7 @@ mkCargoDerivation (args // {
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
     binaryen
-    # dart-sass compiled to javascript
-    # TODO: replace with a native version when it comes to nixpkgs
-    nodePackages.sass
+    dart-sass
     trunk
     wasm-bindgen-cli
     # Store references are certainly false positives

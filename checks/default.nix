@@ -76,6 +76,7 @@ in
             sha256 = "sha256-sNwizxYVUNyv5InR8HS+CyUsroA79h/FpouS+fMWJUI=";
           };
 
+          cargoExtraArgs = "--offline";
           doCheck = false; # Tests need llvm-tools installed
           buildInputs = lib.optionals isDarwin [
             pkgs.libiconv
@@ -236,6 +237,14 @@ in
     src = ./various-targets;
   };
 
+  devShell = myLib.devShell {
+    checks = {
+      simple = myLib.buildPackage {
+        src = ./simple;
+      };
+    };
+  };
+
   features = callPackage ./features { };
 
   flakePackages =
@@ -328,6 +337,10 @@ in
     });
 
   nextest = callPackage ./nextest.nix { };
+
+  procMacro = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./proc-macro;
+  };
 
   simple = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple;
@@ -589,6 +602,7 @@ in
     postUnpack = ''
       cd $sourceRoot/workspace
       sourceRoot="."
+      [[ -f Cargo.lock ]] || ln ../Cargo.lock
     '';
     cargoLock = ./workspace-not-at-root/workspace/Cargo.lock;
     cargoToml = ./workspace-not-at-root/workspace/Cargo.toml;

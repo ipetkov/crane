@@ -68,12 +68,14 @@
           '';
         };
 
-        devShells.default = pkgs.mkShell {
-          inputsFrom = builtins.attrValues self.checks.${system};
+        devShells.default = craneLib.devShell {
+          # Inherit inputs from checks.
+          checks = self.checks.${system};
 
-          # Extra inputs can be added here
-          nativeBuildInputs = with pkgs; [
-            rustWithWasiTarget
+          # Extra inputs can be added here; cargo and rustc are provided by default
+          # from the toolchain that was specified earlier.
+          packages = [
+            # rustWithWasiTarget
           ];
         };
       });
