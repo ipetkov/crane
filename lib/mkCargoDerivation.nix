@@ -37,6 +37,7 @@ let
     "checkPhaseCargoCommand"
     "installPhaseCommand"
     "pnameSuffix"
+    "outputHashes"
     "stdenv"
   ];
 in

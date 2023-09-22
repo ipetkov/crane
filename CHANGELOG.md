@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 * Added `devShell`, a thin wrapper around `pkgs.mkShell` which automatically
   provides `cargo` and `rustc`.
+* Added the ability to specify output hashes of git dependencies for fully
+  offline evaluations. The `outputHashes` attribute can now be optionally
+  specified in `vendorCargoDeps`, `vendorGitDeps`, `vendorMultipleCargoDeps`, or
+  anything else which delegates to them.
 
 ### Changed
 * **Breaking** (technically): `buildDepsOnly`, `buildPackage`, `cargoBuild`,

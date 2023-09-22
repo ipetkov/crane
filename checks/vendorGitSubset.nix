@@ -5,6 +5,7 @@
 , linkFarmFromDrvs
 , runCommand
 , vendorGitDeps
+, outputHashes ? { }
 }:
 
 let
@@ -18,6 +19,7 @@ let
 
   vendoredGit = vendorGitDeps {
     lockPackages = lock.package;
+    inherit outputHashes;
   };
 
   checkSubset = runCommand "vendorGitSubsetAsExpected" { } ''

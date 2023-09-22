@@ -154,6 +154,7 @@ environment variables during the build, you can bring them back via
 * `cargoTestCommand`
 * `cargoTestExtraArgs`
 * `dummySrc`
+* `outputHashes`
 
 ### `craneLib.buildPackage`
 
@@ -227,6 +228,7 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `cargoTestCommand`
 * `cargoTestExtraArgs`
+* `outputHashes`
 
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
@@ -844,13 +846,16 @@ any crates it contains for vendoring.
 * `rev`: the exact revision to check out
 
 #### Optional attributes
+* `allRefs`: whether all git refs should be fetched in order to look for the
+  specified `rev`
+  - Default value: `true` if `ref` is set to `null`, `false` otherwise
 * `ref`: the ref (i.e. branch or tag) to which `rev` belongs to. For branches it
   should be `"refs/head/${branch}"` and for tags it should be
   `"refs/tags/${tag}"`
   - Default value: `null`
-* `allRefs`: whether all git refs should be fetched in order to look for the
-  specified `rev`
-  - Default value: `true` if `ref` is set to `null`, `false` otherwise
+* `sha256`: the sha256 hash of the (unpacked) download. If provided `fetchgit` will be used
+  (instead of `builtins.fetchGit`) which allows for offline evaluations.
+  - Default value: `null`
 
 ### `craneLib.findCargoFiles`
 
@@ -974,6 +979,7 @@ environment variables during the build, you can bring them back via
 * `cargoLockParsed`
 * `checkPhaseCargoCommand`
 * `installPhaseCommand`
+* `outputHashes`
 * `pnameSuffix`
 * `stdenv`
 
@@ -1234,6 +1240,11 @@ the vendored directories (i.e. this configuration can be appended to the
 At least one of the above attributes must be specified, or an error will be
 raised during evaluation.
 
+#### Optional attributes
+* `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
+  download. Useful for supporting fully offline evaluations.
+  - Default value: `[]`
+
 ### `craneLib.vendorCargoRegistries`
 
 `vendorCargoRegistries :: set -> set`
@@ -1275,6 +1286,11 @@ access.
 * `lockPackages`: a list of all `[[package]]` entries found in the project's
   `Cargo.lock` file (parsed via `builtins.fromTOML`)
 
+#### Optional attributes
+* `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
+  download. Useful for supporting fully offline evaluations.
+  - Default value: `[]`
+
 #### Output attributes
 * `config`: the configuration entires needed to point cargo to the vendored
   sources. This is intended to be appended to `$CARGO_HOME/config.toml` verbatim
@@ -1310,6 +1326,9 @@ the vendored directories (i.e. this configuration can be appended to the
   - Default value: `[]`
 * `cargoLockParsedList`: a list of attrsets representing the parsed contents of
   different `Cargo.lock` files to be included while vendoring.
+  - Default value: `[]`
+* `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
+  download. Useful for supporting fully offline evaluations.
   - Default value: `[]`
 * `registries`: an attrset of registry names to their index URL. The default
   ("crates-io") registry need not be specified, as it will automatically be
