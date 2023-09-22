@@ -105,12 +105,6 @@
             partitions = 1;
             partitionType = "count";
           });
-        } // lib.optionalAttrs (system == "x86_64-linux") {
-          # NB: cargo-tarpaulin only supports x86_64 systems
-          # Check code coverage (note: this will not upload coverage anywhere)
-          my-crate-coverage = craneLib.cargoTarpaulin (commonArgs // {
-            inherit cargoArtifacts;
-          });
         };
 
         packages = {
