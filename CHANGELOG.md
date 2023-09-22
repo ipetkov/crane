@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.14.0] - 2023-09-21
+
 ### Added
 * Added `devShell`, a thin wrapper around `pkgs.mkShell` which automatically
   provides `cargo` and `rustc`.
@@ -467,6 +469,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.14.0]: https://github.com/ipetkov/crane/compare/v0.13.1...v0.14.0
 [0.13.1]: https://github.com/ipetkov/crane/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/ipetkov/crane/compare/v0.12.2...v0.13.0
 [0.12.2]: https://github.com/ipetkov/crane/compare/v0.12.1...v0.12.2
