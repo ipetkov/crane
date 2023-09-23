@@ -1,4 +1,5 @@
 { buildDepsOnly
+, linkFarmFromDrvs
 , jq
 }:
 
@@ -30,34 +31,41 @@ let
         false
       fi
     '';
+
+  drvArgs = installCargoArtifactsMode: mkDrv (args // {
+    inherit installCargoArtifactsMode;
+
+    doInstallCargoArtifacts = false;
+
+    # NB: explicit call here so that the buildDepsOnly call
+    # doesn't inherit our build commands
+    cargoArtifacts = buildDepsOnly args;
+
+    nativeBuildInputs = [ jq ];
+
+    buildPhase = ''
+      runHook preBuild
+
+      ${runCargoAndCheckFreshness "check" ""}
+      ${runCargoAndCheckFreshness "build" ""}
+
+      runHook postBuild
+    '';
+
+    checkPhase = ''
+      runHook preCheck
+
+      ${runCargoAndCheckFreshness "test" "--no-run"}
+
+      runHook postCheck
+    '';
+
+    installPhase = ''
+      touch $out
+    '';
+  });
 in
-mkDrv (args // {
-  doInstallCargoArtifacts = false;
-
-  # NB: explicit call here so that the buildDepsOnly call
-  # doesn't inherit our build commands
-  cargoArtifacts = buildDepsOnly args;
-
-  nativeBuildInputs = [ jq ];
-
-  buildPhase = ''
-    runHook preBuild
-
-    ${runCargoAndCheckFreshness "check" ""}
-    ${runCargoAndCheckFreshness "build" ""}
-
-    runHook postBuild
-  '';
-
-  checkPhase = ''
-    runHook preCheck
-
-    ${runCargoAndCheckFreshness "test" "--no-run"}
-
-    runHook postCheck
-  '';
-
-  installPhase = ''
-    touch $out
-  '';
-})
+linkFarmFromDrvs "compiles-fresh" (map drvArgs [
+  "use-zstd"
+  "use-symlink"
+])

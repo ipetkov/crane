@@ -1,6 +1,7 @@
 compressAndInstallCargoArtifactsDir() {
   local dir="${1:?destination directory not defined}"
   local cargoTargetDir="${2:?cargoTargetDir not defined}"
+  local prevArtifacts="${3}"
 
   mkdir -p "${dir}"
 
@@ -8,46 +9,39 @@ compressAndInstallCargoArtifactsDir() {
   echo "compressing ${cargoTargetDir} to ${dest}"
   (
     export SOURCE_DATE_EPOCH=1
-    tar --sort=name \
-      --mtime="@${SOURCE_DATE_EPOCH}" \
-      --owner=0 \
-      --group=0 \
-      --numeric-owner \
-      --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-      -c "${cargoTargetDir}" | zstd "-T${NIX_BUILD_CORES:-0}" -o "${dest}"
-  )
-}
 
-compressAndInstallCargoArtifactsDirIncremental() {
-  local dir="${1:?destination directory not defined}"
-  local cargoTargetDir="${2:?cargoTargetDir not defined}"
+    dynTar() {
+      if [ -n "${doCompressAndInstallFullArchive}" ]; then
+        >&2 echo "compressing and installing full archive as requested"
+        tar "$@" "${cargoTargetDir}"
+      elif [ "$(uname -s)" == "Darwin" ]; then
+        # https://github.com/rust-lang/rust/issues/115982
+        >&2 echo "incremental zstd compression not currently supported on Darwin: https://github.com/rust-lang/rust/issues/115982"
+        tar "$@" "${cargoTargetDir}"
+      elif [ -z "${prevArtifacts}" ]; then
+        >&2 echo "no previous artifacts found, compressing and installing full archive"
+        tar "$@" "${cargoTargetDir}"
+      else
+        >&2 echo "linking previous artifacts ${prevArtifacts}"
+        ln -s "${prevArtifacts}" "${dest}.prev"
+        touch -d @${SOURCE_DATE_EPOCH} "${TMPDIR}/.crane.source-date-epoch"
+        tar \
+          --null \
+          --no-recursion \
+          -T <(find "${cargoTargetDir}" -newer "${TMPDIR}/.crane.source-date-epoch" -print0) \
+          "$@"
+      fi
+    }
 
-  mkdir -p "${dir}"
-
-  local dest="${dir}/target.tar.zst"
-  echo "compressing ${cargoTargetDir} to ${dest}"
-  (
-    export SOURCE_DATE_EPOCH=1
-    touch -d @${SOURCE_DATE_EPOCH} "${TMPDIR}/.crane.source-date-epoch"
-
-    find "${cargoTargetDir}" \
-      -newer "${TMPDIR}/.crane.source-date-epoch" \
-      -print0 \
-      | tar \
-      --null \
-      --no-recursion \
+    dynTar \
       --sort=name \
       --mtime="@${SOURCE_DATE_EPOCH}" \
       --owner=0 \
       --group=0 \
       --numeric-owner \
       --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-      -c -f - -T - \
-      | zstd "-T${NIX_BUILD_CORES:-0}" -o "${dest}"
-     if [ -e "${cargoTargetDir}/.crane-previous-archive" ]; then
-       cp -a "${cargoTargetDir}/.crane-previous-archive" "${dest}.prev"
-     fi
-   )
+      -c | zstd "-T${NIX_BUILD_CORES:-0}" -o "${dest}"
+  )
 }
 
 dedupAndInstallCargoArtifactsDir() {
@@ -82,24 +76,20 @@ prepareAndInstallCargoArtifactsDir() {
   local dir="${1:-${out}}"
   local cargoTargetDir="${2:-${CARGO_TARGET_DIR:-target}}"
   local mode="${3:-${installCargoArtifactsMode:-use-symlink}}"
+  local prevCargoArtifacts="${4:-${cargoArtifacts:""}}"
 
   mkdir -p "${dir}"
 
   case "${mode}" in
-    "use-zstd"|"use-zstd-diff")
-      compressAndInstallCargoArtifactsDirIncremental "${dir}" "${cargoTargetDir}"
-      ;;
-
-    "use-zstd-full")
-      compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}"
+    "use-zstd")
+      compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}" "${prevCargoArtifacts}"
       ;;
 
     "use-symlink")
       # Placeholder if previous artifacts aren't present
       local prevCargoTargetDir="/dev/null"
-
-      if [ -n "${cargoArtifacts}" ] && [ -d "${cargoArtifacts}/target" ]; then
-        local prevCargoTargetDir="${cargoArtifacts}/target"
+      if [ -n "${prevCargoArtifacts}" ] && [ -d "${prevCargoArtifacts}/target" ]; then
+        local prevCargoTargetDir="${prevCargoArtifacts}/target"
       fi
 
       dedupAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}" "${prevCargoTargetDir}"

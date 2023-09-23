@@ -107,6 +107,23 @@ in
     };
   });
 
+  chainedMultiple = pkgs.linkFarmFromDrvs "chainedMultiple" (map
+    (args: myLib.buildPackage (args // {
+      src = ./simple;
+      cargoArtifacts = myLib.cargoClippy (args // {
+        src = ./simple;
+        cargoArtifacts = myLib.buildDepsOnly (args // {
+          src = ./simple;
+        });
+      });
+    }))
+    [
+      { }
+      { installCargoArtifactsMode = "use-zstd"; }
+      { installCargoArtifactsMode = "use-symlink"; }
+    ]
+  );
+
   compilesFresh = callPackage ./compilesFresh.nix { };
   compilesFreshSimple = self.compilesFresh "simple" (myLib.cargoBuild) {
     src = ./simple;
@@ -605,5 +622,18 @@ in
     pname = "workspace-git";
     version = "0.0.1";
   };
+
+  zstdNoChange =
+  let
+    args = {
+      installCargoArtifactsMode = "use-zstd";
+      src = ./simple;
+    };
+  in
+  myLib.cargoBuild (args // {
+    cargoArtifacts = myLib.cargoBuild (args // {
+      cargoArtifacts = myLib.buildDepsOnly args;
+    });
+  });
 })
 )
