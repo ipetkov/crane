@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+
+* Fixed a bug where `buildPackage` would fail to inherit artifacts from
+  dependency crates if `cargoArtifacts` was not explicitly specified.
+
 ## [0.14.0] - 2023-09-21
 
 ### Added
