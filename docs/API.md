@@ -625,7 +625,7 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `""`
 * `cargoTarpaulinExtraArgs`: additional flags to be passed in the cargo
   tarpaulin invocation
-  - Default value: `"--skip-clean --out Xml --output-dir $out"`
+  - Default value: `"--skip-clean --out xml --output-dir $out"`
 * `doNotLinkInheritedArtifacts` will be set to `true` if not specified.
 
 #### Native build dependencies
