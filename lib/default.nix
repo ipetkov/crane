@@ -1,11 +1,19 @@
 { lib
 , newScope
+  # , craneUtils ? (import ./. { inherit lib newScope; craneUtils = throw "craneUtils mut not depend on itself"; }).craneUtils
+  # , craneUtils ? callPackage ../pkgs/crane-utils { };
+, craneUtilsIsolate ? true
 }:
 
 lib.makeScope newScope (self:
 let
   inherit (self) callPackage;
 
+  craneUtils' =
+    if craneUtilsIsolate then
+      (import ./. { inherit lib newScope; craneUtilsIsolate = false; }).craneUtils
+    else
+      callPackage ../pkgs/crane-utils { };
   internalCrateNameFromCargoToml = callPackage ./internalCrateNameFromCargoToml.nix { };
 in
 {
@@ -30,7 +38,9 @@ in
   cleanCargoToml = callPackage ./cleanCargoToml.nix { };
   configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
   configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
-  craneUtils = callPackage ../pkgs/crane-utils { };
+
+  craneUtils = craneUtils';
+
   devShell = callPackage ./devShell.nix { };
 
   crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix {
