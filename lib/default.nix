@@ -1,8 +1,10 @@
 { lib
 , newScope
-  # , craneUtils ? (import ./. { inherit lib newScope; craneUtils = throw "craneUtils mut not depend on itself"; }).craneUtils
-  # , craneUtils ? callPackage ../pkgs/crane-utils { };
-, craneUtilsIsolate ? true
+  # craneUtils to use
+  # when missing, will be generated in a new scope
+  # when null will be generated in the current scope
+  # when set, will be used
+, craneUtils ? (import ./. { inherit lib newScope; craneUtils = null; }).craneUtils
 }:
 
 lib.makeScope newScope (self:
@@ -10,10 +12,11 @@ let
   inherit (self) callPackage;
 
   craneUtils' =
-    if craneUtilsIsolate then
-      (import ./. { inherit lib newScope; craneUtilsIsolate = false; }).craneUtils
+    if craneUtils == null then
+      callPackage ../pkgs/crane-utils { }
     else
-      callPackage ../pkgs/crane-utils { };
+      craneUtils;
+
   internalCrateNameFromCargoToml = callPackage ./internalCrateNameFromCargoToml.nix { };
 in
 {
