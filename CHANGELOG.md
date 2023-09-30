@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   ([#376](https://github.com/ipetkov/crane/pull/376))
 * Replaced various internal usages of `runCommandLocal` with `runCommand` for
   more optimal behavior when downloading cached artifacts
+* Fixed a bug when a git dependency crate relies on reading non-TOML metadata
+  from Cargo.toml at build time.
+  ([#407](https://github.com/ipetkov/crane/pull/407))
 
 ## [0.13.1] - 2023-08-22
 
