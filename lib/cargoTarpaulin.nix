@@ -1,9 +1,12 @@
 { mkCargoDerivation
 , cargo-tarpaulin
+, lib
 }:
-
+let
+  xml = if lib.versionOlder cargo-tarpaulin.version "0.27.0" then "Xml" else "xml";
+in
 { cargoExtraArgs ? ""
-, cargoTarpaulinExtraArgs ? "--skip-clean --out Xml --output-dir $out"
+, cargoTarpaulinExtraArgs ? "--skip-clean --out ${xml} --output-dir $out"
 , ...
 }@origArgs:
 let
