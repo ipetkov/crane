@@ -108,9 +108,6 @@ fn merge(cargo_toml: &mut toml_edit::Document, root: &toml_edit::Document) {
             }
         }
     }
-
-    // cleanup stray spaces left by merging InlineTable values into Tables
-    clear_value_formatting(cargo_toml.as_item_mut());
 }
 
 /// Return a [`toml_edit::TableLike`] representation of the [`Item`] (if any)
@@ -150,14 +147,10 @@ where
         // Bail if:
         // - cargo_toml isn't a table (otherwise `workspace = true` can't show up
         // - the workspace root doesn't have this key
-        let (t, (root_key, root_val)) =
-            match try_as_table_like_mut(&mut *v).zip(root.get_key_value(&k)) {
-                Some((t, root_key_val)) => (t, root_key_val),
-                _ => return,
-            };
-
-        // copy any missing formatting to the current key
-        merge_key_formatting(k, root_key);
+        let (t, root_val) = match try_as_table_like_mut(&mut *v).zip(root.get(&k)) {
+            Some((t, root_val)) => (t, root_val),
+            _ => return,
+        };
 
         if let Some(Item::Value(toml_edit::Value::Boolean(bool_value))) = t.get("workspace") {
             if *bool_value.value() {
@@ -289,79 +282,6 @@ mod table_like_ext {
     }
 }
 
-use fmt::{clear_value_formatting, merge_key_formatting};
-mod fmt {
-    use toml_edit::{Item, Value};
-
-    /// Replicate the formatting of keys, in case one comes from a [`toml_edit::Table`] and the other a
-    /// [`toml_edit::InlineTable`]
-    pub(super) fn merge_key_formatting(
-        mut dest: toml_edit::KeyMut<'_>,
-        additional: &toml_edit::Key,
-    ) {
-        let dest_decor = dest.decor_mut();
-        let additional_decor = additional.decor();
-
-        let is_empty = |s: Option<&toml_edit::RawString>| {
-            s.and_then(toml_edit::RawString::as_str)
-                .map_or(true, str::is_empty)
-        };
-
-        if is_empty(dest_decor.prefix()) {
-            if let Some(prefix) = additional_decor.prefix() {
-                dest_decor.set_prefix(prefix.clone());
-            }
-        }
-        if is_empty(dest_decor.suffix()) {
-            if let Some(suffix) = additional_decor.suffix() {
-                dest_decor.set_suffix(suffix.clone());
-            }
-        }
-    }
-
-    /// Remove formatting from all [`toml_edit::Value`]s recursively
-    pub(super) fn clear_value_formatting(item: &mut Item) {
-        match item {
-            Item::Value(value) => {
-                clear_value_formatting_value(value);
-            }
-            Item::Table(table) => table
-                .iter_mut()
-                .map(|(_k, v)| v)
-                .for_each(clear_value_formatting),
-            Item::None => {}
-            Item::ArrayOfTables(array) => array.iter_mut().for_each(|table| {
-                table
-                    .iter_mut()
-                    .map(|(_k, v)| v)
-                    .for_each(clear_value_formatting)
-            }),
-        }
-    }
-
-    fn clear_value_formatting_value(value: &mut Value) {
-        let decor = match value {
-            Value::String(value) => value.decor_mut(),
-            Value::Integer(value) => value.decor_mut(),
-            Value::Float(value) => value.decor_mut(),
-            Value::Boolean(value) => value.decor_mut(),
-            Value::Datetime(value) => value.decor_mut(),
-            Value::Array(value) => {
-                value.iter_mut().for_each(clear_value_formatting_value);
-                value.decor_mut()
-            }
-            Value::InlineTable(value) => {
-                value
-                    .iter_mut()
-                    .map(|(_k, v)| v)
-                    .for_each(clear_value_formatting_value);
-                value.decor_mut()
-            }
-        };
-        decor.clear();
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use pretty_assertions::assert_eq;
@@ -465,55 +385,57 @@ mod tests {
         )
         .unwrap();
 
+        // NOTE: The nonstandard spacing is due to reusing decorations from original keys/values
+        // in cargo_toml
         let expected_toml_str = r#"
             [package]
-            authors = ["first author", "second author"]
-            categories = ["first category", "second category"]
-            description = "some description"
-            documentation = "some doc url"
-            edition = "2021"
-            exclude = ["first exclusion", "second exclusion"]
-            homepage = "some home page"
-            include = ["first inclusion", "second inclusion"]
-            keyword = ["first keyword", "second keyword"]
-            license = "some license"
-            license-file = "some license-file"
-            publish = true
-            readme = "some readme"
-            repository = "some repository"
-            rust-version = "some rust-version"
-            version = "some version"
+            authors= ["first author", "second author"]
+            categories= ["first category", "second category" ]
+            description= "some description"
+            documentation= "some doc url"
+            edition= "2021"
+            exclude= ["first exclusion", "second exclusion"]
+            homepage= "some home page"
+            include= ["first inclusion", "second inclusion"]
+            keyword= ["first keyword", "second keyword"]
+            license= "some license"
+            license-file= "some license-file"
+            publish= true
+            readme= "some readme"
+            repository= "some repository"
+            rust-version= "some rust-version"
+            version= "some version"
 
             [dependencies]
             # the `foo` dependency is most imporant, so it goes first
-            foo = { version = "foo-vers" }
-            bar = { version = "bar-vers", default-features = false }
-            baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat", "qux-additional"] }
-            corge = { version = "corge-vers-override", features = ["qux-feat"] }
+            foo= { version = "foo-vers" }
+            bar= { version = "bar-vers", default-features = false }
+            baz= { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
 
             [target.'cfg(unix)'.dependencies]
-            unix = { version = "unix-vers", features = ["some"] }
+            unix = { version = "unix-vers" , features = ["some"] }
 
             [dev-dependencies]
-            foo = { version = "foo-vers" }
-            bar = { version = "bar-vers", default-features = false }
-            baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat", "qux-additional"] }
-            corge = { version = "corge-vers-override", features = ["qux-feat"] }
+            foo= { version = "foo-vers" }
+            bar= { version = "bar-vers", default-features = false }
+            baz= { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
 
             [build-dependencies]
-            foo = { version = "foo-vers" }
-            bar = { version = "bar-vers", default-features = false }
-            baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat", "qux-additional"] }
-            corge = { version = "corge-vers-override", features = ["qux-feat"] }
+            foo= { version = "foo-vers" }
+            bar= { version = "bar-vers", default-features = false }
+            baz= { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
