@@ -133,39 +133,18 @@ fn try_as_table_like_mut(item: &mut Item) -> Option<&mut dyn toml_edit::TableLik
 
 /// Merge the specified `cargo_toml` and workspace `root` if both are tables
 fn try_merge_cargo_tables(cargo_toml: &mut Item, root: &Item) {
-    match (cargo_toml, root) {
-        (
-            Item::Table(p), //
-            Item::Table(wp),
-        ) => {
-            merge_cargo_tables(p, wp);
-        }
-        (
-            Item::Value(toml_edit::Value::InlineTable(p)), //
-            Item::Table(wp),
-        ) => {
-            merge_cargo_tables(p, wp);
-        }
-        (
-            Item::Table(p), //
-            Item::Value(toml_edit::Value::InlineTable(wp)),
-        ) => {
-            merge_cargo_tables(p, wp);
-        }
-        (
-            Item::Value(toml_edit::Value::InlineTable(p)),
-            Item::Value(toml_edit::Value::InlineTable(wp)),
-        ) => {
-            merge_cargo_tables(p, wp);
-        }
-        _ => {}
+    let cargo_toml = try_as_table_like_mut(cargo_toml);
+    let root = try_as_table_like(root);
+
+    if let Some((cargo_toml, root)) = cargo_toml.zip(root) {
+        merge_cargo_tables(cargo_toml, root);
     }
 }
 /// Merge the specified `cargo_toml` and workspace `root` tables
 fn merge_cargo_tables<T, U>(cargo_toml: &mut T, root: &U)
 where
-    T: toml_edit::TableLike,
-    U: toml_edit::TableLike,
+    T: toml_edit::TableLike + ?Sized,
+    U: toml_edit::TableLike + ?Sized,
 {
     cargo_toml.iter_mut().for_each(|(k, v)| {
         // Bail if:
@@ -226,6 +205,7 @@ fn merge_items(dest: &mut Item, additional: Item) {
             if let Item::ArrayOfTables(dest) = dest {
                 dest.extend(additional);
             } else {
+                // Override dest completely if types don't match
                 *dest = Item::ArrayOfTables(additional);
             }
         }
