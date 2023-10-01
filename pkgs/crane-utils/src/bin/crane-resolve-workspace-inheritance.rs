@@ -451,7 +451,7 @@ mod tests {
             version = "some version"
 
             [workspace.dependencies]
-            # workspace comments are not copied
+            # top-level workspace comments are not copied - only the values are merged
             foo = { version = "foo-vers" }
             bar = { version = "bar-vers", default-features = false }
             baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
