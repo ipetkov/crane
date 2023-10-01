@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* Fixed handling of Cargo workspace inheritance for git-dependencies where said
+  crate relies on reading non-TOML metadata (i.e. comments) from its Cargo.toml
+  at build time. ([#407](https://github.com/ipetkov/crane/pull/407))
+
 ## [0.14.1] - 2023-09-23
 
 ### Fixed
