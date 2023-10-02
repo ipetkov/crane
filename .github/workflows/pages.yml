@@ -24,7 +24,7 @@ jobs:
         mkdir output
         nix build --accept-flake-config .#book --out-link result --print-build-logs
         rsync -r -L ./result/ ./output
-    - name: git commit
+    - name: git push
       working-directory: output
       run: |
         git init
@@ -33,9 +33,6 @@ jobs:
         git branch -M gh-pages
         git add .
         git commit -m "Deploying site"
-    - name: git push
-      working-directory: output
-      run: |
         ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-        ssh-add - <<< "${{ secrets.DEPLOY_KEY }}"
+        echo "${{ secrets.DEPLOY_KEY }}" | tr -d '\r' | ssh-add -
         git push --force "git@github.com:${GITHUB_REPOSITORY}.git" gh-pages
