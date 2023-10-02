@@ -196,7 +196,7 @@ let
       '' + optionalString (trimmedCargoToml ? package) ''
         # To build regular and dev dependencies (cargo build + cargo test)
         ${cpDummy parentDir "src/lib.rs"}
-        ${cpDummy parentDir "src/bin/crane-dummy/main.rs"}
+        ${cpDummy parentDir "src/bin/crane-dummy-${trimmedCargoToml.package.name or "no-name"}/main.rs"}
 
         # Stub all other targets in case they have particular feature combinations
         ${safeStubLib}
