@@ -36,7 +36,7 @@ jobs:
             nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-23.05"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v22
       with:
         install_url: ${{ matrix.install_url }}
@@ -69,7 +69,7 @@ jobs:
             filter: "-not -name build-std"
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v22
       with:
         install_url: ${{ matrix.install_url }}
@@ -89,7 +89,7 @@ jobs:
   check-dead-code:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v22
     - uses: cachix/cachix-action@v12
       with:
@@ -100,7 +100,7 @@ jobs:
   check-fmt:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v22
     - name: check formatting
       run: nix fmt --accept-flake-config -- --check .
