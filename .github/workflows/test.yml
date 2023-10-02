@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v12
@@ -70,7 +70,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v12
@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
     - uses: cachix/cachix-action@v12
       with:
         name: deadnix
@@ -101,6 +101,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v22
+    - uses: cachix/install-nix-action@v23
     - name: check formatting
       run: nix fmt --accept-flake-config -- --check .
