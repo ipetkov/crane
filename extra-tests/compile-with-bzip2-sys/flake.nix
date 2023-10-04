@@ -18,12 +18,12 @@
       };
     };
   };
-  outputs = {self, nixpkgs, flake-utils, rust-overlay, crane}:
+  outputs = { self, nixpkgs, flake-utils, rust-overlay, crane }:
     flake-utils.lib.eachDefaultSystem
       (system:
         let
           system = "x86_64-linux";
-          overlays = [(import rust-overlay)];
+          overlays = [ (import rust-overlay) ];
           pkgs = import nixpkgs {
             inherit system overlays;
           };
@@ -33,19 +33,19 @@
           src = lib.cleanSourceWith {
             src = ./.; # The original, unfiltered source
           };
-          nativeBuildInputs = with pkgs; [rustToolchain pkg-config];
-          buildInputs = with pkgs; [rustToolchain];
+          nativeBuildInputs = with pkgs; [ rustToolchain pkg-config ];
+          buildInputs = with pkgs; [ rustToolchain ];
           commonArgs = {
             inherit src buildInputs nativeBuildInputs;
           };
-          cargoArtifacts = craneLib.buildDepsOnly(commonArgs // {
+          cargoArtifacts = craneLib.buildDepsOnly (commonArgs // {
             cargoBuildCommand = "cargo build --locked --profile release";
             cargoExtraArgs = "--bin test-bzip2-sys";
             doCheck = false;
             pname = "test-bzip2-sys";
             installCargoArtifactsMode = "use-zstd";
           });
-          binary = craneLib.buildPackage(commonArgs // {
+          binary = craneLib.buildPackage (commonArgs // {
             inherit cargoArtifacts;
             cargoBuildCommand = "cargo build --locked --profile release";
             cargoExtraArgs = "--bin test-bzip2-sys";
