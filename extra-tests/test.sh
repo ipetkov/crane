@@ -21,5 +21,6 @@ cd "${scriptPath}"
 runTest ./dummy-does-not-depend-on-flake-source-via-path/test.sh
 runTest ./dummy-does-not-depend-on-flake-source-via-self/test.sh
 runTest ./fetch-cargo-git/test.sh
+runTest ./compile-with-bzip2-sys/test.sh
 
 exit ${anyFailed}
