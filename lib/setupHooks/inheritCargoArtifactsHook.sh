@@ -21,6 +21,10 @@ inheritCargoArtifacts() {
 
     zstd -d "${preparedArtifacts}" --stdout | \
       tar -x -C "${cargoTargetDir}" --strip-components=1
+
+    # Make cached artifacts writable. Some crates' build scripts assume this, such as bzip2-sys
+    # (https://github.com/alexcrichton/bzip2-rs/blob/3032f3790742bffda521e54d14429f459e078eba/bzip2-sys/build.rs#L44)
+    chmod -R u+w "${cargoTargetDir}"
   elif [ -d "${preparedArtifacts}" ]; then
     echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
