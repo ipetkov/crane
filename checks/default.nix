@@ -237,6 +237,13 @@ in
     src = ./various-targets;
   };
 
+  depsOnlyCargoDoc = myLib.buildDepsOnly {
+    src = ./workspace;
+    version = "0.0.1";
+    pname = "workspace";
+    buildPhaseCargoCommand = "cargo doc --workspace";
+  };
+
   devShell = myLib.devShell {
     checks = {
       simple = myLib.buildPackage {
