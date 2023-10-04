@@ -10,7 +10,7 @@ edition = "2021"
 debug = false
 
 [[bin]]
-name = "crane-bug"
+name = "test-bzip2-sys"
 path = "src/main.rs"
 
 [dependencies]

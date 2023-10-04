@@ -10,7 +10,7 @@
       };
     };
     crane = {
-      url = "github:isibboi/crane";
+      url = "github:ipetkov/crane";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         rust-overlay.follows = "rust-overlay";
@@ -32,58 +32,32 @@
           craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
           src = lib.cleanSourceWith {
             src = ./.; # The original, unfiltered source
-            filter = path: type:
-              # Allow sql files for migrations
-              (lib.hasSuffix "\.sql" path) ||
-              # Default filter from crane (allow .rs files)
-              (craneLib.filterCargoSources path type)
-            ;
           };
           nativeBuildInputs = with pkgs; [rustToolchain pkg-config];
-          buildInputs = with pkgs; [rustToolchain openssl];
-          developmentTools = with pkgs; [cargo];
+          buildInputs = with pkgs; [rustToolchain];
           commonArgs = {
             inherit src buildInputs nativeBuildInputs;
           };
-          cargoDebugArtifacts = craneLib.buildDepsOnly(commonArgs // {
-            cargoBuildCommand = "cargo build --locked --profile dev";
-            cargoExtraArgs = "--bin crane-bug";
-            doCheck = false;
-            pname = "crane-bug";
-            installCargoArtifactsMode = "use-zstd";
-          });
-          debugBinary = craneLib.buildPackage(commonArgs // {
-            inherit cargoDebugArtifacts;
-            cargoBuildCommand = "cargo build --locked --profile dev";
-            cargoExtraArgs = "--bin crane-bug";
-            doCheck = false;
-            pname = "crane-bug";
-          });
           cargoArtifacts = craneLib.buildDepsOnly(commonArgs // {
             cargoBuildCommand = "cargo build --locked --profile release";
-            cargoExtraArgs = "--bin crane-bug";
+            cargoExtraArgs = "--bin test-bzip2-sys";
             doCheck = false;
-            pname = "crane-bug";
+            pname = "test-bzip2-sys";
             installCargoArtifactsMode = "use-zstd";
           });
           binary = craneLib.buildPackage(commonArgs // {
             inherit cargoArtifacts;
             cargoBuildCommand = "cargo build --locked --profile release";
-            cargoExtraArgs = "--bin crane-bug";
+            cargoExtraArgs = "--bin test-bzip2-sys";
             doCheck = false;
-            pname = "crane-bug";
+            pname = "test-bzip2-sys";
           });
         in
         with pkgs;
         {
           packages = {
-            inherit binary debugBinary;
+            inherit binary;
             default = binary;
-          };
-          devShells.default = mkShell {
-            inputsFrom = [binary];
-            buildInputs = with pkgs; [dive wget];
-            packages = developmentTools;
           };
         }
 
