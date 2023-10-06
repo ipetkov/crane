@@ -14,6 +14,13 @@ let
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
 in
 {
+  bzip2Sys = myLib.buildPackage {
+    src = ./bzip2-sys;
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./bzip2-sys;
+    };
+  };
+
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
   clippy = callPackage ./clippy { };
