@@ -8,6 +8,7 @@
 , cargoLockContentsList ? [ ]
 , cargoLockList ? [ ]
 , cargoLockParsedList ? [ ]
+, outputHashes ? { }
 }@args:
 let
   inherit (builtins)
@@ -57,7 +58,7 @@ let
   } // optionalAttrs (args ? registries) { inherit (args) registries; });
 
   vendoredGit = vendorGitDeps {
-    inherit lockPackages;
+    inherit lockPackages outputHashes;
   };
 
   linkSources = sources: concatMapStrings

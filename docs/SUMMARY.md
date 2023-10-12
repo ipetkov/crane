@@ -30,6 +30,7 @@
   * [IFD (import from derivation) errors](./faq/ifd-error.md)
   * [Constantly rebuilding from scratch](./faq/constant-rebuilds.md)
   * [Crates being rebuilt when using different toolchains](./faq/rebuilds-with-different-toolchains.md)
+  * [Constantly rebuilding proc-macro dependencies `dev` mode](./faq/rebuilds-with-proc-macros.md)
   * [Building upstream cargo crate with no `Cargo.lock`](./faq/no-cargo-lock.md)
   * [Patching `Cargo.lock` during build](./faq/patching-cargo-lock.md)
   * [Building a subset of a workspace](./faq/build-workspace-subset.md)

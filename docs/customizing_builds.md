@@ -57,9 +57,9 @@ craneLib.buildPackage {
     fi
   '';
 
-  # Lastly, add a postInstallPhase to install additional items after
+  # Lastly, add postInstall to install additional items after
   # the default installPhase has run and installed the package binaries
-  postInstallPhase = ''
+  postInstall = ''
     echo "hello world" > $out/hello.txt
     # also install the README.md for good measure
     cp README.md $out/

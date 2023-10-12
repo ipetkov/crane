@@ -21,6 +21,7 @@ let
     "cargoExtraArgs"
     "cargoTestCommand"
     "cargoTestExtraArgs"
+    "outputHashes"
     "dummySrc"
   ];
 

@@ -7,12 +7,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-* Added `devShell`, a thin wrapper around `pkgs.mkShell` which automatically
-  provides `cargo` and `rustc`.
 * `use-zstd` mode uses a chained, incremental approach to avoid redundancy.
   Old behavior (taking a full snapshot of the cargo artifacts can be achieved
   by setting `installCargoArtifactsMode = "use-zstd-full"`.
   ([#387](https://github.com/ipetkov/crane/pull/387))
+
+### Fixed
+* Fixed handling of Cargo workspace inheritance for git-dependencies where said
+  crate relies on reading non-TOML metadata (i.e. comments) from its Cargo.toml
+  at build time. ([#407](https://github.com/ipetkov/crane/pull/407))
+* Fixed handling of dummy target names to avoid issues with `cargo doc`.
+  ([#410](https://github.com/ipetkov/crane/pull/410))
+
+## [0.14.1] - 2023-09-23
+
+### Fixed
+
+* Fixed a bug where `buildPackage` would fail to inherit artifacts from
+  dependency crates if `cargoArtifacts` was not explicitly specified.
+
+## [0.14.0] - 2023-09-21
+
+### Added
+* Added `devShell`, a thin wrapper around `pkgs.mkShell` which automatically
+  provides `cargo` and `rustc`.
+* Added the ability to specify output hashes of git dependencies for fully
+  offline evaluations. The `outputHashes` attribute can now be optionally
+  specified in `vendorCargoDeps`, `vendorGitDeps`, `vendorMultipleCargoDeps`, or
+  anything else which delegates to them.
 
 ### Changed
 * **Breaking** (technically): `buildDepsOnly`, `buildPackage`, `cargoBuild`,
@@ -467,6 +489,8 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.14.1]: https://github.com/ipetkov/crane/compare/v0.14.0...v0.14.1
+[0.14.0]: https://github.com/ipetkov/crane/compare/v0.13.1...v0.14.0
 [0.13.1]: https://github.com/ipetkov/crane/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/ipetkov/crane/compare/v0.12.2...v0.13.0
 [0.12.2]: https://github.com/ipetkov/crane/compare/v0.12.1...v0.12.2
