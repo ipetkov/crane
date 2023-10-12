@@ -644,16 +644,16 @@ in
   };
 
   zstdNoChange =
-  let
-    args = {
-      installCargoArtifactsMode = "use-zstd";
-      src = ./simple;
-    };
-  in
-  myLib.cargoBuild (args // {
-    cargoArtifacts = myLib.cargoBuild (args // {
-      cargoArtifacts = myLib.buildDepsOnly args;
+    let
+      args = {
+        installCargoArtifactsMode = "use-zstd";
+        src = ./simple;
+      };
+    in
+    myLib.cargoBuild (args // {
+      cargoArtifacts = myLib.cargoBuild (args // {
+        cargoArtifacts = myLib.buildDepsOnly args;
+      });
     });
-  });
 })
 )
