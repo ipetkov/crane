@@ -6,23 +6,23 @@ compressAndInstallCargoArtifactsDir() {
   mkdir -p "${dir}"
 
   local dest="${dir}/target.tar.zst"
-  echo "compressing ${cargoTargetDir} to ${dest}"
   (
     export SOURCE_DATE_EPOCH=1
 
     dynTar() {
       if [ -n "${doCompressAndInstallFullArchive}" ]; then
-        >&2 echo "compressing and installing full archive as requested"
+        >&2 echo "compressing and installing full archive of ${cargoTargetDir} to ${dest} as requested"
         tar "$@" "${cargoTargetDir}"
       elif [ "$(uname -s)" == "Darwin" ]; then
         # https://github.com/rust-lang/rust/issues/115982
         >&2 echo "incremental zstd compression not currently supported on Darwin: https://github.com/rust-lang/rust/issues/115982"
+        >&2 echo "doing a full archive install of ${cargoTargetDir} to ${dest}"
         tar "$@" "${cargoTargetDir}"
       elif [ -z "${prevArtifacts}" ]; then
-        >&2 echo "no previous artifacts found, compressing and installing full archive"
+        >&2 echo "no previous artifacts found, compressing and installing full archive of ${cargoTargetDir} to ${dest}"
         tar "$@" "${cargoTargetDir}"
       else
-        >&2 echo "linking previous artifacts ${prevArtifacts}"
+        >&2 echo "linking previous artifacts ${prevArtifacts} to ${dest}"
         ln -s "${prevArtifacts}" "${dest}.prev"
         touch -d @${SOURCE_DATE_EPOCH} "${TMPDIR}/.crane.source-date-epoch"
         tar \
