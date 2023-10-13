@@ -26,6 +26,9 @@ nix flake init -t github:ipetkov/crane#trunk
 
 # If you are building a workspace with trunk member
 nix flake init -t github:ipetkov/crane#trunk-workspace
+
+# If you would like to perform end to end testing of a webapp
+nix flake init -t github:ipetkov/crane#end-to-end-testing
 ```
 
 For an even more lean, no frills set up, create a `flake.nix` file with the
