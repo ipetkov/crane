@@ -361,9 +361,9 @@ in
   simpleGitWithHashes = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git;
     outputHashes = {
-      "git+https://github.com/BurntSushi/byteorder.git#8d9f0c0fb577e2d3aa0265a0b0c0b8af56780aec" = "sha256-rP/1WWuCH8dl/zLyarcdWHJvAoR1N9yiIhJHGk6EFFA=";
+      "git+https://github.com/BurntSushi/byteorder.git#ec068eefa042d494475db125c4b034bd8e9e34dd" = "sha256-K/TJjvw05iXmGQ/MDHIY+7AXgdgsiaI3Wt6gvUEUZMg=";
       "git+https://github.com/dtolnay/rustversion.git?rev=2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb#2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb" = "sha256-deS6eoNuWPZ1V3XO9UzR07vLHZjT9arAYL0xEJCoU6E=";
-      "git+https://github.com/rust-lang/libc.git?branch=main#28ab9b9e7bd04a5c5aca3f4d78583214f63d4002" = "sha256-SXmFggY9AUbwzb98JUpxZ1I3DBBhKonZVRUJDrECSb0=";
+      "git+https://github.com/rust-lang/libc.git?branch=main#0dbadb4dad68c7017772c4888700d43f1609493c" = "sha256-GiQSkiwQSwdVfXiqFNACHrgJcxpeQfFAhHxq/SBYmFg=";
       "git+https://github.com/seanmonstar/num_cpus.git?tag=v1.13.1#5f1b03332000b4c4274b5bd35fac516049ff1c6b" = "sha256-mNMxS/WXjNokO9mFXQSwyuIpIp/n94EQ9Ni0Bl40es8";
 
     };
