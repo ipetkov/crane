@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* `cargoAudit` will pass `--ignore yanked` by default if `cargoAuditExtraArgs`
+  are not specified. This is because `cargo-audit` cannot check for yanked
+  crates from inside of the sandbox. To get the old behavior back, set
+  `cargoAuditExtraArgs = "";`.
+
 ### Fixed
 * Fixed handling of Cargo workspace inheritance for git-dependencies where said
   crate relies on reading non-TOML metadata (i.e. comments) from its Cargo.toml
