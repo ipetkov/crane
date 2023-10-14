@@ -108,15 +108,18 @@ in
   });
 
   chainedMultiple = pkgs.linkFarmFromDrvs "chainedMultiple" (map
-    (args: myLib.buildPackage (args // {
-      src = ./simple;
-      cargoArtifacts = myLib.cargoClippy (args // {
-        src = ./simple;
-        cargoArtifacts = myLib.buildDepsOnly (args // {
-          src = ./simple;
+    (test:
+      let
+        args = test // { src = ./simple; };
+      in
+      myLib.buildPackage (args // {
+        cargoArtifacts = myLib.cargoBuild (args // {
+          cargoArtifacts = myLib.cargoClippy (args // {
+            cargoArtifacts = myLib.buildDepsOnly args;
+          });
         });
-      });
-    }))
+      })
+    )
     [
       { }
       { installCargoArtifactsMode = "use-zstd"; }

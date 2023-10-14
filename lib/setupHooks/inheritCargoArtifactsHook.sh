@@ -16,22 +16,14 @@ inheritCargoArtifacts() {
   fi
 
   mkdir -p "${cargoTargetDir}"
-
-  # Check a bunch of options for previous candidates to inherit first
-  local prevArtifactsCandidate="${preparedArtifacts}.prev"
-  local prevArtifactsCandidateTarZst="${candidateTarZst}.prev"
-  local prevArtifactsCandidateTargetDir="${candidateTargetDir}.prev"
-  if [ -e "${prevArtifactsCandidate}" ]; then
-   inheritCargoArtifacts "${prevArtifactsCandidate}" "$cargoTargetDir"
-  elif [ -f "${prevArtifactsCandidateTarZst}" ]; then
-   inheritCargoArtifacts "${prevArtifactsCandidateTarZst}" "$cargoTargetDir"
-  elif [ -d "${prevArtifactsCandidateTargetDir}" ]; then
-   inheritCargoArtifacts "${prevArtifactsCandidateTargetDir}" "$cargoTargetDir"
-  fi
-
   if [ -f "${preparedArtifacts}" ]; then
-    echo "decompressing cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
+    local prevArtifactsCandidate="${preparedArtifacts}.prev"
+    if [ -f "${prevArtifactsCandidate:-}" ]; then
+      inheritCargoArtifacts "$(realpath "${prevArtifactsCandidate}")" "$cargoTargetDir"
+    fi
+
+    echo "decompressing cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
     zstd -d "${preparedArtifacts}" --stdout | \
       tar -x -C "${cargoTargetDir}" --strip-components=1
   elif [ -d "${preparedArtifacts}" ]; then

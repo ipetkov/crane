@@ -82,6 +82,10 @@ prepareAndInstallCargoArtifactsDir() {
 
   case "${mode}" in
     "use-zstd")
+      local prevCandidateTarZst="${prevCargoArtifacts}/target.tar.zst"
+      if [ -f "${prevCandidateTarZst}" ]; then
+        local prevCargoArtifacts="${prevCandidateTarZst}"
+      fi
       compressAndInstallCargoArtifactsDir "${dir}" "${cargoTargetDir}" "${prevCargoArtifacts}"
       ;;
 
