@@ -4,7 +4,7 @@
 }:
 
 { advisory-db
-, cargoAuditExtraArgs ? ""
+, cargoAuditExtraArgs ? "--ignore yanked"
 , cargoExtraArgs ? ""
 , src
 , ...

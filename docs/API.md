@@ -315,7 +315,7 @@ Except where noted below, all derivation attributes are delegated to
 
 #### Optional attributes
 * `cargoAuditExtraArgs`: additional flags to be passed in the cargo-audit invocation
-  - Default value: `""`
+  - Default value: `"--ignore yanked"`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation
   - Default value: `""`
 * `pname`: the name of the derivation; will _not_ be introspected from a

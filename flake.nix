@@ -62,6 +62,11 @@
           path = ./examples/custom-toolchain;
         };
 
+        end-to-end-testing = {
+          description = "Run End-to-End tests for a webapp";
+          path = ./examples/end-to-end-testing;
+        };
+
         default = quick-start;
         quick-start = {
           description = "Build a cargo project";

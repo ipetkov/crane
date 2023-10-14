@@ -14,7 +14,7 @@ format = "terminal" # "terminal" (human readable report) or "json"
 quiet = false # Only print information on error
 show_tree = true # Show inverse dependency trees along with advisories (default: true)
 
+# Doesn't work in the sandbox
 [yanked]
-enabled = true # Warn for yanked crates in Cargo.lock (default: true)
-update_index = true # Auto-update the crates.io index (default: true)
-
+enabled = false # Warn for yanked crates in Cargo.lock (default: true)
+update_index = false # Auto-update the crates.io index (default: true)
