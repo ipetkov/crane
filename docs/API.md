@@ -1546,6 +1546,8 @@ sources themselves. It takes two positional arguments:
    * Note: it is expected that this directory has the exact structure as would
      be produced by `craneLib.vendorCargoDeps`
 
+Any patched binaries on `aarch64-darwin` will be [signed](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Introduction/Introduction.html). You can disable this functionality by setting `doNotSign`.
+
 **Automatic behavior:** if `cargoVendorDir` is set and
 `doNotRemoveReferencesToVendorDir` is not set, then
 `removeReferencesToVendoredSources "$out" "$cargoVendorDir"` will be run as a

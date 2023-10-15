@@ -26,8 +26,12 @@ removeReferencesToVendoredSources() {
 
       echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
     )
+
+    @signIfRequired@
   done < <(find "${installLocation}" -type f)
 }
+
+@sourceSigningUtils@
 
 if [ -n "${doNotRemoveReferencesToVendorDir-}" ]; then
   echo "removeReferencesToVendoredSources disabled"

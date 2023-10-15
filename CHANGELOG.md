@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   ([#410](https://github.com/ipetkov/crane/pull/410))
 * When using `installCargoArtifactsMode = "use-zstd";` all files will be marked
   as user-writable while compressing
+* `removeReferencesToVendoredSources` now signs `aarch64-darwin` binaries. ([#418](https://github.com/ipetkov/crane/pull/418))
 
 ## [0.14.1] - 2023-09-23
 
