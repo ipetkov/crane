@@ -12,6 +12,7 @@ let
     extensions = [ "llvm-tools" ];
   });
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
+  aarch64Darwin = pkgs.hostPlatform.system == "aarch64-darwin";
 in
 {
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
@@ -106,6 +107,20 @@ in
       };
     };
   });
+
+  # https://github.com/ipetkov/crane/issues/417
+  codesign = lib.optionalAttrs aarch64Darwin (
+    let
+      codesignPackage = myLib.buildPackage {
+        src = ./codesign;
+        cargoArtifacts = null;
+        nativeBuildInputs = [ pkgs.pkg-config pkgs.libiconv ];
+        buildInputs = [ pkgs.openssl ];
+        dontStrip = true;
+      };
+    in
+    pkgs.runCommand "codesign" { } "${codesignPackage}/bin/codesign > $out"
+  );
 
   compilesFresh = callPackage ./compilesFresh.nix { };
   compilesFreshSimple = self.compilesFresh "simple" (myLib.cargoBuild) {

@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   at build time. ([#407](https://github.com/ipetkov/crane/pull/407))
 * Fixed handling of dummy target names to avoid issues with `cargo doc`.
   ([#410](https://github.com/ipetkov/crane/pull/410))
+* `removeReferencesToVendoredSources` now signs `aarch64-darwin` binaries. ([#418](https://github.com/ipetkov/crane/pull/418))
 
 ## [0.14.1] - 2023-09-23
 
