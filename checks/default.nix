@@ -15,8 +15,10 @@ let
   aarch64Darwin = pkgs.hostPlatform.system == "aarch64-darwin";
 in
 {
+  # https://github.com/ipetkov/crane/issues/411
   bzip2Sys = myLib.buildPackage {
     src = ./bzip2-sys;
+    strictDeps = false; # Explicitly repro original report
     installCargoArtifactsMode = "use-zstd";
     nativeBuildInputs = [ pkgs.pkg-config ];
   };
@@ -119,6 +121,7 @@ in
     let
       codesignPackage = myLib.buildPackage {
         src = ./codesign;
+        strictDeps = true;
         nativeBuildInputs = [ pkgs.pkg-config pkgs.libiconv ];
         buildInputs = [ pkgs.openssl ];
         dontStrip = true;
@@ -497,11 +500,13 @@ in
     in
     myLibWithRegistry.buildPackage {
       src = ../examples/alt-registry;
-      nativeBuildInputs = with pkgs; [
-        pkg-config
-        openssl
+      strictDeps = true;
+      nativeBuildInputs = [
+        pkgs.pkg-config
       ];
-      buildInputs = lib.optionals isDarwin [
+      buildInputs = [
+        pkgs.openssl
+      ] ++ lib.optionals isDarwin [
         pkgs.libiconv
         pkgs.darwin.apple_sdk.frameworks.Security
       ];

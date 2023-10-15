@@ -63,9 +63,11 @@
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource (craneLib.path ./.);
+          strictDeps = true;
 
           buildInputs = [
             # Add additional build inputs here
+            pkgs.openssl
           ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
             # Additional darwin specific inputs can be set here
             pkgs.libiconv
@@ -73,9 +75,8 @@
           ];
 
           # Specific to our example, but not always necessary in the general case.
-          nativeBuildInputs = with pkgs; [
-            pkg-config
-            openssl
+          nativeBuildInputs = [
+            pkgs.pkg-config
           ];
         };
       in
