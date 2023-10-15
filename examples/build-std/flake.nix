@@ -21,9 +21,6 @@
   };
 
   outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    let
-      optionalList = cond: list: if cond then list else [ ];
-    in
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = import nixpkgs {
