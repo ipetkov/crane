@@ -931,6 +931,16 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - Default value: the build phase will run `preBuild` hooks, print the cargo
     version, log and evaluate `buildPhaseCargoCommand`, and run `postBuild`
     hooks
+* `cargoLock`: if set will be passed through to the derivation and the path it
+  points to will be copied as the workspace `Cargo.lock`
+  - Unset by default
+* `cargoLockContents`: if set and `cargoLock` is missing or null, its value will
+  be written as the workspace `Cargo.lock`
+  - Unset by default
+* `cargoLockParsed`: if set and both `cargoLock` and `cargoLockContents` are
+  missing or null, its value will be serialized as TOML and the result written
+  as the workspace `Cargo.lock`
+  - Unset by default
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
   follow the output of `cargo vendor`.
@@ -992,6 +1002,7 @@ hooks:
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
+* `replaceCargoLockHook`
 * `rsync`
 * `zstd`
 
@@ -1539,3 +1550,15 @@ sources themselves. It takes two positional arguments:
 `doNotRemoveReferencesToVendorDir` is not set, then
 `removeReferencesToVendoredSources "$out" "$cargoVendorDir"` will be run as a
 post install hook.
+
+### `craneLib.replaceCargoLockHook`
+
+Defines `replaceCargoLock()` which handles replacing or inserting a specified
+`Cargo.lock` file in the current directory. It takes one positional argument:
+1. a file which will be copied to `Cargo.lock` in the current directory
+   * If not specified, the value of `$cargoLock` will be used
+   * If `$cargoLock` is not set, an error will be raised
+
+**Automatic behavior:** if `cargoLock` is set and
+`doNotReplaceCargoLock` is not set, then `replaceCargoLock "$cargoLock"` will be
+run as a post unpack hook.

@@ -5,9 +5,13 @@
 , crateNameFromCargoToml
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
+, lib
+, replaceCargoLockHook
 , rsync
 , stdenv
 , vendorCargoDeps
+, writeText
+, writeTOML
 , zstd
 }:
 
@@ -40,8 +44,18 @@ let
     "outputHashes"
     "stdenv"
   ];
+
+  cargoLockFromContents =
+    if args ? cargoLockContents
+    then writeText "Cargo.lock" args.cargoLockContents
+    else if args ? cargoLockParsed
+    then writeTOML "Cargo.lock" args.cargoLockParsed
+    else null;
+  cargoLock = args.cargoLock or cargoLockFromContents;
 in
-chosenStdenv.mkDerivation (cleanedArgs // {
+chosenStdenv.mkDerivation (cleanedArgs // lib.optionalAttrs (cargoLock != null) {
+  inherit cargoLock;
+} // {
   inherit cargoArtifacts;
 
   pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
@@ -61,6 +75,7 @@ chosenStdenv.mkDerivation (cleanedArgs // {
     configureCargoVendoredDepsHook
     inheritCargoArtifactsHook
     installCargoArtifactsHook
+    replaceCargoLockHook
     rsync
     zstd
   ];
