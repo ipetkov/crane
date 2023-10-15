@@ -1,6 +1,6 @@
-{ darwin
-, lib
+{ lib
 , makeSetupHook
+, pkgsBuildBuild
 , stdenv
 }:
 
@@ -12,7 +12,15 @@ makeSetupHook
   name = "removeReferencesToVendoredSourcesHook";
   substitutions = {
     storeDir = builtins.storeDir;
-    sourceSigningUtils = if darwinCodeSign then "source ${darwin.signingUtils}" else null;
-    signIfRequired = if darwinCodeSign then ''if [ -z "''${doNotSign-}" ]; then signIfRequired "''${installedFile}"; fi'' else null;
+    sourceSigningUtils = lib.optionalString darwinCodeSign ''
+      source ${pkgsBuildBuild.darwin.signingUtils}
+    '';
+    signIfRequired = lib.optionalString darwinCodeSign ''
+      if [ -n "''${doNotSign-}" ]; then
+        echo "not signing ''${installedFile} as requested";
+      else
+        signIfRequired "''${installedFile}"
+      fi
+    '';
   };
 } ./removeReferencesToVendoredSourcesHook.sh

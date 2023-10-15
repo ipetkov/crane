@@ -113,7 +113,6 @@ in
     let
       codesignPackage = myLib.buildPackage {
         src = ./codesign;
-        cargoArtifacts = null;
         nativeBuildInputs = [ pkgs.pkg-config pkgs.libiconv ];
         buildInputs = [ pkgs.openssl ];
         dontStrip = true;
