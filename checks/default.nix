@@ -17,11 +17,7 @@ in
   bzip2Sys = myLib.buildPackage {
     src = ./bzip2-sys;
     installCargoArtifactsMode = "use-zstd";
-    cargoArtifacts = myLib.buildDepsOnly {
-      src = ./bzip2-sys;
-      installCargoArtifactsMode = "use-zstd";
-      nativeBuildInputs = [ pkgs.pkg-config ];
-    };
+    nativeBuildInputs = [ pkgs.pkg-config ];
   };
 
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
