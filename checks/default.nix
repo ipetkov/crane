@@ -609,7 +609,6 @@ in
     postUnpack = ''
       cd $sourceRoot/workspace
       sourceRoot="."
-      [[ -f Cargo.lock ]] || ln ../Cargo.lock
     '';
     cargoLock = ./workspace-not-at-root/workspace/Cargo.lock;
     cargoToml = ./workspace-not-at-root/workspace/Cargo.toml;

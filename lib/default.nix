@@ -67,6 +67,7 @@ in
   registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
   registryFromSparse = callPackage ./registryFromSparse.nix { };
   removeReferencesToVendoredSourcesHook = callPackage ./setupHooks/removeReferencesToVendoredSources.nix { };
+  replaceCargoLockHook = callPackage ./setupHooks/replaceCargoLockHook.nix { };
   urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
   vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
   vendorMultipleCargoDeps = callPackage ./vendorMultipleCargoDeps.nix { };
