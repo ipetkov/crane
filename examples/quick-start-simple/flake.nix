@@ -22,6 +22,7 @@
         craneLib = crane.lib.${system};
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource (craneLib.path ./.);
+          strictDeps = true;
 
           buildInputs = [
             # Add additional build inputs here

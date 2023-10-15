@@ -40,6 +40,7 @@
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource (craneLib.path ./.);
+          strictDeps = true;
 
           cargoExtraArgs = "--target wasm32-wasi";
 

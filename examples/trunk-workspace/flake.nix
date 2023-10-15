@@ -66,6 +66,7 @@
           inherit src;
           pname = "trunk-workspace";
           version = "0.1.0";
+          strictDeps = true;
 
           buildInputs = [
             # Add additional build inputs here
