@@ -14,3 +14,4 @@ This directory contains several different ways of configuring a project:
   builds)
 * **quick-start**: build a cargo project with a comprehensive test suite
 * **quick-start-simple**: build a cargo project without extra tests
+* **end-to-end-testing**: run end-to-end tests for a webapp
