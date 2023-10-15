@@ -14,6 +14,12 @@ let
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
 in
 {
+  bzip2Sys = myLib.buildPackage {
+    src = ./bzip2-sys;
+    installCargoArtifactsMode = "use-zstd";
+    nativeBuildInputs = [ pkgs.pkg-config ];
+  };
+
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
   clippy = callPackage ./clippy { };
