@@ -84,7 +84,7 @@ jobs:
         # "opt-out" of our lockfile .gitignore
         rm ./examples/.gitignore
 
-        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }}); do
+        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }} | sort -u); do
           pushd "${f}"
           echo "validating ${f}"
           nix develop --accept-flake-config --command ../../ci/fast-flake-check.sh --override-input crane ../.. ${{ matrix.nixpkgs-override }} -- --keep-going
