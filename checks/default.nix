@@ -15,6 +15,12 @@ let
   aarch64Darwin = pkgs.hostPlatform.system == "aarch64-darwin";
 in
 {
+  bzip2Sys = myLib.buildPackage {
+    src = ./bzip2-sys;
+    installCargoArtifactsMode = "use-zstd";
+    nativeBuildInputs = [ pkgs.pkg-config ];
+  };
+
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
   clippy = callPackage ./clippy { };
