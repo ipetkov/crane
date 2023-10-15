@@ -1,4 +1,4 @@
-/examples/*/flake.lock
+gcroot
 result*
 target/
 /extra-tests/*/flake.lock

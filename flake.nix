@@ -126,6 +126,7 @@
           nativeBuildInputs = with pkgs; [
             jq
             mdbook
+            nix-eval-jobs
             nixpkgs-fmt
           ];
         };

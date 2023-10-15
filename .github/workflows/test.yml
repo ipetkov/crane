@@ -45,7 +45,7 @@ jobs:
         name: crane
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: flake checks
-      run: nix flake check --accept-flake-config --keep-going --print-build-logs ${{ matrix.nixpkgs-override }}
+      run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh ${{ matrix.nixpkgs-override }} -- --keep-going
     - name: extra tests
       run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
 
@@ -79,9 +79,15 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: validate examples
       run: |
-        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }}); do
+        # Nix won't write a lockfile when --override-input is used (which is good because it will
+        # complain that the lock file is .gitignored), but nix-eval-jobs doesn't, so we'll have to
+        # "opt-out" of our lockfile .gitignore
+        rm ./examples/.gitignore
+
+        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }} | sort -u); do
           pushd "${f}"
           echo "validating ${f}"
+          # NB: check the entire flake here, not just `.#checks`
           nix flake check --accept-flake-config --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
           popd
         done
