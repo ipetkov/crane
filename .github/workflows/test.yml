@@ -79,6 +79,11 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: validate examples
       run: |
+        # Nix won't write a lockfile when --override-input is used (which is good because it will
+        # complain that the lock file is .gitignored), but nix-eval-jobs doesn't, so we'll have to
+        # "opt-out" of our lockfile .gitignore
+        rm ./examples/.gitignore
+
         for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }}); do
           pushd "${f}"
           echo "validating ${f}"
