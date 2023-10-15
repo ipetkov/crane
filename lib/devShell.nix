@@ -1,7 +1,5 @@
-{ lib
+{ cargo
 , mkShell
-, rustPlatform
-, cargo
 , rustc
 }:
 
