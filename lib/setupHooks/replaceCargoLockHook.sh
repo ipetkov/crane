@@ -15,6 +15,6 @@ if [ -n "${cargoLock:-}" ]; then
   if [ -n "${doNotReplaceCargoLock:-}" ]; then
     echo "skipping Cargo.lock override as requested";
   else
-    postUnpackHooks+=(replaceCargoLock)
+    prePatchHooks+=(replaceCargoLock)
   fi
 fi

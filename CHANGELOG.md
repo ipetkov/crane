@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `devShell` will now additionally include `clippy` and `rustfmt` from the
   currently configured toolchain
 
+### Fixed
+* `replaceCargoLockHook` now runs as a `prePatch` hook (rather
+  than `postUnpack`) which correctly replaces the `Cargo.lock` in the source
+  directory rather than the parent directory
+
 ## [0.14.2] - 2023-10-15
 
 ### Added

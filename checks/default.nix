@@ -375,6 +375,18 @@ in
   simple = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple;
   };
+
+  simpleWithLockOverride = myLib.buildPackage {
+    cargoVendorDir = myLib.vendorCargoDeps { src = ./simple; };
+    src = lib.cleanSourceWith {
+      src = ./simple;
+      # Intentionally filter out Cargo.lock
+      filter = path: type: !(lib.hasSuffix "Cargo.lock" path);
+    };
+
+    cargoLock = ./simple/Cargo.lock;
+  };
+
   simpleGit = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git;
     buildInputs = lib.optionals isDarwin [
