@@ -1,9 +1,10 @@
 { buildDepsOnly
-, buildPackage
 , cargoClippy
 , cargoFmt
 , cleanCargoSource
+, crateNameFromCargoToml
 , path
+, rustPlatform
 }:
 
 let
@@ -13,8 +14,11 @@ let
     inherit src;
   };
 in
-buildPackage {
-  inherit cargoArtifacts src;
+rustPlatform.buildRustPackage {
+  inherit src;
+  inherit (crateNameFromCargoToml { inherit src; }) pname version;
+
+  cargoSha256 = "sha256-2mqTVhYsOxqD+F5f4yCPvz2jZ2bdAMBK1tgNMyVDtsA=";
 
   passthru = {
     checks = {
