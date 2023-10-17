@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* `craneUtils` will now be built with the `rustPlatform` provided by nixpkgs
+  instead of the currently configured toolchain. This should hopefully result in
+  fewer surprises for those testing with really old MSRV toolchains.
+
 ## [0.14.2] - 2023-10-15
 
 ### Added
