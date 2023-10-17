@@ -1,6 +1,8 @@
 { cargo
+, clippy
 , mkShell
 , rustc
+, rustfmt
 }:
 
 { checks ? { }
@@ -20,10 +22,10 @@ in
 mkShell (cleanedArgs // {
   inputsFrom = builtins.attrValues checks ++ inputsFrom;
 
-  packages =
-    [
-      rustc
-      cargo
-    ]
-    ++ packages;
+  packages = [
+    rustc
+    cargo
+    clippy
+    rustfmt
+  ] ++ packages;
 })

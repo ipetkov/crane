@@ -780,6 +780,9 @@ attributes are passed straight through, so any `mkShell` behavior can be used
 as expected: namely, all key-value pairs other than those `mkShell` consumes
 will be set as environment variables in the resulting shell.
 
+Note that the current toolchain's `cargo`, `clippy`, `rustc`, and `rustfmt`
+packages will automatically be added to the devShell.
+
 #### Optional attributes
 * `checks`: A set of checks to inherit inputs from, typically
   `self.checks.${system}`. Build inputs from the values in this attribute set
