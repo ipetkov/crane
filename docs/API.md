@@ -1566,4 +1566,4 @@ Defines `replaceCargoLock()` which handles replacing or inserting a specified
 
 **Automatic behavior:** if `cargoLock` is set and
 `doNotReplaceCargoLock` is not set, then `replaceCargoLock "$cargoLock"` will be
-run as a post unpack hook.
+run as a pre patch hook.
