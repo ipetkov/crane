@@ -32,9 +32,8 @@
           ];
 
         craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
-      in
-      {
-        packages.default = craneLib.buildPackage {
+
+        my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource (craneLib.path ./.);
 
           strictDeps = true;
@@ -46,6 +45,16 @@
             pkgsCross.mingwW64.stdenv.cc
             pkgsCross.mingwW64.windows.pthreads
           ];
+        };
+      in
+      {
+        packages = {
+          inherit my-crate;
+          default = my-crate;
+        };
+
+        checks = {
+          inherit my-crate;
         };
       }
     );

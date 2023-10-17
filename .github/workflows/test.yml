@@ -45,7 +45,7 @@ jobs:
         name: crane
         authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
     - name: flake checks
-      run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh ${{ matrix.nixpkgs-override }} -- --keep-going
+      run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh ${{ matrix.nixpkgs-override }}
     - name: extra tests
       run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
 
@@ -87,8 +87,9 @@ jobs:
         for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }} | sort -u); do
           pushd "${f}"
           echo "validating ${f}"
-          # NB: check the entire flake here, not just `.#checks`
-          nix flake check --accept-flake-config --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          nix develop ../..# --accept-flake-config --command ../../ci/fast-flake-check.sh --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          # NB: evaluate the rest flake here, but don't build anything
+          nix flake check --no-build --accept-flake-config --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
           popd
         done
 

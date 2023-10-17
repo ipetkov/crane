@@ -2,7 +2,7 @@
 curSystem=$(nix eval --raw --impure --expr builtins.currentSystem)
 
 nixEvalJobsArgs=()
-while [[ $# -ge 0 ]]; do
+while [[ $# -gt 0 ]]; do
   arg="$1"
   shift 1
 
