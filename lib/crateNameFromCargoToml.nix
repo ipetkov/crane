@@ -27,6 +27,12 @@ let
     then "provided Cargo.toml contents"
     else cargoToml;
 
+  hint = lib.optionalString (!lib.elem (builtins.getEnv "NIX_ABORT_ON_WARN") [ "1" "true" "yes" ]) ''
+
+    To find the source of this warning, rerun nix with:
+    `NIX_ABORT_ON_WARN=1 nix --option pure-eval false --show-trace ...`
+  '';
+
   traceMsg = tomlName: drvName: placeholder: lib.flip lib.trivial.warn placeholder ''
     crane will use a placeholder value since `${tomlName}` cannot be found in ${debugPath}
     to silence this warning consider one of the following:
@@ -34,6 +40,7 @@ let
     - setting `package.${tomlName} = "..."` or `workspace.package.${tomlName} = "..."` in the root Cargo.toml
     - explicitly looking up the values from a different Cargo.toml via 
       `craneLib.crateNameFromCargoToml { cargoToml = ./path/to/Cargo.toml; }`
+    ${hint}
   '';
 
   internalName = internalCrateNameFromCargoToml toml;

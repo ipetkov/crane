@@ -12,8 +12,17 @@ let
     extensions = [ "llvm-tools" ];
   });
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
+  aarch64Darwin = pkgs.hostPlatform.system == "aarch64-darwin";
 in
 {
+  # https://github.com/ipetkov/crane/issues/411
+  bzip2Sys = myLib.buildPackage {
+    src = ./bzip2-sys;
+    strictDeps = false; # Explicitly repro original report
+    installCargoArtifactsMode = "use-zstd";
+    nativeBuildInputs = [ pkgs.pkg-config ];
+  };
+
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
   clippy = callPackage ./clippy { };
@@ -125,6 +134,20 @@ in
       { installCargoArtifactsMode = "use-zstd"; }
       { installCargoArtifactsMode = "use-symlink"; }
     ]
+  );
+
+  # https://github.com/ipetkov/crane/issues/417
+  codesign = lib.optionalAttrs aarch64Darwin (
+    let
+      codesignPackage = myLib.buildPackage {
+        src = ./codesign;
+        strictDeps = true;
+        nativeBuildInputs = [ pkgs.pkg-config pkgs.libiconv ];
+        buildInputs = [ pkgs.openssl ];
+        dontStrip = true;
+      };
+    in
+    pkgs.runCommand "codesign" { } "${codesignPackage}/bin/codesign > $out"
   );
 
   compilesFresh = callPackage ./compilesFresh.nix { };
@@ -372,6 +395,18 @@ in
   simple = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple;
   };
+
+  simpleWithLockOverride = myLib.buildPackage {
+    cargoVendorDir = myLib.vendorCargoDeps { src = ./simple; };
+    src = lib.cleanSourceWith {
+      src = ./simple;
+      # Intentionally filter out Cargo.lock
+      filter = path: type: !(lib.hasSuffix "Cargo.lock" path);
+    };
+
+    cargoLock = ./simple/Cargo.lock;
+  };
+
   simpleGit = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git;
     buildInputs = lib.optionals isDarwin [
@@ -497,11 +532,13 @@ in
     in
     myLibWithRegistry.buildPackage {
       src = ../examples/alt-registry;
-      nativeBuildInputs = with pkgs; [
-        pkg-config
-        openssl
+      strictDeps = true;
+      nativeBuildInputs = [
+        pkgs.pkg-config
       ];
-      buildInputs = lib.optionals isDarwin [
+      buildInputs = [
+        pkgs.openssl
+      ] ++ lib.optionals isDarwin [
         pkgs.libiconv
         pkgs.darwin.apple_sdk.frameworks.Security
       ];
@@ -629,7 +666,6 @@ in
     postUnpack = ''
       cd $sourceRoot/workspace
       sourceRoot="."
-      [[ -f Cargo.lock ]] || ln ../Cargo.lock
     '';
     cargoLock = ./workspace-not-at-root/workspace/Cargo.lock;
     cargoToml = ./workspace-not-at-root/workspace/Cargo.toml;

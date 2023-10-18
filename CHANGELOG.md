@@ -7,14 +7,36 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Changed
-* `cargoAudit` will pass `--ignore yanked` by default if `cargoAuditExtraArgs`
-  are not specified. This is because `cargo-audit` cannot check for yanked
-  crates from inside of the sandbox. To get the old behavior back, set
-  `cargoAuditExtraArgs = "";`.
 * The `use-zstd` artifact installation mode now uses a chained, incremental
   approach to avoid redundancy. Old behavior (taking a full snapshot of the
   cargo artifacts) can be achieved by setting `doCompressAndInstallFullArchive =
   true`.
+
+## [0.14.3] - 2023-10-17
+
+### Changed
+* `craneUtils` will now be built with the `rustPlatform` provided by nixpkgs
+  instead of the currently configured toolchain. This should hopefully result in
+  fewer surprises for those testing with really old MSRV toolchains.
+* `devShell` will now additionally include `clippy` and `rustfmt` from the
+  currently configured toolchain
+
+### Fixed
+* `replaceCargoLockHook` now runs as a `prePatch` hook (rather
+  than `postUnpack`) which correctly replaces the `Cargo.lock` in the source
+  directory rather than the parent directory
+
+## [0.14.2] - 2023-10-15
+
+### Added
+* `replaceCargoLockHook` can now be used to easily replace or insert a
+  `Cargo.lock` file in the current derivation
+
+### Changed
+* `cargoAudit` will pass `--ignore yanked` by default if `cargoAuditExtraArgs`
+  are not specified. This is because `cargo-audit` cannot check for yanked
+  crates from inside of the sandbox. To get the old behavior back, set
+  `cargoAuditExtraArgs = "";`.
 
 ### Fixed
 * Fixed handling of Cargo workspace inheritance for git-dependencies where said
@@ -22,6 +44,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   at build time. ([#407](https://github.com/ipetkov/crane/pull/407))
 * Fixed handling of dummy target names to avoid issues with `cargo doc`.
   ([#410](https://github.com/ipetkov/crane/pull/410))
+* When using `installCargoArtifactsMode = "use-zstd";` all files will be marked
+  as user-writable while compressing
+* `removeReferencesToVendoredSources` now signs `aarch64-darwin` binaries. ([#418](https://github.com/ipetkov/crane/pull/418))
 
 ## [0.14.1] - 2023-09-23
 
@@ -493,6 +518,8 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.14.3]: https://github.com/ipetkov/crane/compare/v0.14.2...v0.14.3
+[0.14.2]: https://github.com/ipetkov/crane/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/ipetkov/crane/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/ipetkov/crane/compare/v0.13.1...v0.14.0
 [0.13.1]: https://github.com/ipetkov/crane/compare/v0.13.0...v0.13.1

@@ -61,6 +61,7 @@
         # Common arguments can be set here to avoid repeating them later
         commonArgs = {
           inherit src;
+          strictDeps = true;
           # We must force the target, otherwise cargo will attempt to use your native target
           CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
 

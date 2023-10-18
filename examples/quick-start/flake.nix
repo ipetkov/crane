@@ -38,6 +38,7 @@
         # Common arguments can be set here to avoid repeating them later
         commonArgs = {
           inherit src;
+          strictDeps = true;
 
           buildInputs = [
             # Add additional build inputs here

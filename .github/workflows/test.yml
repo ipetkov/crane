@@ -43,9 +43,9 @@ jobs:
     - uses: cachix/cachix-action@v12
       with:
         name: crane
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
     - name: flake checks
-      run: nix flake check --accept-flake-config --keep-going --print-build-logs ${{ matrix.nixpkgs-override }}
+      run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh ${{ matrix.nixpkgs-override }}
     - name: extra tests
       run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
 
@@ -66,7 +66,7 @@ jobs:
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
             nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/nixpkgs-23.05-darwin"
-            filter: "-not -name build-std"
+            filter: "-not -name build-std -not -name cross-rust-overlay"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -76,13 +76,20 @@ jobs:
     - uses: cachix/cachix-action@v12
       with:
         name: crane
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
     - name: validate examples
       run: |
-        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }}); do
+        # Nix won't write a lockfile when --override-input is used (which is good because it will
+        # complain that the lock file is .gitignored), but nix-eval-jobs doesn't, so we'll have to
+        # "opt-out" of our lockfile .gitignore
+        rm ./examples/.gitignore
+
+        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }} | sort -u); do
           pushd "${f}"
           echo "validating ${f}"
-          nix flake check --accept-flake-config --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          nix develop ../..# --accept-flake-config --command ../../ci/fast-flake-check.sh --override-input crane ../.. ${{ matrix.nixpkgs-override }}
+          # NB: evaluate the rest flake here, but don't build anything
+          nix flake check --no-build --accept-flake-config --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
           popd
         done
 
@@ -91,9 +98,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v23
-    - uses: cachix/cachix-action@v12
-      with:
-        name: deadnix
+    - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: check for dead code
       run: nix run github:astro/deadnix -- .
 
@@ -102,5 +107,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v23
+    - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: check formatting
       run: nix fmt --accept-flake-config -- --check .

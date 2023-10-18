@@ -21,9 +21,6 @@
   };
 
   outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    let
-      optionalList = cond: list: if cond then list else [ ];
-    in
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = import nixpkgs {
@@ -46,6 +43,7 @@
 
         my-crate = craneLib.buildPackage {
           inherit src;
+          strictDeps = true;
 
           cargoVendorDir = craneLib.vendorMultipleCargoDeps {
             inherit (craneLib.findCargoFiles src) cargoConfigs;
