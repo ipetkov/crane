@@ -119,9 +119,14 @@ in
   chainedMultiple = pkgs.linkFarmFromDrvs "chainedMultiple" (map
     (test:
       let
-        args = test // { src = ./simple; };
+        args = test // {
+          src = ./simple;
+          RUSTC_WRAPPER = pkgs.callPackage ./rustc-wrapper.nix { };
+        };
       in
-      myLib.buildPackage (args // {
+      myLib.cargoBuild (args // {
+        __CRANE_DENY_COMPILATION = true;
+
         cargoArtifacts = myLib.cargoBuild (args // {
           cargoArtifacts = myLib.cargoClippy (args // {
             cargoArtifacts = myLib.buildDepsOnly args;
