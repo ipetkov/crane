@@ -17,8 +17,13 @@ inheritCargoArtifacts() {
 
   mkdir -p "${cargoTargetDir}"
   if [ -f "${preparedArtifacts}" ]; then
-    echo "decompressing cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
+    local prevArtifactsCandidate="${preparedArtifacts}.prev"
+    if [ -f "${prevArtifactsCandidate:-}" ]; then
+      inheritCargoArtifacts "$(realpath "${prevArtifactsCandidate}")" "$cargoTargetDir"
+    fi
+
+    echo "decompressing cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
     zstd -d "${preparedArtifacts}" --stdout | \
       tar -x -C "${cargoTargetDir}" --strip-components=1
   elif [ -d "${preparedArtifacts}" ]; then

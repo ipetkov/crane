@@ -116,6 +116,31 @@ in
     };
   });
 
+  chainedMultiple = pkgs.linkFarmFromDrvs "chainedMultiple" (map
+    (test:
+      let
+        args = test // {
+          src = ./simple;
+          RUSTC_WRAPPER = pkgs.callPackage ./rustc-wrapper.nix { };
+        };
+      in
+      myLib.cargoBuild (args // {
+        __CRANE_DENY_COMPILATION = true;
+
+        cargoArtifacts = myLib.cargoBuild (args // {
+          cargoArtifacts = myLib.cargoClippy (args // {
+            cargoArtifacts = myLib.buildDepsOnly args;
+          });
+        });
+      })
+    )
+    [
+      { }
+      { installCargoArtifactsMode = "use-zstd"; }
+      { installCargoArtifactsMode = "use-symlink"; }
+    ]
+  );
+
   # https://github.com/ipetkov/crane/issues/417
   codesign = lib.optionalAttrs aarch64Darwin (
     let
@@ -661,5 +686,18 @@ in
     pname = "workspace-git";
     version = "0.0.1";
   };
+
+  zstdNoChange =
+    let
+      args = {
+        installCargoArtifactsMode = "use-zstd";
+        src = ./simple;
+      };
+    in
+    myLib.cargoBuild (args // {
+      cargoArtifacts = myLib.cargoBuild (args // {
+        cargoArtifacts = myLib.buildDepsOnly args;
+      });
+    });
 })
 )

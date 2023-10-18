@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* The `use-zstd` artifact installation mode now uses a chained, incremental
+  approach to avoid redundancy. Old behavior (taking a full snapshot of the
+  cargo artifacts) can be achieved by setting `doCompressAndInstallFullArchive =
+  true`.
+
 ## [0.14.3] - 2023-10-17
 
 ### Changed
@@ -31,10 +37,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   are not specified. This is because `cargo-audit` cannot check for yanked
   crates from inside of the sandbox. To get the old behavior back, set
   `cargoAuditExtraArgs = "";`.
-* `mkCargoDerivation` (and by extension anything which delegates to it) will now
-  automatically use the value of `cargoLock` or the contents of
-  `cargoLockContents`/`cargoLockParsed` to replace the workspace `Cargo.lock`
-  file. To disable this behavior, set `doNotReplaceCargoLock = true;`.
 
 ### Fixed
 * Fixed handling of Cargo workspace inheritance for git-dependencies where said
