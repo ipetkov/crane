@@ -19,6 +19,7 @@ in
   cargoAudit = callPackage ./cargoAudit.nix { };
   cargoBuild = callPackage ./cargoBuild.nix { };
   cargoClippy = callPackage ./cargoClippy.nix { };
+  cargoDeny = callPackage ./cargoDeny.nix { };
   cargoDoc = callPackage ./cargoDoc.nix { };
   cargoFmt = callPackage ./cargoFmt.nix { };
   cargoHelperFunctionsHook = callPackage ./setupHooks/cargoHelperFunctions.nix { };
