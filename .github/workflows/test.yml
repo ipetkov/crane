@@ -67,7 +67,7 @@ jobs:
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
             nixpkgs: "./test#nixpkgs-darwin"
-            filter: "-not -name build-std -not -name cross-rust-overlay"
+            filter: "-not -name build-std -not -name cross-musl -not -name cross-rust-overlay"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
