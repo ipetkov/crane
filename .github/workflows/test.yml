@@ -45,7 +45,7 @@ jobs:
         name: crane
         authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
     - name: flake checks
-      run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh ${{ matrix.nixpkgs-override }}
+      run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh . ${{ matrix.nixpkgs-override }}
     - name: extra tests
       run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
 
@@ -58,14 +58,15 @@ jobs:
           - os: ubuntu-latest
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
+            nixpkgs: ".#nixpkgs"
           - os: ubuntu-latest
             # The 23.05 branch ships with Nix 2.11.1
             install_url: https://releases.nixos.org/nix/nix-2.13.3/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-23.05"
+            nixpkgs: "./test#nixpkgs"
           - os: macos-12
             # Latest and greatest release of Nix
             install_url: https://nixos.org/nix/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/nixpkgs-23.05-darwin"
+            nixpkgs: "./test#nixpkgs-darwin"
             filter: "-not -name build-std -not -name cross-rust-overlay"
     runs-on: ${{ matrix.os }}
     steps:
@@ -78,20 +79,16 @@ jobs:
         name: crane
         authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
     - name: validate examples
+      # Nix won't write a lockfile when --override-input is used (which is good because it will
+      # complain that the lock file is .gitignored), but nix-eval-jobs doesn't, so we'll have to
+      # "opt-out" of our lockfile .gitignore
       run: |
-        # Nix won't write a lockfile when --override-input is used (which is good because it will
-        # complain that the lock file is .gitignored), but nix-eval-jobs doesn't, so we'll have to
-        # "opt-out" of our lockfile .gitignore
         rm ./examples/.gitignore
-
-        for f in $(find examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }} | sort -u); do
-          pushd "${f}"
-          echo "validating ${f}"
-          nix develop ../..# --accept-flake-config --command ../../ci/fast-flake-check.sh --override-input crane ../.. ${{ matrix.nixpkgs-override }}
-          # NB: evaluate the rest flake here, but don't build anything
-          nix flake check --no-build --accept-flake-config --print-build-logs --override-input crane ../.. ${{ matrix.nixpkgs-override }}
-          popd
-        done
+        nix develop .# --accept-flake-config --command bash -c '
+          for f in $(find ./examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }} | sort -u); do
+            ./ci/check-example.sh "${f}" ${{ matrix.nixpkgs }}
+          done
+        '
 
   check-dead-code:
     runs-on: ubuntu-latest
