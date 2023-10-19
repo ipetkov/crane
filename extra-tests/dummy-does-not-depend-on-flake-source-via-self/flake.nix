@@ -2,7 +2,7 @@
   inputs = {
     crane.url = "github:ipetkov/crane";
     nixpkgs.follows = "crane/nixpkgs";
-    flake-utils.follows = "crane/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { self, flake-utils, crane, ... }: flake-utils.lib.eachDefaultSystem
