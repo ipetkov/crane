@@ -1,7 +1,7 @@
 {
   inputs = {
     crane.url = "github:ipetkov/crane";
-    flake-utils.follows = "crane/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { flake-utils, crane, ... }: flake-utils.lib.eachDefaultSystem

@@ -1,5 +1,5 @@
 let
-  lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+  lock = builtins.fromJSON (builtins.readFile ./test/flake.lock);
   locked = lock.nodes.flake-compat.locked;
   compat = fetchTarball {
     url = "https://github.com/${locked.owner}/${locked.repo}/archive/${locked.rev}.tar.gz";

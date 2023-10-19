@@ -1,35 +1,52 @@
 {
   description = "A Nix library for building cargo projects. Never build twice thanks to incremental artifact caching.";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
-
-    flake-utils.url = "github:numtide/flake-utils";
-
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
   nixConfig = {
     extra-substituters = [ "https://crane.cachix.org" ];
     extra-trusted-public-keys = [ "crane.cachix.org-1:8Scfpmn9w+hGdXH/Q9tTLiYAE/2dnJYRJP7kl80GuRk=" ];
   };
 
-  outputs = { nixpkgs, flake-utils, rust-overlay, ... }:
+  outputs = { nixpkgs, ... }:
     let
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
       };
+
+      nodes = (builtins.fromJSON (builtins.readFile ./test/flake.lock)).nodes;
+      inputFromLock = name:
+        let
+          locked = nodes.${name}.locked;
+        in
+        fetchTarball {
+          url = "https://github.com/${locked.owner}/${locked.repo}/archive/${locked.rev}.tar.gz";
+          sha256 = locked.narHash;
+        };
+
+      eachSystem = systems: f:
+        let
+          # Merge together the outputs for all systems.
+          op = attrs: system:
+            let
+              ret = f system;
+              op = attrs: key: attrs //
+                {
+                  ${key} = (attrs.${key} or { })
+                    // { ${system} = ret.${key}; };
+                }
+              ;
+            in
+            builtins.foldl' op attrs (builtins.attrNames ret);
+        in
+        builtins.foldl' op { } systems;
+
+      eachDefaultSystem = eachSystem [
+        "aarch64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
     in
     {
       inherit mkLib;
@@ -88,7 +105,7 @@
           path = ./examples/trunk-workspace;
         };
       };
-    } // flake-utils.lib.eachDefaultSystem (system:
+    } // eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -107,7 +124,7 @@
             pkgsChecks = import nixpkgs {
               inherit system;
               overlays = [
-                rust-overlay.overlays.default
+                (import (inputFromLock "rust-overlay"))
               ];
             };
           in

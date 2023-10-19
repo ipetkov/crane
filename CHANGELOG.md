@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   approach to avoid redundancy. Old behavior (taking a full snapshot of the
   cargo artifacts) can be achieved by setting `doCompressAndInstallFullArchive =
   true`.
+* All dependencies (outside of `nixpkgs`) have been dropped from the (main)
+  flake.lock file so they do not pollute downstream projects' lock files.
 
 ## [0.14.3] - 2023-10-17
 
