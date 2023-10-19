@@ -5,14 +5,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     flake-utils.url = "github:numtide/flake-utils";
-
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs = {
-        flake-utils.follows = "flake-utils";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
   };
 
   nixConfig = {
@@ -20,11 +12,21 @@
     extra-trusted-public-keys = [ "crane.cachix.org-1:8Scfpmn9w+hGdXH/Q9tTLiYAE/2dnJYRJP7kl80GuRk=" ];
   };
 
-  outputs = { nixpkgs, flake-utils, rust-overlay, ... }:
+  outputs = { nixpkgs, flake-utils, ... }:
     let
       mkLib = pkgs: import ./lib {
         inherit (pkgs) lib newScope;
       };
+
+      nodes = (builtins.fromJSON (builtins.readFile ./test/flake.lock)).nodes;
+      inputFromLock = name:
+        let
+          locked = nodes.${name}.locked;
+        in
+        fetchTarball {
+          url = "https://github.com/${locked.owner}/${locked.repo}/archive/${locked.rev}.tar.gz";
+          sha256 = locked.narHash;
+        };
     in
     {
       inherit mkLib;
@@ -102,7 +104,7 @@
             pkgsChecks = import nixpkgs {
               inherit system;
               overlays = [
-                rust-overlay.overlays.default
+                (import (inputFromLock "rust-overlay"))
               ];
             };
           in
