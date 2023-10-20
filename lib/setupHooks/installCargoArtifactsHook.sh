@@ -76,7 +76,7 @@ prepareAndInstallCargoArtifactsDir() {
   # or fall back to defaults if none are provided
   local dir="${1:-${out}}"
   local cargoTargetDir="${2:-${CARGO_TARGET_DIR:-target}}"
-  local mode="${3:-${installCargoArtifactsMode:-use-symlink}}"
+  local mode="${3:-${installCargoArtifactsMode:-use-zstd}}"
   local prevCargoArtifacts="${4:-${cargoArtifacts:""}}"
 
   mkdir -p "${dir}"

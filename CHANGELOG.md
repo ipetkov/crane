@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   approach to avoid redundancy. Old behavior (taking a full snapshot of the
   cargo artifacts) can be achieved by setting `doCompressAndInstallFullArchive =
   true`.
+* The default `installCargoArtifactsMode` has been changed to `use-zstd`,
+  meaning cargo artifacts will be compressed to a series of incremental, zstd
+  compressed tarballs across derivations. To get the old behavior back, set
+  `installCargoArtifactsMode = "use-symlink"` to any derivation which produces
+  cargo artifacts.
 * All dependencies (outside of `nixpkgs`) have been dropped from the (main)
   flake.lock file so they do not pollute downstream projects' lock files.
 
