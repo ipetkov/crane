@@ -1495,9 +1495,8 @@ arguments:
    * If `CARGO_TARGET_DIR` is not set, cargo's default target location  (i.e.
      `./target`) will be used.
 1. the installation mode to apply
-   * If not specified, the value of `$installCargoArtifactsMode` will be used.
-     If `$installCargoArtifactsMode` is not specified, a default value of
-     `"use-symlink" will be used
+   * If specified, the value of `$installCargoArtifactsMode` will be used,
+     otherwise, a default value of `"use-symlink" will be used
    * If set to "use-symlink" then `dedupAndInstallCargoArtifactsDir()` will be
      used.
      - If `$cargoArtifacts` is defined and `$cargoArtifacts/target` is a valid
