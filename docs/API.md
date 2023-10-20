@@ -187,7 +187,6 @@ install hooks.
   Useful for caching incremental cargo builds.
   - Default value: the result of `buildDepsOnly` after applying the arguments
     set (with the respective default values).
-  - `installCargoArtifactsMode` will be set to `"use-zstd"` if not specified.
   - `installPhase` and `installPhaseCommand` will be removed, and no
     installation hooks will be run
 * `cargoBuildCommand`: A cargo invocation to run during the derivation's build
@@ -257,7 +256,6 @@ Except where noted below, all derivation attributes are delegated to
     set (with the respective default values).
   - `CARGO_BUILD_TARGET` will be set to `"wasm32-unknown-unknown"` if not specified.
   - `doCheck` will be set to `false` if not specified.
-  - `installCargoArtifactsMode` will be set to `"use-zstd"` if not specified.
   - `installPhase` and `installPhaseCommand` will be removed (in favor of their
     default values provided by `buildDepsOnly`)
 * `installPhaseCommand`: the command(s) which are expected to install the
@@ -1541,7 +1539,7 @@ arguments:
      `./target`) will be used.
 1. the installation mode to apply
    * If specified, the value of `$installCargoArtifactsMode` will be used,
-     otherwise, a default value of `"use-symlink" will be used
+     otherwise, a default value of `"use-zstd" will be used
    * If set to "use-symlink" then `dedupAndInstallCargoArtifactsDir()` will be
      used.
      - If `$cargoArtifacts` is defined and `$cargoArtifacts/target` is a valid

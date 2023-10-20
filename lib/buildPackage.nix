@@ -39,7 +39,6 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
 
   cargoArtifacts = args.cargoArtifacts or (
     buildDepsOnly (args // memoizedArgs // {
-      installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
       # NB: we intentionally don't run any caller-provided hooks here since they might fail
       # if they require any files that have been omitted by the source dummification.
       # However, we still _do_ want to run the installation hook with the actual artifacts

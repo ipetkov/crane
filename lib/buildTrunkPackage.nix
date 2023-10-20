@@ -37,7 +37,6 @@ mkCargoDerivation (args // {
 
   cargoArtifacts = args.cargoArtifacts or (buildDepsOnly (args // {
     CARGO_BUILD_TARGET = args.CARGO_BUILD_TARGET or "wasm32-unknown-unknown";
-    installCargoArtifactsMode = args.installCargoArtifactsMode or "use-zstd";
     doCheck = args.doCheck or false;
   }));
 
