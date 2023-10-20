@@ -100,7 +100,7 @@
 
           # Audit licenses
           my-crate-deny = craneLib.cargoDeny {
-            inherit cargoArtifacts;
+            inherit src;
           };
 
           # Run tests with cargo-nextest

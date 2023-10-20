@@ -352,8 +352,10 @@ when dependencies change.
 Except where noted below, all derivation attributes are delegated to
 `mkCargoDerivation`, and can be used to influence its behavior.
 * `buildPhaseCargoCommand` will be set to run
-  `cargo deny --offline check bans licenses sources`
-  in the workspace.
+  `cargo --offline $cargoExtraArgs deny $cargoDenyExtraArgs check
+  $cargoDenyChecks` in the workspace.
+* `cargoArtifacts` will be set to `null`
+* `doInstallCargoArtifacts` will be set to `false`
 * `pnameSuffix` will be set to `"-deny"`
 
 #### Required attributes
