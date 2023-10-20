@@ -48,6 +48,8 @@ in
 
   cargoAuditTests = callPackage ./cargoAudit.nix { };
 
+  cargoDenyTests = callPackage ./cargoDeny.nix { };
+
   cargoLlvmCov = myLibLlvmTools.cargoLlvmCov {
     src = ./simple;
     cargoArtifacts = myLib.buildDepsOnly {

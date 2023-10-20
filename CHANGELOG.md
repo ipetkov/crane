@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `cargoDeny` added for running [`cargo-deny`](https://github.com/EmbarkStudios/cargo-deny).
+
 ### Changed
 * The `use-zstd` artifact installation mode now uses a chained, incremental
   approach to avoid redundancy. Old behavior (taking a full snapshot of the

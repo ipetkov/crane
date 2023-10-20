@@ -98,6 +98,11 @@
             inherit src advisory-db;
           };
 
+          # Audit licenses
+          my-crate-deny = craneLib.cargoDeny {
+            inherit src;
+          };
+
           # Run tests with cargo-nextest
           # Consider setting `doCheck = false` on `my-crate` if you do not want
           # the tests to run twice

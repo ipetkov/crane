@@ -337,6 +337,51 @@ environment variables during the build, you can bring them back via
 * `cargoAuditExtraArgs`
 * `cargoExtraArgs`
 
+### `craneLib.cargoDeny`
+`cargoDeny :: set -> drv`
+
+Create a derivation which will run a `cargo deny` invocation in a cargo
+workspace.
+
+Note that although `cargo deny` can serve as a replacement for `cargo audit`,
+`craneLib.cargoDeny` does not expose this functionality because `cargo deny`
+requires the full source tree, rather than working from just the `Cargo.lock`
+file, meaning it will be re-run when any source file changes, rather than only
+when dependencies change.
+
+Except where noted below, all derivation attributes are delegated to
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `buildPhaseCargoCommand` will be set to run
+  `cargo --offline $cargoExtraArgs deny $cargoDenyExtraArgs check
+  $cargoDenyChecks` in the workspace.
+* `cargoArtifacts` will be set to `null`
+* `doInstallCargoArtifacts` will be set to `false`
+* `pnameSuffix` will be set to `"-deny"`
+
+#### Required attributes
+* `src`: The project source to audit, it must contain `Cargo.toml` and
+  `Cargo.lock` files.
+
+#### Optional attributes
+* `cargoDenyChecks`: check types to run
+  - Default value: `"bans licenses sources"`
+* `cargoDenyExtraArgs`: additional flags to be passed in the cargo-deny invocation
+  - Default value: `""`
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
+  - Default value: `""`
+
+#### Native build dependencies
+The `cargo-deny` package is automatically appended as a native build input to any
+other `nativeBuildInputs` specified by the caller.
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`mkCargoDerivation`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `cargoDenyExtraArgs`
+* `cargoExtraArgs`
+
 ### `craneLib.cargoBuild`
 
 `cargoBuild :: set -> drv`
