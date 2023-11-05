@@ -1,0 +1,17 @@
+name: publish flakestry
+on:
+  workflow_dispatch: # for allowing manual triggers of the workflow
+  push:
+    tags:
+      - "v?[0-9]+.[0-9]+.[0-9]+"
+      - "v?[0-9]+.[0-9]+"
+jobs:
+  publish-flakestry:
+    runs-on: "ubuntu-latest"
+    permissions:
+      id-token: "write"
+      contents: "read"
+    steps:
+      - uses: flakestry/flakestry-publish@main
+        with:
+          version: "${{ github.ref_name }}"

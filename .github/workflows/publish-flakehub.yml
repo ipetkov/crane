@@ -1,11 +1,11 @@
-name: flakehub publish
+name: publish flakehub
 on:
   workflow_dispatch: # for allowing manual triggers of the workflow
   push:
     tags:
       - "v*.*.*"
 jobs:
-  publish:
+  publish-flakehub:
     runs-on: "ubuntu-latest"
     permissions:
       id-token: "write"
