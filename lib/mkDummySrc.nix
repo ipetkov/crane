@@ -93,7 +93,7 @@ let
     then src.origSrc
     else src;
 
-  uncleanSrcBasePath = (toString origSrc) + "/";
+  uncleanSrcBasePath = builtins.unsafeDiscardStringContext ((toString origSrc) + "/");
   uncleanFiles = findCargoFiles origSrc;
 
   cargoTomlsBase = uncleanSrcBasePath;
@@ -112,7 +112,11 @@ let
       name = "cleaned-mkDummySrc";
       filter = path: type:
         let
-          strippedPath = removePrefix uncleanSrcBasePath path;
+          # using `path` can have weird consequences here with alternative store paths
+          # so we cannot assume `uncleanSrcBasePath` will be a strict prefix. Thus we
+          # chop off anything up to and including its value
+          # https://github.com/ipetkov/crane/issues/446
+          strippedPath = lib.last (lib.splitString uncleanSrcBasePath path);
           filter = x:
             if type == "directory" then
               lib.hasPrefix strippedPath x

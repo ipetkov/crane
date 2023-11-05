@@ -18,6 +18,7 @@ runTest() {
 scriptPath=$(dirname "$0")
 cd "${scriptPath}"
 
+runTest ./alt-store/test.sh
 runTest ./dummy-does-not-depend-on-flake-source-via-path/test.sh
 runTest ./dummy-does-not-depend-on-flake-source-via-self/test.sh
 runTest ./fetch-cargo-git/test.sh
