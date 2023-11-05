@@ -356,10 +356,6 @@ Except where noted below, all derivation attributes are delegated to
 * `doInstallCargoArtifacts` will be set to `false`
 * `pnameSuffix` will be set to `"-deny"`
 
-#### Required attributes
-* `src`: The project source to audit, it must contain `Cargo.toml` and
-  `Cargo.lock` files.
-
 #### Optional attributes
 * `cargoDenyChecks`: check types to run
   - Default value: `"bans licenses sources"`
