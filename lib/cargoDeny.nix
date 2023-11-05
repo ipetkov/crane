@@ -5,7 +5,6 @@
 { cargoDenyExtraArgs ? ""
 , cargoDenyChecks ? "bans licenses sources"
 , cargoExtraArgs ? ""
-, src
 , ...
 }@origArgs:
 let

@@ -1,5 +1,4 @@
 { cargoDeny
-, buildDepsOnly
 }:
 
 cargoDeny {

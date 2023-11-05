@@ -39,7 +39,7 @@
           # wasm32-unknown-unknown is required for trunk.
           targets = [ "wasm32-unknown-unknown" ];
         };
-        craneLib = ((crane.mkLib pkgs).overrideToolchain rustToolchain).overrideScope' (final: prev: {
+        craneLib = ((crane.mkLib pkgs).overrideToolchain rustToolchain).overrideScope' (_final: _prev: {
           # The version of wasm-bindgen-cli needs to match the version in Cargo.lock. You
           # can unpin this if your nixpkgs commit contains the appropriate wasm-bindgen-cli version
           inherit (import nixpkgs-for-wasm-bindgen { inherit system; }) wasm-bindgen-cli;

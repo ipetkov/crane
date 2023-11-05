@@ -408,7 +408,7 @@ in
     src = lib.cleanSourceWith {
       src = ./simple;
       # Intentionally filter out Cargo.lock
-      filter = path: type: !(lib.hasSuffix "Cargo.lock" path);
+      filter = path: _type: !(lib.hasSuffix "Cargo.lock" path);
     };
 
     cargoLock = ./simple/Cargo.lock;
