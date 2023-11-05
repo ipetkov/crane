@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 * `cargoDeny` added for running [`cargo-deny`](https://github.com/EmbarkStudios/cargo-deny).
+* `installCargoArtifactsHook` will now pass along the contents of
+  `$zstdCompressionExtraArgs` as arguments to `zstd` when compressing artifacts.
+  This allows for tailoring compression behavior, for example, by setting
+  `zstdCompressionExtraArgs = "-19";` on the derivation.
 
 ### Changed
 * The `use-zstd` artifact installation mode now uses a chained, incremental
