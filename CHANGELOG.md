@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * All dependencies (outside of `nixpkgs`) have been dropped from the (main)
   flake.lock file so they do not pollute downstream projects' lock files.
 
+### Fixed
+* `mkDummySrc` now properly handles file cleaning (and file including) when a
+  build is invoked with a `--store ...` override
+
 ## [0.14.3] - 2023-10-17
 
 ### Changed

@@ -1,4 +1,5 @@
 gcroot
 result*
 target/
+/extra-tests/*/alt-store
 /extra-tests/*/flake.lock
