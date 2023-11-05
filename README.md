@@ -20,10 +20,14 @@ A [Nix] library for building [cargo] projects.
 * Reusing dependency artifacts after only building them once
 * [clippy] checks
 * [rustfmt] checks
-* [cargo-audit] for vulnerability scanning
-* [cargo-nextest] a next-generation test runner
-* [cargo-tarpaulin] for code coverage
-* [trunk] for wasm frontend apps
+* [cargo-doc] generation
+* And support for a number of popular tools such as:
+  - [cargo-audit]
+  - [cargo-deny]
+  - [cargo-llvm-cov]
+  - [cargo-nextest]
+  - [cargo-tarpaulin]
+  - [trunk]
 
 ## Getting Started
 
@@ -62,7 +66,10 @@ conditions.
 
 [API reference]: https://crane.dev/API.html
 [cargo-audit]: https://rustsec.org/
+[cargo-deny]: https://github.com/EmbarkStudios/cargo-deny
+[cargo-doc]: https://doc.rust-lang.org/cargo/commands/cargo-doc.html
 [cargo]: https://doc.rust-lang.org/cargo/
+[cargo-llvm-cov]: https://github.com/taiki-e/cargo-llvm-cov
 [cargo-nextest]: https://nexte.st/
 [cargo-tarpaulin]: https://github.com/xd009642/tarpaulin
 [CHANGELOG]: ./CHANGELOG.md
