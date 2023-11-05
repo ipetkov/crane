@@ -693,6 +693,7 @@ in
     let
       args = {
         installCargoArtifactsMode = "use-zstd";
+        zstdCompressionExtraArgs = "-19";
         src = ./simple;
       };
     in

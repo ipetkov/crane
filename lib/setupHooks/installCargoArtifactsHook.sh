@@ -41,7 +41,7 @@ compressAndInstallCargoArtifactsDir() {
       --mode=u+w \
       --numeric-owner \
       --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-      -c | zstd "-T${NIX_BUILD_CORES:-0}" -o "${dest}"
+      -c | zstd "-T${NIX_BUILD_CORES:-0}" -o "${dest}" ${zstdCompressionExtraArgs:-}
   )
 }
 

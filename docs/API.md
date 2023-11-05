@@ -1505,6 +1505,9 @@ tarball. It takes two positional arguments:
 1. the path to cargo's artifact directory
    * An error will be raised if not specified
 
+If `$zstdCompressionExtraArgs` is set, `compressAndInstallCargoArtifactsDir()`
+will pass its contents along to `zstd` when compressing artifacts.
+
 Defines `dedupAndInstallCargoArtifactsDir()` which handles installing
 cargo's artifact directory to the derivation's output after deduplicating
 identical files against a directory of previously prepared cargo artifacts.
