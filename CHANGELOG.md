@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.15.0] - 2023-11-05
+
 ### Added
 * `cargoDeny` added for running [`cargo-deny`](https://github.com/EmbarkStudios/cargo-deny).
 * `installCargoArtifactsHook` will now pass along the contents of
@@ -536,6 +538,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.15.0]: https://github.com/ipetkov/crane/compare/v0.14.3...v0.15.0
 [0.14.3]: https://github.com/ipetkov/crane/compare/v0.14.2...v0.14.3
 [0.14.2]: https://github.com/ipetkov/crane/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/ipetkov/crane/compare/v0.14.0...v0.14.1
