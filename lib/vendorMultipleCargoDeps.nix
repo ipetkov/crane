@@ -12,12 +12,12 @@ let
     attrNames
     attrValues
     fromTOML
-    groupBy
     readFile;
 
   inherit (lib)
     concatMapStrings
-    escapeShellArg;
+    escapeShellArg
+    groupBy;
 
   inherit (lib.attrsets)
     filterAttrs
