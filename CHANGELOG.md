@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* `buildTrunkPackage`'s `preConfigure` script to fail quicker with a more
+  obvious error message if dependencies at not appropriately met
+
 ## [0.15.0] - 2023-11-05
 
 ### Added
