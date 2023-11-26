@@ -107,9 +107,7 @@
       };
     } // eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
+        pkgs = nixpkgs.legacyPackages.${system};
 
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;

@@ -17,9 +17,7 @@
   outputs = { self, nixpkgs, crane, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
+        pkgs = nixpkgs.legacyPackages.${system};
 
         craneLibOrig = crane.lib.${system};
         craneLib = craneLibOrig.appendCrateRegistries [
