@@ -354,12 +354,21 @@ in
   mkDummySrcTests = callPackage ./mkDummySrcTests { };
 
   # https://github.com/ipetkov/crane/issues/111
-  mkDummySrcCustom = myLib.buildPackage {
-    src = ./custom-dummy;
-    extraDummyScript = ''
-      cp -r ${./custom-dummy/.cargo} -T $out/.cargo
-    '';
-  };
+  mkDummySrcCustom =
+    let
+      src = ./custom-dummy;
+      dotCargoOnly = lib.cleanSourceWith {
+        inherit src;
+        # Only keep `*/.cargo/*`
+        filter = path: _type: lib.hasInfix ".cargo" path;
+      };
+    in
+    myLib.buildPackage {
+      src = ./custom-dummy;
+      extraDummyScript = ''
+        cp -r ${dotCargoOnly} -T $out/
+      '';
+    };
 
   noStd =
     let
