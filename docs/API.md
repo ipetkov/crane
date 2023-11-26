@@ -1099,23 +1099,31 @@ build caches. More specifically:
     `.cargo`, but any other directory would work as well:
     ```nix
     let
-    in
-    mkDummySrc {
       # The _entire_ source of the project. mkDummySrc will automatically
       # filter out irrelevant files as described above
       src = craneLib.path ./.;
 
-      # Note that here we scope the path to just `./.cargo` and not any other
-      # directories which may exist at the root of the project. Also note that
-      # the entire path is inside of the `${ }` which ensures that the
-      # derivation only consumes that directory. Writing `${./.}/.cargo` would
-      # incorectly consume the entire source root, and therefore rebuild
-      # everything when any file changes, which defeats artifact caching.
+      dotCargoOnly = lib.cleanSourceWith {
+        inherit src;
+        # Only keep `*/.cargo/*`
+        filter = path: _type: lib.hasInfix ".cargo" path;
+      };
+    in
+    mkDummySrc {
+      inherit src;
+
+      # Note that here we scope the path to only contain any `.cargo` directory
+      # and its contents and not any other  directories which may exist at the
+      # root of the project. Also note that the entire path is inside of the
+      # `${ }` which ensures that the derivation only consumes that directory.
+      # Writing `${./.}/.cargo` would incorrectly consume the entire source root,
+      # and therefore rebuild everything when any file changes, which defeats
+      # artifact caching.
       #
       # Also note the `--no-target-directory` flag which ensures the results are
       # copied to `$out/.cargo` instead of something like `$out/HASH-.cargo`
       extraDummyScript = ''
-        cp -r ${./.cargo} --no-target-directory $out/.cargo
+        cp -r ${dotCargoOnly} --no-target-directory $out/
       '';
     }
     ```
