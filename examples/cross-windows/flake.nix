@@ -20,9 +20,7 @@
   outputs = { nixpkgs, crane, fenix, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = (import nixpkgs) {
-          inherit system;
-        };
+        pkgs = nixpkgs.legacyPackages.${system};
 
         toolchain = with fenix.packages.${system};
           combine [
