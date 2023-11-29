@@ -95,6 +95,11 @@
           path = ./examples/quick-start-simple;
         };
 
+        sqlx = {
+          description = "Build a cargo project which uses SQLx";
+          path = ./examples/sqlx;
+        };
+
         trunk = {
           description = "Build a trunk project";
           path = ./examples/trunk;
