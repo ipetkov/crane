@@ -10,7 +10,7 @@ Source filtering is a technique Nix employs that allows for better caching by
 programmatically filtering out files which are known to not apply to the build
 _before_ the inputs are hashed.
 
-A default source cleaner is provided via `craneLib.cleanCargoSource`: it cleans
+A default source cleaner is available via `craneLib.cleanCargoSource`: it cleans
 a source tree to omit things like version control directories as well omit any
 non-Rust/non-cargo related files. It can be used like so:
 
