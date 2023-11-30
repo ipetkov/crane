@@ -31,9 +31,9 @@ jobs:
         include:
             # Latest and greatest release of Nix
           - install_url: https://nixos.org/nix/install
-            # The 23.05 branch ships with Nix 2.13.3
-          - install_url: https://releases.nixos.org/nix/nix-2.13.3/install
-            nixpkgs-override: "--override-input nixpkgs github:NixOS/nixpkgs/release-23.05"
+            # The 23.11 branch ships with Nix 2.18.1
+          - install_url: https://releases.nixos.org/nix/nix-2.18.1/install
+            nixpkgs-override: "--override-input nixpkgs $(./ci/ref-from-lock.sh ./test#nixpkgs)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -60,8 +60,8 @@ jobs:
             install_url: https://nixos.org/nix/install
             nixpkgs: ".#nixpkgs"
           - os: ubuntu-latest
-            # The 23.05 branch ships with Nix 2.11.1
-            install_url: https://releases.nixos.org/nix/nix-2.13.3/install
+            # The 23.11 branch ships with Nix 2.18.1
+            install_url: https://releases.nixos.org/nix/nix-2.18.1/install
             nixpkgs: "./test#nixpkgs"
           - os: macos-12
             # Latest and greatest release of Nix

@@ -7,9 +7,7 @@ example="${1:?missing example}"
 nixpkgsFrom="${2:?missing nixpkgsFrom}"
 shift 2
 
-nixpkgsFromFlake="$(echo "${nixpkgsFrom}" | cut -d# -f1)"
-nixpkgsFromInput="$(echo "${nixpkgsFrom}" | cut -d# -f2)"
-chosenNixpkgs="$("${gitRoot}/ci/ref-from-lock.sh" "${nixpkgsFromFlake}" "${nixpkgsFromInput}")"
+chosenNixpkgs="$("${gitRoot}/ci/ref-from-lock.sh" "${nixpkgsFrom}")"
 
 commonArgs=(
   "${example}"

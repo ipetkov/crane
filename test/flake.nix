@@ -1,8 +1,8 @@
 {
   inputs = {
     # NB: nixpkgs-unstable testing will come from the root flake
-    nixpkgs.url = "github:NixOS/nixpkgs/release-23.05";
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-23.11";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
 
     # The version of wasm-bindgen-cli needs to match the version in Cargo.lock
     # Update this to include the version you need
