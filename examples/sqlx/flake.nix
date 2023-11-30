@@ -28,7 +28,6 @@
           src = craneLib.path ./.; # The original, unfiltered source
           filter = sqlOrCargo;
         };
-        srcMigrations = craneLib.path ./migrations;
 
         # Common arguments can be set here to avoid repeating them later
         commonArgs = {
@@ -55,35 +54,19 @@
         # all of that work (e.g. via cachix) when running in CI
         cargoArtifacts = craneLib.buildDepsOnly commonArgs;
 
-        # Prepare a db with all of our migrations using only the migrations files
-        sqlx-db = pkgs.runCommand "sqlx-db-prepare"
-          {
-            nativeBuildInputs = [
-              pkgs.sqlx-cli
-            ];
-          } ''
-          mkdir $out
-          export DATABASE_URL=sqlite:$out/db.sqlite3
-          sqlx database create
-          sqlx migrate run --source ${srcMigrations}
-        '';
-
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
         my-crate = craneLib.buildPackage (commonArgs // {
           inherit cargoArtifacts;
 
-          preBuildPhases = [ "linkDb" ];
-
           nativeBuildInputs = (commonArgs.nativeBuildInputs or [ ]) ++ [
-            pkgs.sqlite
+            pkgs.sqlx-cli
           ];
 
-          # Copy over the db so it's available for sqlx to check it's schema
-          linkDb = ''
-            mkdir -p db
-            cp --no-preserve=ownership,mode -t ./db ${sqlx-db}/db.sqlite3*
-            export DATABASE_URL=sqlite:./db/db.sqlite3
+          preBuild = ''
+            export DATABASE_URL=sqlite:./db.sqlite3
+            sqlx database create
+            sqlx migrate run
           '';
         });
       in
