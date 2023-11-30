@@ -9,7 +9,7 @@
 , cargoCheckCommand ? "cargoWithProfile check"
 , cargoExtraArgs ? "--locked"
 , cargoTestCommand ? "cargoWithProfile test"
-, cargoTestExtraArgs ? ""
+, cargoTestExtraArgs ? "--no-run"
 , ...
 }@args:
 let

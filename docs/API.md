@@ -122,7 +122,7 @@ to influence its behavior.
       altogether.
 * `cargoTestExtraArgs`: additional flags to be passed in the `cargoTestCommand`
   invocation (e.g. enabling specific tests)
-  - Default value: `""`
+  - Default value: `"--no-run"`
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
   follow the output of `cargo vendor`.
