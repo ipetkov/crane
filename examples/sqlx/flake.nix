@@ -60,7 +60,6 @@
           inherit cargoArtifacts;
 
           nativeBuildInputs = (commonArgs.nativeBuildInputs or [ ]) ++ [
-            pkgs.sqlite
             pkgs.sqlx-cli
           ];
 
