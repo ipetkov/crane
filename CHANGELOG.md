@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* `buildDepsOnly` will now assume `cargoTestExtraArgs = "--no-run";` if not
+  specified (since there is no point to trying to run tests with the stripped
+  sources). To get the old behavior back, set `cargoTestExtraArgs = "";`
+
 ### Fixed
 * `buildTrunkPackage`'s `preConfigure` script to fail quicker with a more
   obvious error message if dependencies at not appropriately met
