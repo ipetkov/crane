@@ -90,20 +90,29 @@ fn merge(cargo_toml: &mut toml_edit::Document, root: &toml_edit::Document) {
         };
 
     // https://doc.rust-lang.org/cargo/reference/workspaces.html#workspaces
-    for (key, ws_key) in [
-        ("package", "package"),
-        ("dependencies", "dependencies"),
-        ("dev-dependencies", "dependencies"),
-        ("build-dependencies", "dependencies"),
+    for (key, ws_key, inherit) in [
+        ("package", "package", false),
+        ("dependencies", "dependencies", false),
+        ("dev-dependencies", "dependencies", false),
+        ("build-dependencies", "dependencies", false),
+        ("lints", "lints", true),
     ] {
         if let Some((cargo_toml, root)) = cargo_toml.get_mut(key).zip(w.get(ws_key)) {
-            try_merge_cargo_tables(cargo_toml, root);
+            if inherit {
+                try_inherit_cargo_table(cargo_toml, root);
+            } else {
+                try_merge_cargo_tables(cargo_toml, root);
+            }
         };
 
         if let Some(targets) = cargo_toml.get_mut("target").and_then(try_as_table_like_mut) {
             for (_, tp) in targets.iter_mut() {
                 if let Some((cargo_toml, root)) = tp.get_mut(key).zip(w.get(ws_key)) {
-                    try_merge_cargo_tables(cargo_toml, root);
+                    if inherit {
+                        try_inherit_cargo_table(cargo_toml, root);
+                    } else {
+                        try_merge_cargo_tables(cargo_toml, root);
+                    }
                 }
             }
         }
@@ -125,6 +134,21 @@ fn try_as_table_like_mut(item: &mut Item) -> Option<&mut dyn toml_edit::TableLik
         Item::Table(w) => Some(w),
         Item::Value(toml_edit::Value::InlineTable(w)) => Some(w),
         _ => None,
+    }
+}
+
+/// Inherit the specified `cargo_toml` from workspace `root` if the former is a table
+fn try_inherit_cargo_table(cargo_toml: &mut Item, root: &Item) {
+    let Some(t) = try_as_table_like_mut(cargo_toml) else {
+        return;
+    };
+    if t.get("workspace")
+        .and_then(Item::as_bool)
+        .unwrap_or_default()
+    {
+        t.remove("workspace");
+        let orig_val = mem::replace(cargo_toml, root.clone());
+        merge_items(cargo_toml, orig_val);
     }
 }
 
@@ -346,6 +370,9 @@ mod tests {
             [features]
             # this feature is a demonstration that comments are preserved
             my_feature = []
+
+            [lints]
+            workspace = true
         "#,
         )
         .unwrap();
@@ -381,6 +408,11 @@ mod tests {
             waldo = { version = "waldo-workspace-vers" }
             unix = { version = "unix-vers" }
 
+            [workspace.lints.rust]
+            unused_extern_crates = 'warn'
+
+            [workspace.lints.clippy]
+            all = 'allow'
         "#,
         )
         .unwrap();
@@ -420,6 +452,9 @@ mod tests {
             [target.'cfg(unix)'.dependencies]
             unix = { version = "unix-vers" , features = ["some"] }
 
+            [lints.rust]
+            unused_extern_crates = 'warn'
+
             [dev-dependencies]
             foo= { version = "foo-vers" }
             bar= { version = "bar-vers", default-features = false }
@@ -429,6 +464,9 @@ mod tests {
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
+
+            [lints.clippy]
+            all = 'allow'
 
             [build-dependencies]
             foo= { version = "foo-vers" }
