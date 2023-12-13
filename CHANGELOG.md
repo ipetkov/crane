@@ -6,12 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-### Added
-* Projects using `lints` `Cargo.toml` attribute with workspace inheritance are now supported
-
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.18.1
 * **Breaking**: dropped compatibility for nixpkgs-23.05.
+
+### Fixed
+* Workspace inheritance of `lints` in git dependencies is now correctly handled
 
 ## [0.15.1] - 2023-11-30
 
