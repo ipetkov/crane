@@ -85,6 +85,7 @@ jobs:
       run: |
         rm ./examples/.gitignore
         nix develop .# --accept-flake-config --command bash -c '
+          set -euo pipefail
           for f in $(find ./examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }} | sort -u); do
             ./ci/check-example.sh "${f}" ${{ matrix.nixpkgs }}
           done
