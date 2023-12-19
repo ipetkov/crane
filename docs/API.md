@@ -1546,7 +1546,7 @@ arguments:
      `./target`) will be used.
 1. the installation mode to apply
    * If specified, the value of `$installCargoArtifactsMode` will be used,
-     otherwise, a default value of `"use-zstd" will be used
+     otherwise, a default value of `"use-zstd"` will be used
    * If set to "use-symlink" then `dedupAndInstallCargoArtifactsDir()` will be
      used.
      - If `$cargoArtifacts` is defined and `$cargoArtifacts/target` is a valid
