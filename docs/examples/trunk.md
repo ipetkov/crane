@@ -5,6 +5,7 @@ Being a more specialized tool, it comes with some constraints that must be noted
 * Your Toolchain must have the `wasm32-unknown-unknown` target installed (See: [Custom toolchain](../custom-toolchain.md))
 * For `craneLib.buildDepsOnly` to work you will need to set the build target (See: [API Reference](../API.md#libbuilddepsonly))
 * `craneLib.filterCargoSources` will remove html, css, your assets folder, so you need to modify the source filtering function (See: [Source filtering](../source-filtering.md))
+* You will need to set `wasm-bindgen-cli` to a version that matches your Cargo.lock file. (See examples)
 
 Quick-start a Trunk project with
 

@@ -267,6 +267,10 @@ Except where noted below, all derivation attributes are delegated to
   - Default value: `""`
 * `trunkIndexPath` A path to the index.html of your trunk project
   - Default value: `"./index.html"`
+* `wasm-bindgen-cli` The package used to satisfy the `wasm-bindgen-cli`
+  dependency of `trunk`, the version used here must match the version
+  of `wasm-bindgen` in the `Cargo.lock` file of your project *exactly*.
+  - Default value: `pkgs.wasm-bindgen-cli`
 
 
 #### Remove attributes
@@ -284,7 +288,6 @@ The following hooks are automatically added as native build inputs:
 * `binaryen`
 * `dart-sass`
 * `trunk`
-* `wasm-bindgen-cli`
 
 ### `craneLib.cargoAudit`
 `cargoAudit :: set -> drv`

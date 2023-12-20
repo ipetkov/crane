@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.18.1
 * **Breaking**: dropped compatibility for nixpkgs-23.05.
+* `buildTrunkPackage` has a new argument, `wasm-bindgen-cli` must be set
+  to avoid mismatching versions between the wasm-bindgen library and CLI tool.
 
 ### Fixed
 * Workspace inheritance of `lints` in git dependencies is now correctly handled

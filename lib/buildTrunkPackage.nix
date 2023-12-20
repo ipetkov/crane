@@ -1,4 +1,5 @@
-{ binaryen
+{ lib
+, binaryen
 , buildDepsOnly
 , crateNameFromCargoToml
 , mkCargoDerivation
@@ -9,9 +10,30 @@
 , wasm-bindgen-cli
 }:
 
+let
+  missingWasmBindgenCliPkgMessage = ''
+    Unstable usage of buildTrunkPackage!
+
+    The version of the tool `wasm-bindgen-cli` (Package used during compilation)
+    must match the version of the `wasm-bindgen` (Rust library, check your Cargo.lock),
+    buildTrunkPackage now requires the argument wasm-bindgen-cli:
+
+    buildTrunkPackage {
+      wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
+        version = "0.2.84";
+        hash = "sha256-0rK+Yx4/Jy44Fw5VwJ3tG243ZsyOIBBehYU54XP/JGk=";
+        cargoHash = "sha256-vcpxcRlW1OKoD64owFF6mkxSqmNrvY+y3Ckn5UwEQ50=";
+      };
+      ...
+    }
+  '';
+  default-wasm-bindgen-cli = wasm-bindgen-cli;
+in
+
 { trunkExtraArgs ? ""
 , trunkExtraBuildArgs ? ""
 , trunkIndexPath ? "./index.html"
+, wasm-bindgen-cli ? lib.warn missingWasmBindgenCliPkgMessage default-wasm-bindgen-cli
 , ...
 }@origArgs:
 let
@@ -21,6 +43,7 @@ let
     "trunkExtraArgs"
     "trunkExtraBuildArgs"
     "trunkIndexPath"
+    "wasm-bindgen-cli"
   ];
 
   crateName = crateNameFromCargoToml cleanedArgs;
