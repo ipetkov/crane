@@ -44,14 +44,16 @@ let
     lockPackages;
   lockedRegistryGroups = groupBy (p: p.source) lockedPackagesFromRegistry;
 
-  vendorSingleRegistry = (packages: let
-    packageCount = builtins.length packages;
-    shardCharacters = if packageCount < 32 then 0 else if packageCount < 2048 then 1 else 2;
-    shard = package: builtins.substring 0 shardCharacters (builtins.hashString "sha256" package.name);
-    grouped = builtins.groupBy shard packages;
-    vendoredShards = builtins.mapAttrs (shardName: packages: downloadCargoPackages {inherit shardName packages;}) grouped;
-    vendoredShardsList = builtins.attrValues vendoredShards;
-    in runCommandLocal "vendor-registry" { } ''
+  vendorSingleRegistry = (packages:
+    let
+      packageCount = builtins.length packages;
+      shardCharacters = if packageCount < 32 then 0 else if packageCount < 2048 then 1 else 2;
+      shard = package: builtins.substring 0 shardCharacters (builtins.hashString "sha256" package.name);
+      grouped = builtins.groupBy shard packages;
+      vendoredShards = builtins.mapAttrs (shardName: packages: downloadCargoPackages { inherit shardName packages; }) grouped;
+      vendoredShardsList = builtins.attrValues vendoredShards;
+    in
+    runCommandLocal "vendor-registry" { } ''
       mkdir -p $out
       ${concatMapStrings (p: ''
       for dir in ${p}/*/; do ln -s "$(realpath "$dir")" "$out/''${dir##*/}"; done
