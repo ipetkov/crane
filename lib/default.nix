@@ -43,7 +43,7 @@ in
     indexUrl = "https://github.com/rust-lang/crates.io-index";
   };
 
-  downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
+  downloadCargoPackages = callPackage ./downloadCargoPackages.nix { };
   downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
   filterCargoSources = callPackage ./filterCargoSources.nix { };
   findCargoFiles = callPackage ./findCargoFiles.nix { };
