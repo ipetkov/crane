@@ -23,6 +23,7 @@ let
     "cargoTestExtraArgs"
     "outputHashes"
     "dummySrc"
+    "outputs"
   ];
 
   # Run tests by default to ensure we cache any dev-dependencies
