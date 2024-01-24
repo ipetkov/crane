@@ -862,22 +862,24 @@ craneLib.devShell {
 }
 ```
 
-### `craneLib.downloadCargoPackage`
+### `craneLib.downloadCargoPackages`
 
-`downloadCargoPackage :: set -> drv`
+`downloadCargoPackages :: set -> drv`
 
-Download a packaged cargo crate (e.g. from crates.io) and prepare it for
-vendoring.
+Downloads a collection of cargo crates (e.g. from crates.io) and extract
+into a single directory.
 
 The registry's `fetchurlExtraArgs` will be passed through to `fetchurl` when
 downloading the crate, making it possible to influence interacting with the
 registry's API if necessary.
 
 #### Required input attributes
-* `checksum`: the (sha256) checksum recorded in the Cargo.lock file
-* `name`: the name of the crate
-* `source`: the source key recorded in the Cargo.lock file
-* `version`: the version of the crate
+* `shard`: an identifier for the shard. This will become a part of the derivation name.
+* `packages`: a list of attribute sets, each one containing:
+  * `checksum`: the (sha256) checksum recorded in the Cargo.lock file
+  * `name`: the name of the crate
+  * `source`: the source key recorded in the Cargo.lock file
+  * `version`: the version of the crate
 
 ### `craneLib.downloadCargoPackageFromGit`
 

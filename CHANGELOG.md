@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 * Workspace inheritance of `lints` in git dependencies is now correctly handled
+* Crane can now build large (>500 crate) projects inside the OSX sandbox.
 
 ## [0.15.1] - 2023-11-30
 
