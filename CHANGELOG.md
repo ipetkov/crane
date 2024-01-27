@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* `buildDepsOnly` failing when workspace is configured with `#[deny(unused-extern-crates)]`
+
 ## [0.16.0] - 2024-01-18
 
 ### Changed
