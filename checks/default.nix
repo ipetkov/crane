@@ -372,7 +372,7 @@ in
 
   multiOutputDerivation = myLib.buildPackage {
     src = ./simple;
-    outputs = ["out" "doc"];
+    outputs = [ "out" "doc" ];
     preInstall = ''
       echo "Very useful documentation" > "$doc"
     '';
