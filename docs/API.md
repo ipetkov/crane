@@ -155,6 +155,7 @@ environment variables during the build, you can bring them back via
 * `cargoTestExtraArgs`
 * `dummySrc`
 * `outputHashes`
+* `outputs`
 
 ### `craneLib.buildPackage`
 

@@ -370,6 +370,14 @@ in
       '';
     };
 
+  multiOutputDerivation = myLib.buildPackage {
+    src = ./simple;
+    outputs = [ "out" "doc" ];
+    preInstall = ''
+      echo "Very useful documentation" > "$doc"
+    '';
+  };
+
   noStd =
     let
       noStdLib = myLib.overrideToolchain (pkgs.rust-bin.stable.latest.minimal.override {
