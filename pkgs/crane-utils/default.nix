@@ -18,7 +18,7 @@ rustPlatform.buildRustPackage {
   inherit src;
   inherit (crateNameFromCargoToml { inherit src; }) pname version;
 
-  cargoSha256 = "sha256-2mqTVhYsOxqD+F5f4yCPvz2jZ2bdAMBK1tgNMyVDtsA=";
+  cargoSha256 = "sha256-oE67gg4+csvsGvMn2YyRnmZCqSodbFCLvzQi7kgsnfs=";
 
   passthru = {
     checks = {
