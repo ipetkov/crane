@@ -5,7 +5,7 @@ version = 3
 [[package]]
 name = "byteorder"
 version = "1.5.0"
-source = "git+https://github.com/BurntSushi/byteorder.git#ec068eefa042d494475db125c4b034bd8e9e34dd"
+source = "git+https://github.com/BurntSushi/byteorder.git#2e17045ca2580719b2df78973901b56eb8a86f49"
 
 [[package]]
 name = "hermit-abi"
@@ -13,19 +13,19 @@ version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
- "libc 0.2.149 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.152",
 ]
 
 [[package]]
 name = "libc"
-version = "0.2.149"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a08173bc88b7955d1b3145aa561539096c421ac8debde8cbc3612ec635fee29b"
+version = "0.2.151"
+source = "git+https://github.com/rust-lang/libc.git?branch=main#40741baa1d892518fd3c39795e962058ff558fb9"
 
 [[package]]
 name = "libc"
-version = "0.2.149"
-source = "git+https://github.com/rust-lang/libc.git?branch=main#0dbadb4dad68c7017772c4888700d43f1609493c"
+version = "0.2.152"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "13e3bf6590cbc649f4d1a3eefc9d5d6eb746f5200ffb04e5e142700b8faa56e7"
 
 [[package]]
 name = "num_cpus"
@@ -33,7 +33,7 @@ version = "1.13.1"
 source = "git+https://github.com/seanmonstar/num_cpus.git?tag=v1.13.1#5f1b03332000b4c4274b5bd35fac516049ff1c6b"
 dependencies = [
  "hermit-abi",
- "libc 0.2.149 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.152",
 ]
 
 [[package]]
@@ -46,7 +46,7 @@ name = "simple-git"
 version = "0.1.0"
 dependencies = [
  "byteorder",
- "libc 0.2.149 (git+https://github.com/rust-lang/libc.git?branch=main)",
+ "libc 0.2.151",
  "num_cpus",
  "rustversion",
 ]
