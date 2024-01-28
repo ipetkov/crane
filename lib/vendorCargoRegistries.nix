@@ -1,13 +1,12 @@
 { downloadCargoPackage
 , lib
-, runCommandLocal
+, pkgsBuildBuild
 }:
 
-{ cargoConfigs ? [ ]
-, lockPackages
-, ...
-}@args:
 let
+  inherit (pkgsBuildBuild)
+    runCommandLocal;
+
   inherit (builtins)
     attrNames
     concatStringsSep
@@ -36,7 +35,12 @@ let
   hash = hashString "sha256";
 
   hasRegistryProtocolPrefix = s: hasPrefix "registry+" s || hasPrefix "sparse+" s;
-
+in
+{ cargoConfigs ? [ ]
+, lockPackages
+, ...
+}@args:
+let
   # Local crates will show up in the lock file with no checksum/source,
   # so should filter them out without trying to download them
   lockedPackagesFromRegistry = filter

@@ -1,11 +1,16 @@
-{ cargo
-, craneUtils
-, jq
-, lib
-, fetchgit
-, runCommand
+{ lib
+, pkgsBuildBuild
 }:
 
+let
+  inherit (pkgsBuildBuild)
+    cargo
+    fetchgit
+    jq
+    runCommand;
+
+  craneUtils = pkgsBuildBuild.callPackage ../pkgs/crane-utils { };
+in
 { git
 , rev
 , ref ? null

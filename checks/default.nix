@@ -1,4 +1,4 @@
-{ pkgs, myLib, myPkgs }:
+{ pkgs, myLib, myLibCross }:
 
 let
   inherit (pkgs) lib;
@@ -210,6 +210,24 @@ in
       src = ./with-build-script-custom;
     };
 
+  craneUtilsChecks =
+    let
+      src = myLib.cleanCargoSource ../pkgs/crane-utils;
+      cargoArtifacts = myLib.buildDepsOnly {
+        inherit src;
+      };
+    in
+    pkgs.linkFarmFromDrvs "craneUtilsTests" [
+      (myLib.cargoClippy {
+        inherit cargoArtifacts src;
+        cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+      })
+
+      (myLib.cargoFmt {
+        inherit src;
+      })
+    ];
+
   customCargoTargetDirectory =
     let
       simple = self.simple.overrideAttrs (_old: {
@@ -303,15 +321,6 @@ in
   };
 
   features = callPackage ./features { };
-
-  flakePackages =
-    let
-      pkgDrvs = builtins.attrValues myPkgs;
-      extraChecks = lib.flatten (map builtins.attrValues
-        (map (p: onlyDrvs (p.passthru.checks or { })) pkgDrvs)
-      );
-    in
-    pkgs.linkFarmFromDrvs "flake-packages" (pkgDrvs ++ extraChecks);
 
   gitOverlappingRepo = myLib.buildPackage {
     src = ./git-overlapping;
@@ -602,6 +611,26 @@ in
     );
 
   vendorGitSubset = callPackage ./vendorGitSubset.nix { };
+
+  vendorIsCrossAgnostic =
+    let
+      mkVendor = whichLib: builtins.unsafeDiscardStringContext (
+        (whichLib.vendorCargoDeps {
+          src = ./simple-git;
+        }).drvPath
+      );
+      expected = mkVendor myLib;
+      actual = mkVendor myLibCross;
+    in
+    pkgs.runCommand "vendorIsCrossAgnostic" { } ''
+      if [[ "${expected}" == "${actual}" ]]; then
+        touch $out
+      else
+        echo derivations differ. to debug run:
+        echo 'nix run nixpkgs#nix-diff -- "${expected}" "${actual}"'
+        exit 1
+      fi
+    '';
 
   vendorMultipleCargoDeps =
     let

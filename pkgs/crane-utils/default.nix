@@ -1,35 +1,12 @@
-{ buildDepsOnly
-, cargoClippy
-, cargoFmt
-, cleanCargoSource
-, crateNameFromCargoToml
-, path
+{ lib
 , rustPlatform
 }:
 
-let
-  src = cleanCargoSource (path ./.);
-
-  cargoArtifacts = buildDepsOnly {
-    inherit src;
-  };
-in
 rustPlatform.buildRustPackage {
-  inherit src;
-  inherit (crateNameFromCargoToml { inherit src; }) pname version;
+  pname = "crane-utils";
+  version = "0.0.1";
 
-  cargoSha256 = "sha256-oE67gg4+csvsGvMn2YyRnmZCqSodbFCLvzQi7kgsnfs=";
+  src = lib.sourceFilesBySuffices ./. [ ".rs" ".toml" ".lock" ];
 
-  passthru = {
-    checks = {
-      clippy = cargoClippy {
-        inherit cargoArtifacts src;
-        cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-      };
-
-      fmt = cargoFmt {
-        inherit src;
-      };
-    };
-  };
+  cargoSha256 = "sha256-joZrcKKByaGopWzPhaytCSU+LnlhQaNIXZoh40UCSrM=";
 }

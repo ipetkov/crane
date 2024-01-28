@@ -1,11 +1,15 @@
 { cleanCargoToml
 , findCargoFiles
 , lib
-, runCommand
-, writeText
+, pkgsBuildBuild
 , writeTOML
 }:
 
+let
+  inherit (pkgsBuildBuild)
+    runCommand
+    writeText;
+in
 { src
 , cargoLock ? null
 , extraDummyScript ? ""
