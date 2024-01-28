@@ -44,7 +44,7 @@ let
 in
 runCommand "cargo-git" deps ''
   mkdir -p $out
-  existing_crates=()
+  declare -A existing_crates
   while read -r cargoToml; do
     local crate=$(
       cargo metadata --format-version 1 --no-deps --manifest-path "$cargoToml" |
@@ -52,7 +52,7 @@ runCommand "cargo-git" deps ''
     )
 
     if [ -n "$crate" ]; then
-      if [[ " ''${existing_crates[*]} " =~ " $crate " ]]; then
+      if [[ -n "''${existing_crates["$crate"]}" ]]; then
         >&2 echo "warning: skipping duplicate package $crate found at $cargoToml"
         continue
       fi
@@ -65,7 +65,7 @@ runCommand "cargo-git" deps ''
       crane-resolve-workspace-inheritance "$cargoToml" > "$dest/Cargo.toml.resolved" &&
         mv "$dest/Cargo.toml"{.resolved,}
 
-      existing_crates+=("$crate")
+      existing_crates["$crate"]='1'
     fi
   done < <(find ${repo} -name Cargo.toml)
 ''
