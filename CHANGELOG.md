@@ -10,7 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `buildDepsOnly` now ignores any outputs (besides the default `out`)
 
 ### Fixed
-* `buildDepsOnly` no longer fails when workspace is configured with `#[deny(unused-extern-crates)]`
+* `buildDepsOnly` no longer fails when workspace is configured with
+  `#[deny(unused-extern-crates)]`
+* `vendorCargoDeps` (and friends) are now much more friendly to
+  cross-compilation definitions. Specifically, source vendoring will always
+  build dependencies to run on the build machine (and not for the host we're
+  cross compiling to).
 
 ## [0.16.0] - 2024-01-18
 

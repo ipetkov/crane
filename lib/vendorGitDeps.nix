@@ -1,12 +1,12 @@
 { downloadCargoPackageFromGit
 , lib
-, runCommandLocal
+, pkgsBuildBuild
 }:
 
-{ lockPackages
-, outputHashes ? { }
-}:
 let
+  inherit (pkgsBuildBuild)
+    runCommandLocal;
+
   inherit (builtins)
     any
     attrNames
@@ -33,6 +33,12 @@ let
     removePrefix;
 
   knownGitParams = [ "branch" "rev" "tag" ];
+  hash = hashString "sha256";
+in
+{ lockPackages
+, outputHashes ? { }
+}:
+let
   parseGitUrl = p:
     let
       lockUrl = removePrefix "git+" p.source;
@@ -67,8 +73,6 @@ let
     extractedParams // {
       inherit git id lockedRev;
     };
-
-  hash = hashString "sha256";
 
   # Local crates will show up in the lock file with no checksum/source
   lockedPackagesFromGit = filter

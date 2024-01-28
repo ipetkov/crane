@@ -1,16 +1,13 @@
 { lib
-, runCommandLocal
+, pkgsBuildBuild
 , vendorCargoRegistries
 , vendorGitDeps
 }:
 
-{ cargoConfigs ? [ ]
-, cargoLockContentsList ? [ ]
-, cargoLockList ? [ ]
-, cargoLockParsedList ? [ ]
-, outputHashes ? { }
-}@args:
 let
+  inherit (pkgsBuildBuild)
+    runCommandLocal;
+
   inherit (builtins)
     attrNames
     attrValues
@@ -29,7 +26,14 @@ let
   inherit (lib.lists)
     flatten
     unique;
-
+in
+{ cargoConfigs ? [ ]
+, cargoLockContentsList ? [ ]
+, cargoLockList ? [ ]
+, cargoLockParsedList ? [ ]
+, outputHashes ? { }
+}@args:
+let
   cargoLocksParsed = (map fromTOML ((map readFile cargoLockList) ++ cargoLockContentsList))
     ++ cargoLockParsedList;
 

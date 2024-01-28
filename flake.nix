@@ -117,11 +117,6 @@
         # To override do: lib.overrideScope' (self: super: { ... });
         lib = mkLib pkgs;
 
-        packages = import ./pkgs {
-          inherit pkgs;
-          myLib = lib;
-        };
-
         checks =
           let
             pkgsChecks = import nixpkgs {
@@ -134,11 +129,19 @@
           pkgsChecks.callPackages ./checks {
             pkgs = pkgsChecks;
             myLib = mkLib pkgsChecks;
-            myPkgs = packages;
+            myLibCross = mkLib (import nixpkgs {
+              localSystem = system;
+              crossSystem = "wasm32-wasi";
+            });
           };
       in
       {
-        inherit checks lib packages;
+        inherit checks lib;
+
+        packages = import ./pkgs {
+          inherit pkgs;
+          myLib = lib;
+        };
 
         formatter = pkgs.nixpkgs-fmt;
 

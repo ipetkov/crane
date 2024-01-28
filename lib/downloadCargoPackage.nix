@@ -1,8 +1,12 @@
-{ fetchurl
+{ pkgsBuildBuild
 , urlForCargoPackage
-, runCommand
 }:
 
+let
+  inherit (pkgsBuildBuild)
+    fetchurl
+    runCommand;
+in
 { name
 , version
 , checksum
