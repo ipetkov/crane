@@ -705,6 +705,13 @@ in
     version = "0.0.1";
   };
 
+  # https://github.com/ipetkov/crane/issues/500
+  workspaceLints = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./workspace-lints;
+    pname = "workspace-lints";
+    version = "1.0.1";
+  };
+
   zstdNoChange =
     let
       args = {

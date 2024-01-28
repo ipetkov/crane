@@ -1,0 +1,13 @@
+[workspace]
+members = ["./member/foo"]
+
+[workspace.lints.rust]
+warnings = "deny"
+future-incompatible = "deny"
+let-underscore = "deny"
+nonstandard-style = "deny"
+rust-2018-compatibility = "deny"
+rust-2018-idioms = "deny"
+rust-2021-compatibility = "deny"
+unused = "deny"
+
