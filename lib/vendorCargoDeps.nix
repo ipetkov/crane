@@ -27,7 +27,9 @@ let
     else
       throw ''
         unable to find Cargo.lock at ${src}. please ensure one of the following:
-        - a Cargo.lock exists at the root of the source directory of the derivation
+        - a Cargo.lock exists at the root of the source directory of the derivation,
+          it is *not* included in .gitignore, and that it is at least staged with git
+          via `git add -N Cargo.lock`
         - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
         - set `cargoVendorDir = vendorCargoDeps { src = ./src/containing/cargo/lock/file; }`
         - set `cargoVendorDir = null` to skip vendoring altogether

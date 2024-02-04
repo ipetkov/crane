@@ -777,6 +777,9 @@ value is a string. Otherwise `workspace.package.version` will be used if it is
 present _and_ the value is a string. Otherwise a placeholder version field will
 be used.
 
+Note that *only the root `Cargo.toml` of the specified source will be checked*.
+Directories **will not be crawled** to resolve potential workspace inheritance.
+
 ```nix
 craneLib.crateNameFromCargoToml { cargoToml = ./Cargo.toml; }
 # { pname = "simple"; version = "0.1.0"; }
