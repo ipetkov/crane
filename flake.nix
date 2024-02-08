@@ -114,7 +114,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        # To override do: lib.overrideScope' (self: super: { ... });
+        # To override do: lib.overrideScope (self: super: { ... });
         lib = mkLib pkgs;
 
         checks =

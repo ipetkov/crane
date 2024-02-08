@@ -13,10 +13,10 @@ mkLib (import inputs.nixpkgs { system = "armv7l-linux"; })
 ```
 
 Note that if you wish to override a particular package without having to overlay
-it across all of nixpkgs, consider using `overrideScope'`:
+it across all of nixpkgs, consider using `overrideScope`:
 
 ```nix
-(mkLib pkgs).overrideScope' (final: prev: {
+(mkLib pkgs).overrideScope (final: prev: {
   cargo-tarpaulin = myCustomCargoTarpaulinVersion;
 })
 ```

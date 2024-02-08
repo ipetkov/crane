@@ -35,12 +35,12 @@ in
 ```
 
 Finally, specific inputs can be overridden for the entire library via the
-`overrideScope'` API as follows. For more information, see the [API
+`overrideScope` API as follows. For more information, see the [API
 docs](../API.md) for `mkLib`/`overrideToolchain`, or checkout the
 [custom-toolchain](../../examples/custom-toolchain) example.
 
 ```nix
-crane.lib.${system}.overrideScope' (final: prev: {
+crane.lib.${system}.overrideScope (final: prev: {
   cargo-tarpaulin = myCustomCargoTarpaulinVersion;
 })
 ```

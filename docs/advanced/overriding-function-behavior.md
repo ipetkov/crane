@@ -1,7 +1,7 @@
 ## Overriding function behavior
 
 At it's core, `crane` is instantiated via `pkgs.lib.newScope` which allows any
-internal definition to be changed or replaced via `.overrideScope'` (which
+internal definition to be changed or replaced via `.overrideScope` (which
 behaves very much like applying overlays to nixpkgs). Although this mechanism is
 incredibly powerful, care should be taken to avoid creating confusing or brittle
 integrations built on undocumented details.
@@ -17,7 +17,7 @@ Here is an example:
 
 ```nix
 let
-  craneLib = (inputs.crane.mkLib pkgs).overrideScope' (final: prev: {
+  craneLib = (inputs.crane.mkLib pkgs).overrideScope (final: prev: {
     # We override the behavior of `mkCargoDerivation` by adding a wrapper which
     # will set a default value of `CARGO_PROFILE` when not set by the caller.
     # This change will automatically be propagated to any other functions built
