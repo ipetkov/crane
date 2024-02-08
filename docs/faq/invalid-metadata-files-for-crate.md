@@ -10,7 +10,7 @@ let
   rustToolchain = ...;
 in
 # Incorrect usage, missing `clippy` override!
-#(crane.mkLib pkgs).overrideScope' (final: prev: {
+#(crane.mkLib pkgs).overrideScope (final: prev: {
 #  rustc = rustToolchain;
 #  cargo = rustToolchain;
 #  rustfmt = rustToolchain;
