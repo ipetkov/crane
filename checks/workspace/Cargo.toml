@@ -2,3 +2,6 @@
 # NB: hello and world are intentionally left out cargo will
 # promote them to members since they are listed as path deps
 members = ["print"]
+
+[workspace.lints.rust]
+rust_2018_idioms = "deny"
