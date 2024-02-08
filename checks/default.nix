@@ -209,6 +209,23 @@ in
     {
       src = ./with-build-script-custom;
     };
+  compilesFreshWorkspace = self.compilesFresh
+    {
+      check = (builtins.concatStringsSep "\n" [
+        "hello"
+        "print"
+        "world"
+      ]);
+      build = (builtins.concatStringsSep "\n" [
+        "hello"
+        "print"
+        "world"
+      ]);
+    }
+    myLib.cargoBuild
+    {
+      src = ./workspace;
+    };
 
   craneUtilsChecks =
     let

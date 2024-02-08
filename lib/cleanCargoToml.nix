@@ -56,14 +56,17 @@ let
   ];
 
   cleanWorkspace = workspace: removeAttrs workspace [
+    "lints"
     "metadata"
 
     # Additional package attributes which are expressly kept in
     # (but listed here for audit purposes)
     # "default-members"
     # "exclude"
+    # "dependencies"
     # "members"
     # "package"
+    # "resolver"
   ];
 
   # https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -78,6 +81,7 @@ let
 
       topLevelCleaned = removeAttrs parsed [
         "badges" # Badges to display on a registry.
+        "lints" # Only applied to local sources, which we need to rebuild anyway
 
         # Top level attributes intentionally left in place:
         # "build-dependencies" # we want to build and cache these

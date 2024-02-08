@@ -209,5 +209,17 @@ exclude = ["crates/foo", "path/to/other"]
 root = "path/to/webproject"
 tool = ["npm", "run", "build"]
 
+[workspace.lints.clippy]
+todo = "forbid"
+
+[workspace.lints.rust]
+rust_2018_idioms = "deny"
+
 [some-unrecognized-object]
 some-unrecognized-field = "some value"
+
+[lints.clippy]
+workspace = true
+
+[lints.rust]
+missing_docs = "deny"
