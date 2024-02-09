@@ -337,6 +337,14 @@ in
     };
   };
 
+  # https://github.com/ipetkov/crane/issues/500
+  dummyNoWarnings = myLib.buildDepsOnly {
+    src = myLib.cleanCargoSource ./simple;
+    pname = "dummy-no-warnings";
+    version = "0.0.1";
+    env.RUSTFLAGS = "--deny warnings";
+  };
+
   features = callPackage ./features { };
 
   gitOverlappingRepo = myLib.buildPackage {
