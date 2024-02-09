@@ -24,7 +24,7 @@ as such **it is not recommended**.
 ```nix
 # You have been warned
 buildPackage {
-  # other attributes omtited
+  # other attributes omitted
   postPatch = ''
     mkdir -p "$TMPDIR/nix-vendor"
     cp -r "$cargoVendorDir" -T "$TMPDIR/nix-vendor"
