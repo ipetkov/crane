@@ -20,7 +20,7 @@ together.
 
 ```nix
 buildPackage {
-  NIX_OUTPUT_USED_AS_RANDOM_SEED = "aaaaaaaaaa";
+  NIX_OUTPATH_USED_AS_RANDOM_SEED = "aaaaaaaaaa";
   # other attributes omitted
 }
 ```
