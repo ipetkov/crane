@@ -302,6 +302,14 @@ in
     };
   };
 
+  # https://github.com/ipetkov/crane/issues/500
+  dummyNoWarnings = myLib.buildDepsOnly {
+    src = myLib.cleanCargoSource ./simple;
+    pname = "dummy-no-warnings";
+    version = "0.0.1";
+    env.RUSTFLAGS = "--deny warnings";
+  };
+
   features = callPackage ./features { };
 
   flakePackages =
@@ -703,13 +711,6 @@ in
     src = myLib.cleanCargoSource ./workspace-git;
     pname = "workspace-git";
     version = "0.0.1";
-  };
-
-  # https://github.com/ipetkov/crane/issues/500
-  workspaceLints = myLib.buildPackage {
-    src = myLib.cleanCargoSource ./workspace-lints;
-    pname = "workspace-lints";
-    version = "1.0.1";
   };
 
   zstdNoChange =
