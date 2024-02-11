@@ -20,7 +20,9 @@ jobs:
     needs:
       - check-dead-code
       - check-fmt
-      - examples
+      - examples-darwin
+      - examples-unstable
+      - examples-release
       - tests
 
   tests:
@@ -49,31 +51,89 @@ jobs:
     - name: extra tests
       run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
 
-  examples:
+  examples-unstable:
     strategy:
       # Allow other jobs to finish building and cache properly before bailing
       fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-latest
-            # Latest and greatest release of Nix
-            install_url: https://nixos.org/nix/install
-            nixpkgs: ".#nixpkgs"
-          - os: ubuntu-latest
-            # The 23.11 branch ships with Nix 2.18.1
-            install_url: https://releases.nixos.org/nix/nix-2.18.1/install
-            nixpkgs: "./test#nixpkgs"
-          - os: macos-13
-            # Latest and greatest release of Nix
-            install_url: https://nixos.org/nix/install
-            nixpkgs: "./test#nixpkgs-darwin"
-            filter: "-not -name build-std -not -name cross-musl -not -name cross-rust-overlay"
-    runs-on: ${{ matrix.os }}
+        example:
+          - alt-registry
+          - build-std
+          - cross-musl
+          - cross-rust-overlay
+          - cross-windows
+          - custom-toolchain
+          - end-to-end-testing
+          - quick-start-simple
+          - quick-start
+          - sqlx
+          - trunk-workspace
+          - trunk
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v25
       with:
-        install_url: ${{ matrix.install_url }}
+        install_url: https://nixos.org/nix/install
+    - uses: cachix/cachix-action@v14
+      with:
+        name: crane
+        authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
+    - name: validate examples
+      # Nix won't write a lockfile when --override-input is used (which is good because it will
+      # complain that the lock file is .gitignored), but nix-eval-jobs doesn't, so we'll have to
+      # "opt-out" of our lockfile .gitignore
+      run: |
+        rm ./examples/.gitignore
+        nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} ".#nixpkgs"
+
+  examples-release:
+    strategy:
+      # Allow other jobs to finish building and cache properly before bailing
+      fail-fast: false
+      matrix:
+        example:
+          - alt-registry
+          - build-std
+          - cross-musl
+          - cross-rust-overlay
+          - cross-windows
+          - custom-toolchain
+          - end-to-end-testing
+          - quick-start-simple
+          - quick-start
+          - sqlx
+          - trunk-workspace
+          - trunk
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v25
+      with:
+        install_url: https://releases.nixos.org/nix/nix-2.18.1/install
+    - uses: cachix/cachix-action@v14
+      with:
+        name: crane
+        authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
+    - name: validate examples
+      # Nix won't write a lockfile when --override-input is used (which is good because it will
+      # complain that the lock file is .gitignored), but nix-eval-jobs doesn't, so we'll have to
+      # "opt-out" of our lockfile .gitignore
+      run: |
+        rm ./examples/.gitignore
+        nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} "./test#nixpkgs"
+
+
+  examples-darwin:
+    strategy:
+      # Allow other jobs to finish building and cache properly before bailing
+      fail-fast: false
+    runs-on: macos-13
+    steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v25
+      with:
+        install_url: https://nixos.org/nix/install
     - uses: cachix/cachix-action@v14
       with:
         name: crane
@@ -86,8 +146,8 @@ jobs:
         rm ./examples/.gitignore
         nix develop .# --accept-flake-config --command bash -c '
           set -euo pipefail
-          for f in $(find ./examples -maxdepth 1 -mindepth 1 -type d ${{ matrix.filter }} | sort -u); do
-            ./ci/check-example.sh "${f}" ${{ matrix.nixpkgs }}
+          for f in $(find ./examples -maxdepth 1 -mindepth 1 -type d -not -name build-std -not -name cross-musl -not -name cross-rust-overlay | sort -u); do
+            ./ci/check-example.sh "${f}" "./test#nixpkgs-darwin"
           done
         '
 
