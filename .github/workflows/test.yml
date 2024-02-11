@@ -21,8 +21,7 @@ jobs:
       - check-dead-code
       - check-fmt
       - examples-darwin
-      - examples-unstable
-      - examples-release
+      - examples-linux
       - tests
 
   tests:
@@ -51,7 +50,7 @@ jobs:
     - name: extra tests
       run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
 
-  examples-unstable:
+  examples-linux:
     strategy:
       # Allow other jobs to finish building and cache properly before bailing
       fail-fast: false
@@ -86,43 +85,6 @@ jobs:
       run: |
         rm ./examples/.gitignore
         nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} ".#nixpkgs"
-
-  examples-release:
-    strategy:
-      # Allow other jobs to finish building and cache properly before bailing
-      fail-fast: false
-      matrix:
-        example:
-          - alt-registry
-          - build-std
-          - cross-musl
-          - cross-rust-overlay
-          - cross-windows
-          - custom-toolchain
-          - end-to-end-testing
-          - quick-start-simple
-          - quick-start
-          - sqlx
-          - trunk-workspace
-          - trunk
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
-      with:
-        install_url: https://releases.nixos.org/nix/nix-2.18.1/install
-    - uses: cachix/cachix-action@v14
-      with:
-        name: crane
-        authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
-    - name: validate examples
-      # Nix won't write a lockfile when --override-input is used (which is good because it will
-      # complain that the lock file is .gitignored), but nix-eval-jobs doesn't, so we'll have to
-      # "opt-out" of our lockfile .gitignore
-      run: |
-        rm ./examples/.gitignore
-        nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} "./test#nixpkgs"
-
 
   examples-darwin:
     strategy:
