@@ -8,5 +8,5 @@ rustPlatform.buildRustPackage {
 
   src = lib.sourceFilesBySuffices ./. [ ".rs" ".toml" ".lock" ];
 
-  cargoSha256 = "sha256-/ybcjLrjLBuL8jYN0thBQtqyrpKDPAltF9sRqc98Yw0=";
+  cargoHash = "sha256-b/l0GV2QCHntdMFFkAtsPjnVMAFUC++2J4VnIyavf6w=";
 }
