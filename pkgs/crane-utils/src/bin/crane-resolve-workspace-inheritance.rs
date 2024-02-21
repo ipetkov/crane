@@ -9,7 +9,7 @@ use std::{
     process::{Command, Stdio},
     str::FromStr,
 };
-use toml_edit::Item;
+use toml_edit::{Item, Table};
 
 fn main() {
     let mut args = env::args();
@@ -90,33 +90,28 @@ fn merge(cargo_toml: &mut toml_edit::Document, root: &toml_edit::Document) {
         };
 
     // https://doc.rust-lang.org/cargo/reference/workspaces.html#workspaces
-    for (key, ws_key, inherit) in [
-        ("package", "package", false),
-        ("dependencies", "dependencies", false),
-        ("dev-dependencies", "dependencies", false),
-        ("build-dependencies", "dependencies", false),
-        ("lints", "lints", true),
-    ] {
-        if let Some((cargo_toml, root)) = cargo_toml.get_mut(key).zip(w.get(ws_key)) {
-            if inherit {
-                try_inherit_cargo_table(cargo_toml, root);
-            } else {
-                try_merge_cargo_tables(cargo_toml, root);
-            }
+    let w_deps = w.get("dependencies");
+    for key in ["dependencies", "dev-dependencies", "build-dependencies"] {
+        if let Some((cargo_toml, root)) = cargo_toml.get_mut(key).zip(w_deps) {
+            try_merge_dependencies_tables(cargo_toml, root);
         };
 
         if let Some(targets) = cargo_toml.get_mut("target").and_then(try_as_table_like_mut) {
             for (_, tp) in targets.iter_mut() {
-                if let Some((cargo_toml, root)) = tp.get_mut(key).zip(w.get(ws_key)) {
-                    if inherit {
-                        try_inherit_cargo_table(cargo_toml, root);
-                    } else {
-                        try_merge_cargo_tables(cargo_toml, root);
-                    }
+                if let Some((cargo_toml, root)) = tp.get_mut(key).zip(w_deps) {
+                    try_merge_dependencies_tables(cargo_toml, root);
                 }
             }
         }
     }
+
+    if let Some((cargo_toml, root)) = cargo_toml.get_mut("package").zip(w.get("package")) {
+        try_merge_cargo_tables(cargo_toml, root);
+    };
+
+    if let Some((cargo_toml, root)) = cargo_toml.get_mut("lints").zip(w.get("lints")) {
+        try_inherit_cargo_table(cargo_toml, root);
+    };
 }
 
 /// Return a [`toml_edit::TableLike`] representation of the [`Item`] (if any)
@@ -180,6 +175,54 @@ where
             if *bool_value.value() {
                 t.remove("workspace");
                 let orig_val = mem::replace(v, root_val.clone());
+                merge_items(v, orig_val);
+            }
+        }
+    });
+}
+
+/// Merge the specified `cargo_toml` and workspace `root` if both are dependency tables
+fn try_merge_dependencies_tables(cargo_toml: &mut Item, root: &Item) {
+    let cargo_toml = try_as_table_like_mut(cargo_toml);
+    let root = try_as_table_like(root);
+
+    if let Some((cargo_toml, root)) = cargo_toml.zip(root) {
+        merge_dependencies_tables(cargo_toml, root);
+    }
+}
+
+/// Merge the specified `cargo_toml` and workspace `root` dependencies tables
+fn merge_dependencies_tables<T, U>(cargo_toml: &mut T, root: &U)
+where
+    T: toml_edit::TableLike + ?Sized,
+    U: toml_edit::TableLike + ?Sized,
+{
+    use toml_edit::Value;
+
+    cargo_toml.iter_mut().for_each(|(k, v)| {
+        // Bail if:
+        // - cargo_toml isn't a table (otherwise `workspace = true` can't show up
+        // - the workspace root doesn't have this key
+        let (t, root_val) = match try_as_table_like_mut(&mut *v).zip(root.get(&k)) {
+            Some((t, root_val)) => (t, root_val),
+            _ => return,
+        };
+
+        if let Some(Item::Value(toml_edit::Value::Boolean(bool_value))) = t.get("workspace") {
+            if *bool_value.value() {
+                t.remove("workspace");
+                let orig_val = mem::replace(
+                    v,
+                    match root_val.clone() {
+                        s @ Item::Value(Value::String(_)) => {
+                            let mut table = Table::new();
+                            table.insert("version", s);
+                            Item::Table(table)
+                        }
+                        v => v,
+                    },
+                );
+
                 merge_items(v, orig_val);
             }
         }
@@ -343,6 +386,8 @@ mod tests {
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
+            fred.workspace = true
+            plugh = { workspace = true, optional = true }
 
             [target.'cfg(unix)'.dependencies]
             unix = { workspace = true, features = ["some"] }
@@ -407,6 +452,8 @@ mod tests {
             garply = "garply-workspace-vers"
             waldo = { version = "waldo-workspace-vers" }
             unix = { version = "unix-vers" }
+            fred = "0.1.3"
+            plugh = "0.2.4"
 
             [workspace.lints.rust]
             unused_extern_crates = 'warn'
@@ -448,6 +495,13 @@ mod tests {
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
+
+[dependencies.            fred]
+version = "0.1.3"
+
+[dependencies.            plugh ]
+version = "0.2.4"
+optional = true 
 
             [target.'cfg(unix)'.dependencies]
             unix = { version = "unix-vers" , features = ["some"] }
