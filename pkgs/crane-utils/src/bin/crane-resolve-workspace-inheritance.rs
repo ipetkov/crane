@@ -468,38 +468,37 @@ mod tests {
         // in cargo_toml
         let expected_toml_str = r#"
             [package]
-            authors= ["first author", "second author"]
-            categories= ["first category", "second category" ]
-            description= "some description"
-            documentation= "some doc url"
-            edition= "2021"
-            exclude= ["first exclusion", "second exclusion"]
-            homepage= "some home page"
-            include= ["first inclusion", "second inclusion"]
-            keyword= ["first keyword", "second keyword"]
-            license= "some license"
-            license-file= "some license-file"
-            publish= true
-            readme= "some readme"
-            repository= "some repository"
-            rust-version= "some rust-version"
-            version= "some version"
+authors = ["first author", "second author"]
+categories = ["first category", "second category" ]
+description = "some description"
+documentation = "some doc url"
+edition = "2021"
+exclude = ["first exclusion", "second exclusion"]
+homepage = "some home page"
+include = ["first inclusion", "second inclusion"]
+keyword = ["first keyword", "second keyword"]
+license = "some license"
+license-file = "some license-file"
+publish = true
+readme = "some readme"
+repository = "some repository"
+rust-version = "some rust-version"
+version = "some version"
 
             [dependencies]
-            # the `foo` dependency is most imporant, so it goes first
-            foo= { version = "foo-vers" }
-            bar= { version = "bar-vers", default-features = false }
-            baz= { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+foo = { version = "foo-vers" }
+bar = { version = "bar-vers", default-features = false }
+baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
             qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
             corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
 
-[dependencies.            fred]
+[dependencies.fred]
 version = "0.1.3"
 
-[dependencies.            plugh ]
+[            dependencies.plugh ]
 version = "0.2.4"
 optional = true 
 
@@ -510,9 +509,9 @@ optional = true
             unused_extern_crates = 'warn'
 
             [dev-dependencies]
-            foo= { version = "foo-vers" }
-            bar= { version = "bar-vers", default-features = false }
-            baz= { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+foo = { version = "foo-vers" }
+bar = { version = "bar-vers", default-features = false }
+baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
             qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
             corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
@@ -523,9 +522,9 @@ optional = true
             all = 'allow'
 
             [build-dependencies]
-            foo= { version = "foo-vers" }
-            bar= { version = "bar-vers", default-features = false }
-            baz= { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+foo = { version = "foo-vers" }
+bar = { version = "bar-vers", default-features = false }
+baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
             qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
             corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
