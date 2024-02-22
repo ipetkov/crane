@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   dummified sources which might have violated a lint marked as `deny` or
   `forbid`
 
+### Fixed
+* Fixed an edge case with inheriting workspace dependencies where the workspace
+  dependency is a string (e.g. `foo = "0.1.2"`) but the crate definition is a
+  table (e.g. `foo = { workspace = true, optional = true }`)
+
 ## [0.16.1] - 2024-01-28
 
 ### Changed
