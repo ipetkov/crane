@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.16.2] - 2024-02-21
+
 ### Changed
 * `cleanCargoToml` now also strips out `[lints]` and `[workspace.lints]`
   definitions. This means avoiding unnecessarily rebuilding dependencies when
