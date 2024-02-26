@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   the lint definitions change, and it avoids issues with failing to build
   dummified sources which might have violated a lint marked as `deny` or
   `forbid`
+* `crane-resolve-workspace-inheritance` no longer preserves comments or ordering
 
 ### Fixed
 * Fixed an edge case with inheriting workspace dependencies where the workspace

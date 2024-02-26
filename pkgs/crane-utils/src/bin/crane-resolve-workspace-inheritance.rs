@@ -9,7 +9,7 @@ use std::{
     process::{Command, Stdio},
     str::FromStr,
 };
-use toml_edit::{Item, Table};
+use toml::{Table, Value};
 
 fn main() {
     let mut args = env::args();
@@ -66,28 +66,29 @@ fn resolve_and_print_cargo_toml(cargo_toml: &Path) -> anyhow::Result<()> {
     merge(&mut cargo_toml, &parse_toml(&root_toml.join("Cargo.toml"))?);
 
     stdout()
-        .write_all(cargo_toml.to_string().as_bytes())
+        .write_all(
+            toml::to_string(&cargo_toml)
+                .expect("can't serialize toml::Value")
+                .as_bytes(),
+        )
         .context("failed to print updated Cargo.toml")
 }
 
-fn parse_toml(path: &Path) -> anyhow::Result<toml_edit::Document> {
+fn parse_toml(path: &Path) -> anyhow::Result<Value> {
     let mut buf = String::new();
     File::open(path)
         .and_then(|mut file| file.read_to_string(&mut buf))
         .with_context(|| format!("cannot read {}", path.display()))?;
 
-    toml_edit::Document::from_str(&buf).with_context(|| format!("cannot parse {}", path.display()))
+    Value::from_str(&buf).with_context(|| format!("cannot parse {}", path.display()))
 }
 
 /// Merge the workspace `root` toml into the specified crate's `cargo_toml`
-fn merge(cargo_toml: &mut toml_edit::Document, root: &toml_edit::Document) {
-    let w: &dyn toml_edit::TableLike =
-        if let Some(w) = root.get("workspace").and_then(try_as_table_like) {
-            w
-        } else {
-            // no "workspace" entry, nothing to merge
-            return;
-        };
+fn merge(cargo_toml: &mut Value, root: &Value) {
+    let Some(Value::Table(w)) = root.get("workspace") else {
+        // no "workspace" entry, nothing to merge
+        return;
+    };
 
     // https://doc.rust-lang.org/cargo/reference/workspaces.html#workspaces
     let w_deps = w.get("dependencies");
@@ -96,7 +97,7 @@ fn merge(cargo_toml: &mut toml_edit::Document, root: &toml_edit::Document) {
             try_merge_dependencies_tables(cargo_toml, root);
         };
 
-        if let Some(targets) = cargo_toml.get_mut("target").and_then(try_as_table_like_mut) {
+        if let Some(Value::Table(targets)) = cargo_toml.get_mut("target") {
             for (_, tp) in targets.iter_mut() {
                 if let Some((cargo_toml, root)) = tp.get_mut(key).zip(w_deps) {
                     try_merge_dependencies_tables(cargo_toml, root);
@@ -114,238 +115,135 @@ fn merge(cargo_toml: &mut toml_edit::Document, root: &toml_edit::Document) {
     };
 }
 
-/// Return a [`toml_edit::TableLike`] representation of the [`Item`] (if any)
-fn try_as_table_like(item: &Item) -> Option<&dyn toml_edit::TableLike> {
-    match item {
-        Item::Table(w) => Some(w),
-        Item::Value(toml_edit::Value::InlineTable(w)) => Some(w),
-        _ => None,
-    }
-}
-
-/// Return a mutable [`toml_edit::TableLike`] representation of the [`Item`] (if any)
-fn try_as_table_like_mut(item: &mut Item) -> Option<&mut dyn toml_edit::TableLike> {
-    match item {
-        Item::Table(w) => Some(w),
-        Item::Value(toml_edit::Value::InlineTable(w)) => Some(w),
-        _ => None,
-    }
-}
-
 /// Inherit the specified `cargo_toml` from workspace `root` if the former is a table
-fn try_inherit_cargo_table(cargo_toml: &mut Item, root: &Item) {
-    let Some(t) = try_as_table_like_mut(cargo_toml) else {
+fn try_inherit_cargo_table(cargo_toml: &mut Value, root: &Value) {
+    let Value::Table(t) = cargo_toml else {
         return;
     };
     if t.get("workspace")
-        .and_then(Item::as_bool)
+        .and_then(Value::as_bool)
         .unwrap_or_default()
     {
         t.remove("workspace");
         let orig_val = mem::replace(cargo_toml, root.clone());
-        merge_items(cargo_toml, orig_val);
+        merge_items(cargo_toml, &orig_val);
     }
 }
 
 /// Merge the specified `cargo_toml` and workspace `root` if both are tables
-fn try_merge_cargo_tables(cargo_toml: &mut Item, root: &Item) {
-    let cargo_toml = try_as_table_like_mut(cargo_toml);
-    let root = try_as_table_like(root);
+fn try_merge_cargo_tables(cargo_toml: &mut Value, root: &Value) {
+    let Some(cargo_toml) = cargo_toml.as_table_mut() else {
+        return;
+    };
+    let Some(root) = root.as_table() else {
+        return;
+    };
 
-    if let Some((cargo_toml, root)) = cargo_toml.zip(root) {
-        merge_cargo_tables(cargo_toml, root);
-    }
+    merge_cargo_tables(cargo_toml, root);
 }
 /// Merge the specified `cargo_toml` and workspace `root` tables
-fn merge_cargo_tables<T, U>(cargo_toml: &mut T, root: &U)
-where
-    T: toml_edit::TableLike + ?Sized,
-    U: toml_edit::TableLike + ?Sized,
-{
+fn merge_cargo_tables(cargo_toml: &mut Table, root: &Table) {
     cargo_toml.iter_mut().for_each(|(k, v)| {
         // Bail if:
         // - cargo_toml isn't a table (otherwise `workspace = true` can't show up
         // - the workspace root doesn't have this key
-        let (t, root_val) = match try_as_table_like_mut(&mut *v).zip(root.get(&k)) {
+        let (t, root_val) = match v.as_table_mut().zip(root.get(k)) {
             Some((t, root_val)) => (t, root_val),
             _ => return,
         };
 
-        if let Some(Item::Value(toml_edit::Value::Boolean(bool_value))) = t.get("workspace") {
-            if *bool_value.value() {
+        if let Some(Value::Boolean(bool_value)) = t.get("workspace") {
+            if *bool_value {
                 t.remove("workspace");
                 let orig_val = mem::replace(v, root_val.clone());
-                merge_items(v, orig_val);
+                merge_items(v, &orig_val);
             }
         }
     });
 }
 
 /// Merge the specified `cargo_toml` and workspace `root` if both are dependency tables
-fn try_merge_dependencies_tables(cargo_toml: &mut Item, root: &Item) {
-    let cargo_toml = try_as_table_like_mut(cargo_toml);
-    let root = try_as_table_like(root);
+fn try_merge_dependencies_tables(cargo_toml: &mut Value, root: &Value) {
+    let Some(cargo_toml) = cargo_toml.as_table_mut() else {
+        return;
+    };
+    let Some(root) = root.as_table() else {
+        return;
+    };
 
-    if let Some((cargo_toml, root)) = cargo_toml.zip(root) {
-        merge_dependencies_tables(cargo_toml, root);
-    }
+    merge_dependencies_tables(cargo_toml, root);
 }
 
 /// Merge the specified `cargo_toml` and workspace `root` dependencies tables
-fn merge_dependencies_tables<T, U>(cargo_toml: &mut T, root: &U)
-where
-    T: toml_edit::TableLike + ?Sized,
-    U: toml_edit::TableLike + ?Sized,
-{
-    use toml_edit::Value;
-
+fn merge_dependencies_tables(cargo_toml: &mut Table, root: &Table) {
     cargo_toml.iter_mut().for_each(|(k, v)| {
         // Bail if:
         // - cargo_toml isn't a table (otherwise `workspace = true` can't show up
         // - the workspace root doesn't have this key
-        let (t, root_val) = match try_as_table_like_mut(&mut *v).zip(root.get(&k)) {
+        let (t, root_val) = match v.as_table_mut().zip(root.get(k)) {
             Some((t, root_val)) => (t, root_val),
             _ => return,
         };
 
-        if let Some(Item::Value(toml_edit::Value::Boolean(bool_value))) = t.get("workspace") {
-            if *bool_value.value() {
+        if let Some(Value::Boolean(bool_value)) = t.get("workspace") {
+            if *bool_value {
                 t.remove("workspace");
                 let orig_val = mem::replace(
                     v,
                     match root_val.clone() {
-                        s @ Item::Value(Value::String(_)) => {
+                        s @ Value::String(_) => {
                             let mut table = Table::new();
-                            table.insert("version", s);
-                            Item::Table(table)
+                            table.insert("version".to_string(), s);
+                            Value::Table(table)
                         }
                         v => v,
                     },
                 );
 
-                merge_items(v, orig_val);
+                merge_items(v, &orig_val);
             }
         }
     });
 }
 
 /// Recursively merge the `additional` item into the specified `dest`
-fn merge_items(dest: &mut Item, additional: Item) {
-    use toml_edit::Value;
-
+fn merge_items(dest: &mut Value, additional: &Value) {
     match additional {
-        Item::Value(additional) => match additional {
-            Value::String(_)
-            | Value::Integer(_)
-            | Value::Float(_)
-            | Value::Boolean(_)
-            | Value::Datetime(_) => {
-                // Override dest completely for raw values
-                *dest = Item::Value(additional);
-            }
-
-            Value::Array(additional) => {
-                if let Item::Value(Value::Array(dest)) = dest {
-                    dest.extend(additional);
-                } else {
-                    // Override dest completely if types don't match
-                    *dest = Item::Value(Value::Array(additional));
-                }
-            }
-
-            Value::InlineTable(additional) => {
-                merge_tables(dest, additional);
-            }
-        },
-        Item::Table(additional) => {
-            merge_tables(dest, additional);
+        Value::String(_)
+        | Value::Integer(_)
+        | Value::Float(_)
+        | Value::Boolean(_)
+        | Value::Datetime(_) => {
+            // Override dest completely for raw values
+            *dest = additional.clone();
         }
-        Item::None => {}
-        Item::ArrayOfTables(additional) => {
-            if let Item::ArrayOfTables(dest) = dest {
-                dest.extend(additional);
+
+        Value::Array(additional) => {
+            if let Value::Array(dest) = dest {
+                dest.extend(additional.clone());
             } else {
                 // Override dest completely if types don't match
-                *dest = Item::ArrayOfTables(additional);
+                *dest = Value::Array(additional.clone());
             }
+        }
+        Value::Table(additional) => {
+            merge_tables(dest, additional);
         }
     }
 }
 
-use table_like_ext::merge_tables;
-mod table_like_ext {
-    //! Helper functions to merge values in any combination of the two [`TableLike`] items
-    //! found in [`toml_edit`]
-
-    use toml_edit::{Item, TableLike};
-
-    /// Recursively merge the `additional` table into `dest` (overwriting if `dest` is not a table)
-    pub(super) fn merge_tables<T>(dest: &mut Item, additional: T)
-    where
-        T: TableLikeExt,
-    {
-        match dest {
-            Item::Table(dest) => merge_table_like(dest, additional),
-            Item::Value(toml_edit::Value::InlineTable(dest)) => merge_table_like(dest, additional),
-            _ => {
-                // Override dest completely if types don't match, but also
-                // skip empty tables (i.e. if we had `key = { workspace = true }`
-                if !additional.is_empty() {
-                    *dest = additional.into_item();
-                }
-            }
-        }
-    }
-
-    /// Recursively merge two tables
-    fn merge_table_like<T, U>(dest: &mut T, additional: U)
-    where
-        T: TableLike,
-        U: TableLikeExt,
-    {
+fn merge_tables(dest: &mut Value, additional: &Table) {
+    if let Some(dest) = dest.as_table_mut() {
         additional
             .into_iter()
-            .map(U::map_iter_item)
-            .for_each(|(k, v)| match dest.get_mut(&k) {
-                Some(existing) => super::merge_items(existing, v),
+            .for_each(|(k, v)| match dest.get_mut(k) {
+                Some(existing) => merge_items(existing, v),
                 None => {
-                    dest.insert(&k, v);
+                    dest.insert(k.to_string(), v.clone());
                 }
             });
-    }
-
-    /// Generalized form of the item yielded by [`IntoIterator`] for the two [`TableLike`] types
-    /// in [`toml_edit`]
-    type CommonIterItem = (toml_edit::InternalString, Item);
-
-    /// Extension trait to iterate [`Item`]s from a [`TableLike`] item
-    pub(super) trait TableLikeExt: TableLike + IntoIterator {
-        /// Convert the iterator item to a common type
-        fn map_iter_item(item: Self::Item) -> CommonIterItem;
-
-        /// Convert the table into an [`Item`]
-        fn into_item(self) -> Item;
-    }
-
-    impl TableLikeExt for toml_edit::Table {
-        fn map_iter_item(item: Self::Item) -> CommonIterItem {
-            item
-        }
-
-        fn into_item(self) -> Item {
-            Item::Table(self)
-        }
-    }
-
-    impl TableLikeExt for toml_edit::InlineTable {
-        fn map_iter_item(item: Self::Item) -> CommonIterItem {
-            let (k, v) = item;
-            (k, Item::Value(v))
-        }
-
-        fn into_item(self) -> Item {
-            Item::Value(toml_edit::Value::InlineTable(self))
-        }
+    } else if !additional.is_empty() {
+        *dest = Value::Table(additional.clone());
     }
 }
 
@@ -356,7 +254,7 @@ mod tests {
 
     #[test]
     fn smoke() {
-        let mut cargo_toml = toml_edit::Document::from_str(
+        let mut cargo_toml = toml::Value::from_str(
             r#"
             [package]
             authors.workspace = true
@@ -377,7 +275,6 @@ mod tests {
             version.workspace = true
 
             [dependencies]
-            # the `foo` dependency is most imporant, so it goes first
             foo.workspace = true
             bar.workspace = true
             baz.workspace = true
@@ -413,7 +310,6 @@ mod tests {
             waldo = "waldo-vers"
 
             [features]
-            # this feature is a demonstration that comments are preserved
             my_feature = []
 
             [lints]
@@ -422,7 +318,7 @@ mod tests {
         )
         .unwrap();
 
-        let root_toml = toml_edit::Document::from_str(
+        let root_toml = toml::Value::from_str(
             r#"
             [workspace.package]
             authors = ["first author", "second author"]
@@ -443,7 +339,6 @@ mod tests {
             version = "some version"
 
             [workspace.dependencies]
-            # top-level workspace comments are not copied - only the values are merged
             foo = { version = "foo-vers" }
             bar = { version = "bar-vers", default-features = false }
             baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
@@ -464,43 +359,42 @@ mod tests {
         )
         .unwrap();
 
-        // NOTE: The nonstandard spacing is due to reusing decorations from original keys/values
-        // in cargo_toml
-        let expected_toml_str = r#"
+        let expected_toml = toml::Value::from_str(
+            r#"
             [package]
-authors = ["first author", "second author"]
-categories = ["first category", "second category" ]
-description = "some description"
-documentation = "some doc url"
-edition = "2021"
-exclude = ["first exclusion", "second exclusion"]
-homepage = "some home page"
-include = ["first inclusion", "second inclusion"]
-keyword = ["first keyword", "second keyword"]
-license = "some license"
-license-file = "some license-file"
-publish = true
-readme = "some readme"
-repository = "some repository"
-rust-version = "some rust-version"
-version = "some version"
+            authors = ["first author", "second author"]
+            categories = ["first category", "second category" ]
+            description = "some description"
+            documentation = "some doc url"
+            edition = "2021"
+            exclude = ["first exclusion", "second exclusion"]
+            homepage = "some home page"
+            include = ["first inclusion", "second inclusion"]
+            keyword = ["first keyword", "second keyword"]
+            license = "some license"
+            license-file = "some license-file"
+            publish = true
+            readme = "some readme"
+            repository = "some repository"
+            rust-version = "some rust-version"
+            version = "some version"
 
             [dependencies]
-foo = { version = "foo-vers" }
-bar = { version = "bar-vers", default-features = false }
-baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+            foo = { version = "foo-vers" }
+            bar = { version = "bar-vers", default-features = false }
+            baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
             qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
             corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
             garply = "garply-vers"
             waldo = "waldo-vers"
 
-[dependencies.fred]
-version = "0.1.3"
+            [dependencies.fred]
+            version = "0.1.3"
 
-[            dependencies.plugh ]
-version = "0.2.4"
-optional = true 
+            [dependencies.plugh]
+            version = "0.2.4"
+            optional = true 
 
             [target.'cfg(unix)'.dependencies]
             unix = { version = "unix-vers" , features = ["some"] }
@@ -509,9 +403,9 @@ optional = true
             unused_extern_crates = 'warn'
 
             [dev-dependencies]
-foo = { version = "foo-vers" }
-bar = { version = "bar-vers", default-features = false }
-baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+            foo = { version = "foo-vers" }
+            bar = { version = "bar-vers", default-features = false }
+            baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
             qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
             corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
@@ -522,9 +416,9 @@ baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
             all = 'allow'
 
             [build-dependencies]
-foo = { version = "foo-vers" }
-bar = { version = "bar-vers", default-features = false }
-baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
+            foo = { version = "foo-vers" }
+            bar = { version = "bar-vers", default-features = false }
+            baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
             qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
             corge = { version = "corge-vers-override" , features = ["qux-feat"] }
             grault = { version = "grault-vers" }
@@ -532,12 +426,13 @@ baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
             waldo = "waldo-vers"
 
             [features]
-            # this feature is a demonstration that comments are preserved
             my_feature = []
-        "#;
+        "#,
+        )
+        .unwrap();
 
         super::merge(&mut cargo_toml, &root_toml);
 
-        assert_eq!(expected_toml_str, cargo_toml.to_string());
+        assert_eq!(expected_toml, cargo_toml);
     }
 }
