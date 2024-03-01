@@ -23,7 +23,7 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: Update flake.lock
       id: flakeupdate
-      uses: DeterminateSystems/update-flake-lock@v20
+      uses: DeterminateSystems/update-flake-lock@v21
       with:
         token: ${{ secrets.PAT_FLAKE_UPDATE }}
         branch: "automation/flake-update"
