@@ -1,4 +1,4 @@
-In adittion to Unit and Integration tests, you can also write tests that
+In addition to Unit and Integration tests, you can also write tests that
 interact with your application as a real user would.
 That technique is called End to End(E2E) testing.
 
