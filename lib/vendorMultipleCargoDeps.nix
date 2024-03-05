@@ -32,7 +32,8 @@ in
 , cargoLockList ? [ ]
 , cargoLockParsedList ? [ ]
 , outputHashes ? { }
-}@args:
+, registries ? null
+}:
 let
   cargoLocksParsed = (map fromTOML ((map readFile cargoLockList) ++ cargoLockContentsList))
     ++ cargoLockParsedList;
@@ -59,7 +60,7 @@ let
 
   vendoredRegistries = vendorCargoRegistries ({
     inherit cargoConfigs lockPackages;
-  } // optionalAttrs (args ? registries) { inherit (args) registries; });
+  } // optionalAttrs (registries != null) { inherit registries; });
 
   vendoredGit = vendorGitDeps {
     inherit lockPackages outputHashes;

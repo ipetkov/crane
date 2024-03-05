@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed:
+* `vendorMultipleCargoDeps` correctly lists `registries` as an optional
+  parameter
+
 ## [0.16.2] - 2024-02-21
 
 ### Changed
