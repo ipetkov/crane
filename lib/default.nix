@@ -38,7 +38,7 @@ in
   };
 
   crateRegistries = self.registryFromDownloadUrl {
-    dl = "https://crates.io/api/v1/crates";
+    dl = "https://static.crates.io/crates";
     indexUrl = "https://github.com/rust-lang/crates.io-index";
   };
 

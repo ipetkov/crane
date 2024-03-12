@@ -47,7 +47,7 @@ See the documentation on each function for more specifics.
 newLib = craneLib.appendCrateRegistries [
   (craneLib.registryFromDownloadUrl {
     indexUrl = "https://github.com/rust-lang/crates.io-index";
-    dl = "https://crates.io/api/v1/crates";
+    dl = "https://static.crates.io/crates";
     fetchurlExtraArgs = {};
   })
 
@@ -1214,12 +1214,12 @@ crate sources (e.g. by setting `curlOptsList`)
 
 ```nix
 craneLib.registryFromDownloadUrl {
-  dl = "https://crates.io/api/v1/crates";
+  dl = "https://static.crates.io/crates";
   indexUrl = "https://github.com/rust-lang/crates.io-index";
 }
 # {
 #   "registry+https://github.com/rust-lang/crates.io-index" = {
-#     downloadUrl = "https://crates.io/api/v1/crates/{crate}/{version}/download";
+#     downloadUrl = "https://static.crates.io/crates/{crate}/{version}/download";
 #     fetchurlExtraArgs = {};
 #   };
 # }
