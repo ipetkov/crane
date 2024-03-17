@@ -72,7 +72,7 @@
           inherit my-crate;
 
           # Run clippy (and deny all warnings) on the crate source,
-          # again, resuing the dependency artifacts from above.
+          # again, reusing the dependency artifacts from above.
           #
           # Note that this is done as a separate derivation so that
           # we can block the CI if there are issues here, but not
