@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* Sources are now fetched [crates.io's
+  CDN](https://blog.rust-lang.org/2024/03/11/crates-io-download-changes.html),
+  following cargo's (new) default behavior.
+
 ### Fixed:
 * `vendorMultipleCargoDeps` correctly lists `registries` as an optional
   parameter
