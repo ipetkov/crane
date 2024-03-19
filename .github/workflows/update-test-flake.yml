@@ -26,7 +26,7 @@ jobs:
       uses: DeterminateSystems/update-flake-lock@v21
       with:
         token: ${{ secrets.PAT_FLAKE_UPDATE }}
-        branch: "automation/flake-update"
+        branch: "automation/flake-update-internal"
         path-to-flake-dir: ./test
         pr-title: "Update internal flake.lock"
         pr-labels: |
