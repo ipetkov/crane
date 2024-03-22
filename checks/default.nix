@@ -57,15 +57,6 @@ in
     };
   };
 
-  cargoLlvmCovNextest = myLibLlvmTools.cargoLlvmCov {
-    src = ./simple;
-    cargoLlvmCovCommand = "nextest";
-    cargoArtifacts = myLib.buildDepsOnly {
-      src = ./simple;
-    };
-    nativeBuildInputs = [ pkgs.cargo-nextest ];
-  };
-
   # NB: explicitly using a github release (not crates.io release)
   # which lacks a Cargo.lock file, so we can test adding our own
   cargoLockOverride =
@@ -444,7 +435,9 @@ in
       doCheck = false;
     });
 
-  nextest = callPackage ./nextest.nix { };
+  nextest = callPackage ./nextest.nix {
+    inherit (myLibLlvmTools) cargoNextest;
+  };
 
   procMacro = myLib.buildPackage {
     src = myLib.cleanCargoSource ./proc-macro;

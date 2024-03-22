@@ -615,6 +615,9 @@ Except where noted below, all derivation attributes are delegated to
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `""`
+* `cargoLlvmCovExtraArgs`: additional flags to be passed in the cargo
+  llvm-cov invocation
+  - Default value: `"--lcov --output-path $out/coverage"`
 * `cargoNextestExtraArgs`: additional flags to be passed in the clippy invocation (e.g.
   deny specific lints)
   - Default value: `""`
@@ -625,6 +628,10 @@ Except where noted below, all derivation attributes are delegated to
 * `partitionType`: The kind of nextest partition to run (e.g. `"count"` or
   `"hash"` based).
   - Default value: `"count"`
+* `withLlvmCov`: Whether or not to run nextest through `cargo llvm-cov`
+  - Default value: `false`
+  - Note that setting `withLlvmCov = true;` is not currently supported if
+    `partitions > 1`.
 
 #### Native build dependencies
 The `cargo-nextest` package is automatically appended as a native build input to any
@@ -636,9 +643,11 @@ The following attributes will be removed before being lowered to
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoExtraArgs`
+* `cargoLlvmCovExtraArgs`
 * `cargoNextestExtraArgs`
 * `partitions`
 * `partitionType`
+* `withLlvmCov`
 
 ### `craneLib.cargoTarpaulin`
 
