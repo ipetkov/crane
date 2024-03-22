@@ -200,6 +200,12 @@ in
     {
       src = ./with-build-script-custom;
     };
+  # https://github.com/ipetkov/crane/issues/538
+  compilesFreshWithCustomTargetDir = self.compilesFresh "simple" (myLib.cargoBuild) {
+    src = ./simple;
+    asdf = 1;
+    CARGO_TARGET_DIR = "target/foo";
+  };
   compilesFreshWorkspace = self.compilesFresh
     {
       check = (builtins.concatStringsSep "\n" [

@@ -9,18 +9,19 @@ compressAndInstallCargoArtifactsDir() {
   (
     export SOURCE_DATE_EPOCH=1
 
-    dynTar() {
+    dynTar() (
+      cd "${cargoTargetDir}"
       if [ -n "${doCompressAndInstallFullArchive}" ]; then
         >&2 echo "compressing and installing full archive of ${cargoTargetDir} to ${dest} as requested"
-        tar "$@" "${cargoTargetDir}"
+        tar "$@" .
       elif [ "$(uname -s)" == "Darwin" ]; then
         # https://github.com/rust-lang/rust/issues/115982
         >&2 echo "incremental zstd compression not currently supported on Darwin: https://github.com/rust-lang/rust/issues/115982"
         >&2 echo "doing a full archive install of ${cargoTargetDir} to ${dest}"
-        tar "$@" "${cargoTargetDir}"
+        tar "$@" .
       elif [ -z "${prevArtifacts}" ]; then
         >&2 echo "no previous artifacts found, compressing and installing full archive of ${cargoTargetDir} to ${dest}"
-        tar "$@" "${cargoTargetDir}"
+        tar "$@" .
       else
         >&2 echo "linking previous artifacts ${prevArtifacts} to ${dest}"
         ln -s "${prevArtifacts}" "${dest}.prev"
@@ -28,10 +29,10 @@ compressAndInstallCargoArtifactsDir() {
         tar \
           --null \
           --no-recursion \
-          -T <(find "${cargoTargetDir}" -newer "${TMPDIR}/.crane.source-date-epoch" -print0) \
+          -T <(find . -newer "${TMPDIR}/.crane.source-date-epoch" -print0) \
           "$@"
       fi
-    }
+    )
 
     dynTar \
       --sort=name \
