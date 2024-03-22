@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `cargo llvm-cov nextest`. Note that `withLlvmCov = true;` is (currently) only
   supported when `partitions = 1;`
 
+### Fixed:
+* `inheritCargoArtifactsHook` and `installCargoArtifactsHook` now correctly
+  handle the case when `CARGO_TARGET_DIR` is set to a nested directory
+
 ## [0.16.3] - 2024-03-19
 
 ### Changed

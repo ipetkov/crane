@@ -24,8 +24,9 @@ inheritCargoArtifacts() {
     fi
 
     echo "decompressing cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
+    mkdir -p "${cargoTargetDir}"
     zstd -d "${preparedArtifacts}" --stdout | \
-      tar -x -C "${cargoTargetDir}" --strip-components=1
+      tar -x -C "${cargoTargetDir}"
   elif [ -d "${preparedArtifacts}" ]; then
     echo "copying cargo artifacts from ${preparedArtifacts} to ${cargoTargetDir}"
 
