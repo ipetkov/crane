@@ -27,7 +27,8 @@ buildPackage {
   # other attributes omitted
   postPatch = ''
     mkdir -p "$TMPDIR/nix-vendor"
-    cp -r "$cargoVendorDir" -T "$TMPDIR/nix-vendor"
+    cp -Lr "$cargoVendorDir" -T "$TMPDIR/nix-vendor"
+    sed -i "s|$cargoVendorDir|$TMPDIR/nix-vendor/|g" "$TMPDIR/nix-vendor/config.toml"
     chmod -R +w "$TMPDIR/nix-vendor"
     cargoVendorDir="$TMPDIR/nix-vendor"
   '';
