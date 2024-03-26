@@ -17,6 +17,7 @@ in
   buildPackage = callPackage ./buildPackage.nix { };
   buildTrunkPackage = callPackage ./buildTrunkPackage.nix { };
   cargoAudit = callPackage ./cargoAudit.nix { };
+  cargoBench = callPackage ./cargoBench.nix { };
   cargoBuild = callPackage ./cargoBuild.nix { };
   cargoClippy = callPackage ./cargoClippy.nix { };
   cargoDeny = callPackage ./cargoDeny.nix { };

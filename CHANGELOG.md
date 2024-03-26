@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `cargoBench` can now be used to run cargo benchmarks
+
 ### Changed
 * `cargoNextest` now supports setting `withLlvmCov` which will automatically run
   `cargo llvm-cov nextest`. Note that `withLlvmCov = true;` is (currently) only
