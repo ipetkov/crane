@@ -5,8 +5,11 @@ set -eu
 scriptDir=$(dirname "$0")
 cd "${scriptDir}"
 
-if [ "nix (Nix) 2.21.0" = "$(nix --version)" ]; then
-  echo 'skipping test: https://github.com/NixOS/nix/issues/10267'
-else
-  nix build .#default --override-input crane ../.. --store $(pwd)/alt-store
-fi
+case "$(nix --version)" in
+  "nix (Nix) 2.21.0" | "nix (Nix) 2.21.1")
+    echo 'skipping test: https://github.com/NixOS/nix/issues/10267'
+    ;;
+
+  *) nix build .#default --override-input crane ../.. --store $(pwd)/alt-store
+    ;;
+esac

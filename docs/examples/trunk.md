@@ -7,13 +7,14 @@ Being a more specialized tool, it comes with some constraints that must be noted
 * `craneLib.filterCargoSources` will remove html, css, your assets folder, so you need to modify the source filtering function (See: [Source filtering](../source-filtering.md))
 * You will need to set `wasm-bindgen-cli` to a version that matches your Cargo.lock file. (See examples)
 
-Quick-start a Trunk project with
+For a quick-start run the following in a fresh directory:
 
 ```sh
 nix flake init -t github:ipetkov/crane#trunk
 ```
 
-Alternatively, copy and paste the following `flake.nix`:
+Alternatively, if you have an existing project already, copy and paste the
+following `flake.nix`:
 
 ```nix
 {{#include ../../examples/trunk/flake.nix}}
