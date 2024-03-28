@@ -9,13 +9,14 @@ In this example we have a workspace with two members:
 * e2e: a end-to-end test "script" that drives
   Firefox into interacting with the sever
 
-Quick-start an E2E project with
+Quick-start an E2E project in a fresh directory with:
 
 ```sh
 nix flake init -t github:ipetkov/crane#end-to-end-testing
 ```
 
-Alternatively, copy and paste the following `flake.nix` and modify it to build your workspace's packages:
+Alternatively, if you have an existing project already, copy and paste the
+following `flake.nix` and modify it to build your workspace's packages:
 
 ```nix
 {{#include ../../examples/end-to-end-testing/flake.nix}}

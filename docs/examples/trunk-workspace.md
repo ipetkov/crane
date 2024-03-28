@@ -7,13 +7,14 @@ In this example we have a workspace with three members:
 * server: a Axum server built using Cargo
 * shared: a library that contains types to be imported in both the client and server
 
-Quick-start a Trunk+Server project with
+For a quick-start run the following in a fresh directory:
 
 ```sh
 nix flake init -t github:ipetkov/crane#trunk-workspace
 ```
 
-Alternatively, copy and paste the following `flake.nix` and modify it to build your workspace's packages:
+Alternatively, if you have an existing project already, copy and paste the
+following `flake.nix` and modify it to build your workspace's packages:
 
 ```nix
 {{#include ../../examples/trunk-workspace/flake.nix}}
