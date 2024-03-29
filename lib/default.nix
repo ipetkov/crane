@@ -2,7 +2,13 @@
 , newScope
 }:
 
-lib.makeScope newScope (self:
+let
+  minSupported = "23.11";
+  current = lib.concatStringsSep "." (lib.lists.sublist 0 2 (lib.splitVersion lib.version));
+  isUnsupported = lib.versionOlder current minSupported;
+  msg = "crane requires at least nixpkgs-${minSupported}, supplied nixpkgs-${current}";
+in
+lib.warnIf isUnsupported msg (lib.makeScope newScope (self:
 let
   inherit (self) callPackage;
 
@@ -74,4 +80,4 @@ in
   vendorCargoRegistries = callPackage ./vendorCargoRegistries.nix { };
   vendorGitDeps = callPackage ./vendorGitDeps.nix { };
   writeTOML = callPackage ./writeTOML.nix { };
-})
+}))
