@@ -6,12 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* Added a warning if an unsupported version of nixpkgs is used
+
 ### Changed
 * `cargoNextest` now supports setting `withLlvmCov` which will automatically run
   `cargo llvm-cov nextest`. Note that `withLlvmCov = true;` is (currently) only
   supported when `partitions = 1;`
 
-### Fixed:
+### Fixed
 * `inheritCargoArtifactsHook` and `installCargoArtifactsHook` now correctly
   handle the case when `CARGO_TARGET_DIR` is set to a nested directory
 
@@ -22,7 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   CDN](https://blog.rust-lang.org/2024/03/11/crates-io-download-changes.html),
   following cargo's (new) default behavior.
 
-### Fixed:
+### Fixed
 * `vendorMultipleCargoDeps` correctly lists `registries` as an optional
   parameter
 
