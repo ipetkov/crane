@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v26
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v14
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v26
       with:
         install_url: https://nixos.org/nix/install
     - uses: cachix/cachix-action@v14
@@ -93,7 +93,7 @@ jobs:
     runs-on: macos-13
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v26
       with:
         install_url: https://nixos.org/nix/install
     - uses: cachix/cachix-action@v14
@@ -117,7 +117,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v26
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: check for dead code
       run: nix run github:astro/deadnix -- .
@@ -126,7 +126,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v26
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: check formatting
       run: nix fmt --accept-flake-config -- --check .
