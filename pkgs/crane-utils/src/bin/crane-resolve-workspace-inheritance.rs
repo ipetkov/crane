@@ -70,17 +70,18 @@ fn resolve_and_print_cargo_toml(cargo_toml: &Path) -> anyhow::Result<()> {
         .context("failed to print updated Cargo.toml")
 }
 
-fn parse_toml(path: &Path) -> anyhow::Result<toml_edit::Document> {
+fn parse_toml(path: &Path) -> anyhow::Result<toml_edit::DocumentMut> {
     let mut buf = String::new();
     File::open(path)
         .and_then(|mut file| file.read_to_string(&mut buf))
         .with_context(|| format!("cannot read {}", path.display()))?;
 
-    toml_edit::Document::from_str(&buf).with_context(|| format!("cannot parse {}", path.display()))
+    toml_edit::DocumentMut::from_str(&buf)
+        .with_context(|| format!("cannot parse {}", path.display()))
 }
 
 /// Merge the workspace `root` toml into the specified crate's `cargo_toml`
-fn merge(cargo_toml: &mut toml_edit::Document, root: &toml_edit::Document) {
+fn merge(cargo_toml: &mut toml_edit::DocumentMut, root: &toml_edit::DocumentMut) {
     let w: &dyn toml_edit::TableLike =
         if let Some(w) = root.get("workspace").and_then(try_as_table_like) {
             w
@@ -356,7 +357,7 @@ mod tests {
 
     #[test]
     fn smoke() {
-        let mut cargo_toml = toml_edit::Document::from_str(
+        let mut cargo_toml = toml_edit::DocumentMut::from_str(
             r#"
             [package]
             authors.workspace = true
@@ -422,7 +423,7 @@ mod tests {
         )
         .unwrap();
 
-        let root_toml = toml_edit::Document::from_str(
+        let root_toml = toml_edit::DocumentMut::from_str(
             r#"
             [workspace.package]
             authors = ["first author", "second author"]
