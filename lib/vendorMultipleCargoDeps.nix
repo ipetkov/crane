@@ -49,7 +49,7 @@ let
   allPackagesTrimmed = map
     (l: map
       (filterAttrs (k: _: allowedAttrs.${k} or false))
-      (l.package or [ ])
+      ((l.package or [ ]) ++ (l.patch.unused or [ ]))
     )
     cargoLocksParsed;
 

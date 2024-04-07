@@ -50,3 +50,8 @@ dependencies = [
  "num_cpus",
  "rustversion",
 ]
+
+[[patch.unused]]
+name = "unicode-ident"
+version = "1.0.12"
+source = "git+https://github.com/dtolnay/unicode-ident.git?rev=a8736e7e62be959d87970d2d137a098ba533d78b#a8736e7e62be959d87970d2d137a098ba533d78b"
