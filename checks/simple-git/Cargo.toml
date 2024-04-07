@@ -21,3 +21,8 @@ tag = "v1.13.1"
 version = "*"
 git = "https://github.com/dtolnay/rustversion.git"
 rev = "2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb"
+
+# Intentionally unused patch dependency
+# https://github.com/ipetkov/crane/issues/576
+[patch.crates-io]
+unicode-ident = { git = "https://github.com/dtolnay/unicode-ident.git", rev = "a8736e7e62be959d87970d2d137a098ba533d78b" }
