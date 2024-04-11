@@ -200,10 +200,11 @@ where
 {
     use toml_edit::Value;
 
-    cargo_toml.iter_mut().for_each(|(k, v)| {
+    cargo_toml.iter_mut().for_each(|(mut k, v)| {
         // Bail if:
         // - cargo_toml isn't a table (otherwise `workspace = true` can't show up
         // - the workspace root doesn't have this key
+        k.leaf_decor_mut().clear();
         let (t, root_val) = match try_as_table_like_mut(&mut *v).zip(root.get(&k)) {
             Some((t, root_val)) => (t, root_val),
             _ => return,
@@ -490,21 +491,21 @@ version = "some version"
 foo = { version = "foo-vers" }
 bar = { version = "bar-vers", default-features = false }
 baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
-            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
-            grault = { version = "grault-vers" }
-            garply = "garply-vers"
-            waldo = "waldo-vers"
+qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+corge = { version = "corge-vers-override" , features = ["qux-feat"] }
+grault = { version = "grault-vers" }
+garply = "garply-vers"
+waldo = "waldo-vers"
 
 [dependencies.fred]
 version = "0.1.3"
 
-[            dependencies.plugh ]
+[dependencies.plugh]
 version = "0.2.4"
 optional = true 
 
             [target.'cfg(unix)'.dependencies]
-            unix = { version = "unix-vers" , features = ["some"] }
+unix = { version = "unix-vers" , features = ["some"] }
 
             [lints.rust]
             unused_extern_crates = 'warn'
@@ -513,11 +514,11 @@ optional = true
 foo = { version = "foo-vers" }
 bar = { version = "bar-vers", default-features = false }
 baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
-            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
-            grault = { version = "grault-vers" }
-            garply = "garply-vers"
-            waldo = "waldo-vers"
+qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+corge = { version = "corge-vers-override" , features = ["qux-feat"] }
+grault = { version = "grault-vers" }
+garply = "garply-vers"
+waldo = "waldo-vers"
 
             [lints.clippy]
             all = 'allow'
@@ -526,11 +527,11 @@ baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
 foo = { version = "foo-vers" }
 bar = { version = "bar-vers", default-features = false }
 baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
-            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
-            grault = { version = "grault-vers" }
-            garply = "garply-vers"
-            waldo = "waldo-vers"
+qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+corge = { version = "corge-vers-override" , features = ["qux-feat"] }
+grault = { version = "grault-vers" }
+garply = "garply-vers"
+waldo = "waldo-vers"
 
             [features]
             # this feature is a demonstration that comments are preserved
@@ -569,7 +570,19 @@ baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
         .unwrap();
 
         let expected_toml_str = r#"
-               add me later
+            [package]
+            name = "alloy-consensus"
+
+            [dependencies]
+
+[dependencies.thiserror]
+version = "1.0"
+optional = true 
+
+[dependencies.arbitrary]
+version = "1.3"
+features = ["derive"]
+optional = true 
         "#;
 
         super::merge(&mut cargo_toml, &root_toml);
