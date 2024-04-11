@@ -541,4 +541,39 @@ baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
 
         assert_eq!(expected_toml_str, cargo_toml.to_string());
     }
+
+    #[test]
+    fn alloy_workspace_bug() {
+        let mut cargo_toml = toml_edit::Document::from_str(
+            r#"
+            [package]
+            name = "alloy-consensus"
+
+            [dependencies]
+            # kzg
+            thiserror = { workspace = true, optional = true }
+
+            # arbitrary
+            arbitrary = { workspace = true, features = ["derive"], optional = true }
+        "#,
+        )
+        .unwrap();
+
+        let root_toml = toml_edit::Document::from_str(
+            r#"
+            [workspace.dependencies]
+            thiserror = "1.0"
+            arbitrary = "1.3"
+        "#,
+        )
+        .unwrap();
+
+        let expected_toml_str = r#"
+               add me later
+        "#;
+
+        super::merge(&mut cargo_toml, &root_toml);
+
+        assert_eq!(expected_toml_str, cargo_toml.to_string());
+    }
 }
