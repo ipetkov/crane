@@ -1,6 +1,8 @@
 { buildDepsOnly
 , cargoClippy
+, crateNameFromCargoToml
 , linkFarmFromDrvs
+, mkDummySrc
 }:
 
 let
@@ -13,6 +15,13 @@ linkFarmFromDrvs "clippy-tests" (builtins.attrValues {
   clippytest = cargoClippy {
     inherit cargoArtifacts src;
   };
+
+  dummySrc = cargoClippy ((crateNameFromCargoToml { inherit src; }) // {
+    cargoArtifacts = null;
+    src = mkDummySrc {
+      inherit src;
+    };
+  });
 
   checkWarnings = cargoClippy {
     inherit cargoArtifacts src;
