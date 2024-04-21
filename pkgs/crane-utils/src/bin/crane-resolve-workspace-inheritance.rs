@@ -201,10 +201,14 @@ where
     use toml_edit::Value;
 
     cargo_toml.iter_mut().for_each(|(mut k, v)| {
+        // NB: ignore any comments on dependencies as toml_edit appears to mangle them
+        // https://github.com/ipetkov/crane/issues/527
+        // https://github.com/toml-rs/toml/issues/691
+        k.leaf_decor_mut().clear();
+
         // Bail if:
         // - cargo_toml isn't a table (otherwise `workspace = true` can't show up
         // - the workspace root doesn't have this key
-        k.leaf_decor_mut().clear();
         let (t, root_val) = match try_as_table_like_mut(&mut *v).zip(root.get(&k)) {
             Some((t, root_val)) => (t, root_val),
             _ => return,
@@ -543,8 +547,11 @@ waldo = "waldo-vers"
         assert_eq!(expected_toml_str, cargo_toml.to_string());
     }
 
+    // https://github.com/ipetkov/crane/issues/527
+    // https://github.com/toml-rs/toml/issues/691
+    // https://github.com/ipetkov/crane/pull/583
     #[test]
-    fn alloy_workspace_bug() {
+    fn dependency_comments_ignored() {
         let mut cargo_toml = toml_edit::Document::from_str(
             r#"
             [package]
