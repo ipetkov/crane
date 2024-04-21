@@ -552,7 +552,7 @@ waldo = "waldo-vers"
     // https://github.com/ipetkov/crane/pull/583
     #[test]
     fn dependency_comments_ignored() {
-        let mut cargo_toml = toml_edit::Document::from_str(
+        let mut cargo_toml = toml_edit::DocumentMut::from_str(
             r#"
             [package]
             name = "alloy-consensus"
@@ -567,7 +567,7 @@ waldo = "waldo-vers"
         )
         .unwrap();
 
-        let root_toml = toml_edit::Document::from_str(
+        let root_toml = toml_edit::DocumentMut::from_str(
             r#"
             [workspace.dependencies]
             thiserror = "1.0"
