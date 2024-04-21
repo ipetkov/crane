@@ -1,0 +1,4 @@
+contact_links:
+  - name: Question
+    url: https://github.com/ipetkov/crane/discussions
+    about: Questions about Crane should be posted as a GitHub discussion.
