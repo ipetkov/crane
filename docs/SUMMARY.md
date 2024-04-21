@@ -24,6 +24,7 @@
 * [Local development](./local_development.md)
 * [Custom cargo commands](./custom_cargo_commands.md)
 * [Customizing builds](./customizing_builds.md)
+* [Overriding derivations after the fact](./overriding_derivations.md)
 ---
 - [API Reference](./API.md)
 ---
