@@ -1,0 +1,10 @@
+[package]
+name = "my-cli"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+my-common = { path = "../my-common" }
+my-workspace-hack = { version = "0.1", path = "../my-workspace-hack" }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }

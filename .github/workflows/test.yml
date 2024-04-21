@@ -63,8 +63,9 @@ jobs:
           - cross-windows
           - custom-toolchain
           - end-to-end-testing
-          - quick-start-simple
           - quick-start
+          - quick-start-simple
+          - quick-start-workspace
           - sqlx
           - trunk-workspace
           - trunk

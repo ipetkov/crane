@@ -10,6 +10,7 @@
 * [Getting started](./getting-started.md)
   * [Quick start](./examples/quick-start.md)
   * [Quick start (simple)](./examples/quick-start-simple.md)
+  * [Quick start (workspace)](./examples/quick-start-workspace.md)
   * [Custom toolchain](./examples/custom-toolchain.md)
   * [Alternative registry](./examples/alt-registry.md)
   * [Building standard library crates](./examples/build-std.md)
