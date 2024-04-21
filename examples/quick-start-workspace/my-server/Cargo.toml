@@ -1,0 +1,11 @@
+[package]
+name = "my-server"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+axum = "0.7.5"
+my-common = { path = "../my-common" }
+my-workspace-hack = { version = "0.1", path = "../my-workspace-hack" }
+tokio = { version = "1.0", features = ["full"] }
