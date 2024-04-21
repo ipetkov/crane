@@ -44,8 +44,8 @@
 
           #fixes issues related to openssl
           OPENSSL_DIR = "${pkgs.openssl.dev}";
-          OPENSSL_LIB_DIR="${pkgs.openssl.out}/lib";
-          OPENSSL_INCLUDE_DIR="${pkgs.openssl.dev}/include/";
+          OPENSSL_LIB_DIR = "${pkgs.openssl.out}/lib";
+          OPENSSL_INCLUDE_DIR = "${pkgs.openssl.dev}/include/";
 
           depsBuildBuild = with pkgs; [
             pkgsCross.mingwW64.stdenv.cc
