@@ -200,7 +200,12 @@ where
 {
     use toml_edit::Value;
 
-    cargo_toml.iter_mut().for_each(|(k, v)| {
+    cargo_toml.iter_mut().for_each(|(mut k, v)| {
+        // NB: ignore any comments on dependencies as toml_edit appears to mangle them
+        // https://github.com/ipetkov/crane/issues/527
+        // https://github.com/toml-rs/toml/issues/691
+        k.leaf_decor_mut().clear();
+
         // Bail if:
         // - cargo_toml isn't a table (otherwise `workspace = true` can't show up
         // - the workspace root doesn't have this key
@@ -490,21 +495,21 @@ version = "some version"
 foo = { version = "foo-vers" }
 bar = { version = "bar-vers", default-features = false }
 baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
-            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
-            grault = { version = "grault-vers" }
-            garply = "garply-vers"
-            waldo = "waldo-vers"
+qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+corge = { version = "corge-vers-override" , features = ["qux-feat"] }
+grault = { version = "grault-vers" }
+garply = "garply-vers"
+waldo = "waldo-vers"
 
 [dependencies.fred]
 version = "0.1.3"
 
-[            dependencies.plugh ]
+[dependencies.plugh]
 version = "0.2.4"
 optional = true 
 
             [target.'cfg(unix)'.dependencies]
-            unix = { version = "unix-vers" , features = ["some"] }
+unix = { version = "unix-vers" , features = ["some"] }
 
             [lints.rust]
             unused_extern_crates = 'warn'
@@ -513,11 +518,11 @@ optional = true
 foo = { version = "foo-vers" }
 bar = { version = "bar-vers", default-features = false }
 baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
-            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
-            grault = { version = "grault-vers" }
-            garply = "garply-vers"
-            waldo = "waldo-vers"
+qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+corge = { version = "corge-vers-override" , features = ["qux-feat"] }
+grault = { version = "grault-vers" }
+garply = "garply-vers"
+waldo = "waldo-vers"
 
             [lints.clippy]
             all = 'allow'
@@ -526,15 +531,65 @@ baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
 foo = { version = "foo-vers" }
 bar = { version = "bar-vers", default-features = false }
 baz = { version = "baz-vers", features = ["baz-feat", "baz-feat2"] }
-            qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
-            corge = { version = "corge-vers-override" , features = ["qux-feat"] }
-            grault = { version = "grault-vers" }
-            garply = "garply-vers"
-            waldo = "waldo-vers"
+qux = { version = "qux-vers", features = ["qux-feat","qux-additional"] }
+corge = { version = "corge-vers-override" , features = ["qux-feat"] }
+grault = { version = "grault-vers" }
+garply = "garply-vers"
+waldo = "waldo-vers"
 
             [features]
             # this feature is a demonstration that comments are preserved
             my_feature = []
+        "#;
+
+        super::merge(&mut cargo_toml, &root_toml);
+
+        assert_eq!(expected_toml_str, cargo_toml.to_string());
+    }
+
+    // https://github.com/ipetkov/crane/issues/527
+    // https://github.com/toml-rs/toml/issues/691
+    // https://github.com/ipetkov/crane/pull/583
+    #[test]
+    fn dependency_comments_ignored() {
+        let mut cargo_toml = toml_edit::DocumentMut::from_str(
+            r#"
+            [package]
+            name = "alloy-consensus"
+
+            [dependencies]
+            # kzg
+            thiserror = { workspace = true, optional = true }
+
+            # arbitrary
+            arbitrary = { workspace = true, features = ["derive"], optional = true }
+        "#,
+        )
+        .unwrap();
+
+        let root_toml = toml_edit::DocumentMut::from_str(
+            r#"
+            [workspace.dependencies]
+            thiserror = "1.0"
+            arbitrary = "1.3"
+        "#,
+        )
+        .unwrap();
+
+        let expected_toml_str = r#"
+            [package]
+            name = "alloy-consensus"
+
+            [dependencies]
+
+[dependencies.thiserror]
+version = "1.0"
+optional = true 
+
+[dependencies.arbitrary]
+version = "1.3"
+features = ["derive"]
+optional = true 
         "#;
 
         super::merge(&mut cargo_toml, &root_toml);

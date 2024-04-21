@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   handle the case when `CARGO_TARGET_DIR` is set to a nested directory
 * Dependency vendoring now correctly takes unused patch dependencies into
   account
+* Workspace inheritance for git dependencies now ignores (removes) all comments
+  around dependency declarations to work around a mangling bug in `toml_edit`
+  (see https://github.com/ipetkov/crane/issues/527 and
+  https://github.com/toml-rs/toml/issues/691)
 
 ## [0.16.3] - 2024-03-19
 
