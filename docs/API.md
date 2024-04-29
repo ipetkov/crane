@@ -618,8 +618,8 @@ Except where noted below, all derivation attributes are delegated to
 * `cargoLlvmCovExtraArgs`: additional flags to be passed in the cargo
   llvm-cov invocation
   - Default value: `"--lcov --output-path $out/coverage"`
-* `cargoNextestExtraArgs`: additional flags to be passed in the clippy invocation (e.g.
-  deny specific lints)
+* `cargoNextestExtraArgs`: additional flags to be passed in the nextest invocation
+  (e.g. specifying a profile)
   - Default value: `""`
 * `partitions`: The number of separate nextest partitions to run. Useful if the
   test suite takes a long time and can be parallelized across multiple build
