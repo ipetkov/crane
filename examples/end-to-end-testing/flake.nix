@@ -75,7 +75,7 @@
         '';
 
         pkgsSupportsPackage = pkg:
-          (lib.elem system pkgs.meta.platforms) && !(lib.elem system pkg.meta.badPlatforms);
+          (lib.elem system pkg.meta.platforms) && !(lib.elem system pkg.meta.badPlatforms);
       in
       {
         checks = {
