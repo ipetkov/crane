@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   around dependency declarations to work around a mangling bug in `toml_edit`
   (see https://github.com/ipetkov/crane/issues/527 and
   https://github.com/toml-rs/toml/issues/691)
+* removed `cargoExtraArgs` from `cargoAudit`
 
 ## [0.16.3] - 2024-03-19
 
