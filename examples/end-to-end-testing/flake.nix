@@ -75,13 +75,13 @@
         '';
 
         pkgsSupportsPackage = pkg:
-          lib.any (s: s == pkgs.stdenv.hostPlatform.system) pkg;
+          (lib.elem system pkgs.meta.platforms) && !(lib.elem system pkg.meta.badPlatforms);
       in
       {
         checks = {
           inherit workspace;
           # Firefox is broken in some platforms (namely "aarch64-apple-darwin"), skip those
-        } // (lib.optionalAttrs (pkgsSupportsPackage pkgs.firefox.meta.platforms) {
+        } // (lib.optionalAttrs (pkgsSupportsPackage pkgs.firefox) {
           inherit runE2ETests;
         });
 
