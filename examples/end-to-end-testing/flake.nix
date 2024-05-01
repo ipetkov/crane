@@ -75,7 +75,7 @@
         '';
 
         pkgsSupportsPackage = pkg:
-          lib.any (s: s == pkgs.stdenv.hostPlatform.config) pkg;
+          lib.any (s: s == pkgs.stdenv.hostPlatform.system) pkg;
       in
       {
         checks = {
