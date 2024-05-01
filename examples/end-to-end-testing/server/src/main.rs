@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Write};
 
 use axum::{extract::Query, response::Html, routing::get, Extension, Router};
 
@@ -8,10 +8,13 @@ async fn home(Extension(pool): Extension<sqlx::PgPool>) -> Html<String> {
         .await
         .unwrap();
 
-    let users_names: String = users
+    let cap = users.len() * 9;
+    let users_names = users
         .into_iter()
-        .map(|u| format!("<li>{}</li>", u.0))
-        .collect();
+        .fold(String::with_capacity(cap), |mut s, (u,)| {
+            let _ = write!(s, "<li>{u}</li>");
+            s
+        });
 
     Html(format!(
         r#"
@@ -33,7 +36,7 @@ async fn user(
     let username = query.get("username").unwrap();
 
     sqlx::query("INSERT INTO users(name) VALUES ($1)")
-        .bind(&username)
+        .bind(username)
         .execute(&pool)
         .await
         .unwrap();
@@ -53,8 +56,6 @@ async fn main() {
 
     let addr = "0.0.0.0:8000";
     eprintln!("Listening on {addr}");
-    axum::Server::bind(&addr.parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }

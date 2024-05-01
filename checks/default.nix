@@ -473,9 +473,10 @@ in
   simpleGitWithHashes = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple-git;
     outputHashes = {
-      "git+https://github.com/BurntSushi/byteorder.git#2e17045ca2580719b2df78973901b56eb8a86f49" = "sha256-YgwtCY93fzrCrLJgrYBHJOwecD1dcVOo/ZS7hh+LcgA=";
+      "git+https://github.com/BurntSushi/byteorder.git#18f32ca3a41c9823138e782752bc439e99ef7ec8" = "sha256-B98zLO/PICVR6QL9dq9Z8LMKnko3kdiYQgj5L0F+gOk=";
       "git+https://github.com/dtolnay/rustversion.git?rev=2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb#2abd4d0e00db08bb91145cb88e5dcbad2f45bbcb" = "sha256-deS6eoNuWPZ1V3XO9UzR07vLHZjT9arAYL0xEJCoU6E=";
-      "git+https://github.com/rust-lang/libc.git?branch=main#40741baa1d892518fd3c39795e962058ff558fb9" = "sha256-vg/KRYC3NPM3J+RY/SU3vqQr/JbJkQ7VPu97IxIhZRk=";
+      "git+https://github.com/dtolnay/unicode-ident.git?rev=a8736e7e62be959d87970d2d137a098ba533d78b#a8736e7e62be959d87970d2d137a098ba533d78b" = "sha256-++OSSdXBaHKeJnC8LOq/ouL+UAJMasDVsBzFClLnjaU=";
+      "git+https://github.com/rust-lang/libc.git?branch=main#a0f5b4b21391252fe38b2df9310dc65e37b07d9f" = "sha256-UwNxrPk6jrmtXeYef+RYYNfpNSlHQllANs/U4bmxlok=";
       "git+https://github.com/seanmonstar/num_cpus.git?tag=v1.13.1#5f1b03332000b4c4274b5bd35fac516049ff1c6b" = "sha256-mNMxS/WXjNokO9mFXQSwyuIpIp/n94EQ9Ni0Bl40es8=";
     };
     buildInputs = lib.optionals isDarwin [

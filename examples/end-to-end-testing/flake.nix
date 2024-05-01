@@ -5,20 +5,30 @@
 
     crane = {
       url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    flake-utils.url = "github:numtide/flake-utils";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
       };
     };
-
-    flake-utils.url = "github:numtide/flake-utils";
   };
-  outputs = { nixpkgs, crane, flake-utils, ... }:
+  outputs = { nixpkgs, crane, flake-utils, rust-overlay, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ (import rust-overlay) ];
+        };
         inherit (pkgs) lib;
-        craneLib = crane.lib.${system};
+
+        rustToolchain = pkgs.rust-bin.stable.latest.default;
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
         src = craneLib.cleanCargoSource (craneLib.path ./.);
 
         workspace = craneLib.buildPackage {
@@ -75,13 +85,13 @@
         '';
 
         pkgsSupportsPackage = pkg:
-          lib.any (s: s == pkgs.stdenv.hostPlatform.config) pkg;
+          (lib.elem system pkg.meta.platforms) && !(lib.elem system pkg.meta.badPlatforms);
       in
       {
         checks = {
           inherit workspace;
           # Firefox is broken in some platforms (namely "aarch64-apple-darwin"), skip those
-        } // (lib.optionalAttrs (pkgsSupportsPackage pkgs.firefox.meta.platforms) {
+        } // (lib.optionalAttrs (pkgsSupportsPackage pkgs.firefox) {
           inherit runE2ETests;
         });
 
