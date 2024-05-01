@@ -5,18 +5,16 @@
 
 { advisory-db
 , cargoAuditExtraArgs ? "--ignore yanked"
-, cargoExtraArgs ? ""
 , src
 , ...
 }@origArgs:
 let
   args = builtins.removeAttrs origArgs [
     "cargoAuditExtraArgs"
-    "cargoExtraArgs"
   ];
 in
 mkCargoDerivation (args // {
-  buildPhaseCargoCommand = "cargo audit ${cargoExtraArgs} -n -d ${advisory-db} ${cargoAuditExtraArgs}";
+  buildPhaseCargoCommand = "cargo audit -n -d ${advisory-db} ${cargoAuditExtraArgs}";
 
   src = lib.cleanSourceWith {
     inherit src;

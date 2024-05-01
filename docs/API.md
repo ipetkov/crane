@@ -318,8 +318,6 @@ Except where noted below, all derivation attributes are delegated to
 #### Optional attributes
 * `cargoAuditExtraArgs`: additional flags to be passed in the cargo-audit invocation
   - Default value: `"--ignore yanked"`
-* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
-  - Default value: `""`
 * `pname`: the name of the derivation; will _not_ be introspected from a
   `Cargo.toml` file
   - Default value: `"crate"`
@@ -337,7 +335,6 @@ The following attributes will be removed before being lowered to
 environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoAuditExtraArgs`
-* `cargoExtraArgs`
 
 ### `craneLib.cargoDeny`
 `cargoDeny :: set -> drv`
