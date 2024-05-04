@@ -5,6 +5,8 @@ version = "0.1.0"
 [dependencies]
 foo = { workspace = true }
 
+[workspace]
+resolver = "2"
 [workspace.dependencies]
 foo = { path = "./foo", target = "wasm32-unknown-unknown", artifact = "cdylib" }
 
