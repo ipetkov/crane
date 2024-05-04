@@ -5,8 +5,8 @@
 }:
 
 let
-  auditWith = pname: src: cargoAudit {
-    inherit src pname;
+  auditWith = src: cargoAudit {
+    inherit src;
     advisory-db = fetchFromGitHub {
       owner = "rustsec";
       repo = "advisory-db";
@@ -15,7 +15,7 @@ let
     };
   };
 
-  simpleWithAuditToml = (auditWith "simple-with-audit-toml" ./simple-with-audit-toml);
+  simpleWithAuditToml = (auditWith ./simple-with-audit-toml);
 
   containsAuditTomlInSrc = runCommand "containsAuditTomlInSrc" { } ''
     if [[ -f ${simpleWithAuditToml.src}/.cargo/audit.toml ]]; then
@@ -28,16 +28,16 @@ let
 in
 linkFarmFromDrvs "cleanCargoToml" [
   # Check against all different kinds of workspace types to make sure it works
-  (auditWith "simple" ./simple)
-  (auditWith "simple-git" ./simple-git)
+  (auditWith ./simple)
+  (auditWith ./simple-git)
 
   simpleWithAuditToml
   containsAuditTomlInSrc
 
-  (auditWith "gitRevNoRef" ./gitRevNoRef)
-  (auditWith "git-overlapping" ./git-overlapping)
+  (auditWith ./gitRevNoRef)
+  (auditWith ./git-overlapping)
 
-  (auditWith "workspace" ./workspace)
-  (auditWith "workspace-git" ./workspace-git)
-  (auditWith "workspace-root" ./workspace-root)
+  (auditWith ./workspace)
+  (auditWith ./workspace-git)
+  (auditWith ./workspace-root)
 ]

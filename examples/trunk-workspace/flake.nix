@@ -64,8 +64,6 @@
         # to set "pname" and "version".
         commonArgs = {
           inherit src;
-          pname = "trunk-workspace";
-          version = "0.1.0";
           strictDeps = true;
 
           buildInputs = [

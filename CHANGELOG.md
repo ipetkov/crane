@@ -11,11 +11,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   installed to `$out/share` (which can be useful when cross-compiling). By
   default `$CARGO_TARGET_DIR` and `$CARGO_BUILD_TARGET` (if set) will be taken
   into account
+* `crateNameFromCargoToml` now supports selecting a derivation name by setting
+  `package.metadata.crane.name` or `workspace.metadata.crane.name` in the root
+  `Cargo.toml`
 
 ### Changed
 * **Breaking** `cargoAudit` no longer accepts `cargoExtraArgs` (since it does
   not support the regular set of `cargo` flags like most cargo-commands do, it
   does not make much sense to propagate those flags through)
+
+### Deprecations
+* In the future, `crateNameFromCargoToml` will stop considering
+  `workspace.package.name` in the root `Cargo.toml` when determining the crate
+  name. This attribute is not recognized by cargo (which will emit its own
+  warnings about it) and should be avoided going forward.
 
 ## [0.16.6] - 2024-05-04
 
