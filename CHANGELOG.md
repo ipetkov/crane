@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.16.5] - 2024-05-04
+
+### Fixed
+* Workspace inheritance for git dependencies now ignores (removes) all comments
+  around dependency declarations to work around a mangling bug in `toml_edit`
+  (see https://github.com/ipetkov/crane/issues/527 and
+  https://github.com/toml-rs/toml/issues/691)
+
 ## [0.16.4] - 2024-04-07
 
 ### Added
@@ -21,10 +29,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   handle the case when `CARGO_TARGET_DIR` is set to a nested directory
 * Dependency vendoring now correctly takes unused patch dependencies into
   account
-* Workspace inheritance for git dependencies now ignores (removes) all comments
-  around dependency declarations to work around a mangling bug in `toml_edit`
-  (see https://github.com/ipetkov/crane/issues/527 and
-  https://github.com/toml-rs/toml/issues/691)
 
 ## [0.16.3] - 2024-03-19
 
@@ -618,6 +622,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.16.5]: https://github.com/ipetkov/crane/compare/v0.16.4...v0.16.5
 [0.16.4]: https://github.com/ipetkov/crane/compare/v0.16.3...v0.16.4
 [0.16.3]: https://github.com/ipetkov/crane/compare/v0.16.2...v0.16.3
 [0.16.2]: https://github.com/ipetkov/crane/compare/v0.16.1...v0.16.2
