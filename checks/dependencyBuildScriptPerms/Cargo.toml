@@ -4,6 +4,7 @@ version = "0.2.0"
 edition = "2021"
 
 [workspace]
+resolver = "2"
 members = ["inner"]
 
 [dependencies]

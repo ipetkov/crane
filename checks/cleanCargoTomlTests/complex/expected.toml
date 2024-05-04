@@ -111,6 +111,7 @@ garply = "8"
 grault = "7"
 
 [workspace]
+resolver = "2"
 default-members = ["path/to/member2", "path/to/member3/foo"]
 exclude = ["crates/foo", "path/to/other"]
 members = ["member1", "path/to/member2", "crates/*"]

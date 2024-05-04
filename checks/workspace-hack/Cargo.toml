@@ -1,4 +1,5 @@
 [workspace]
+resolver = "2"
 # NB: hello and world are intentionally left out cargo will
 # promote them to members since they are listed as path deps
 members = ["my-workspace-hack","print"]

@@ -201,6 +201,7 @@ opt-level = 2
 overflow-checks = true
 
 [workspace]
+resolver = "2"
 members = ["member1", "path/to/member2", "crates/*"]
 default-members = ["path/to/member2", "path/to/member3/foo"]
 exclude = ["crates/foo", "path/to/other"]
