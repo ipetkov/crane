@@ -627,6 +627,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.16.6]: https://github.com/ipetkov/crane/compare/v0.16.5...v1.16.6
 [0.16.5]: https://github.com/ipetkov/crane/compare/v0.16.4...v0.16.5
 [0.16.4]: https://github.com/ipetkov/crane/compare/v0.16.3...v0.16.4
 [0.16.3]: https://github.com/ipetkov/crane/compare/v0.16.2...v0.16.3
