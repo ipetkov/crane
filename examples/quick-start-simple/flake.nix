@@ -18,7 +18,10 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         craneLib = crane.lib.${system};
-        my-crate = craneLib.buildPackage {
+
+        # Common arguments can be set here to avoid repeating them later
+        # Note: changes here will rebuild all dependency crates
+        commonArgs = {
           src = craneLib.cleanCargoSource (craneLib.path ./.);
           strictDeps = true;
 
@@ -28,10 +31,13 @@
             # Additional darwin specific inputs can be set here
             pkgs.libiconv
           ];
-
-          # Additional environment variables can be set directly
-          # MY_CUSTOM_VAR = "some value";
         };
+
+        my-crate = craneLib.buildPackage (commonArgs // {
+          # Additional environment variables or build phases/hooks can be set
+          # here *without* rebuilding all dependency crates
+          # MY_CUSTOM_VAR = "some value";
+        });
       in
       {
         checks = {
