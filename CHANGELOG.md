@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.16.6] - 2024-05-04
+
+### Fixed
+* Same as 0.16.5 but with the correct tag deployed to Flakestry/FlakeHub
+
 ## [0.16.5] - 2024-05-04
 
 ### Fixed
