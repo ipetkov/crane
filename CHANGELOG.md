@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* **Breaking** `cargoAudit` no longer accepts `cargoExtraArgs` (since it does
+  not support the regular set of `cargo` flags like most cargo-commands do, it
+  does not make much sense to propagate those flags through)
+
 ## [0.16.6] - 2024-05-04
 
 ### Fixed
