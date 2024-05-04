@@ -34,6 +34,8 @@
         };
 
         my-crate = craneLib.buildPackage (commonArgs // {
+          cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
           # Additional environment variables or build phases/hooks can be set
           # here *without* rebuilding all dependency crates
           # MY_CUSTOM_VAR = "some value";
