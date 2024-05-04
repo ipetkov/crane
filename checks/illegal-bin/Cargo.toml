@@ -10,6 +10,8 @@
 # Instead we need to drop a dummy file at `src/lib.rs`, and this is a
 # regression test for that case.
 [workspace]
+package.version = "0.0.1"
+metadata.crane.name = "illegal-bin"
 members = [
   "examples",
 ]

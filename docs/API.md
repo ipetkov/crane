@@ -778,16 +778,20 @@ raised during evaluation.
 Extract a crate's name and version from its Cargo.toml file.
 
 The resulting `pname` attribute will be populated with the value of the
-Cargo.toml's (top-level) `package.name` attribute, if present and if the
-value is a string. Otherwise `workspace.package.name` will be used if it is
-present _and_ the value is a string. Otherwise a placeholder version field will
-be used.
+Cargo.toml's (top-level) attributes in the following order, where the first
+attribute (with a string value) will be chosen:
+1. `package.metadata.crane.name`
+1. `package.name`
+1. `workspace.metadata.crane.name`
+1. (Deprecated) `workspace.package.name`
+1. Otherwise a placeholder name will be used
 
 The resulting `version` attribute will be populated with the value of the
-Cargo.toml's (top-level) `package.version` attribute, if present and if the
-value is a string. Otherwise `workspace.package.version` will be used if it is
-present _and_ the value is a string. Otherwise a placeholder version field will
-be used.
+Cargo.toml's (top-level) attributes in the following order, where the first
+attribute (with a string value) will be chosen:
+1. `package.version`
+1. `workspace.package.version`
+1. Otherwise a placeholder version will be used
 
 Note that *only the root `Cargo.toml` of the specified source will be checked*.
 Directories **will not be crawled** to resolve potential workspace inheritance.

@@ -33,8 +33,6 @@
 
         workspace = craneLib.buildPackage {
           inherit src;
-          pname = "example-e2e";
-          version = "0.1";
           doCheck = false;
           nativeBuildInputs = lib.optionals pkgs.stdenv.isDarwin
             (with pkgs.darwin.apple_sdk.frameworks; [

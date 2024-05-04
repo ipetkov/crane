@@ -1,4 +1,6 @@
 [workspace]
+package.version = "0.0.1"
+metadata.crane.name = "workspace-git"
 members = [
   "foo",
   "bar",

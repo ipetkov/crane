@@ -2,3 +2,5 @@
 # NB: hello and world are intentionally left out cargo will
 # promote them to members since they are listed as path deps
 members = ["my-workspace-hack","print"]
+package.version = "0.0.1"
+metadata.crane.name = "workspace-hack"

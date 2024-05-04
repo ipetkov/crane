@@ -321,8 +321,6 @@ in
 
   depsOnlyCargoDoc = myLib.buildDepsOnly {
     src = ./workspace;
-    version = "0.0.1";
-    pname = "workspace";
     buildPhaseCargoCommand = "cargo doc --workspace";
   };
 
@@ -353,15 +351,11 @@ in
   };
 
   illegalBin = myLib.buildPackage {
-    pname = "illegalBin";
-    version = "0.0.1";
     src = ./illegal-bin;
   };
 
   manyLibs = myLib.buildPackage {
     src = ./with-libs;
-    pname = "my-libs";
-    version = "0.0.1";
     cargoArtifacts = null;
   };
 
@@ -720,19 +714,14 @@ in
 
   workspace = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace;
-    pname = "workspace";
-    version = "0.0.1";
   };
 
   workspaceHack = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-hack;
-    pname = "workspace-hack";
-    version = "0.0.1";
   };
 
   workspaceInheritance = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-inheritance;
-    pname = "workspace-inheritance";
   };
 
   # https://github.com/ipetkov/crane/issues/209
@@ -755,8 +744,6 @@ in
 
   workspaceGit = myLib.buildPackage {
     src = myLib.cleanCargoSource ./workspace-git;
-    pname = "workspace-git";
-    version = "0.0.1";
   };
 
   zstdNoChange =
