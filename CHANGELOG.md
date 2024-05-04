@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `cargoDoc` now supports `docInstallRoot` to influence which directory will be
+  installed to `$out/share` (which can be useful when cross-compiling). By
+  default `$CARGO_TARGET_DIR` and `$CARGO_BUILD_TARGET` (if set) will be taken
+  into account
+
 ### Changed
 * **Breaking** `cargoAudit` no longer accepts `cargoExtraArgs` (since it does
   not support the regular set of `cargo` flags like most cargo-commands do, it

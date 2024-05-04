@@ -491,6 +491,11 @@ Except where noted below, all derivation attributes are delegated to
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `"--locked"`
+* `docInstallRoot`: defines the exact directory to install to `$out/share`,
+  useful for overriding when compiling different targets. By default will honor
+  `$CARGO_TARGET_DIR` (or default to `./target` if not set) and
+  `$CARGO_BUILD_TARGET` (if set).
+  - Default value: `"${CARGO_TARGET_DIR:-target}/${CARGO_BUILD_TARGET:-}/doc"`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -499,6 +504,7 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoDocExtraArgs`
 * `cargoExtraArgs`
+* `docInstallRoot`
 
 ### `craneLib.cargoFmt`
 
