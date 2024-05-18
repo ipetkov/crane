@@ -1,0 +1,24 @@
+diff --git a/hello/src/lib.rs b/hello/src/lib.rs
+index 8fd0518..d9a3c40 100644
+--- a/hello/src/lib.rs
++++ b/hello/src/lib.rs
+@@ -1,3 +1,3 @@
+ pub fn hello() -> &'static str {
+-    "hello"
++    byteorder::patched_hello()
+ }
+diff --git a/world/src/common.txt b/world/src/common.txt
+deleted file mode 120000
+index 0f27b3e..0000000
+--- a/world/src/common.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-../../common.txt
+\ No newline at end of file
+diff --git a/world/src/common.txt b/world/src/common.txt
+new file mode 100644
+index 0000000..e79a719
+--- /dev/null
++++ b/world/src/common.txt
+@@ -0,0 +1 @@
++crane!
