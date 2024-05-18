@@ -42,4 +42,6 @@ vendorMultipleCargoDeps ({
   inherit cargoConfigs;
   cargoLockParsedList = [ lock ];
   outputHashes = args.outputHashes or { };
+  overrideVendorCargoPackage = args.overrideVendorCargoPackage or (_: drv: drv);
+  overrideVendorGitCheckout = args.overrideVendorGitCheckout or (_: drv: drv);
 } // optionalAttrs (args ? registries) { inherit (args) registries; })

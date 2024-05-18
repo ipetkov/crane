@@ -1,0 +1,16 @@
+diff --git a/src/lib.rs b/src/lib.rs
+index cc37cca..ed2d091 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -70,6 +70,11 @@ cases.
+ #![deny(missing_docs)]
+ #![cfg_attr(not(feature = "std"), no_std)]
+ 
++/// A patched hello :)
++pub fn patched_hello() -> &'static str {
++    "greetings"
++}
++
+ use core::{
+     convert::TryInto, fmt::Debug, hash::Hash, ptr::copy_nonoverlapping, slice,
+ };

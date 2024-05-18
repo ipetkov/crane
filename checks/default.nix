@@ -242,6 +242,8 @@ in
       })
     ];
 
+  cratePatching = callPackage ./cratePatching { };
+
   customCargoTargetDirectory =
     let
       simple = self.simple.overrideAttrs (_old: {
@@ -612,7 +614,7 @@ in
     inherit myLib;
   };
 
-  vendorCargoDeps =
+  vendorCargoDepsCombinations =
     let
       src = ./workspace;
       cargoLock = ./workspace/Cargo.lock;
