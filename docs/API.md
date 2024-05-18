@@ -937,6 +937,23 @@ any crates it contains for vendoring.
   (instead of `builtins.fetchGit`) which allows for offline evaluations.
   - Default value: `null`
 
+#### Attributes of the vendor-prep derivation
+* `dontBuild`: `true`
+* `dontConfigure`: `true`
+* `installPhase`: This phase will:
+   1. run the `preInstall` hook
+   1. Prepare the current directory for vendoring by:
+      - Searching for all `Cargo.toml` files
+      - Copying their parent directory to `$out/$crate` (where `$crate` is the
+        package name and version as defined in `Cargo.toml`)
+      - Populating `.cargo-checksum.json`
+      - Running `crane-resolve-workspace-inheritance` on the `Cargo.toml`
+      - Note that duplicate crates (whose name and version collide) are ignored
+   1. run the `postInstall` hook
+* `nativeBuildInputs`: A list of the `cargo`, `craneUtils`, and `jq` packages
+* `name`: set to `"cargo-git"`
+* `src`: the git repo checkout, as determined by the input parameters
+
 ### `craneLib.findCargoFiles`
 
 `findCargoFiles :: path -> set of lists`
