@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking** `cargoAudit` no longer accepts `cargoExtraArgs` (since it does
   not support the regular set of `cargo` flags like most cargo-commands do, it
   does not make much sense to propagate those flags through)
+* `buildTrunkPackage` now sets `env.TRUNK_SKIP_VERSION_CHECK = "true";` if not
+  specified
 
 ### Deprecations
 * In the future, `crateNameFromCargoToml` will stop considering
