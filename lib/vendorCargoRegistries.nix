@@ -38,6 +38,7 @@ let
 in
 { cargoConfigs ? [ ]
 , lockPackages
+, overrideVendorCargoPackage ? _: drv: drv
 , ...
 }@args:
 let
@@ -48,10 +49,11 @@ let
     lockPackages;
   lockedRegistryGroups = groupBy (p: p.source) lockedPackagesFromRegistry;
 
+  vendorCrate = p: overrideVendorCargoPackage p (downloadCargoPackage p);
   vendorSingleRegistry = packages: runCommandLocal "vendor-registry" { } ''
     mkdir -p $out
     ${concatMapStrings (p: ''
-      ln -s ${escapeShellArg (downloadCargoPackage p)} $out/${escapeShellArg "${p.name}-${p.version}"}
+      ln -s ${escapeShellArg (vendorCrate p)} $out/${escapeShellArg "${p.name}-${p.version}"}
     '') packages}
   '';
 

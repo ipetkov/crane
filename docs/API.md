@@ -1360,6 +1360,24 @@ raised during evaluation.
 * `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
   download. Useful for supporting fully offline evaluations.
   - Default value: `[]`
+* `overrideVendorCargoPackage`: a function that will be called on every crate
+  vendored from a cargo registry, which allows for modifying the derivation
+  which will unpack the cargo tarball (e.g. to patch the crate source).
+  It will be called with the following parameters:
+  1. The `Cargo.lock` entry for that package (to allow conditional overrides
+     based on the package name/version/source, etc.)
+  1. The default `downloadCargoPackage` derivation
+  - Default value: `_p: drv: drv`
+* `overrideVendorGitCheckout`: a function that will be called on every unique
+  checkout vendored from a git repository, which allows for modifying the
+  derivation which will unpack the cargo crates found in the checkout (e.g. to
+  patch the crate sources). It will be called with the following
+  parameters:
+  1. A list of the `Cargo.lock` entries for each package which shares the same
+     repo URL and revision to checkout (to allow conditional overrides based on
+     the repo/checkout etc.)
+  1. The default `downloadCargoPackageFromGit` derivation
+  - Default value: `_ps: drv: drv`
 
 ### `craneLib.vendorCargoRegistries`
 
@@ -1377,6 +1395,14 @@ cargo can use for subsequent builds without needing network access.
 * `cargoConfigs`: a list of paths to all `.cargo/config.toml` files which may
   appear in the project. Ignored if `registries` is set.
   - Default value: `[]`
+* `overrideVendorCargoPackage`: a function that will be called on every crate
+  vendored from a cargo registry, which allows for modifying the derivation
+  which will unpack the cargo tarball (e.g. to patch the crate source).
+  It will be called with the following parameters:
+  1. The `Cargo.lock` entry for that package (to allow conditional overrides
+     based on the package name/version/source, etc.)
+  1. The default `downloadCargoPackage` derivation
+  - Default value: `_p: drv: drv`
 * `registries`: an attrset of registry names to their index URL. The default
   ("crates-io") registry need not be specified, as it will automatically be
   available, but it can be overridden if required.
@@ -1406,6 +1432,16 @@ access.
 * `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
   download. Useful for supporting fully offline evaluations.
   - Default value: `[]`
+* `overrideVendorGitCheckout`: a function that will be called on every unique
+  checkout vendored from a git repository, which allows for modifying the
+  derivation which will unpack the cargo crates found in the checkout (e.g. to
+  patch the crate sources). It will be called with the following
+  parameters:
+  1. A list of the `Cargo.lock` entries for each package which shares the same
+     repo URL and revision to checkout (to allow conditional overrides based on
+     the repo/checkout etc.)
+  1. The default `downloadCargoPackageFromGit` derivation
+  - Default value: `_ps: drv: drv`
 
 #### Output attributes
 * `config`: the configuration entires needed to point cargo to the vendored
@@ -1446,6 +1482,24 @@ the vendored directories (i.e. this configuration can be appended to the
 * `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
   download. Useful for supporting fully offline evaluations.
   - Default value: `[]`
+* `overrideVendorCargoPackage`: a function that will be called on every crate
+  vendored from a cargo registry, which allows for modifying the derivation
+  which will unpack the cargo tarball (e.g. to patch the crate source).
+  It will be called with the following parameters:
+  1. The `Cargo.lock` entry for that package (to allow conditional overrides
+     based on the package name/version/source, etc.)
+  1. The default `downloadCargoPackage` derivation
+  - Default value: `_p: drv: drv`
+* `overrideVendorGitCheckout`: a function that will be called on every unique
+  checkout vendored from a git repository, which allows for modifying the
+  derivation which will unpack the cargo crates found in the checkout (e.g. to
+  patch the crate sources). It will be called with the following
+  parameters:
+  1. A list of the `Cargo.lock` entries for each package which shares the same
+     repo URL and revision to checkout (to allow conditional overrides based on
+     the repo/checkout etc.)
+  1. The default `downloadCargoPackageFromGit` derivation
+  - Default value: `_ps: drv: drv`
 * `registries`: an attrset of registry names to their index URL. The default
   ("crates-io") registry need not be specified, as it will automatically be
   available, but it can be overridden if required.

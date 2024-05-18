@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `crateNameFromCargoToml` now supports selecting a derivation name by setting
   `package.metadata.crane.name` or `workspace.metadata.crane.name` in the root
   `Cargo.toml`
+* `vendorCargoDeps`, `vendorCargoRegistries`, `vendorGitDeps`, and
+  `vendorMultipleCargoDeps` now support arbitrary overrides (i.e. patching) at
+  the individual crate/repo level when vendoring sources.
 
 ### Changed
 * **Breaking** `cargoAudit` no longer accepts `cargoExtraArgs` (since it does

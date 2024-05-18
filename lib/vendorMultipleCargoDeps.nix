@@ -32,6 +32,8 @@ in
 , cargoLockList ? [ ]
 , cargoLockParsedList ? [ ]
 , outputHashes ? { }
+, overrideVendorCargoPackage ? _: drv: drv
+, overrideVendorGitCheckout ? _: drv: drv
 , registries ? null
 }:
 let
@@ -59,11 +61,11 @@ let
   )));
 
   vendoredRegistries = vendorCargoRegistries ({
-    inherit cargoConfigs lockPackages;
+    inherit cargoConfigs lockPackages overrideVendorCargoPackage;
   } // optionalAttrs (registries != null) { inherit registries; });
 
   vendoredGit = vendorGitDeps {
-    inherit lockPackages outputHashes;
+    inherit lockPackages outputHashes overrideVendorGitCheckout;
   };
 
   linkSources = sources: concatMapStrings
