@@ -63,6 +63,8 @@ mkCargoDerivation (args // {
     doCheck = args.doCheck or false;
   }));
 
+  env.TRUNK_SKIP_VERSION_CHECK = args.env.TRUNK_SKIP_VERSION_CHECK or "true";
+
   # Force trunk to not download dependencies, but set the version with
   # whatever tools actually make it into the builder's PATH
   preConfigure = ''
