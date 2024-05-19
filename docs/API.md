@@ -941,6 +941,7 @@ any crates it contains for vendoring.
 #### Attributes of the vendor-prep derivation
 * `dontBuild`: `true`
 * `dontConfigure`: `true`
+* `dontFixup`: `true`
 * `installPhase`: This phase will:
    1. run the `preInstall` hook
    1. Prepare the current directory for vendoring by:
