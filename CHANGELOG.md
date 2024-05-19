@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* `downloadCargoPackage` and `downloadCargoPackageFromGit` no longer run the
+  fixup phase by default, avoiding issues with source directories and files
+  being moved to different locations
+* `downloadCargoPackage` now unpacks and installs from a fresh directory,
+  avoiding having build environment files (like `env-vars`) appearing in the
+  output
+
 ## [0.17.0] - 2024-05-18
 
 ### Added

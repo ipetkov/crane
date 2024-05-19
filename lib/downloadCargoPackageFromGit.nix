@@ -40,6 +40,7 @@ stdenv.mkDerivation {
 
   dontConfigure = true;
   dontBuild = true;
+  dontFixup = true;
 
   nativeBuildInputs = [
     cargo
