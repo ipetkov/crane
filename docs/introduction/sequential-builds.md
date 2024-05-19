@@ -19,11 +19,9 @@ build.
   outputs = { self, nixpkgs, crane, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
+        pkgs = nixpkgs.legacyPackages.${system};
+        craneLib = crane.mkLib pkgs;
 
-        craneLib = crane.lib.${system};
         # Common derivation arguments used for all builds
         commonArgs = {
           src = craneLib.cleanCargoSource (craneLib.path ./.);

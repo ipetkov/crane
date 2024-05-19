@@ -115,7 +115,9 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         # To override do: lib.overrideScope (self: super: { ... });
-        lib = mkLib pkgs;
+        lib = pkgs.lib.warn
+          "`crane.lib.\${system}` is deprecated. please use `(crane.mkLib nixpkgs.legacyPackages.\${system})` instead"
+          (mkLib pkgs);
 
         checks =
           let

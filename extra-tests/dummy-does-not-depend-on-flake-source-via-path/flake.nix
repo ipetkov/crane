@@ -5,9 +5,13 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { flake-utils, crane, ... }: flake-utils.lib.eachDefaultSystem
-    (system: {
-      packages.dummy = crane.lib.${system}.mkDummySrc {
+  outputs = { nixpkgs, flake-utils, crane, ... }: flake-utils.lib.eachDefaultSystem (system:
+    let
+      pkgs = nixpkgs.legacyPackages.${system};
+      craneLib = crane.mkLib pkgs;
+    in
+    {
+      packages.dummy = craneLib.mkDummySrc {
         src = ./.;
       };
     });

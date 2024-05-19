@@ -40,7 +40,7 @@ docs](../API.md) for `mkLib`/`overrideToolchain`, or checkout the
 [custom-toolchain](../../examples/custom-toolchain) example.
 
 ```nix
-crane.lib.${system}.overrideScope (final: prev: {
+(crane.mkLib pkgs).overrideScope (final: prev: {
   cargo-tarpaulin = myCustomCargoTarpaulinVersion;
 })
 ```
