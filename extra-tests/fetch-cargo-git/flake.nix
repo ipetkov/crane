@@ -1,12 +1,13 @@
 {
   inputs = {
     crane.url = "github:ipetkov/crane";
+    nixpkgs.follows = "crane/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { flake-utils, crane, ... }: flake-utils.lib.eachDefaultSystem
-    (_: {
-      packages.cargo-git = crane.lib.x86_64-linux.downloadCargoPackageFromGit {
+  outputs = { nixpkgs, flake-utils, crane, ... }: flake-utils.lib.eachDefaultSystem
+    (system: {
+      packages.cargo-git = (crane.mkLib nixpkgs.legacyPackages.${system}).downloadCargoPackageFromGit {
         git = "https://github.com/rust-lang/cargo";
         rev = "17f8088d6eafd82349630a8de8cc6efe03abf5fb";
       };
