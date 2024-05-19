@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.17.1] - 2024-05-19
+
 ### Fixed
 * `downloadCargoPackage` and `downloadCargoPackageFromGit` no longer run the
   fixup phase by default, avoiding issues with source directories and files
@@ -664,6 +666,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.17.1]: https://github.com/ipetkov/crane/compare/v0.17.0...v1.17.1
 [0.17.0]: https://github.com/ipetkov/crane/compare/v0.16.6...v1.17.0
 [0.16.6]: https://github.com/ipetkov/crane/compare/v0.16.5...v1.16.6
 [0.16.5]: https://github.com/ipetkov/crane/compare/v0.16.4...v0.16.5
