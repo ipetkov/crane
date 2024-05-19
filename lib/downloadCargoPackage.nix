@@ -31,9 +31,11 @@ stdenv.mkDerivation {
   unpackPhase = ''
     runHook preUnpack
     mkdir -p crate
-    tar -xzf ${tarball} --strip-components=1
+    tar -xzf ${tarball} -C crate --strip-components=1
     runHook postUnpack
   '';
+
+  sourceRoot = "./crate";
 
   installPhase = ''
     runHook preInstall

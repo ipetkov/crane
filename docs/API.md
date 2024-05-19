@@ -904,14 +904,17 @@ registry's API if necessary.
 * `dontConfigure`: `true`
 * `dontFixup`: `true`
 * `pname`: `"cargo-package-"` suffixed by the package name in `Cargo.lock`
+* `sourceRoot`: `"./crate"`
 * `version`: inherited from the package version in `Cargo.lock`
 * `unpackPhase`: This phase will:
    1. run the `preUnpack` hook
-   1. unpack the crate's tarball to the current directory
+   1. create an empty directory named `./crate`
+   1. unpack the crate's tarball under `./crate`
    1. run the `postUnpack` hook
 * `installPhase`: This phase will:
    1. run the `preInstall` hook
-   1. move the contents of the current directory to `$out`
+   1. move the contents of the current directory (i.e. `./crate` by default) to
+      `$out`
    1. populate `$out/.cargo-checksum.json`
    1. run the `postInstall` hook
 
