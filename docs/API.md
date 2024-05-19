@@ -902,6 +902,7 @@ registry's API if necessary.
 #### Attributes of the vendor-prep derivation
 * `dontBuild`: `true`
 * `dontConfigure`: `true`
+* `dontFixup`: `true`
 * `pname`: `"cargo-package-"` suffixed by the package name in `Cargo.lock`
 * `version`: inherited from the package version in `Cargo.lock`
 * `unpackPhase`: This phase will:
