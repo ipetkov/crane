@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.17.0] - 2024-05-18
+
 ### Added
 * `cargoDoc` now supports `docInstallRoot` to influence which directory will be
   installed to `$out/share` (which can be useful when cross-compiling). By
@@ -654,6 +656,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.17.0]: https://github.com/ipetkov/crane/compare/v0.16.6...v1.17.0
 [0.16.6]: https://github.com/ipetkov/crane/compare/v0.16.5...v1.16.6
 [0.16.5]: https://github.com/ipetkov/crane/compare/v0.16.4...v0.16.5
 [0.16.4]: https://github.com/ipetkov/crane/compare/v0.16.3...v0.16.4
