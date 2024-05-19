@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `workspace.package.name` in the root `Cargo.toml` when determining the crate
   name. This attribute is not recognized by cargo (which will emit its own
   warnings about it) and should be avoided going forward.
+* In the future, `crane.lib.${system}` will be removed. Please switch to using
+  `(crane.mkLib nixpkgs.lib.${system})` as an equivalent alternative.
 
 ## [0.16.6] - 2024-05-04
 

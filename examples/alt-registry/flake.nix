@@ -19,7 +19,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        craneLibOrig = crane.lib.${system};
+        craneLibOrig = crane.mkLib pkgs;
         craneLib = craneLibOrig.appendCrateRegistries [
           # Automatically infer the download URL from the registry's index
           #

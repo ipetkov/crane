@@ -27,11 +27,8 @@ Here's how we can set up our flake to achieve our goals:
   outputs = { self, nixpkgs, crane, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
-
-        craneLib = crane.lib.${system};
+        pkgs = nixpkgs.legacyPackages.${system};
+        craneLib = crane.mkLib pkgs;
 
         # Common derivation arguments used for all builds
         commonArgs = {

@@ -17,7 +17,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        craneLib = crane.lib.${system};
+        craneLib = crane.mkLib pkgs;
 
         # Common arguments can be set here to avoid repeating them later
         # Note: changes here will rebuild all dependency crates
