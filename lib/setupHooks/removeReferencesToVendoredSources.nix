@@ -2,6 +2,7 @@
 , makeSetupHook
 , pkgsBuildBuild
 , stdenv
+, parallel
 }:
 
 let
@@ -10,6 +11,7 @@ in
 makeSetupHook
 {
   name = "removeReferencesToVendoredSourcesHook";
+  propagatedBuildInputs = [parallel];
   substitutions = {
     storeDir = builtins.storeDir;
     sourceSigningUtils = lib.optionalString darwinCodeSign ''

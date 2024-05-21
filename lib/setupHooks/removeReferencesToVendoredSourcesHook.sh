@@ -4,8 +4,10 @@ removeReferencesToVendoredSources() {
   local installLocation="${1:-${out:?not defined}}"
   local vendoredDir="${2:-${cargoVendorDir:?not defined}}"
 
-  local installedFile
-  while read installedFile; do
+  removeReferencesInOneFile() {
+    local vendoredDir="${1}"
+    local installedFile="${2}"
+
     echo stripping references to cargoVendorDir from "${installedFile}"
     time sed -i'' "${installedFile}" -f <(
       echo -n 's!@storeDir@/\(eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
@@ -28,7 +30,12 @@ removeReferencesToVendoredSources() {
     )
 
     @signIfRequired@
-  done < <(find "${installLocation}" -type f)
+  }
+
+  # Allow GNU parallel to see the function
+  export -f removeReferencesInOneFile
+
+  find "${installLocation}" -type f | parallel removeReferencesInOneFile "${vendoredDir}"
 }
 
 @sourceSigningUtils@
