@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `removeReferencesToVendoredSourcesHook` now processes multiple files in
+  parallel, speeding up builds
+
 ## [0.17.1] - 2024-05-19
 
 ### Fixed
