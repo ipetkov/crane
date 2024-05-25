@@ -4,15 +4,15 @@ removeReferencesToVendoredSources() {
   local installLocation="${1:-${out:?not defined}}"
   local vendoredDir="${2:-${cargoVendorDir:?not defined}}"
 
-  local installedFile
-  while read installedFile; do
-    echo stripping references to cargoVendorDir from "${installedFile}"
-    time sed -i'' "${installedFile}" -f <(
-      echo -n 's!@storeDir@/\(eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  (
+    exec 3>&1
+    echo stripping references to cargoVendorDir from:
+    find "${installLocation}" -type f |
+      sort |
+      tee -a /dev/fd/3 |
+      xargs --no-run-if-empty sed -i'' -f <(
+        echo -n 's!@storeDir@/\(eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
-      while read crateSource; do
-        echo -n '\|'"${crateSource#@storeDir@/}";
-      done < <(
         (
           # Include the root of the vendor dir itself
           echo "${vendoredDir}"
@@ -21,14 +21,19 @@ removeReferencesToVendoredSources() {
           # something else slips in a reference to them
           find -L "${vendoredDir}" -mindepth 1 -maxdepth 1 -type d | \
             xargs -I DIR find -H DIR -type l -exec readlink '{}' \;
-        ) | grep --only-matching '@storeDir@/[a-z0-9]\{32\}'
+        ) |
+          grep --only-matching '@storeDir@/[a-z0-9]\{32\}' |
+          while read crateSource; do
+            echo -n '\|'"${crateSource#@storeDir@/}";
+          done
+
+        echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
       )
 
-      echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
-    )
+    echo stripping references done
+  )
 
-    @signIfRequired@
-  done < <(find "${installLocation}" -type f)
+  @signIfRequired@
 }
 
 @sourceSigningUtils@

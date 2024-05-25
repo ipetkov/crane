@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* `removeReferencesToVendoredSources` has been optimzed to search for source
+  references only once. For derivations which install many files, this phase can
+  run up to 99% faster than before.
+
 ## [0.17.1] - 2024-05-19
 
 ### Fixed

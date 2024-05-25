@@ -17,9 +17,17 @@ makeSetupHook
     '';
     signIfRequired = lib.optionalString darwinCodeSign ''
       if [ -n "''${doNotSign-}" ]; then
-        echo "not signing ''${installedFile} as requested";
+        echo "not signing as requested";
       else
-        signIfRequired "''${installedFile}"
+        (
+          exec 3>&1
+          echo signing files:
+          find "''${installLocation}" -type f |
+            sort |
+            tee -a /dev/fd/3 |
+            xargs --no-run-if-empty signIfRequired
+          echo signing done
+        )
       fi
     '';
   };
