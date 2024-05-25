@@ -25,13 +25,17 @@ removeReferencesToVendoredSources() {
     echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
   ) >"${sedScript}"
 
-  local installedFile
-  find "${installLocation}" -type f | while read installedFile; do
-    echo stripping references to cargoVendorDir from "${installedFile}"
-    sed -i'' "${installedFile}" -f "${sedScript}"
+  (
+    exec 3>&1
+    echo stripping references to cargoVendorDir from:
+    find "${installLocation}" -type f |
+      sort |
+      tee -a /dev/fd/3 |
+      xargs --no-run-if-empty sed -i'' -f "${sedScript}"
+    echo stripping references done
+  )
 
-    @signIfRequired@
-  done
+  @signIfRequired@
 }
 
 @sourceSigningUtils@
