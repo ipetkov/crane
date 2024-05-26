@@ -11,6 +11,7 @@ let
     "build"
     "categories"
     "default-run"
+    "default_run"
     "description"
     "documentation"
     "exclude"
@@ -18,6 +19,7 @@ let
     "include"
     "keywords"
     "license-file"
+    "license_file"
     "license"
     "links"
     "metadata"
@@ -25,6 +27,7 @@ let
     "readme"
     "repository"
     "rust-version"
+    "rust_version"
 
     # Additional package attributes which are expressly kept in
     # (but listed here for audit purposes)
@@ -43,8 +46,10 @@ let
     "doc"
     "plugin"
     "proc-macro"
+    "proc_macro"
     "harness"
     "required-features" # only affects selection of a target, does not actually enable any features
+    "required_features" # only affects selection of a target, does not actually enable any features
 
     # Additional package attributes which are expressly kept in
     # (but listed here for audit purposes)
