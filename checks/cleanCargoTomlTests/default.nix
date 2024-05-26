@@ -34,4 +34,6 @@ in
 linkFarmFromDrvs "cleanCargoToml" [
   (cmpCleanCargoToml "barebones" ./barebones)
   (cmpCleanCargoToml "complex" ./complex)
+  # https://github.com/ipetkov/crane/issues/610
+  (cmpCleanCargoToml "complex-underscores" ./complex-underscores)
 ]
