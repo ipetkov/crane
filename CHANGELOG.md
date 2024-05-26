@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.17.2] - 2024-05-26
+
 ### Fixed
 * `removeReferencesToVendoredSources` has been optimzed to search for source
   references only once. For derivations which install many files, this phase can
@@ -673,6 +675,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.17.2]: https://github.com/ipetkov/crane/compare/v0.17.1...v1.17.2
 [0.17.1]: https://github.com/ipetkov/crane/compare/v0.17.0...v1.17.1
 [0.17.0]: https://github.com/ipetkov/crane/compare/v0.16.6...v1.17.0
 [0.16.6]: https://github.com/ipetkov/crane/compare/v0.16.5...v1.16.6
