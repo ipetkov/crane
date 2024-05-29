@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* `removeReferencesToVendoredSources` correctly signs aarch64-darwin builds
+  (which was accidentally broken in 0.17.2)
+
 ## [0.17.2] - 2024-05-26
 
 ### Fixed
