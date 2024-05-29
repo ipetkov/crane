@@ -19,15 +19,12 @@ makeSetupHook
       if [ -n "''${doNotSign-}" ]; then
         echo "not signing as requested";
       else
-        (
-          exec 3>&1
-          echo signing files:
-          while IFS= read -r -d $'\0' file; do
-            echo "signing: $file"
-            signIfRequired "$file"
-          done < <(find "''${installLocation}" -type f -print0)
-          echo signing done
-        )
+        echo signing files:
+        while IFS= read -r -d $'\0' file; do
+          echo "signing: $file"
+          signIfRequired "$file"
+        done < <(find "''${installLocation}" -type f -print0)
+        echo signing done
       fi
     '';
   };
