@@ -22,10 +22,10 @@ makeSetupHook
         (
           exec 3>&1
           echo signing files:
-          find "''${installLocation}" -type f |
-            sort |
-            tee -a /dev/fd/3 |
-            xargs --no-run-if-empty signIfRequired
+          while IFS= read -r -d $'\0' file; do
+            echo "signing: $file"
+            signIfRequired "$file"
+          done < <(find "''${installLocation}" -type f -print0)
           echo signing done
         )
       fi
