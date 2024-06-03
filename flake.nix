@@ -10,10 +10,9 @@
 
   outputs = { nixpkgs, ... }:
     let
-      mkLib = pkgs: import ./lib {
-        inherit (pkgs) lib newScope;
+      mkLib = pkgs: import ./default.nix {
+        inherit pkgs;
       };
-
       nodes = (builtins.fromJSON (builtins.readFile ./test/flake.lock)).nodes;
       inputFromLock = name:
         let

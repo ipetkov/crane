@@ -75,6 +75,7 @@
             # overridden above.
             nativeBuildInputs = [
               pkg-config
+              stdenv.cc
             ] ++ lib.optionals stdenv.buildPlatform.isDarwin [
               libiconv
             ];
