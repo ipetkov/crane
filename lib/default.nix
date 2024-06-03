@@ -1,5 +1,6 @@
 { lib
-, newScope
+, makeScopeWithSplicing'
+, otherSplices
 }:
 
 let
@@ -7,8 +8,12 @@ let
   current = lib.concatStringsSep "." (lib.lists.sublist 0 2 (lib.splitVersion lib.version));
   isUnsupported = lib.versionOlder current minSupported;
   msg = "crane requires at least nixpkgs-${minSupported}, supplied nixpkgs-${current}";
+
+  mySplice = f: makeScopeWithSplicing' {
+    inherit otherSplices f;
+  };
 in
-lib.warnIf isUnsupported msg (lib.makeScope newScope (self:
+lib.warnIf isUnsupported msg (mySplice (self:
 let
   inherit (self) callPackage;
 

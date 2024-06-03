@@ -1,12 +1,12 @@
 { lib
+, cargo
+, jq
 , pkgsBuildBuild
 }:
 
 let
   inherit (pkgsBuildBuild)
-    cargo
     fetchgit
-    jq
     stdenv;
 
   craneUtils = pkgsBuildBuild.callPackage ../pkgs/crane-utils { };
@@ -42,7 +42,7 @@ stdenv.mkDerivation {
   dontBuild = true;
   dontFixup = true;
 
-  nativeBuildInputs = [
+  depsBuildBuild = [
     cargo
     craneUtils
     jq
