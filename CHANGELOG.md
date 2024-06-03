@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.17.3] - 2024-06-02
+
 ### Fixed
 * `removeReferencesToVendoredSources` correctly signs aarch64-darwin builds
   (which was accidentally broken in 0.17.2)
@@ -679,6 +681,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.17.3]: https://github.com/ipetkov/crane/compare/v0.17.2...v1.17.3
 [0.17.2]: https://github.com/ipetkov/crane/compare/v0.17.1...v1.17.2
 [0.17.1]: https://github.com/ipetkov/crane/compare/v0.17.0...v1.17.1
 [0.17.0]: https://github.com/ipetkov/crane/compare/v0.16.6...v1.17.0
