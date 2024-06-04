@@ -91,7 +91,7 @@ jobs:
     strategy:
       # Allow other jobs to finish building and cache properly before bailing
       fail-fast: false
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@V27
