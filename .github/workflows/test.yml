@@ -109,8 +109,17 @@ jobs:
         rm ./examples/.gitignore
         nix develop .# --accept-flake-config --command bash -c '
           set -euo pipefail
+          chosenNixpkgs="$(./ci/ref-from-lock.sh ./test#nixpkgs-darwin)"
           for f in $(find ./examples -maxdepth 1 -mindepth 1 -type d -not -name build-std -not -name cross-musl -not -name cross-rust-overlay | sort -u); do
-            ./ci/check-example.sh "${f}" "./test#nixpkgs-darwin"
+            # NB: nix-eval-jobs appears broken on darwin atm?
+            # /nix/store/2419grj384lg233jqchamm73il9iyjxg-libcxx-16.0.6-dev/include/c++/v1/optional:962: assertion this->has_value() failed: optional operator* called on a disengaged valueerror: error: while checking worker process, evaluation worker got killed by signal 6 (Abort trap: 6)
+            nix flake check \
+              --accept-flake-config \
+              --print-build-logs \
+              --reference-lock-file ./test/flake.lock \
+              --override-input crane ./. \
+              --override-input nixpkgs "${chosenNixpkgs}" \
+              "${f}"
           done
         '
 
