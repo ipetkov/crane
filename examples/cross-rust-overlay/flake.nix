@@ -101,12 +101,13 @@
             cargoExtraArgs = "--target aarch64-unknown-linux-gnu";
             # CARGO_BUILD_TARGET = "aarch64-unknown-linux-gnu";
 
-            # This environment variable may be necessary if any of your dependencies use a
+            # These environment variables may be necessary if any of your dependencies use a
             # build-script which invokes the `cc` crate to build some other code. The `cc` crate
             # should automatically pick up on our target-specific linker above, but this may be
             # necessary if the build script needs to compile and run some extra code on the build
             # system.
             HOST_CC = "${stdenv.cc.nativePrefix}cc";
+            TARGET_CC = "${stdenv.cc.targetPrefix}cc";
           };
 
         # Assuming the above expression was in a file called myCrate.nix

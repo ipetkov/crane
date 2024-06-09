@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking**: dropped compatibility for Nix versions below 2.18.2
 * **Breaking**: dropped compatibility for nixpkgs-23.11.
 
+### Fixed
+* The cross compilation example also hows how to set the `TARGET_CC` environment
+  variable which may be required by some build scripts to function properly
+
 ## [0.17.3] - 2024-06-02
 
 ### Fixed
