@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * The cross compilation example also hows how to set the `TARGET_CC` environment
   variable which may be required by some build scripts to function properly
+* `vendorCargoDeps` and `crateNameFromCargoToml` do their best to avoid IFD when
+  `src` is the result of `lib.cleanSourceWith` (and by extension
+  `cleanCargoSource`)
 
 ## [0.17.3] - 2024-06-02
 
