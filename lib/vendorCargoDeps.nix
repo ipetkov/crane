@@ -18,12 +18,14 @@ let
 
   cargoConfigs = if args ? src then (findCargoFiles (origSrc args.src)).cargoConfigs else [ ];
 
-  src = origSrc (args.src or (throw ''
-    unable to find `src` attribute. consider one of the following:
-    - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
-    - set `cargoVendorDir = vendorCargoDeps { src = ./src/containing/cargo/lock/file; }`
-    - set `cargoVendorDir = null` to skip vendoring altogether
-  ''));
+  src = origSrc (
+    args.src or (throw ''
+      unable to find `src` attribute. consider one of the following:
+      - set `cargoVendorDir = vendorCargoDeps { cargoLock = ./some/path/to/Cargo.lock; }`
+      - set `cargoVendorDir = vendorCargoDeps { src = ./src/containing/cargo/lock/file; }`
+      - set `cargoVendorDir = null` to skip vendoring altogether
+    '')
+  );
 
   cargoLock = args.cargoLock or (src + "/Cargo.lock");
   cargoLockContents = args.cargoLockContents or (
