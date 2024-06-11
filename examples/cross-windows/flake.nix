@@ -32,7 +32,7 @@
         craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
 
         my-crate = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          src = craneLib.cleanCargoSource ./.;
 
           strictDeps = true;
           doCheck = false;

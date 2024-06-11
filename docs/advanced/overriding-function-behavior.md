@@ -31,11 +31,11 @@ in
     # Build two different workspaces with the modified behavior above
 
     foo = craneLib.buildPackage {
-      src = craneLib.cleanCargoSource (craneLib.path ./foo);
+      src = craneLib.cleanCargoSource ./foo;
     };
 
     bar = craneLib.buildPackage {
-      src = craneLib.cleanCargoSource (craneLib.path ./bar);
+      src = craneLib.cleanCargoSource ./bar;
     };
 }
 ```

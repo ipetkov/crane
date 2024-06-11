@@ -35,7 +35,7 @@
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
         my-crate = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";

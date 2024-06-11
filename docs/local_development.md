@@ -34,7 +34,7 @@ Sample `flake.nix`:
         craneLib = crane.mkLib pkgs;
 
         my-crate = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          src = craneLib.cleanCargoSource ./.;
 
           buildInputs = [
             # Add additional build inputs here

@@ -13,7 +13,7 @@
     {
       # https://github.com/ipetkov/crane/issues/446
       packages.default = craneLib.buildPackage {
-        src = craneLib.cleanCargoSource (craneLib.path ../../checks/simple);
+        src = craneLib.cleanCargoSource ../../checks/simple;
       };
     });
 }

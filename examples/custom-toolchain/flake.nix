@@ -39,7 +39,7 @@
         craneLib = (crane.mkLib pkgs).overrideToolchain rustWithWasiTarget;
 
         my-crate = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
           cargoExtraArgs = "--target wasm32-wasi";

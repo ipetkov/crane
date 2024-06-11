@@ -55,7 +55,7 @@
           , stdenv
           }:
           craneLib.buildPackage {
-            src = craneLib.cleanCargoSource (craneLib.path ./.);
+            src = craneLib.cleanCargoSource ./.;
             strictDeps = true;
 
             # Build-time tools which are target agnostic. build = host = target = your-machine.

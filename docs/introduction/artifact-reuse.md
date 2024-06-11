@@ -32,7 +32,7 @@ Here's how we can set up our flake to achieve our goals:
 
         # Common derivation arguments used for all builds
         commonArgs = {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
           buildInputs = with pkgs; [

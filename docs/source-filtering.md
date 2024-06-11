@@ -17,7 +17,7 @@ non-Rust/non-cargo related files. It can be used like so:
 ```nix
 craneLib.buildPackage {
   # other attributes omitted
-  src = craneLib.cleanCargoSource (craneLib.path ./.);
+  src = craneLib.cleanCargoSource ./.;
 }
 ```
 
@@ -37,8 +37,9 @@ in
 craneLib.buildPackage {
   # other attributes omitted
   src = lib.cleanSourceWith {
-    src = craneLib.path ./.; # The original, unfiltered source
+    src = ./.; # The original, unfiltered source
     filter = markdownOrCargo;
+    name = "source"; # Be reproducible, regardless of the directory name
   };
 }
 ```

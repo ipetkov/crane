@@ -46,6 +46,6 @@ let
   });
 in
 cargoAwesome {
-  src = craneLib.cleanCargoSource (craneLib.path ./.);
+  src = craneLib.cleanCargoSource ./.;
 }
 ```

@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.18.2
 * **Breaking**: dropped compatibility for nixpkgs-23.11.
+* The guidance around using (both) `cleanCargoSource` and `path` has been
+  updated. Namely, it is no longer necessary to call both (e.g.
+  `craneLib.cleanCargoSource (craneLib.path ./.)`): it is recommended to either
+  use `craneLib.cleanCargoSource ./.` directly (if the default source cleaning
+  is desired) or `craneLib.path ./.` (if not).
 
 ### Fixed
 * The cross compilation example also hows how to set the `TARGET_CC` environment

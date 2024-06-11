@@ -1,4 +1,5 @@
 { filterCargoSources
+, internalCrateNameForCleanSource
 , lib
 }:
 
@@ -8,4 +9,6 @@ src: lib.cleanSourceWith {
 
   # Then add our own filter on top
   filter = filterCargoSources;
+
+  name = internalCrateNameForCleanSource src;
 }

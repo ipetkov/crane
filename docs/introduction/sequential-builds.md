@@ -24,7 +24,7 @@ build.
 
         # Common derivation arguments used for all builds
         commonArgs = {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
           buildInputs = with pkgs; [

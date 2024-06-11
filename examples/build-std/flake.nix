@@ -39,7 +39,7 @@
         # our specific toolchain there.
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
-        src = craneLib.cleanCargoSource (craneLib.path ./.);
+        src = craneLib.cleanCargoSource ./.;
 
         my-crate = craneLib.buildPackage {
           inherit src;

@@ -741,7 +741,7 @@ written (which may want to also call `craneLib.filterCargoSources`) to achieve t
 desired behavior.
 
 ```nix
-craneLib.cleanCargoSource (craneLib.path ./.)
+craneLib.cleanCargoSource ./.
 ```
 
 ### `craneLib.cleanCargoToml`
@@ -983,8 +983,9 @@ will retain the following files from a given source:
 
 ```nix
 cleanSourceWith {
-  src = craneLib.path ./.;
+  src = ./.;
   filter = craneLib.filterCargoSources;
+  name = "source"; # Be reproducible, regardless of the directory name
 }
 ```
 
@@ -999,8 +1000,9 @@ let
     (markdownFilter path type) || (craneLib.filterCargoSources path type);
 in
 cleanSourceWith {
-  src = craneLib.path ./.;
+  src = ./.;
   filter = markdownOrCargo;
+  name = "source"; # Be reproducible, regardless of the directory name
 }
 ```
 
