@@ -25,7 +25,7 @@ does not alter the derivation's attributes_ directly:
 }:
 
 craneLib.buildPackage {
-  src = craneLib.cleanCargoSource (craneLib.path ./..);
+  src = craneLib.cleanCargoSource ./..;
   strictDeps = true;
   cargoExtraArgs =
       (lib.optionalString withFoo "--features foo") +
@@ -123,7 +123,7 @@ If you need to change behavior that way, consider using a combination of
 
         craneLib = crane.mkLib pkgs;
         my-crate = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
         };
       in

@@ -18,6 +18,9 @@ let
   inherit (self) callPackage;
 
   internalCrateNameFromCargoToml = callPackage ./internalCrateNameFromCargoToml.nix { };
+  internalCrateNameForCleanSource = callPackage ./internalCrateNameForCleanSource.nix {
+    inherit internalCrateNameFromCargoToml;
+  };
 in
 {
   appendCrateRegistries = input: self.overrideScope (_final: prev: {
@@ -38,7 +41,9 @@ in
   cargoNextest = callPackage ./cargoNextest.nix { };
   cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };
   cargoTest = callPackage ./cargoTest.nix { };
-  cleanCargoSource = callPackage ./cleanCargoSource.nix { };
+  cleanCargoSource = callPackage ./cleanCargoSource.nix {
+    inherit internalCrateNameForCleanSource;
+  };
   cleanCargoToml = callPackage ./cleanCargoToml.nix { };
   configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
   configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
@@ -71,7 +76,7 @@ in
   });
 
   path = callPackage ./path.nix {
-    inherit internalCrateNameFromCargoToml;
+    inherit internalCrateNameForCleanSource;
   };
 
   registryFromDownloadUrl = callPackage ./registryFromDownloadUrl.nix { };

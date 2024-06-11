@@ -12,7 +12,12 @@ let
     - `pname` and `version` are explicitly set 
   '';
 
-  src = args.src or throwMsg;
+  origSrc = src:
+    if src ? _isLibCleanSourceWith
+    then src.origSrc
+    else src;
+
+  src = origSrc (args.src or throwMsg);
   cargoToml = args.cargoToml or (src + "/Cargo.toml");
   cargoTomlContents = args.cargoTomlContents or (
     if builtins.pathExists cargoToml

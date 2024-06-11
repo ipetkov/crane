@@ -60,7 +60,7 @@
         ];
 
         my-crate = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource (craneLib.path ./.);
+          src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
           buildInputs = [

@@ -29,7 +29,7 @@ craneLib.buildPackage {
     src = patchedCargoLock;
   };
 
-  src = craneLib.cleanCargoSource (craneLib.path ./.);
+  src = craneLib.cleanCargoSource ./.;
 
   patches = [
     ./update-cargo-lock.patch

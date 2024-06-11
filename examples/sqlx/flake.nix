@@ -25,8 +25,9 @@
         sqlOrCargo = path: type: (sqlFilter path type) || (craneLib.filterCargoSources path type);
 
         src = lib.cleanSourceWith {
-          src = craneLib.path ./.; # The original, unfiltered source
+          src = ./.; # The original, unfiltered source
           filter = sqlOrCargo;
+          name = "source"; # Be reproducible, regardless of the directory name
         };
 
         # Common arguments can be set here to avoid repeating them later
