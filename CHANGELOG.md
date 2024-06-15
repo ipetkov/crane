@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `vendorCargoDeps` and `crateNameFromCargoToml` do their best to avoid IFD when
   `src` is the result of `lib.cleanSourceWith` (and by extension
   `cleanCargoSource`)
+* `removeReferencesToVendoredSources` handles the edge case where
+  `cargoVendorDir` does not point to a path within the Nix store
 
 ## [0.17.3] - 2024-06-02
 
