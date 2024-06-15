@@ -449,6 +449,11 @@ in
     src = myLib.cleanCargoSource ./simple;
   };
 
+  simpleNoDeps = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./simple-no-deps;
+    cargoVendorDir = "/dev/null";
+  };
+
   simpleWithLockOverride = myLib.buildPackage {
     cargoVendorDir = myLib.vendorCargoDeps { src = ./simple; };
     src = lib.cleanSourceWith {

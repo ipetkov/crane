@@ -25,7 +25,7 @@ removeReferencesToVendoredSources() {
           grep --only-matching '@storeDir@/[a-z0-9]\{32\}' |
           while read crateSource; do
             echo -n '\|'"${crateSource#@storeDir@/}";
-          done
+          done || true # Handle if vendoredDir doesn't point to the store
 
         echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
       )
