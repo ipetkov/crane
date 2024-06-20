@@ -13,6 +13,9 @@
       mkLib = pkgs: import ./default.nix {
         inherit pkgs;
       };
+      mkLibForToolchain = pkgs: toolchainFn: import ./default.nix {
+        inherit pkgs toolchainFn;
+      };
       nodes = (builtins.fromJSON (builtins.readFile ./test/flake.lock)).nodes;
       inputFromLock = name:
         let
@@ -48,7 +51,7 @@
       ];
     in
     {
-      inherit mkLib;
+      inherit mkLib mkLibForToolchain;
 
       overlays.default = _final: _prev: { };
 

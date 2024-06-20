@@ -1,5 +1,7 @@
 { lib
-, makeScopeWithSplicing'
+, splicePackages
+, newScope
+, stdenv
 , otherSplices
 }:
 
@@ -7,13 +9,15 @@ let
   minSupported = "24.05";
   current = lib.concatStringsSep "." (lib.lists.sublist 0 2 (lib.splitVersion lib.version));
   isUnsupported = lib.versionOlder current minSupported;
-  msg = "crane requires at least nixpkgs-${minSupported}, supplied nixpkgs-${current}";
+  unsupportedMsg = "crane requires at least nixpkgs-${minSupported}, supplied nixpkgs-${current}";
+  isCross = stdenv.buildPlatform != stdenv.hostPlatform;
+  crossOverrideMsg = "crane overrideToolchain does not work with cross-compilation";
 
-  mySplice = f: makeScopeWithSplicing' {
+  mySplice = f: lib.makeScopeWithSplicing' { inherit splicePackages newScope; } {
     inherit otherSplices f;
   };
 in
-lib.warnIf isUnsupported msg (mySplice (self:
+lib.warnIf isUnsupported unsupportedMsg (mySplice (self:
 let
   inherit (self) callPackage;
 
@@ -68,12 +72,12 @@ in
   mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
   mkDummySrc = callPackage ./mkDummySrc.nix { };
 
-  overrideToolchain = toolchain: self.overrideScope (_final: _prev: {
+  overrideToolchain = toolchain: lib.warnIf isCross crossOverrideMsg (self.overrideScope (_final: _prev: {
     cargo = toolchain;
     clippy = toolchain;
     rustc = toolchain;
     rustfmt = toolchain;
-  });
+  }));
 
   path = callPackage ./path.nix {
     inherit internalCrateNameForCleanSource;

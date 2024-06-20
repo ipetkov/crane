@@ -1,13 +1,28 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import <nixpkgs> { }
+, lib ? pkgs.callPackage ({ lib }: lib) { }
+, toolchainFn ? (pkgs: pkgs)
+, otherSplices ? null
+}:
 
-import ./lib {
-  inherit (pkgs) lib makeScopeWithSplicing';
-  otherSplices = {
-    selfBuildBuild = pkgs.pkgsBuildBuild;
-    selfBuildHost = pkgs.pkgsBuildHost;
-    selfBuildTarget = pkgs.pkgsBuildTarget;
-    selfHostHost = pkgs.pkgsHostHost;
-    selfHostTarget = pkgs.pkgsHostTarget;
-    selfTargetTarget = pkgs.pkgsTargetTarget;
-  };
+let
+  otherSpliceFn = pkgs:
+    let toolchain = toolchainFn pkgs;
+    in lib.makeScope pkgs.newScope (_self: {
+      cargo = toolchain;
+      clippy = toolchain;
+      rustc = toolchain;
+      rustfmt = toolchain;
+    });
+in
+pkgs.callPackage ./lib {
+  otherSplices =
+    if otherSplices != null then otherSplices
+    else {
+      selfBuildBuild = otherSpliceFn pkgs.pkgsBuildBuild;
+      selfBuildHost = otherSpliceFn pkgs.pkgsBuildHost;
+      selfBuildTarget = otherSpliceFn pkgs.pkgsBuildTarget;
+      selfHostHost = otherSpliceFn pkgs.pkgsHostHost;
+      selfHostTarget = otherSpliceFn pkgs.pkgsHostTarget;
+      selfTargetTarget = lib.optionalAttrs (pkgs.pkgsTargetTarget?newScope) (otherSpliceFn pkgs.pkgsTargetTarget);
+    };
 }
