@@ -1,6 +1,12 @@
 { lib
 , makeScopeWithSplicing'
-, otherSplices
+, splicePackages
+, pkgsBuildBuild
+, pkgsBuildHost
+, pkgsBuildTarget
+, pkgsHostHost
+, pkgsHostTarget
+, pkgsTargetTarget
 }:
 
 let
@@ -9,85 +15,121 @@ let
   isUnsupported = lib.versionOlder current minSupported;
   msg = "crane requires at least nixpkgs-${minSupported}, supplied nixpkgs-${current}";
 
-  mySplice = f: makeScopeWithSplicing' {
-    inherit otherSplices f;
+  spliceToolchain = toolchainFn:
+    let
+      splices = {
+        pkgsBuildBuild = { toolchain = toolchainFn pkgsBuildBuild; };
+        pkgsBuildHost = { toolchain = toolchainFn pkgsBuildHost; };
+        pkgsBuildTarget = { toolchain = toolchainFn pkgsBuildTarget; };
+        pkgsHostHost = { toolchain = toolchainFn pkgsHostHost; };
+        pkgsHostTarget = { toolchain = toolchainFn pkgsHostTarget; };
+        pkgsTargetTarget = lib.optionalAttrs (pkgsTargetTarget?newScope) { toolchain = toolchainFn pkgsTargetTarget; };
+      };
+    in
+    (splicePackages splices).toolchain;
+
+  scopeFn = self:
+    let
+      inherit (self) callPackage;
+
+      internalCrateNameFromCargoToml = callPackage ./internalCrateNameFromCargoToml.nix { };
+      internalCrateNameForCleanSource = callPackage ./internalCrateNameForCleanSource.nix {
+        inherit internalCrateNameFromCargoToml;
+      };
+    in
+    {
+      appendCrateRegistries = input: self.overrideScope (_final: prev: {
+        crateRegistries = prev.crateRegistries // (lib.foldl (a: b: a // b) { } input);
+      });
+
+      buildDepsOnly = callPackage ./buildDepsOnly.nix { };
+      buildPackage = callPackage ./buildPackage.nix { };
+      buildTrunkPackage = callPackage ./buildTrunkPackage.nix { };
+      cargoAudit = callPackage ./cargoAudit.nix { };
+      cargoBuild = callPackage ./cargoBuild.nix { };
+      cargoClippy = callPackage ./cargoClippy.nix { };
+      cargoDeny = callPackage ./cargoDeny.nix { };
+      cargoDoc = callPackage ./cargoDoc.nix { };
+      cargoFmt = callPackage ./cargoFmt.nix { };
+      cargoHelperFunctionsHook = callPackage ./setupHooks/cargoHelperFunctions.nix { };
+      cargoLlvmCov = callPackage ./cargoLlvmCov.nix { };
+      cargoNextest = callPackage ./cargoNextest.nix { };
+      cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };
+      cargoTest = callPackage ./cargoTest.nix { };
+      cleanCargoSource = callPackage ./cleanCargoSource.nix {
+        inherit internalCrateNameForCleanSource;
+      };
+      cleanCargoToml = callPackage ./cleanCargoToml.nix { };
+      configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
+      configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
+      devShell = callPackage ./devShell.nix { };
+
+      crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix {
+        inherit internalCrateNameFromCargoToml;
+      };
+
+      crateRegistries = self.registryFromDownloadUrl {
+        dl = "https://static.crates.io/crates";
+        indexUrl = "https://github.com/rust-lang/crates.io-index";
+      };
+
+      downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
+      downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
+      filterCargoSources = callPackage ./filterCargoSources.nix { };
+      findCargoFiles = callPackage ./findCargoFiles.nix { };
+      inheritCargoArtifactsHook = callPackage ./setupHooks/inheritCargoArtifacts.nix { };
+      installCargoArtifactsHook = callPackage ./setupHooks/installCargoArtifacts.nix { };
+      installFromCargoBuildLogHook = callPackage ./setupHooks/installFromCargoBuildLog.nix { };
+      mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
+      mkDummySrc = callPackage ./mkDummySrc.nix { };
+
+      overrideToolchain = toolchain: self.overrideScope (_final: _prev:
+        let
+          splicedToolchain = spliceToolchain toolchain;
+        in
+        if lib.isFunction toolchain then
+          {
+            cargo = splicedToolchain;
+            clippy = splicedToolchain;
+            rustc = splicedToolchain;
+            rustfmt = splicedToolchain;
+          }
+        else
+          {
+            cargo = toolchain;
+            clippy = toolchain;
+            rustc = toolchain;
+            rustfmt = toolchain;
+          }
+      );
+
+      path = callPackage ./path.nix {
+        inherit internalCrateNameForCleanSource;
+      };
+
+      registryFromDownloadUrl = callPackage ./registryFromDownloadUrl.nix { };
+      registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
+      registryFromSparse = callPackage ./registryFromSparse.nix { };
+      removeReferencesToVendoredSourcesHook = callPackage ./setupHooks/removeReferencesToVendoredSources.nix { };
+      replaceCargoLockHook = callPackage ./setupHooks/replaceCargoLockHook.nix { };
+      urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
+      vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
+      vendorMultipleCargoDeps = callPackage ./vendorMultipleCargoDeps.nix { };
+      vendorCargoRegistries = callPackage ./vendorCargoRegistries.nix { };
+      vendorGitDeps = callPackage ./vendorGitDeps.nix { };
+      writeTOML = callPackage ./writeTOML.nix { };
+    };
+
+  craneSpliced = makeScopeWithSplicing' {
+    f = scopeFn;
+    otherSplices = {
+      selfBuildBuild = lib.makeScope pkgsBuildBuild.newScope scopeFn;
+      selfBuildHost = lib.makeScope pkgsBuildHost.newScope scopeFn;
+      selfBuildTarget = lib.makeScope pkgsBuildTarget.newScope scopeFn;
+      selfHostHost = lib.makeScope pkgsHostHost.newScope scopeFn;
+      selfHostTarget = lib.makeScope pkgsHostTarget.newScope scopeFn;
+      selfTargetTarget = lib.optionalAttrs (pkgsTargetTarget?newScope) (lib.makeScope pkgsTargetTarget.newScope scopeFn);
+    };
   };
 in
-lib.warnIf isUnsupported msg (mySplice (self:
-let
-  inherit (self) callPackage;
-
-  internalCrateNameFromCargoToml = callPackage ./internalCrateNameFromCargoToml.nix { };
-  internalCrateNameForCleanSource = callPackage ./internalCrateNameForCleanSource.nix {
-    inherit internalCrateNameFromCargoToml;
-  };
-in
-{
-  appendCrateRegistries = input: self.overrideScope (_final: prev: {
-    crateRegistries = prev.crateRegistries // (lib.foldl (a: b: a // b) { } input);
-  });
-
-  buildDepsOnly = callPackage ./buildDepsOnly.nix { };
-  buildPackage = callPackage ./buildPackage.nix { };
-  buildTrunkPackage = callPackage ./buildTrunkPackage.nix { };
-  cargoAudit = callPackage ./cargoAudit.nix { };
-  cargoBuild = callPackage ./cargoBuild.nix { };
-  cargoClippy = callPackage ./cargoClippy.nix { };
-  cargoDeny = callPackage ./cargoDeny.nix { };
-  cargoDoc = callPackage ./cargoDoc.nix { };
-  cargoFmt = callPackage ./cargoFmt.nix { };
-  cargoHelperFunctionsHook = callPackage ./setupHooks/cargoHelperFunctions.nix { };
-  cargoLlvmCov = callPackage ./cargoLlvmCov.nix { };
-  cargoNextest = callPackage ./cargoNextest.nix { };
-  cargoTarpaulin = callPackage ./cargoTarpaulin.nix { };
-  cargoTest = callPackage ./cargoTest.nix { };
-  cleanCargoSource = callPackage ./cleanCargoSource.nix {
-    inherit internalCrateNameForCleanSource;
-  };
-  cleanCargoToml = callPackage ./cleanCargoToml.nix { };
-  configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
-  configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
-  devShell = callPackage ./devShell.nix { };
-
-  crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix {
-    inherit internalCrateNameFromCargoToml;
-  };
-
-  crateRegistries = self.registryFromDownloadUrl {
-    dl = "https://static.crates.io/crates";
-    indexUrl = "https://github.com/rust-lang/crates.io-index";
-  };
-
-  downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
-  downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
-  filterCargoSources = callPackage ./filterCargoSources.nix { };
-  findCargoFiles = callPackage ./findCargoFiles.nix { };
-  inheritCargoArtifactsHook = callPackage ./setupHooks/inheritCargoArtifacts.nix { };
-  installCargoArtifactsHook = callPackage ./setupHooks/installCargoArtifacts.nix { };
-  installFromCargoBuildLogHook = callPackage ./setupHooks/installFromCargoBuildLog.nix { };
-  mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
-  mkDummySrc = callPackage ./mkDummySrc.nix { };
-
-  overrideToolchain = toolchain: self.overrideScope (_final: _prev: {
-    cargo = toolchain;
-    clippy = toolchain;
-    rustc = toolchain;
-    rustfmt = toolchain;
-  });
-
-  path = callPackage ./path.nix {
-    inherit internalCrateNameForCleanSource;
-  };
-
-  registryFromDownloadUrl = callPackage ./registryFromDownloadUrl.nix { };
-  registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
-  registryFromSparse = callPackage ./registryFromSparse.nix { };
-  removeReferencesToVendoredSourcesHook = callPackage ./setupHooks/removeReferencesToVendoredSources.nix { };
-  replaceCargoLockHook = callPackage ./setupHooks/replaceCargoLockHook.nix { };
-  urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
-  vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
-  vendorMultipleCargoDeps = callPackage ./vendorMultipleCargoDeps.nix { };
-  vendorCargoRegistries = callPackage ./vendorCargoRegistries.nix { };
-  vendorGitDeps = callPackage ./vendorGitDeps.nix { };
-  writeTOML = callPackage ./writeTOML.nix { };
-}))
+lib.warnIf isUnsupported msg (craneSpliced)

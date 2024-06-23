@@ -31,11 +31,11 @@
           overlays = [ (import rust-overlay) ];
         };
 
-        rustToolchain = pkgs.pkgsBuildHost.rust-bin.stable.latest.default.override {
+        mkRustToolchain = pkgs: pkgs.pkgsBuildHost.rust-bin.stable.latest.default.override {
           targets = [ "aarch64-unknown-linux-gnu" ];
         };
 
-        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+        craneLib = (crane.mkLib pkgs).overrideToolchain mkRustToolchain;
 
         # Note: we have to use the `callPackage` approach here so that Nix
         # can "splice" the packages in such a way that dependencies are
