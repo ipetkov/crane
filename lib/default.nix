@@ -1,4 +1,5 @@
 { lib
+, stdenv
 , makeScopeWithSplicing'
 , splicePackages
 , pkgsBuildBuild
@@ -83,24 +84,20 @@ let
       mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
       mkDummySrc = callPackage ./mkDummySrc.nix { };
 
-      overrideToolchain = toolchain: self.overrideScope (_final: _prev:
+      overrideToolchain = toolchainArg: self.overrideScope (_final: _prev:
         let
-          splicedToolchain = spliceToolchain toolchain;
+          toolchain =
+            if lib.isFunction toolchainArg
+            then spliceToolchain toolchainArg
+            else toolchainArg;
+          needsSplicing = stdenv.buildPlatform != stdenv.hostPlatform && toolchain?__spliced == false;
         in
-        if lib.isFunction toolchain then
-          {
-            cargo = splicedToolchain;
-            clippy = splicedToolchain;
-            rustc = splicedToolchain;
-            rustfmt = splicedToolchain;
-          }
-        else
-          {
-            cargo = toolchain;
-            clippy = toolchain;
-            rustc = toolchain;
-            rustfmt = toolchain;
-          }
+        lib.warnIf needsSplicing "crane overrideToolchain requires a spliced toolchain when cross-compiling" {
+          cargo = toolchain;
+          clippy = toolchain;
+          rustc = toolchain;
+          rustfmt = toolchain;
+        }
       );
 
       path = callPackage ./path.nix {
@@ -130,6 +127,7 @@ let
       selfHostTarget = lib.makeScope pkgsHostTarget.newScope scopeFn;
       selfTargetTarget = lib.optionalAttrs (pkgsTargetTarget?newScope) (lib.makeScope pkgsTargetTarget.newScope scopeFn);
     };
+    keep = self: lib.optionalAttrs (self?cargo) { inherit (self) cargo clippy rustc rustfmt; };
   };
 in
 lib.warnIf isUnsupported msg (craneSpliced)
