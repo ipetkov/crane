@@ -1,5 +1,6 @@
 { lib
 , cargo
+, craneUtils
 , jq
 , pkgsBuildBuild
 }:
@@ -8,8 +9,6 @@ let
   inherit (pkgsBuildBuild)
     fetchgit
     stdenv;
-
-  craneUtils = pkgsBuildBuild.callPackage ../pkgs/crane-utils { };
 in
 { git
 , rev

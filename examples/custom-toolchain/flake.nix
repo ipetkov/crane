@@ -28,15 +28,13 @@
           overlays = [ (import rust-overlay) ];
         };
 
-        rustWithWasiTarget = pkgs.rust-bin.stable.latest.default.override {
-          targets = [ "wasm32-wasi" ];
-        };
-
         # NB: we don't need to overlay our custom toolchain for the *entire*
         # pkgs (which would require rebuidling anything else which uses rust).
         # Instead, we just want to update the scope that crane will use by appending
         # our specific toolchain there.
-        craneLib = (crane.mkLib pkgs).overrideToolchain rustWithWasiTarget;
+        craneLib = (crane.mkLib pkgs).overrideToolchain (p: p.rust-bin.stable.latest.default.override {
+          targets = [ "wasm32-wasi" ];
+        });
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;
@@ -76,7 +74,6 @@
           # Extra inputs can be added here; cargo and rustc are provided by default
           # from the toolchain that was specified earlier.
           packages = [
-            # rustWithWasiTarget
           ];
         };
       });

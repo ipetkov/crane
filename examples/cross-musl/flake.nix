@@ -28,11 +28,9 @@
           overlays = [ (import rust-overlay) ];
         };
 
-        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+        craneLib = (crane.mkLib pkgs).overrideToolchain (p: p.rust-bin.stable.latest.default.override {
           targets = [ "x86_64-unknown-linux-musl" ];
-        };
-
-        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+        });
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;

@@ -1193,15 +1193,20 @@ build caches. More specifically:
 
 ### `craneLib.overrideToolchain`
 
-`overrideToolchain :: drv -> set`
+`overrideToolchain :: (set -> drv) -> set`
+`overrideToolchain :: drv -> set` (legacy)
 
 A convenience method to override and use tools (like `cargo`, `clippy`,
 `rustfmt`, `rustc`, etc.) from one specific toolchain. The input should be a
 single derivation which contains all the tools as binaries. For example, this
 can be the output of `oxalica/rust-overlay`.
 
+Note that in order to best support cross compilation, `overrideToolchain` should
+be provided a function (whose argument is a cross-compilation aware version of
+`pkgs`) which constructs the toolchain:
+
 ```nix
-craneLib.overrideToolchain myCustomToolchain
+craneLib.overrideToolchain (p: myCustomToolchainForPkgs p)
 ```
 
 ### `craneLib.path`

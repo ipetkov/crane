@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `craneLib.cleanCargoSource (craneLib.path ./.)`): it is recommended to either
   use `craneLib.cleanCargoSource ./.` directly (if the default source cleaning
   is desired) or `craneLib.path ./.` (if not).
+* `overrideToolchain` has been updated to better handle cross-compilation
+  splicing for a customized toolchain. This means that `overrideToolchain`
+  should now be called with a function which constructs said toolchain for any
+  given `pkgs` instantiation. For example: `craneLib.overrideToolchain (p:
+  p.rust-bin.stable.latest.default)`
 
 ### Fixed
 * The cross compilation example also hows how to set the `TARGET_CC` environment
@@ -23,6 +28,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `cleanCargoSource`)
 * `removeReferencesToVendoredSources` handles the edge case where
   `cargoVendorDir` does not point to a path within the Nix store
+* It is now possible to use `.overrideScope` to change what instance of
+  `craneUtils` will be used during vendoring.
 
 ## [0.17.3] - 2024-06-02
 
