@@ -16,6 +16,14 @@ let
   isUnsupported = lib.versionOlder current minSupported;
   msg = "crane requires at least nixpkgs-${minSupported}, supplied nixpkgs-${current}";
 
+  # Helps keep things in sync between `overrideToolchain` and `keep`
+  attrsForToolchainOverride = [
+    "cargo"
+    "clippy"
+    "rustc"
+    "rustfmt"
+  ];
+
   spliceToolchain = toolchainFn:
     let
       splices = {
@@ -92,12 +100,8 @@ let
             else toolchainArg;
           needsSplicing = stdenv.buildPlatform != stdenv.hostPlatform && toolchain?__spliced == false;
         in
-        lib.warnIf needsSplicing "crane overrideToolchain requires a spliced toolchain when cross-compiling" {
-          cargo = toolchain;
-          clippy = toolchain;
-          rustc = toolchain;
-          rustfmt = toolchain;
-        }
+        lib.warnIf needsSplicing "crane overrideToolchain requires a spliced toolchain when cross-compiling"
+          (lib.genAttrs attrsForToolchainOverride (_: toolchain))
       );
 
       path = callPackage ./path.nix {
@@ -127,7 +131,8 @@ let
       selfHostTarget = lib.makeScope pkgsHostTarget.newScope scopeFn;
       selfTargetTarget = lib.optionalAttrs (pkgsTargetTarget?newScope) (lib.makeScope pkgsTargetTarget.newScope scopeFn);
     };
-    keep = self: lib.optionalAttrs (self?cargo) { inherit (self) cargo clippy rustc rustfmt; };
+    keep = self: lib.optionalAttrs (self?cargo)
+      (lib.genAttrs attrsForToolchainOverride (n: self.${n}));
   };
 in
 lib.warnIf isUnsupported msg (craneSpliced)
