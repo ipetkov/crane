@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `craneLib.cleanCargoSource (craneLib.path ./.)`): it is recommended to either
   use `craneLib.cleanCargoSource ./.` directly (if the default source cleaning
   is desired) or `craneLib.path ./.` (if not).
+* `overrideToolchain` has been updated to better handle cross-compilation
+  splicing for a customized toolchain. This means that `overrideToolchain`
+  should now be called with a function which constructs said toolchain for any
+  given `pkgs` instantiation. For example: `craneLib.overrideToolchain (p:
+  p.rust-bin.stable.latest.default)`
 
 ### Fixed
 * The cross compilation example also hows how to set the `TARGET_CC` environment
