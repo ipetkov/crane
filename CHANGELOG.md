@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `cleanCargoSource`)
 * `removeReferencesToVendoredSources` handles the edge case where
   `cargoVendorDir` does not point to a path within the Nix store
+* It is now possible to use `.overrideScope` to change what instance of
+  `craneUtils` will be used during vendoring.
 
 ## [0.17.3] - 2024-06-02
 
