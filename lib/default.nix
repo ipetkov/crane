@@ -71,7 +71,6 @@ let
       cleanCargoToml = callPackage ./cleanCargoToml.nix { };
       configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
       configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
-      devShell = callPackage ./devShell.nix { };
 
       crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix {
         inherit internalCrateNameFromCargoToml;
@@ -82,6 +81,7 @@ let
         indexUrl = "https://github.com/rust-lang/crates.io-index";
       };
 
+      devShell = callPackage ./devShell.nix { };
       downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
       downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
       filterCargoSources = callPackage ./filterCargoSources.nix { };
