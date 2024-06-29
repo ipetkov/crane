@@ -1194,7 +1194,7 @@ build caches. More specifically:
 ### `craneLib.overrideToolchain`
 
 `overrideToolchain :: (set -> drv) -> set`
-`overrideToolchain :: drv -> set` (deprecated)
+`overrideToolchain :: drv -> set` (legacy)
 
 A convenience method to override and use tools (like `cargo`, `clippy`,
 `rustfmt`, `rustc`, etc.) from one specific toolchain. The input should be a
