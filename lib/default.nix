@@ -99,9 +99,14 @@ let
             then spliceToolchain toolchainArg
             else toolchainArg;
           needsSplicing = stdenv.buildPlatform != stdenv.hostPlatform && toolchain?__spliced == false;
+          warningMsg = ''
+            craneLib.overrideToolchain requires a spliced toolchain when cross-compiling. Consider specifying
+            a function which constructs a toolchain for any given `pkgs` instantiation:
+
+            (crane.mkLib pkgs).overrideToolchain (p: ...)
+          '';
         in
-        lib.warnIf needsSplicing "crane overrideToolchain requires a spliced toolchain when cross-compiling"
-          (lib.genAttrs attrsForToolchainOverride (_: toolchain))
+        lib.warnIf needsSplicing warningMsg (lib.genAttrs attrsForToolchainOverride (_: toolchain))
       );
 
       path = callPackage ./path.nix {
