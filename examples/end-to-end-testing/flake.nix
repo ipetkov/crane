@@ -27,8 +27,7 @@
         };
         inherit (pkgs) lib;
 
-        rustToolchain = pkgs.rust-bin.stable.latest.default;
-        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+        craneLib = (crane.mkLib pkgs).overrideToolchain (p: p.rust-bin.stable.latest.default);
         src = craneLib.cleanCargoSource ./.;
 
         workspace = craneLib.buildPackage {

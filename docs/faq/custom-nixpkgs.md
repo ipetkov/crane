@@ -26,12 +26,10 @@ let
     inherit system;
     overlays = [ (import rust-overlay) ];
   };
-
-  rustToolchain = pkgs.rust-bin.stable.latest.default.override {
-    targets = [ "wasm32-wasi" ];
-  };
 in
-(crane.mkLib pkgs).overrideToolchain rustToolchain
+(crane.mkLib pkgs).overrideToolchain (p: p.rust-bin.stable.latest.default.override {
+    targets = [ "wasm32-wasi" ];
+})
 ```
 
 Finally, specific inputs can be overridden for the entire library via the

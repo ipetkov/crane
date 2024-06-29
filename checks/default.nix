@@ -8,7 +8,7 @@ in
 onlyDrvs (lib.makeScope myLib.newScope (self:
 let
   callPackage = self.newScope { };
-  myLibLlvmTools = myLib.overrideToolchain (pkgs.rust-bin.stable.latest.minimal.override {
+  myLibLlvmTools = myLib.overrideToolchain (p: p.rust-bin.stable.latest.minimal.override {
     extensions = [ "llvm-tools" ];
   });
   x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
@@ -407,7 +407,7 @@ in
 
   noStd =
     let
-      noStdLib = myLib.overrideToolchain (pkgs.rust-bin.stable.latest.minimal.override {
+      noStdLib = myLib.overrideToolchain (p: p.rust-bin.stable.latest.minimal.override {
         targets = [
           "thumbv6m-none-eabi"
           "x86_64-unknown-none"
@@ -423,7 +423,7 @@ in
 
   bindeps =
     let
-      bindepsLib = myLib.overrideToolchain (pkgs.rust-bin.nightly.latest.minimal.override {
+      bindepsLib = myLib.overrideToolchain (p: p.rust-bin.nightly.latest.minimal.override {
         targets = [
           "wasm32-unknown-unknown"
           "x86_64-unknown-none"

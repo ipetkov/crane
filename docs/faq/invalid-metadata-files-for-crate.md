@@ -7,7 +7,8 @@ used in the build:
 
 ```nix
 let
-  rustToolchain = ...;
+  rustToolchainForPkgs = p: ...;
+  rustToolchain = rustToolchainForPkgs pkgs;
 in
 # Incorrect usage, missing `clippy` override!
 #(crane.mkLib pkgs).overrideScope (final: prev: {
@@ -17,5 +18,5 @@ in
 #});
 
 # Correct usage (`overrideToolchain` handles the details for us)
-(crane.mkLib pkgs).overrideToolchain rustToolchain
+(crane.mkLib pkgs).overrideToolchain rustToolchainForPkgs
 ```

@@ -83,7 +83,7 @@ craneLib.buildPackage {
 
           # Use a different `craneLib` instantiation: one with a nightly compiler
           my-crate-nightly = my-crate.override {
-            craneLib = craneLib.overrideToolchain pkgs.rust-bin.nightly.latest.default;
+            craneLib = craneLib.overrideToolchain (p: p.rust-bin.nightly.latest.default);
           };
         };
       });
