@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Constantly rebuilding pyo3 - crane</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="A Nix library for building cargo projects.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Home</a></li><li class="chapter-item expanded affix "><a href="../CHANGELOG.html">Changelog</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../introduction/artifact-reuse.html"><strong aria-hidden="true">1.1.</strong> Artifact reuse</a></li><li class="chapter-item expanded "><a href="../introduction/sequential-builds.html"><strong aria-hidden="true">1.2.</strong> Sequential builds</a></li></ol></li><li class="chapter-item expanded "><a href="../getting-started.html"><strong aria-hidden="true">2.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../examples/quick-start.html"><strong aria-hidden="true">2.1.</strong> Quick start</a></li><li class="chapter-item expanded "><a href="../examples/quick-start-simple.html"><strong aria-hidden="true">2.2.</strong> Quick start (simple)</a></li><li class="chapter-item expanded "><a href="../examples/quick-start-workspace.html"><strong aria-hidden="true">2.3.</strong> Quick start (workspace)</a></li><li class="chapter-item expanded "><a href="../examples/custom-toolchain.html"><strong aria-hidden="true">2.4.</strong> Custom toolchain</a></li><li class="chapter-item expanded "><a href="../examples/alt-registry.html"><strong aria-hidden="true">2.5.</strong> Alternative registry</a></li><li class="chapter-item expanded "><a href="../examples/build-std.html"><strong aria-hidden="true">2.6.</strong> Building standard library crates</a></li><li class="chapter-item expanded "><a href="../examples/cross-rust-overlay.html"><strong aria-hidden="true">2.7.</strong> Cross compiling</a></li><li class="chapter-item expanded "><a href="../examples/cross-musl.html"><strong aria-hidden="true">2.8.</strong> Cross compiling with musl</a></li><li class="chapter-item expanded "><a href="../examples/cross-windows.html"><strong aria-hidden="true">2.9.</strong> Cross compiling to windows</a></li><li class="chapter-item expanded "><a href="../examples/trunk.html"><strong aria-hidden="true">2.10.</strong> Building Trunk projects</a></li><li class="chapter-item expanded "><a href="../examples/trunk-workspace.html"><strong aria-hidden="true">2.11.</strong> Workspace with Trunk</a></li><li class="chapter-item expanded "><a href="../examples/end-to-end-testing.html"><strong aria-hidden="true">2.12.</strong> End-to-End Testing</a></li><li class="chapter-item expanded "><a href="../examples/sqlx.html"><strong aria-hidden="true">2.13.</strong> Building with SQLx</a></li></ol></li><li class="chapter-item expanded "><a href="../source-filtering.html"><strong aria-hidden="true">3.</strong> Source filtering</a></li><li class="chapter-item expanded "><a href="../local_development.html"><strong aria-hidden="true">4.</strong> Local development</a></li><li class="chapter-item expanded "><a href="../custom_cargo_commands.html"><strong aria-hidden="true">5.</strong> Custom cargo commands</a></li><li class="chapter-item expanded "><a href="../customizing_builds.html"><strong aria-hidden="true">6.</strong> Customizing builds</a></li><li class="chapter-item expanded "><a href="../overriding_derivations.html"><strong aria-hidden="true">7.</strong> Overriding derivations after the fact</a></li><li class="chapter-item expanded "><a href="../patching_dependency_sources.html"><strong aria-hidden="true">8.</strong> Patching sources of dependencies</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../API.html"><strong aria-hidden="true">9.</strong> API Reference</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="../faq/faq.html"><strong aria-hidden="true">10.</strong> Troubleshooting/FAQ</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../faq/custom-nixpkgs.html"><strong aria-hidden="true">10.1.</strong> Customizing nixpkgs and other inputs</a></li><li class="chapter-item expanded "><a href="../faq/ifd-error.html"><strong aria-hidden="true">10.2.</strong> IFD (import from derivation) errors</a></li><li class="chapter-item expanded "><a href="../faq/constant-rebuilds.html"><strong aria-hidden="true">10.3.</strong> Constantly rebuilding from scratch</a></li><li class="chapter-item expanded "><a href="../faq/rebuilds-with-different-toolchains.html"><strong aria-hidden="true">10.4.</strong> Crates being rebuilt when using different toolchains</a></li><li class="chapter-item expanded "><a href="../faq/rebuilds-with-proc-macros.html"><strong aria-hidden="true">10.5.</strong> Constantly rebuilding proc-macro dependencies dev mode</a></li><li class="chapter-item expanded "><a href="../faq/rebuilds-pyo3.html" class="active"><strong aria-hidden="true">10.6.</strong> Constantly rebuilding pyo3</a></li><li class="chapter-item expanded "><a href="../faq/rebuilds-bindgen.html"><strong aria-hidden="true">10.7.</strong> Constantly rebuilding bindgen</a></li><li class="chapter-item expanded "><a href="../faq/no-cargo-lock.html"><strong aria-hidden="true">10.8.</strong> Building upstream cargo crate with no Cargo.lock</a></li><li class="chapter-item expanded "><a href="../faq/patching-cargo-lock.html"><strong aria-hidden="true">10.9.</strong> Patching Cargo.lock during build</a></li><li class="chapter-item expanded "><a href="../faq/build-workspace-subset.html"><strong aria-hidden="true">10.10.</strong> Building a subset of a workspace</a></li><li class="chapter-item expanded "><a href="../faq/building-with-non-rust-includes.html"><strong aria-hidden="true">10.11.</strong> Trouble building when using include_str! (or including other non-rust files)</a></li><li class="chapter-item expanded "><a href="../faq/sandbox-unfriendly-build-scripts.html"><strong aria-hidden="true">10.12.</strong> Dealing with sandbox-unfriendly build scripts</a></li><li class="chapter-item expanded "><a href="../faq/workspace-not-at-source-root.html"><strong aria-hidden="true">10.13.</strong> Cargo.toml is not at the source root</a></li><li class="chapter-item expanded "><a href="../faq/invalid-metadata-files-for-crate.html"><strong aria-hidden="true">10.14.</strong> Found invalid metadata files for crate error</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../advanced/advanced.html"><strong aria-hidden="true">11.</strong> Advanced Techniques</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../advanced/overriding-function-behavior.html"><strong aria-hidden="true">11.1.</strong> Overriding function behavior</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">crane</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane/edit/master/docs/./faq/rebuilds-pyo3.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="i-see-the-pyo3-crate-constantly-rebuilding"><a class="header" href="#i-see-the-pyo3-crate-constantly-rebuilding">I see the <code>pyo3</code> crate constantly rebuilding</a></h2>
+<p>The <code>pyo3</code> crate uses checks <code>$PYO3_PYTHON</code> for a path to the <code>python</code> binary it
+should use during the build. If this environment variable is not set, <code>pyo3</code>
+will look for whatever version of <code>python</code> is on the <code>$PATH</code>, which
+unfortunately results in the crate being rebuilt when <code>$PATH</code> changes (i.e.
+whenever the cargo artifacts are used in a derivation which may have different
+build inputs).</p>
+<p>The way to remedy this is to explicitly set <code>PYO3_PYTHON</code> to point to the
+version of <code>python</code> that will be used by the derivation:</p>
+<pre><code class="language-nix">let
+  chosenPython = pkgs.python3;
+in
+craneLib.buildPackage {
+  env.PYO3_PYTHON = "${chosenPython}/bin/python";
+  nativeBuildInputs = [
+    chosenPython
+  ];
+
+  # etc...
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../faq/rebuilds-with-proc-macros.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../faq/rebuilds-bindgen.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../faq/rebuilds-with-proc-macros.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../faq/rebuilds-bindgen.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
