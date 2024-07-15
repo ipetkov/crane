@@ -58,6 +58,11 @@
           path = ./examples/alt-registry;
         };
 
+        build-std = {
+          description = "Build a cargo project while also compiling the standard library";
+          path = ./examples/build-std;
+        };
+
         cross-musl = {
           description = "Building static binaries with musl";
           path = ./examples/cross-musl;
@@ -92,6 +97,11 @@
         quick-start-simple = {
           description = "Build a cargo project without extra checks";
           path = ./examples/quick-start-simple;
+        };
+
+        quick-start-workspace = {
+          description = "Build a cargo workspace with hakari";
+          path = ./examples/quick-start-workspace;
         };
 
         sqlx = {
