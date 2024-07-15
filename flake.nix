@@ -58,6 +58,11 @@
           path = ./examples/alt-registry;
         };
 
+        build-std = {
+          description = "Build a cargo project while also compiling the standard library";
+          path = ./examples/build-std;
+        };
+
         cross-musl = {
           description = "Building static binaries with musl";
           path = ./examples/cross-musl;
