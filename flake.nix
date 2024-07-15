@@ -94,6 +94,11 @@
           path = ./examples/quick-start-simple;
         };
 
+        quick-start-workspace = {
+          description = "Build a cargo workspace with hakari";
+          path = ./examples/quick-start-workspace;
+        };
+
         sqlx = {
           description = "Build a cargo project which uses SQLx";
           path = ./examples/sqlx;
