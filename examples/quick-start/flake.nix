@@ -91,6 +91,11 @@
             inherit src;
           };
 
+          my-crate-toml-fmt = craneLib.taploFmt {
+            inherit src;
+            taploExtraArgs = "--config ./taplo.toml";
+          };
+
           # Audit dependencies
           my-crate-audit = craneLib.cargoAudit {
             inherit src advisory-db;
