@@ -1,4 +1,5 @@
-{ downloadCargoPackage
+{ crateRegistries
+, downloadCargoPackage
 , lib
 , pkgsBuildBuild
 }:
@@ -23,18 +24,23 @@ let
     concatMapStrings
     concatStrings
     escapeShellArg
+    filterAttrs
     flatten
+    foldl
     groupBy
     hasPrefix
     mapAttrs'
     mapAttrsToList
-    nameValuePair;
+    nameValuePair
+    removePrefix;
 
   inherit (lib.lists) unique;
 
   hash = hashString "sha256";
 
   hasRegistryProtocolPrefix = s: hasPrefix "registry+" s || hasPrefix "sparse+" s;
+
+  removeProtocol = s: removePrefix "registry+" (removePrefix "sparse+" s);
 in
 { cargoConfigs ? [ ]
 , lockPackages
@@ -57,11 +63,17 @@ let
     '') packages}
   '';
 
+  # Registries configured in cargo config
   parsedCargoConfigTomls = map (p: builtins.fromTOML (readFile p)) cargoConfigs;
   allCargoRegistries = flatten (map (c: c.registries or [ ]) parsedCargoConfigTomls);
   allCargoRegistryPairs = flatten (map (mapAttrsToList (name: value: { inherit name value; })) allCargoRegistries);
   allCargoRegistryPairsWithIndex = filter (r: r ? value.index) allCargoRegistryPairs;
   configuredRegistries = mapAttrs (_: map (r: r.value.index)) (groupBy (x: x.name) allCargoRegistryPairsWithIndex);
+
+  # Registries referenced in Cargo.lock that are missing from cargo config
+  existingRegistries = foldl (acc: r: acc // { ${removeProtocol r.value.index} = true; }) { "https://github.com/rust-lang/crates.io-index" = true; } allCargoRegistryPairsWithIndex;
+  allPackageRegistries = foldl (acc: p: if p ? source then acc // { ${removeProtocol p.source} = [ p.source ]; } else acc) { } lockPackages;
+  missingPackageRegistries = filterAttrs (name: _: !(existingRegistries ? ${name})) allPackageRegistries;
 
   # Append the default crates.io registry, but allow it to be overridden
   registries = {
@@ -69,7 +81,7 @@ let
   } // (
     if args ? registries
     then mapAttrs (_: val: [ val ]) args.registries
-    else configuredRegistries
+    else configuredRegistries // missingPackageRegistries
   );
 
   sources = mapAttrs'
@@ -113,7 +125,7 @@ let
           hashed = hash prefixedUrl;
         in
         ''
-          [source.${name}]
+          [source.${escapeShellArg name}]
           registry = "${url}"
           replace-with = "nix-sources-${hashed}"
         ''
