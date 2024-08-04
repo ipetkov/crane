@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* Fixed vendoring dependencies from an alternative registry which they
+  themselves have dependencies on crates from _other_ registries.
+
 ## [0.18.0] - 2024-07-05
 
 ### Changed
