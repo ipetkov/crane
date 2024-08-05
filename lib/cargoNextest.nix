@@ -8,7 +8,6 @@
 }:
 
 { cargoArtifacts
-, cargoExtraArgs ? ""
 , cargoLlvmCovExtraArgs ? "--lcov --output-path $out/coverage"
 , cargoNextestExtraArgs ? ""
 , doInstallCargoArtifacts ? true
@@ -19,7 +18,6 @@
 }@origArgs:
 let
   args = builtins.removeAttrs origArgs [
-    "cargoExtraArgs"
     "cargoLlvmCovExtraArgs"
     "cargoNextestExtraArgs"
     "partitions"
@@ -44,10 +42,8 @@ let
     '';
 
     checkPhaseCargoCommand = ''
-      cargo ${cargoExtraArgs} \
-        ${lib.optionalString withLlvmCov "llvm-cov ${cargoLlvmCovExtraArgs}"} \
-        nextest ${cmd} ''${CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE} \
-          ${cargoNextestExtraArgs} ${moreArgs}
+      ${if withLlvmCov then "cargo llvm-cov nextest ${cargoLlvmCovExtraArgs}" else "cargo nextest ${cmd}"} \
+      ''${CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE} ${cargoNextestExtraArgs} ${moreArgs}
     '';
 
     nativeBuildInputs = (args.nativeBuildInputs or [ ])
