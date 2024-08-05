@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* Removed invalid `cargoExtraArgs` input attribute from `craneLib.cargoNextest`
+  in favor of `cargoNextestExtraArgs`.
+
 ## [0.18.0] - 2024-07-05
 
 ### Changed
