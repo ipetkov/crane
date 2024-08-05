@@ -25,7 +25,7 @@ let
     "withLlvmCov"
   ];
 
-  mkUpdatedArgs = { cmd ? lib.optionalString (!withLlvmCov) "run", extraSuffix ? "", moreArgs ? "", withLlvmCov }: args // {
+  mkUpdatedArgs = { cmd ? "run", extraSuffix ? "", moreArgs ? "", withLlvmCov }: args // {
     inherit cargoArtifacts;
     pnameSuffix = "-nextest${extraSuffix}";
     doCheck = args.doCheck or true;
