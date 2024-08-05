@@ -615,15 +615,13 @@ Except where noted below, all derivation attributes are delegated to
 
 #### Optional attributes
 * `buildPhaseCargoCommand`, unless specified, will be set to print the nextest version
-* `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
-  enabling specific features)
-  - Default value: `""`
 * `cargoLlvmCovExtraArgs`: additional flags to be passed in the cargo
   llvm-cov invocation
   - Default value: `"--lcov --output-path $out/coverage"`
 * `cargoNextestExtraArgs`: additional flags to be passed in the nextest invocation
   (e.g. specifying a profile)
   - Default value: `""`
+  - Note that all flags from `cargo test` are supported.
 * `partitions`: The number of separate nextest partitions to run. Useful if the
   test suite takes a long time and can be parallelized across multiple build
   nodes.
