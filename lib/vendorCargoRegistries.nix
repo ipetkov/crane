@@ -1,5 +1,4 @@
-{ crateRegistries
-, downloadCargoPackage
+{ downloadCargoPackage
 , lib
 , pkgsBuildBuild
 }:
