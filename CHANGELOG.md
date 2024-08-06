@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * Fixed vendoring dependencies from an alternative registry which they
   themselves have dependencies on crates from _other_ registries.
+* Fixed `cargoNextest`'s positioning of `cargoExtraArgs` to form a valid command
+  invocation when specified.
 
 ## [0.18.0] - 2024-07-05
 

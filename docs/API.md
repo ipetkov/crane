@@ -624,6 +624,7 @@ Except where noted below, all derivation attributes are delegated to
 * `cargoNextestExtraArgs`: additional flags to be passed in the nextest invocation
   (e.g. specifying a profile)
   - Default value: `""`
+  - Note that all flags from `cargo test` are supported.
 * `partitions`: The number of separate nextest partitions to run. Useful if the
   test suite takes a long time and can be parallelized across multiple build
   nodes.
