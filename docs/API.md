@@ -615,6 +615,9 @@ Except where noted below, all derivation attributes are delegated to
 
 #### Optional attributes
 * `buildPhaseCargoCommand`, unless specified, will be set to print the nextest version
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
+  enabling specific features)
+  - Default value: `""`
 * `cargoLlvmCovExtraArgs`: additional flags to be passed in the cargo
   llvm-cov invocation
   - Default value: `"--lcov --output-path $out/coverage"`
