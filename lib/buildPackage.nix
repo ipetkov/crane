@@ -77,8 +77,9 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
   '';
 
   nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
+    # NB: avoid adding any non-hook packages here. Doing so will end up
+    # changing PKG_CONFIG_PATH and cause rebuilds of `*-sys` crates.
     installFromCargoBuildLogHook
-    jq
     removeReferencesToVendoredSourcesHook
   ];
 })

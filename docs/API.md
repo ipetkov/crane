@@ -233,7 +233,6 @@ environment variables during the build, you can bring them back via
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
 * `installFromCargoBuildLogHook`
-* `jq`
 * `removeReferencesToVendoredSourcesHook`
 
 ### `craneLib.buildTrunkPackage`
@@ -1703,7 +1702,7 @@ takes two positional arguments:
 
 **Automatic behavior:** none
 
-**Required nativeBuildInputs**: assumes `cargo` and `jq` are available on the `$PATH`
+**Required nativeBuildInputs**: assumes `cargo` is available on the `$PATH`
 
 ### `craneLib.removeReferencesToVendoredSourcesHook`
 
