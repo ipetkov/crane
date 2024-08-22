@@ -10,7 +10,7 @@ function installFromCargoBuildLog() (
   echo searching for bins/libs to install from cargo build log at ${log}
 
   local logs
-  logs=$(jq -R 'fromjson?' <"${log}")
+  logs=$(@jq@ -R 'fromjson?' <"${log}")
 
   # We automatically ignore any bindeps artifacts as installation candidates.
   # Note that if the same binary is built both as a bindep artifact for something else and as a
@@ -19,7 +19,7 @@ function installFromCargoBuildLog() (
   local select_non_deps_artifact='select(contains("/deps/artifact/") | not)'
 
   # Only install binaries and libraries from the current workspace as a sanity check
-  local members="$(command cargo metadata --format-version 1 | jq -c '.workspace_members')"
+  local members="$(command cargo metadata --format-version 1 | @jq@ -c '.workspace_members')"
   local select_non_test_members='select(.reason == "compiler-artifact" and .profile.test == false)
     | select(.package_id as $pid
       | '"${members}"'
@@ -49,8 +49,8 @@ function installFromCargoBuildLog() (
     rmdir --ignore-fail-on-non-empty "${loc}"
   }
 
-  echo "${logs}" | jq -r "${select_lib_files}" | installArtifacts "${dest}/lib"
-  echo "${logs}" | jq -r "${select_bins}" | installArtifacts "${dest}/bin"
+  echo "${logs}" | @jq@ -r "${select_lib_files}" | installArtifacts "${dest}/lib"
+  echo "${logs}" | @jq@ -r "${select_bins}" | installArtifacts "${dest}/bin"
 
   echo searching for bins/libs complete
 )

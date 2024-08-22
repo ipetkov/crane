@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* **Breaking** (technically): `buildPackage` no longer adds `jq` to
+  `nativeBuildInputs` as doing so can result in rebuilding any `*-sys` crates
+  which rely on `PKG_CONFIG_PATH` remaining stable
+* `installFromCargoBuildLogHook` no longer assumes or requires that `jq` is
+  available on `$PATH` and will instead directly reference `pkgs.jq`
+
 ## [0.18.1] - 2024-08-22
 
 ### Fixed
