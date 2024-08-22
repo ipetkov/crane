@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.18.1] - 2024-08-22
+
 ### Fixed
 * Fixed vendoring dependencies from an alternative registry which they
   themselves have dependencies on crates from _other_ registries.
@@ -714,6 +716,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.18.1]: https://github.com/ipetkov/crane/compare/v0.18.0...v1.18.1
 [0.18.0]: https://github.com/ipetkov/crane/compare/v0.17.3...v1.18.0
 [0.17.3]: https://github.com/ipetkov/crane/compare/v0.17.2...v1.17.3
 [0.17.2]: https://github.com/ipetkov/crane/compare/v0.17.1...v1.17.2
