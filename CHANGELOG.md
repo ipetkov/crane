@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   which rely on `PKG_CONFIG_PATH` remaining stable
 * `installFromCargoBuildLogHook` no longer assumes or requires that `jq` is
   available on `$PATH` and will instead directly reference `pkgs.jq`
+* `downloadCargoPackageFromGit` will now set `fetchLFS = true` when fetching git
+  repos with defined output hashes
 
 ## [0.18.1] - 2024-08-22
 
