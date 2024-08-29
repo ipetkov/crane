@@ -13,13 +13,13 @@ in
 { git
 , rev
 , ref ? null
-, sha256 ? null
+, hash ? null
 , allRefs ? ref == null
 }:
 let
   maybeRef = lib.optionalAttrs (ref != null) { inherit ref; };
   repo =
-    if sha256 == null then
+    if hash == null then
       builtins.fetchGit
         (maybeRef // {
           inherit allRefs rev;
@@ -28,7 +28,7 @@ let
         })
     else
       fetchgit {
-        inherit rev sha256;
+        inherit rev hash;
         url = git;
         fetchSubmodules = true;
         fetchLFS = true;
