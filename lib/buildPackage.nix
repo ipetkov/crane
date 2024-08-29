@@ -1,7 +1,6 @@
 { buildDepsOnly
 , crateNameFromCargoToml
 , installFromCargoBuildLogHook
-, jq
 , lib
 , mkCargoDerivation
 , removeReferencesToVendoredSourcesHook
