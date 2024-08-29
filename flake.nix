@@ -1,14 +1,14 @@
 {
   description = "A Nix library for building cargo projects. Never build twice thanks to incremental artifact caching.";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  inputs = { };
 
   nixConfig = {
     extra-substituters = [ "https://crane.cachix.org" ];
     extra-trusted-public-keys = [ "crane.cachix.org-1:8Scfpmn9w+hGdXH/Q9tTLiYAE/2dnJYRJP7kl80GuRk=" ];
   };
 
-  outputs = { nixpkgs, ... }:
+  outputs = { ... }:
     let
       mkLib = pkgs: import ./default.nix {
         inherit pkgs;
@@ -121,12 +121,12 @@
       };
     } // eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        nixpkgs = inputFromLock "nixpkgs";
+        pkgs = import nixpkgs {
+          inherit system;
+        };
 
-        # To override do: lib.overrideScope (self: super: { ... });
-        lib = pkgs.lib.warn
-          "`crane.lib.\${system}` is deprecated. please use `(crane.mkLib nixpkgs.legacyPackages.\${system})` instead"
-          (mkLib pkgs);
+        myLib = mkLib pkgs;
 
         checks =
           let
@@ -147,11 +147,10 @@
           };
       in
       {
-        inherit checks lib;
+        inherit checks;
 
         packages = import ./pkgs {
-          inherit pkgs;
-          myLib = lib;
+          inherit pkgs myLib;
         };
 
         formatter = pkgs.nixpkgs-fmt;
