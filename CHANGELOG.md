@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking** (technically): `buildPackage` no longer adds `jq` to
   `nativeBuildInputs` as doing so can result in rebuilding any `*-sys` crates
   which rely on `PKG_CONFIG_PATH` remaining stable
+* **Breaking**: `downloadCargoPackageFromGit` now takes `hash` instead of
+  `sha256` when specifying an output hash for the download
 * `installFromCargoBuildLogHook` no longer assumes or requires that `jq` is
   available on `$PATH` and will instead directly reference `pkgs.jq`
 * `downloadCargoPackageFromGit` will now set `fetchLFS = true` when fetching git

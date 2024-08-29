@@ -1369,8 +1369,8 @@ At least one of the above attributes must be specified, or an error will be
 raised during evaluation.
 
 #### Optional attributes
-* `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
-  download. Useful for supporting fully offline evaluations.
+* `outputHashes`: a mapping of package-source to the `hash` attribute of the
+  (unpacked) download. Useful for supporting fully offline evaluations.
   - Default value: `[]`
 * `overrideVendorCargoPackage`: a function that will be called on every crate
   vendored from a cargo registry, which allows for modifying the derivation
@@ -1441,8 +1441,8 @@ access.
   `Cargo.lock` file (parsed via `builtins.fromTOML`)
 
 #### Optional attributes
-* `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
-  download. Useful for supporting fully offline evaluations.
+* `outputHashes`: a mapping of package-source to the `hash` attribute of the
+  (unpacked) download. Useful for supporting fully offline evaluations.
   - Default value: `[]`
 * `overrideVendorGitCheckout`: a function that will be called on every unique
   checkout vendored from a git repository, which allows for modifying the
@@ -1491,8 +1491,8 @@ the vendored directories (i.e. this configuration can be appended to the
 * `cargoLockParsedList`: a list of attrsets representing the parsed contents of
   different `Cargo.lock` files to be included while vendoring.
   - Default value: `[]`
-* `outputHashes`: a mapping of package-source to the sha256 of the (unpacked)
-  download. Useful for supporting fully offline evaluations.
+* `outputHashes`: a mapping of package-source to the `hash` attribute of the
+  (unpacked) download. Useful for supporting fully offline evaluations.
   - Default value: `[]`
 * `overrideVendorCargoPackage`: a function that will be called on every crate
   vendored from a cargo registry, which allows for modifying the derivation

@@ -100,7 +100,7 @@ let
           inherit (p) git;
           inherit ref;
           rev = p.lockedRev;
-          sha256 = outputHashes.${p.package.source} or (lib.warnIf
+          hash = outputHashes.${p.package.source} or (lib.warnIf
             (outputHashes != { })
             "No output hash provided for ${p.package.source}"
             null
