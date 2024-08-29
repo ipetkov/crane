@@ -31,6 +31,7 @@ let
         inherit rev sha256;
         url = git;
         fetchSubmodules = true;
+        fetchLFS = true;
       };
 in
 stdenv.mkDerivation {
