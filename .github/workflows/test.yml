@@ -36,7 +36,7 @@ jobs:
           - install_url: https://releases.nixos.org/nix/nix-2.18.2/install
             # The 24.05 branch ships with Nix 2.18.2
           - install_url: https://releases.nixos.org/nix/nix-2.18.2/install
-            nixpkgs-override: "--override-input nixpkgs $(./ci/ref-from-lock.sh ./test#nixpkgs)"
+            nixpkgs-override: "--override-input nixpkgs $(./ci/ref-from-lock.sh ./test#nixpkgs-latest-release)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -89,7 +89,7 @@ jobs:
       # "opt-out" of our lockfile .gitignore
       run: |
         rm ./examples/.gitignore
-        nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} ".#nixpkgs"
+        nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} "./test#nixpkgs"
 
   examples-darwin:
     strategy:

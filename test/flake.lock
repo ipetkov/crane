@@ -93,16 +93,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1724490791,
-        "narHash": "sha256-Uw7NvIky7bzk3zBQgxUySyaKGrnmPtn8ZdCzDWbfByg=",
+        "lastModified": 1724300212,
+        "narHash": "sha256-x3jl6OWTs+L9C7EtscuWZmGZWI0iSBDafvg3X7JMa1A=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "c7eb282d733ee64a11b9153b0e471413bd56776b",
+        "rev": "4de4818c1ffa76d57787af936e8a23648bda6be4",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "release-24.05",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -139,6 +139,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-latest-release": {
+      "locked": {
+        "lastModified": 1724490791,
+        "narHash": "sha256-Uw7NvIky7bzk3zBQgxUySyaKGrnmPtn8ZdCzDWbfByg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c7eb282d733ee64a11b9153b0e471413bd56776b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "release-24.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "advisory-db": "advisory-db",
@@ -149,6 +165,7 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-darwin": "nixpkgs-darwin",
         "nixpkgs-for-wasm-bindgen": "nixpkgs-for-wasm-bindgen",
+        "nixpkgs-latest-release": "nixpkgs-latest-release",
         "rust-overlay": "rust-overlay"
       }
     },

@@ -5,7 +5,8 @@ set -eu
 scriptDir=$(dirname "$0")
 cd "${scriptDir}"
 
-craneOverride="--override-input crane ../.."
+nixpkgsOverride="$(../../ci/ref-from-lock.sh ../../test#nixpkgs)"
+craneOverride="--override-input crane ../.. --override-input nixpkgs ${nixpkgsOverride}"
 flakeSrc=$(nix flake metadata ${craneOverride} --json 2>/dev/null | jq -r '.path')
 
 # Get information about the default derivation

@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `downloadCargoPackageFromGit` will now set `fetchLFS = true` when fetching git
   repos with defined output hashes
 
+### Removed
+* The deprecated top-level (flake) attribute `lib` no longer exists. Please use
+  `mkLib` with an instance of `pkgs` instead.
+
 ## [0.18.1] - 2024-08-22
 
 ### Fixed
