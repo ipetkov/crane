@@ -89,7 +89,7 @@ jobs:
       # "opt-out" of our lockfile .gitignore
       run: |
         rm ./examples/.gitignore
-      nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} "./test#nixpkgs"
+        nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} "./test#nixpkgs"
 
   examples-darwin:
     strategy:
