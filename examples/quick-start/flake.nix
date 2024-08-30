@@ -92,7 +92,7 @@
           };
 
           my-crate-toml-fmt = craneLib.taploFmt {
-            inherit src;
+            src = pkgs.lib.sources.sourceFilesBySuffices src [ ".toml" ];
             taploExtraArgs = "--config ./taplo.toml";
           };
 

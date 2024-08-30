@@ -539,6 +539,40 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `rustFmtExtraArgs`
 
+### `craneLib.taploFmt`
+
+`taploFmt :: set -> drv`
+
+Create a derivation which will run a `taplo fmt` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+`mkCargoDerivation`, and can be used to influence its behavior.
+* `buildPhaseCargoCommand` will be set to run `taplo fmt` (in check mode) in the
+  workspace.
+* `cargoArtifacts` is disabled/cleared
+* `cargoVendorDir` is disabled/cleared
+* `pnameSuffix` will be set to `"-tomlfmt"`
+
+#### Optional attributes
+* `taploExtraArgs`: additional flags to be passed in the taplo invocation
+  - Default value: `""`
+
+`taplo` command line options for setting `taploExtraArgs` and configuration options
+for `taplo.toml` config files can be found in the _Command Line_ and _Configuration_
+sections of the [taplo documentation](https://taplo.tamasfe.dev/).
+
+#### Native build dependencies
+The `taplo` package is automatically appended as a native build input to any
+other `nativeBuildInputs` specified by the caller.
+
+#### Remove attributes
+The following attributes will be removed before being lowered to
+`mkCargoDerivation`. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+`.overrideAttrs`.
+* `taploExtraArgs`
+
 ### `craneLib.cargoLlvmCov`
 
 `cargoLlvmCov :: set -> drv`
