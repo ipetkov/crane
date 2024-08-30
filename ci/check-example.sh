@@ -21,7 +21,11 @@ echo "--- checking ${example}"
 # nix-eval-jobs doesn't (yet) support --reference-lock-file: https://github.com/nix-community/nix-eval-jobs/pull/210
 # Nix older than 2.15 also doesn't support it
 cp {"${gitRoot}/test","${example}"}/flake.lock
-trap "rm -f ${example}/flake.lock" EXIT
+# NB: need to forcibly add the file here because we normally .gitignore it
+# otherwise nix-eval-jobs appears to ignore the previous entry and make up its own
+# (which ignores the versions we have pinned, so not what we want)
+git add -N --force "${example}/flake.lock"
+trap "git rm -f ${example}/flake.lock" EXIT
 
 "${gitRoot}/ci/fast-flake-check.sh" "${commonArgs[@]}"
 

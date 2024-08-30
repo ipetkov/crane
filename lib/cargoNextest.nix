@@ -27,7 +27,7 @@ let
     "withLlvmCov"
   ];
 
-  mkUpdatedArgs = { cmd ? lib.optionalString (!withLlvmCov) "run", extraSuffix ? "", moreArgs ? "", withLlvmCov }: args // {
+  mkUpdatedArgs = { cmd ? "run", extraSuffix ? "", moreArgs ? "", withLlvmCov }: args // {
     inherit cargoArtifacts;
     pnameSuffix = "-nextest${extraSuffix}";
     doCheck = args.doCheck or true;
@@ -44,10 +44,11 @@ let
     '';
 
     checkPhaseCargoCommand = ''
-      cargo ${cargoExtraArgs} \
-        ${lib.optionalString withLlvmCov "llvm-cov ${cargoLlvmCovExtraArgs}"} \
-        nextest ${cmd} ''${CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE} \
-          ${cargoNextestExtraArgs} ${moreArgs}
+      ${if withLlvmCov
+        then "cargo llvm-cov nextest ${cargoLlvmCovExtraArgs}"
+        else "cargo nextest ${cmd}"} \
+      ''${CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE} \
+      ${cargoExtraArgs} ${cargoNextestExtraArgs} ${moreArgs}
     '';
 
     nativeBuildInputs = (args.nativeBuildInputs or [ ])

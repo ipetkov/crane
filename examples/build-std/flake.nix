@@ -56,7 +56,7 @@
               # to the repo and import it with `./path/to/rustlib/Cargo.lock` which
               # will avoid IFD entirely but will require manually keeping the file
               # up to date!
-              "${rustToolchain.passthru.availableComponents.rust-src}/lib/rustlib/src/rust/Cargo.lock"
+              "${rustToolchain.passthru.availableComponents.rust-src}/lib/rustlib/src/rust/library/Cargo.lock"
             ];
           };
 

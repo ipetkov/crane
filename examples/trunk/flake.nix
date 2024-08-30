@@ -84,9 +84,9 @@
           inherit cargoArtifacts;
           # The version of wasm-bindgen-cli here must match the one from Cargo.lock.
           wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
-            version = "0.2.90";
-            hash = "sha256-X8+DVX7dmKh7BgXqP7Fp0smhup5OO8eWEhn26ODYbkQ=";
-            cargoHash = "sha256-ckJxAR20GuVGstzXzIj1M0WBFj5eJjrO2/DRMUK5dwM=";
+            version = "0.2.93";
+            hash = "sha256-DDdu5mM3gneraM85pAepBXWn3TMofarVR4NbjMdz3r0=";
+            cargoHash = "sha256-birrg+XABBHHKJxfTKAMSlmTVYLmnmqMDfRnmG6g/YQ=";
           };
         });
 

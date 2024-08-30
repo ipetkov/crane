@@ -1,5 +1,4 @@
 { internalCrateNameFromCargoToml
-, lib
 }:
 
 src:
