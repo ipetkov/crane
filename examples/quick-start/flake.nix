@@ -93,7 +93,8 @@
 
           my-crate-toml-fmt = craneLib.taploFmt {
             src = pkgs.lib.sources.sourceFilesBySuffices src [ ".toml" ];
-            taploExtraArgs = "--config ./taplo.toml";
+            # taplo arguments can be further customized below as needed
+            # taploExtraArgs = "--config ./taplo.toml";
           };
 
           # Audit dependencies
