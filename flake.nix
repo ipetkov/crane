@@ -161,6 +161,7 @@
             mdbook
             nix-eval-jobs
             nixpkgs-fmt
+            taplo
           ];
         };
       });
