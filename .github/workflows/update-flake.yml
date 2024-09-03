@@ -1,4 +1,4 @@
-name: Update flake dependencies
+name: Update internal flake dependencies
 
 on:
   workflow_dispatch: # for allowing manual triggers of the workflow
@@ -27,7 +27,8 @@ jobs:
       with:
         token: ${{ secrets.PAT_FLAKE_UPDATE }}
         branch: "automation/flake-update"
-        pr-title: "Update flake.lock"
+        pr-title: "Update internal flake.lock"
+        path-to-flake-dir: ./test
         pr-labels: |
           automated
           dependencies
