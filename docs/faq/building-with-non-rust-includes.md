@@ -8,3 +8,7 @@ use `include_str!`, `include_bytes!`, or any other attempt at accessing such a
 file you may need to tweak the source filter to ensure the files are included.
 
 Check out the [source filtering](../source-filtering.md) section for more info!
+
+Note that if the error is originating from a git-dependency, it [may be a
+problem with the upstream source
+itself](./git-dep-cannot-find-relative-path.md).
