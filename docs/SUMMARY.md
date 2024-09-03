@@ -45,6 +45,7 @@
   * [Dealing with sandbox-unfriendly build scripts](./faq/sandbox-unfriendly-build-scripts.md)
   * [Cargo.toml is not at the source root](./faq/workspace-not-at-source-root.md)
   * [Found invalid metadata files for crate error](./faq/invalid-metadata-files-for-crate.md)
+  * [A git dependency fails to find a file by a relative path](./faq/git-dep-cannot-find-relative-path.md)
 ---
 * [Advanced Techniques](./advanced/advanced.md)
   * [Overriding function behavior](./advanced/overriding-function-behavior.md)
