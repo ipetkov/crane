@@ -19,7 +19,7 @@ command: each crate (whether it comes from a registry or a git repo) is extracte
 in a separate directory. Thus the problem of trying to locate files outside of
 the crate's (not the _workspace's_) root directory can also be demonstrated by
 calling `cargo vendor` and then following its instructions (normally copying
-some configuration to `.config/cargo.toml`) and then building as normal.
+some configuration to `.cargo/config.toml`) and then building as normal.
 
 If building like this after running `cargo vendor` **succeeds but fails when
 building with Crane** please open an issue with a reproduction! However, if the
