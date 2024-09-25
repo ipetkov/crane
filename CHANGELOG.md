@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `downloadCargoPackageFromGit` will now set `fetchLFS = true` when fetching git
   repos with defined output hashes
 
+### Fixed
+* `cargoDoc` correctly honors `docInstallRoot` when specified
+* `cargoDoc` falls back to installing from `./target/doc` even if
+  `$CARGO_BUILD_TARGET` is set but `./target/$CARGO_BUILD_TARGET/doc` does not
+  exist
+
 ### Removed
 * The deprecated top-level (flake) attribute `lib` no longer exists. Please use
   `mkLib` with an instance of `pkgs` instead.
@@ -68,7 +74,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.17.2] - 2024-05-26
 
 ### Fixed
-* `removeReferencesToVendoredSources` has been optimzed to search for source
+* `removeReferencesToVendoredSources` has been optimized to search for source
   references only once. For derivations which install many files, this phase can
   run up to 99% faster than before.
 * `cleanCargoToml` now cleans underscored versions of the same attributes (e.g.
