@@ -495,6 +495,8 @@ Except where noted below, all derivation attributes are delegated to
   `$CARGO_TARGET_DIR` (or default to `./target` if not set) and
   `$CARGO_BUILD_TARGET` (if set).
   - Default value: `"${CARGO_TARGET_DIR:-target}/${CARGO_BUILD_TARGET:-}/doc"`
+    if such a directory exists, otherwise falls back to
+    `"${CARGO_TARGET_DIR:-target}/doc"`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -503,7 +505,6 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoDocExtraArgs`
 * `cargoExtraArgs`
-* `docInstallRoot`
 
 ### `craneLib.cargoFmt`
 
