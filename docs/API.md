@@ -917,6 +917,25 @@ craneLib.devShell {
 }
 ```
 
+Note that it is possible to override the underlying `mkShell` (for example to
+customize the build environment further) like so:
+
+```nix
+let
+  moldDevShell = craneLib.devShell.override {
+    # For example, use the mold linker
+    mkShell = pkgs.mkShell.override {
+      stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv;
+    };
+  };
+in
+moldDevShell {
+  packages = [
+    # etc...
+  ];
+}
+```
+
 ### `craneLib.downloadCargoPackage`
 
 `downloadCargoPackage :: set -> drv`
