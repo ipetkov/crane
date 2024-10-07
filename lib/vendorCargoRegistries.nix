@@ -23,7 +23,6 @@ let
     concatMapStrings
     concatStrings
     escapeShellArg
-    filterAttrs
     flatten
     foldl
     groupBy
@@ -31,7 +30,8 @@ let
     mapAttrs'
     mapAttrsToList
     nameValuePair
-    removePrefix;
+    removePrefix
+    warnIf;
 
   inherit (lib.lists) unique;
 
@@ -71,8 +71,22 @@ let
 
   # Registries referenced in Cargo.lock that are missing from cargo config
   existingRegistries = foldl (acc: r: acc // { ${removeProtocol r.value.index} = true; }) { "https://github.com/rust-lang/crates.io-index" = true; } allCargoRegistryPairsWithIndex;
-  allPackageRegistries = foldl (acc: p: if p ? source then acc // { ${removeProtocol p.source} = [ p.source ]; } else acc) { } lockPackages;
-  missingPackageRegistries = filterAttrs (name: _: !(existingRegistries ? ${name})) allPackageRegistries;
+  missingPackageRegistries = filter (r: !(existingRegistries ? ${r}))
+    (map (p: removeProtocol p.source) (filter (p: p ? source && (! hasPrefix "git+" p.source)) lockPackages));
+
+  missingPackageRegistriesMsg = ''
+    unable to find registry name/url configurations for the registries below:
+    ${concatStringsSep "\n" missingPackageRegistries}
+
+    any attempt to build with this set of vendored dependencies is likely to fail.
+    to resolve this consider one of the following:
+
+    - add `.cargo/config.toml` at the root of the `src` attribute which configures a
+      registry. Make sure this file is staged via `git add` if using flakes.
+      https://doc.rust-lang.org/cargo/reference/registries.html#using-an-alternate-registry
+    - otherwise set `cargoConfigs` when calling `vendorCargoDeps` and friends
+      which contains the appropriate registry definitions
+  '';
 
   # Append the default crates.io registry, but allow it to be overridden
   registries = {
@@ -80,7 +94,7 @@ let
   } // (
     if args ? registries
     then mapAttrs (_: val: [ val ]) args.registries
-    else configuredRegistries // missingPackageRegistries
+    else warnIf (builtins.length missingPackageRegistries > 0) missingPackageRegistriesMsg configuredRegistries
   );
 
   sources = mapAttrs'
