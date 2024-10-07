@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* Vendoring dependencies avoids creating malformed TOML configurations in
+  situations where registry name/url definitions cannot be found. When this
+  happens a warning will be printed out during evaluation to highlight the
+  issue.
+
 ## [0.19.0] - 2024-09-25
 
 ### Added
