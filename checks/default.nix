@@ -518,9 +518,9 @@ in
   };
 
   runCargoDocTests = myLib.cargoDocTest {
-    src = ./simple;
+    src = ./simple-only-tests;
     cargoArtifacts = myLib.buildDepsOnly {
-      src = ./simple;
+      src = ./simple-only-tests;
     };
   };
 
