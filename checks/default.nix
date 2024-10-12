@@ -517,6 +517,13 @@ in
     };
   };
 
+  runCargoDocTests = myLib.cargoDocTest {
+    src = ./simple;
+    cargoArtifacts = myLib.buildDepsOnly {
+      src = ./simple;
+    };
+  };
+
   simple-nonflake = (import ../default.nix {
     inherit pkgs;
   }).buildPackage {
