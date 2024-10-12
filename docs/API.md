@@ -507,6 +507,27 @@ environment variables during the build, you can bring them back via
 * `cargoDocExtraArgs`
 * `cargoExtraArgs`
 
+### `craneLib.cargoDocTest`
+
+`cargoDocTest :: set -> drv`
+
+Create a derivation which will run a `cargo test --doc` invocation in a cargo
+workspace.
+
+Except where noted below, all derivation attributes are delegated to
+* `buildPhaseCargoCommand` will be set to run `cargo test --profile release` in
+  the workspace.
+  - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
+    selected; setting it to `""` will omit specifying a profile altogether.
+* `pnameSuffix` will be set to `"-doctest"`
+
+#### Optional attributes
+* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
+  - Default value: `"--locked"`
+* `cargoTestExtraArgs`: additional flags to be passed in the cargo
+  invocation
+  - Default value: `""`
+
 ### `craneLib.cargoFmt`
 
 `cargoFmt :: set -> drv`
@@ -761,27 +782,6 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 * `cargoExtraArgs`
 * `cargoTestExtraArgs`
-
-### `craneLib.cargoDocTest`
-
-`cargoDocTest :: set -> drv`
-
-Create a derivation which will run a `cargo test --doc` invocation in a cargo
-workspace.
-
-Except where noted below, all derivation attributes are delegated to
-* `buildPhaseCargoCommand` will be set to run `cargo test --profile release` in
-  the workspace.
-  - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
-    selected; setting it to `""` will omit specifying a profile altogether.
-* `pnameSuffix` will be set to `"-doctest"`
-
-#### Optional attributes
-* `cargoExtraArgs`: additional flags to be passed in the cargo invocation
-  - Default value: `"--locked"`
-* `cargoTestExtraArgs`: additional flags to be passed in the cargo
-  invocation
-  - Default value: `""`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
