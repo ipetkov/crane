@@ -92,6 +92,8 @@ to influence its behavior.
 * `src`: set to the result of `mkDummySrc` after applying the arguments set.
   This ensures that we do not need to rebuild the cargo artifacts derivation
   whenever the application source changes.
+* `CRANE_BUILD_DEPS_ONLY` is exported as an environment variable, in case this
+  is handy for scripts or hooks which may want to customize how they run
 
 #### Optional attributes
 * `buildPhaseCargoCommand`: A command to run during the derivation's build

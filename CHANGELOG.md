@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `cargoDocTest` is now available as an alternative to `cargoTest` which runs
   only doc tests.
 
+### Changed
+
+* `buildDepsOnly` now sets `CRANE_BUILD_DEPS_ONLY` as an environment variable
+  when it runs. Build hooks can use this as a shortcut to determine whether
+  running inside of a `buildDepsOnly` derivation in case they need to tailor
+  their behavior accordingly.
+
 ### Fixed
 * Vendoring dependencies avoids creating malformed TOML configurations in
   situations where registry name/url definitions cannot be found. When this

@@ -51,6 +51,14 @@ mkCargoDerivation (cleanedArgs // {
   cargoArtifacts = null;
   cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
+  env = (args.env or { }) // {
+    # Export a marker variable in case any scripts or hooks want to customize
+    # how they run depending on if they are running here or with the "real"
+    # project sources.
+    # NB: *just* in case someone tries to set this to something specific, honor it
+    CRANE_BUILD_DEPS_ONLY = args.env.CRANE_BUILD_DEPS_ONLY or 1;
+  };
+
   # First we run `cargo check` to cache cargo's internal artifacts, fingerprints, etc. for all deps.
   # Then we run `cargo build` to actually compile the deps and cache the results
   buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
