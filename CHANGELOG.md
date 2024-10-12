@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.19.1] - 2024-10-12
+
 ### Added
 
 * `cargoDocTest` is now available as an alternative to `cargoTest` which runs
@@ -760,6 +762,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.19.1]: https://github.com/ipetkov/crane/compare/v0.19.0...v1.19.1
 [0.19.0]: https://github.com/ipetkov/crane/compare/v0.18.1...v1.19.0
 [0.18.1]: https://github.com/ipetkov/crane/compare/v0.18.0...v1.18.1
 [0.18.0]: https://github.com/ipetkov/crane/compare/v0.17.3...v1.18.0
