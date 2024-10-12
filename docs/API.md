@@ -512,7 +512,7 @@ environment variables during the build, you can bring them back via
 `cargoDocTest :: set -> drv`
 
 Create a derivation which will run a `cargo test --doc` invocation in a cargo
-workspace.
+workspace. To run all or any tests for a workspace, consider `cargoTest`.
 
 Except where noted below, all derivation attributes are delegated to
 * `buildPhaseCargoCommand` will be set to run `cargo test --profile release` in
