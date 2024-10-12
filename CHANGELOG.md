@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+
+* `cargoDocTest` is now available as an alternative to `cargoTest` which runs
+  only doc tests.
+
 ### Fixed
 * Vendoring dependencies avoids creating malformed TOML configurations in
   situations where registry name/url definitions cannot be found. When this

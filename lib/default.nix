@@ -59,6 +59,7 @@ let
       cargoClippy = callPackage ./cargoClippy.nix { };
       cargoDeny = callPackage ./cargoDeny.nix { };
       cargoDoc = callPackage ./cargoDoc.nix { };
+      cargoDocTest = callPackage ./cargoDocTest.nix { };
       cargoFmt = callPackage ./cargoFmt.nix { };
       cargoHelperFunctionsHook = callPackage ./setupHooks/cargoHelperFunctions.nix { };
       cargoLlvmCov = callPackage ./cargoLlvmCov.nix { };
