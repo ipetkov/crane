@@ -50,7 +50,7 @@ jobs:
     - name: flake checks
       run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh . ${{ matrix.nixpkgs-override }}
     - name: extra tests
-      run: nix develop --accept-flake-config ${{ matrix.nixpkgs-override }} --command ./extra-tests/test.sh
+      run: nix develop --accept-flake-config --command ./extra-tests/test.sh
 
   examples-linux:
     strategy:
