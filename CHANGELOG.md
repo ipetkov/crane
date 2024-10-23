@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+
+* `cleanCargoSource` will now automatically filter out empty directories to
+  avoid causing unnecessary rebuilds.
+
 ## [0.19.1] - 2024-10-12
 
 ### Added
