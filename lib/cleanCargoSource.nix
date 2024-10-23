@@ -3,12 +3,17 @@
 , lib
 }:
 
-src: lib.cleanSourceWith {
-  # Apply the default source cleaning from nixpkgs
-  src = lib.cleanSource src;
+src: lib.fileset.toSource {
+  root = src;
 
-  # Then add our own filter on top
-  filter = filterCargoSources;
+  # Filter out empty directories by converting back and forth from a file set
+  fileset = lib.fileset.fromSource (lib.cleanSourceWith {
+    # Apply the default source cleaning from nixpkgs
+    src = lib.cleanSource src;
 
-  name = internalCrateNameForCleanSource src;
+    # Then add our own filter on top
+    filter = filterCargoSources;
+
+    name = internalCrateNameForCleanSource src;
+  });
 }
