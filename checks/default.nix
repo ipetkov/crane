@@ -23,6 +23,8 @@ in
     nativeBuildInputs = [ pkgs.pkg-config ];
   };
 
+  cleanCargoSourceWorksWithNonPaths = myLib.cleanCargoSource pkgs.ripgrep.src;
+
   cleanCargoTomlTests = callPackage ./cleanCargoTomlTests { };
 
   clippy = callPackage ./clippy { };
