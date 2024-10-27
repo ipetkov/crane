@@ -71,8 +71,8 @@
           fileset = lib.fileset.unions [
             ./Cargo.toml
             ./Cargo.lock
-            ./my-common
-            ./my-workspace-hack
+            ./crates/my-common
+            ./crates/my-workspace-hack
             crate
           ];
         };
@@ -81,15 +81,19 @@
         # This allows consumers to only depend on (and build) only what they need.
         # Though it is possible to build the entire workspace as a single derivation,
         # so this is left up to you on how to organize things
+        #
+        # Note that the cargo workspace must define `workspace.members` using wildcards,
+        # otherwise, omitting a crate (like we do below) will result in errors since
+        # cargo won't be able to find the sources for all members.
         my-cli = craneLib.buildPackage (individualCrateArgs // {
           pname = "my-cli";
           cargoExtraArgs = "-p my-cli";
-          src = fileSetForCrate ./my-cli;
+          src = fileSetForCrate ./crates/my-cli;
         });
         my-server = craneLib.buildPackage (individualCrateArgs // {
           pname = "my-server";
           cargoExtraArgs = "-p my-server";
-          src = fileSetForCrate ./my-server;
+          src = fileSetForCrate ./crates/my-server;
         });
       in
       {
