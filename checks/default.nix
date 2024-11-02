@@ -346,6 +346,42 @@ in
 
   features = callPackage ./features { };
 
+  fileset = myLib.buildPackage {
+    src = lib.fileset.toSource {
+      root = ./simple;
+      fileset = myLib.cargoFileset ./simple;
+    };
+  };
+
+  filesetBuildScript = myLib.buildPackage {
+    src = lib.fileset.toSource {
+      root = ./with-build-script;
+      fileset = myLib.cargoFileset ./with-build-script;
+    };
+  };
+
+  filesetWorkspace = myLib.buildPackage {
+    src = lib.fileset.toSource {
+      root = ./workspace;
+      fileset = myLib.cargoFileset ./workspace;
+    };
+  };
+
+  filesetWorkspaceInheritance = myLib.buildPackage {
+    src = lib.fileset.toSource {
+      root = ./workspace-inheritance;
+      fileset = myLib.cargoFileset ./workspace-inheritance;
+    };
+  };
+
+  filesetWorkspaceRoot = myLib.buildPackage {
+    src = lib.fileset.toSource {
+      root = ./workspace-root;
+      fileset = myLib.cargoFileset ./workspace-root;
+    };
+    pname = "workspace-root";
+  };
+
   gitOverlappingRepo = myLib.buildPackage {
     src = ./git-overlapping;
   };
