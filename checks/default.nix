@@ -349,35 +349,35 @@ in
   fileset = myLib.buildPackage {
     src = lib.fileset.toSource {
       root = ./simple;
-      fileset = myLib.cargoFileset ./simple;
+      fileset = myLib.fileset.cargoFileset ./simple;
     };
   };
 
   filesetBuildScript = myLib.buildPackage {
     src = lib.fileset.toSource {
       root = ./with-build-script;
-      fileset = myLib.cargoFileset ./with-build-script;
+      fileset = myLib.fileset.cargoFileset ./with-build-script;
     };
   };
 
   filesetWorkspace = myLib.buildPackage {
     src = lib.fileset.toSource {
       root = ./workspace;
-      fileset = myLib.cargoFileset ./workspace;
+      fileset = myLib.fileset.cargoFileset ./workspace;
     };
   };
 
   filesetWorkspaceInheritance = myLib.buildPackage {
     src = lib.fileset.toSource {
       root = ./workspace-inheritance;
-      fileset = myLib.cargoFileset ./workspace-inheritance;
+      fileset = myLib.fileset.cargoFileset ./workspace-inheritance;
     };
   };
 
   filesetWorkspaceRoot = myLib.buildPackage {
     src = lib.fileset.toSource {
       root = ./workspace-root;
-      fileset = myLib.cargoFileset ./workspace-root;
+      fileset = myLib.fileset.cargoFileset ./workspace-root;
     };
     pname = "workspace-root";
   };

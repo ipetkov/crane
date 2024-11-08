@@ -60,7 +60,6 @@ let
       cargoDeny = callPackage ./cargoDeny.nix { };
       cargoDoc = callPackage ./cargoDoc.nix { };
       cargoDocTest = callPackage ./cargoDocTest.nix { };
-      cargoFileset = callPackage ./cargoFileset.nix { };
       cargoFmt = callPackage ./cargoFmt.nix { };
       cargoHelperFunctionsHook = callPackage ./setupHooks/cargoHelperFunctions.nix { };
       cargoLlvmCov = callPackage ./cargoLlvmCov.nix { };
@@ -88,6 +87,11 @@ let
       downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
       downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
       filterCargoSources = callPackage ./filterCargoSources.nix { };
+
+      fileset = {
+        cargoFileset = callPackage ./cargoFileset.nix { };
+      };
+
       findCargoFiles = callPackage ./findCargoFiles.nix { };
       inheritCargoArtifactsHook = callPackage ./setupHooks/inheritCargoArtifacts.nix { };
       installCargoArtifactsHook = callPackage ./setupHooks/installCargoArtifacts.nix { };
