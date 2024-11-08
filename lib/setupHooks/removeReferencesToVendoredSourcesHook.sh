@@ -9,7 +9,7 @@ removeReferencesToVendoredSources() {
     echo stripping references to cargoVendorDir from:
     find "${installLocation}" -type f |
       sort |
-      tee -a /dev/fd/3 |
+      tee -a >(cat >&3) |
       xargs --no-run-if-empty sed -i'' -f <(
         echo -n 's!@storeDir@/\(eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
