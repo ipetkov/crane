@@ -71,9 +71,9 @@
           fileset = lib.fileset.unions [
             ./Cargo.toml
             ./Cargo.lock
-            ./crates/my-common
-            ./crates/my-workspace-hack
-            crate
+            (craneLib.fileset.commonCargoSources ./crates/my-common)
+            (craneLib.fileset.commonCargoSources ./crates/my-workspace-hack)
+            (craneLib.fileset.commonCargoSources crate)
           ];
         };
 
