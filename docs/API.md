@@ -1076,7 +1076,6 @@ cleanSourceWith {
   name = "source"; # Be reproducible, regardless of the directory name
 }
 ```
-
 Note that it is possible to compose source filters, especially if
 `filterCargoSources` omits files which are relevant to the build. For example:
 
@@ -1093,6 +1092,47 @@ cleanSourceWith {
   name = "source"; # Be reproducible, regardless of the directory name
 }
 ```
+
+### `craneLib.fileset.cargoTomlAndLock`
+
+`cargoTomlAndLock :: path -> fileset`
+
+A [fileset] helper which will only include any `Cargo.toml` and `Cargo.lock`
+files from the specified path.
+
+### `craneLib.fileset.commonCargoSources`
+
+`commonCargoSources :: path -> fileset`
+
+A [fileset] helper which will only include any files commonly used by cargo
+projects from the specified path. Essentially a union of:
+
+* `craneLib.fileset.cargoTomlAndLock`
+* `craneLib.fileset.rust`
+* `craneLib.fileset.toml`
+
+### `craneLib.fileset.configToml`
+
+`configToml :: path -> fileset`
+
+A [fileset] helper which will only include `config.toml` files from the
+specified path.
+
+Note that cargo usually only pays attention to `config.toml` files if they are
+present inside of a directory named `.cargo`. This fileset will contain any
+`config.toml` file, even if its parent directory is _not_ named `.cargo`.
+
+### `craneLib.fileset.rust`
+
+`rust :: path -> fileset`
+
+A [fileset] helper which will only include `*.rs` files from the specified path.
+
+### `craneLib.fileset.toml`
+
+`toml :: path -> fileset`
+
+A [fileset] helper which will only include `*.toml` files from the specified path.
 
 ### `craneLib.mkCargoDerivation`
 
@@ -1866,3 +1906,5 @@ Defines `replaceCargoLock()` which handles replacing or inserting a specified
 **Automatic behavior:** if `cargoLock` is set and
 `doNotReplaceCargoLock` is not set, then `replaceCargoLock "$cargoLock"` will be
 run as a pre patch hook.
+
+[fileset]: https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset
