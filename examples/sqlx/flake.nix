@@ -18,13 +18,15 @@
 
         craneLib = crane.mkLib pkgs;
 
-        sqlFilter = path: _type: null != builtins.match ".*sql$" path;
-        sqlOrCargo = path: type: (sqlFilter path type) || (craneLib.filterCargoSources path type);
-
-        src = lib.cleanSourceWith {
-          src = ./.; # The original, unfiltered source
-          filter = sqlOrCargo;
-          name = "source"; # Be reproducible, regardless of the directory name
+        unfilteredRoot = ./.; # The original, unfiltered source
+        src = lib.fileset.toSource {
+          root = unfilteredRoot;
+          fileset = lib.fileset.unions [
+            # Default files from crane (Rust and cargo files)
+            (craneLib.fileset.commonCargoSources unfilteredRoot)
+            # Include all the .sql migrations as well
+            ./migrations
+          ];
         };
 
         # Common arguments can be set here to avoid repeating them later
