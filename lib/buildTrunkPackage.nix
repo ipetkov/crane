@@ -84,7 +84,7 @@ mkCargoDerivation (args // {
   buildPhaseCargoCommand = args.buildPhaseCommand or ''
     local profileArgs=""
     if [[ "$CARGO_PROFILE" == "release" ]]; then
-      profileArgs="--release"
+      profileArgs="--release${lib.optionalString (lib.versionAtLeast trunk.version "0.21") "=true"}"
     fi
 
     trunk ${trunkExtraArgs} build $profileArgs ${trunkExtraBuildArgs} "${trunkIndexPath}"
