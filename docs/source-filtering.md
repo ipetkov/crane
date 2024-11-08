@@ -43,3 +43,30 @@ craneLib.buildPackage {
   };
 }
 ```
+
+## Fileset filtering
+
+A more composable alternative to source filtering is using [filesets]:
+
+```nix
+let
+  unfilteredRoot = ./.; # The original, unfiltered source
+  src = lib.fileset.toSource {
+    root = unfilteredRoot;
+    fileset = lib.fileset.unions [
+      # Default files from crane (Rust and cargo files)
+      (craneLib.fileset.commonCargoSources unfilteredRoot)
+      # Also keep any markdown files
+      (lib.fileset.fileFilter (file: file.hasExt == "md") unfilteredRoot)
+      # Example of a folder for images, icons, etc
+      (lib.fileset.maybeMissing ./assets)
+    ];
+  };
+in
+craneLib.buildPackage {
+  # other attributes omitted
+  inherit src;
+}
+```
+
+[filesets]: https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset
