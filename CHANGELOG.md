@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* Added a number of fileset helpers to more easily compose source filtering:
+   * `fileset.cargoTomlAndLock`: for `Cargo.toml` and `Cargo.lock` files
+   * `fileset.commonCargoSources`: for files commonly used by cargo projects
+   * `fileset.configToml`: for `config.toml` files
+   * `fileset.rust`: for `*.rs` files
+   * `fileset.toml`: for `*.toml` files
+
 ### Fixed
 * `buildTrunkPackage` will pass in `--release=true` (instead of just
   `--release`) for trunk versions 0.21 or higher to avoid argument ambiguities
