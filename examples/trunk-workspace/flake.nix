@@ -40,18 +40,20 @@
         });
 
         # When filtering sources, we want to allow assets other than .rs files
-        src = lib.cleanSourceWith {
-          src = ./.; # The original, unfiltered source
-          filter = path: type:
-            (lib.hasSuffix "\.html" path) ||
-            (lib.hasSuffix "\.scss" path) ||
+        unfilteredRoot = ./.; # The original, unfiltered source
+        src = lib.fileset.toSource {
+          root = unfilteredRoot;
+          fileset = lib.fileset.unions [
+            # Default files from crane (Rust and cargo files)
+            (craneLib.fileset.commonCargoSources unfilteredRoot)
+            (lib.fileset.fileFilter
+              (file: lib.any file.hasExt [ "html" "scss" ])
+              unfilteredRoot
+            )
             # Example of a folder for images, icons, etc
-            (lib.hasInfix "/assets/" path) ||
-            # Default filter from crane (allow .rs files)
-            (craneLib.filterCargoSources path type)
-          ;
+            (lib.fileset.maybeMissing ./assets)
+          ];
         };
-
 
         # Arguments to be used by both the client and the server
         # When building a workspace with crane, it's a good idea

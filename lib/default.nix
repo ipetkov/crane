@@ -87,6 +87,15 @@ let
       downloadCargoPackage = callPackage ./downloadCargoPackage.nix { };
       downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
       filterCargoSources = callPackage ./filterCargoSources.nix { };
+
+      fileset = {
+        cargoTomlAndLock = callPackage ./fileset/cargoTomlAndLock.nix { };
+        commonCargoSources = callPackage ./fileset/commonCargoSources.nix { };
+        configToml = callPackage ./fileset/configToml.nix { };
+        rust = callPackage ./fileset/rust.nix { };
+        toml = callPackage ./fileset/toml.nix { };
+      };
+
       findCargoFiles = callPackage ./findCargoFiles.nix { };
       inheritCargoArtifactsHook = callPackage ./setupHooks/inheritCargoArtifacts.nix { };
       installCargoArtifactsHook = callPackage ./setupHooks/installCargoArtifacts.nix { };
