@@ -1,6 +1,11 @@
 { lib }:
+let
+  inherit (lib.fileset)
+    fileFilter
+    maybeMissing
+    unions;
+in
 # A fileset that includes the minimum files needed to build a Rust project with Cargo
-with lib.fileset;
 path: unions [
   # Cargo files
   (fileFilter (file: file.name == "Cargo.toml" || file.name == "Cargo.lock") path)
