@@ -90,6 +90,10 @@ let
 
       fileset = {
         cargoFileset = callPackage ./cargoFileset.nix { };
+        cargoTomlAndLock = callPackage ./fileset/cargoTomlAndLock.nix { };
+        configToml = callPackage ./fileset/configToml.nix { };
+        rust = callPackage ./fileset/rust.nix { };
+        toml = callPackage ./fileset/toml.nix { };
       };
 
       findCargoFiles = callPackage ./findCargoFiles.nix { };
