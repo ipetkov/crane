@@ -2,14 +2,13 @@
 let
   inherit (lib.fileset)
     fileFilter
-    maybeMissing
     unions;
 in
 # A fileset that includes the minimum files needed to build a Rust project with Cargo
 path: unions [
-  # Cargo files
-  (fileFilter (file: file.name == "Cargo.toml" || file.name == "Cargo.lock") path)
-  (maybeMissing (path + ./.cargo/config.toml))
-  # any Rust source files
-  (fileFilter (file: file.hasExt "rs") path)
+  # Cargo files (Cargo.toml handled below)
+  (fileFilter (file: file.name == "Cargo.lock") path)
+  # Keep all toml files as they are commonly used to configure other
+  # cargo-based tools
+  (fileFilter (file: lib.any file.hasExt [ "rs" "toml" ]) path)
 ]
