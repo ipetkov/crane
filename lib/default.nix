@@ -89,8 +89,8 @@ let
       filterCargoSources = callPackage ./filterCargoSources.nix { };
 
       fileset = {
-        cargoFileset = callPackage ./cargoFileset.nix { };
         cargoTomlAndLock = callPackage ./fileset/cargoTomlAndLock.nix { };
+        commonCargoSources = callPackage ./fileset/commonCargoSources.nix { };
         configToml = callPackage ./fileset/configToml.nix { };
         rust = callPackage ./fileset/rust.nix { };
         toml = callPackage ./fileset/toml.nix { };
