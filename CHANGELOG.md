@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.19.2] - 2024-11-18
+
 ### Added
 * Added a number of fileset helpers to more easily compose source filtering:
    * `fileset.cargoTomlAndLock`: for `Cargo.toml` and `Cargo.lock` files
@@ -779,6 +781,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.19.2]: https://github.com/ipetkov/crane/compare/v0.19.1...v1.19.2
 [0.19.1]: https://github.com/ipetkov/crane/compare/v0.19.0...v1.19.1
 [0.19.0]: https://github.com/ipetkov/crane/compare/v0.18.1...v1.19.0
 [0.18.1]: https://github.com/ipetkov/crane/compare/v0.18.0...v1.18.1
