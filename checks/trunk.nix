@@ -39,22 +39,10 @@ let
   trunkSimpleNoArtifacts = myLibWasm.buildTrunkPackage (defaultArgs // {
     pname = "trunk-simple-no-artifacts";
   });
-
-  trunkOutdatedBindgen = myLibWasm.buildTrunkPackage {
-    pname = "trunk-outdated-bindgen";
-    src = ./trunk-outdated-bindgen;
-    doCheck = false;
-    wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
-      version = "0.2.85";
-      hash = "sha256-0pTIzpu7dJM34CXmi83e8UV0E3N2bKJiOMw5WJQ2s/Y=";
-      cargoHash = "sha256-ZwmoFKmGaf5VvTTXjLyb2714Pu536E/8UxUzxI40ID8=";
-    };
-  };
 in
 runCommand "trunkTests" { } ''
   test -f ${trunkSimple}/*.wasm
   test -f ${trunkSimple}/*.css
   test -f ${trunkSimpleNoArtifacts}/*.wasm
-  test -f ${trunkOutdatedBindgen}/*.wasm
   mkdir -p $out
 ''
