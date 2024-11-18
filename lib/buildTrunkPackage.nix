@@ -81,7 +81,7 @@ mkCargoDerivation (args // {
     echo "TRUNK_TOOLS_WASM_OPT=''${TRUNK_TOOLS_WASM_OPT}"
   '';
 
-  buildPhaseCargoCommand = args.buildPhaseCommand or ''
+  buildPhaseCargoCommand = args.buildPhaseCargoCommand or ''
     local profileArgs=""
     if [[ "$CARGO_PROFILE" == "release" ]]; then
       profileArgs="--release${lib.optionalString (lib.versionAtLeast trunk.version "0.21") "=true"}"
