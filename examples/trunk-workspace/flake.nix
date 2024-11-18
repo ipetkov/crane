@@ -99,7 +99,15 @@
         myClient = craneLib.buildTrunkPackage (wasmArgs // {
           pname = "trunk-workspace-client";
           cargoArtifacts = cargoArtifactsWasm;
-          trunkIndexPath = "client/index.html";
+          # Trunk expects the current directory to be the crate to compile
+          preBuild = ''
+            cd ./client
+          '';
+          # After building, move the `dist` artifacts and restore the working directory
+          postBuild = ''
+            mv ./dist ..
+            cd ..
+          '';
           # The version of wasm-bindgen-cli here must match the one from Cargo.lock.
           wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
             version = "0.2.93";
