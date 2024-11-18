@@ -20,9 +20,9 @@ let
 
     buildTrunkPackage {
       wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
-        version = "0.2.84";
-        hash = "sha256-0rK+Yx4/Jy44Fw5VwJ3tG243ZsyOIBBehYU54XP/JGk=";
-        cargoHash = "sha256-vcpxcRlW1OKoD64owFF6mkxSqmNrvY+y3Ckn5UwEQ50=";
+        version = "${default-wasm-bindgen-cli.version}";
+        hash = "${default-wasm-bindgen-cli.hash or "lib.fakeHash"}";
+        cargoHash = "${default-wasm-bindgen-cli.cargoHash or "lib.fakeHash"}";
       };
       ...
     }
