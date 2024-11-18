@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * `buildTrunkPackage` will pass in `--release=true` (instead of just
   `--release`) for trunk versions 0.21 or higher to avoid argument ambiguities
+* `buildTrunkPackage` will now correctly honor `buildPhaseCargoCommand` if
+  specified (previously the value of `buildPhaseCommand` was incorrectly being
+  used)
 * `removeReferencesToVendoredSourcesHook` avoids referencing `/dev/fd`
   directly since it may not be present on certain platforms
 
