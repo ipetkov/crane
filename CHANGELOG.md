@@ -784,17 +784,17 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
-[0.19.3]: https://github.com/ipetkov/crane/compare/v0.19.2...v1.19.3
-[0.19.2]: https://github.com/ipetkov/crane/compare/v0.19.1...v1.19.2
-[0.19.1]: https://github.com/ipetkov/crane/compare/v0.19.0...v1.19.1
-[0.19.0]: https://github.com/ipetkov/crane/compare/v0.18.1...v1.19.0
-[0.18.1]: https://github.com/ipetkov/crane/compare/v0.18.0...v1.18.1
-[0.18.0]: https://github.com/ipetkov/crane/compare/v0.17.3...v1.18.0
-[0.17.3]: https://github.com/ipetkov/crane/compare/v0.17.2...v1.17.3
-[0.17.2]: https://github.com/ipetkov/crane/compare/v0.17.1...v1.17.2
-[0.17.1]: https://github.com/ipetkov/crane/compare/v0.17.0...v1.17.1
-[0.17.0]: https://github.com/ipetkov/crane/compare/v0.16.6...v1.17.0
-[0.16.6]: https://github.com/ipetkov/crane/compare/v0.16.5...v1.16.6
+[0.19.3]: https://github.com/ipetkov/crane/compare/v0.19.2...v0.19.3
+[0.19.2]: https://github.com/ipetkov/crane/compare/v0.19.1...v0.19.2
+[0.19.1]: https://github.com/ipetkov/crane/compare/v0.19.0...v0.19.1
+[0.19.0]: https://github.com/ipetkov/crane/compare/v0.18.1...v0.19.0
+[0.18.1]: https://github.com/ipetkov/crane/compare/v0.18.0...v0.18.1
+[0.18.0]: https://github.com/ipetkov/crane/compare/v0.17.3...v0.18.0
+[0.17.3]: https://github.com/ipetkov/crane/compare/v0.17.2...v0.17.3
+[0.17.2]: https://github.com/ipetkov/crane/compare/v0.17.1...v0.17.2
+[0.17.1]: https://github.com/ipetkov/crane/compare/v0.17.0...v0.17.1
+[0.17.0]: https://github.com/ipetkov/crane/compare/v0.16.6...v0.17.0
+[0.16.6]: https://github.com/ipetkov/crane/compare/v0.16.5...v0.16.6
 [0.16.5]: https://github.com/ipetkov/crane/compare/v0.16.4...v0.16.5
 [0.16.4]: https://github.com/ipetkov/crane/compare/v0.16.3...v0.16.4
 [0.16.3]: https://github.com/ipetkov/crane/compare/v0.16.2...v0.16.3
