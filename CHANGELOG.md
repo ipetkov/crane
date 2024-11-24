@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* `removeReferencesToVendoredSources` now deduplicates any found references to
+  avoid pathological memory usage before removing them.
+
 ## [0.19.3] - 2024-11-18
 A republish of 0.19.2 which was incorrectly tagged.
 

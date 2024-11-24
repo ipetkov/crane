@@ -23,6 +23,7 @@ removeReferencesToVendoredSources() {
             xargs -I DIR find -H DIR -type l -exec readlink '{}' \;
         ) |
           grep --only-matching '@storeDir@/[a-z0-9]\{32\}' |
+          sort -u |
           while read crateSource; do
             echo -n '\|'"${crateSource#@storeDir@/}";
           done || true # Handle if vendoredDir doesn't point to the store
