@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * `removeReferencesToVendoredSources` now deduplicates any found references to
   avoid pathological memory usage before removing them.
+* `buildDepsOnly` will calculate fallback `pname`/`version`/`cargoVendorDir`
+  attributes using `dummySrc` if it was specified (rather than attempting to use
+  `src`)
 
 ## [0.19.3] - 2024-11-18
 A republish of 0.19.2 which was incorrectly tagged.

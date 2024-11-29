@@ -260,6 +260,20 @@ in
       touch $out
     '';
 
+  customDummy = myLib.buildDepsOnly {
+    dummySrc = pkgs.stdenv.mkDerivation {
+      pname = "custom-dummy";
+      version = "0.0.0";
+      src = myLib.cleanCargoSource ./simple;
+      postInstall = ''
+        mkdir -p $out
+        cp -r . $out
+        echo 'fn main() {}' > $out/src/main.rs
+        find $out
+      '';
+    };
+  };
+
   # https://github.com/ipetkov/crane/pull/234
   nonJsonCargoBuildLog =
     let
