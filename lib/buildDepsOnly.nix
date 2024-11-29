@@ -13,7 +13,6 @@
 , ...
 }@args:
 let
-  crateName = crateNameFromCargoToml args;
   cleanedArgs = builtins.removeAttrs args [
     "cargoBuildCommand"
     "cargoCheckCommand"
@@ -39,6 +38,18 @@ let
         args.dummySrc
     else
       mkDummySrc args;
+
+  # If dummySrc is define *in args*, use it as the `src` for fallback calculations,
+  # but DO NOT use the computed `dummySrc` above as that's likely to trigger IFD
+  # (in case anyone is trying to avoid that). Dummifiying the sources should preserve
+  # the name/version of the Cargo.toml, as well as the entirety of Cargo.lock,
+  # so it shouldn't matter anyway
+  argsMaybeDummySrcOverride =
+    if args ? dummySrc
+    then args // { src = args.dummySrc; }
+    else args;
+
+  crateName = crateNameFromCargoToml argsMaybeDummySrcOverride;
 in
 mkCargoDerivation (cleanedArgs // {
   inherit doCheck;
@@ -49,7 +60,7 @@ mkCargoDerivation (cleanedArgs // {
   version = args.version or crateName.version;
 
   cargoArtifacts = null;
-  cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
+  cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps argsMaybeDummySrcOverride);
 
   env = (args.env or { }) // {
     # Export a marker variable in case any scripts or hooks want to customize
