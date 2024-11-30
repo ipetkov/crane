@@ -1,8 +1,7 @@
 {
   inputs = {
-    # NB: nixpkgs-unstable testing will come from the root flake
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-latest-release.url = "github:NixOS/nixpkgs/release-24.05";
+    nixpkgs-latest-release.url = "github:NixOS/nixpkgs/release-24.11";
 
     advisory-db = {
       url = "github:rustsec/advisory-db";

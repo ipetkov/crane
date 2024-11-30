@@ -31,11 +31,9 @@ jobs:
       matrix:
         include:
             # Latest and greatest release of Nix
-            #- install_url: https://nixos.org/nix/install
-            # The latest nix releases keep being broken, stick to what's in NixOS
-          - install_url: https://releases.nixos.org/nix/nix-2.18.2/install
-            # The 24.05 branch ships with Nix 2.18.2
-          - install_url: https://releases.nixos.org/nix/nix-2.18.2/install
+          - install_url: https://nixos.org/nix/install
+            # The 24.11 branch ships with Nix 2.24.10
+          - install_url: https://releases.nixos.org/nix/nix-2.24.10/install
             nixpkgs-override: "--override-input nixpkgs $(./ci/ref-from-lock.sh ./test#nixpkgs-latest-release)"
     runs-on: ubuntu-latest
     steps:
@@ -75,10 +73,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v30
-      with:
-        #install_url: https://nixos.org/nix/install
-        # The latest nix releases keep being broken, stick to what's in NixOS
-        install_url: https://releases.nixos.org/nix/nix-2.18.2/install
     - uses: cachix/cachix-action@v15
       with:
         name: crane
@@ -99,10 +93,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v30
-      with:
-        #install_url: https://nixos.org/nix/install
-        # The latest nix releases keep being broken, stick to what's in NixOS
-        install_url: https://releases.nixos.org/nix/nix-2.18.2/install
     - uses: cachix/cachix-action@v15
       with:
         name: crane
