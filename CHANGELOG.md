@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `mkDummySrc` will deduplicate discovered and declared binary targets when
   dummifying sources
 
+### Meta
+* Dropped support for publishing releases to https://flakestry.dev/
+
 ## [0.19.4] - 2024-11-30
 
 ### Fixed
