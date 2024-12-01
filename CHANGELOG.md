@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.24.10
 * **Breaking**: dropped compatibility for nixpkgs-23.11
+* `mkDummySrc` has been reworked to match cargo's `autobin` detection logic,
+  meaning that only real binary targets defined by the project will be dummified
+  if they exist (no more injecting `src/bin/crane-dummy-*`). This does mean that
+  adding a new bin target definition will invalidate caches and require
+  rebuilding all dependencies once more. (If this is a frequent enough
+  occurrence for your project to cause headaches, please open an issue!)
 
 ## [0.19.4] - 2024-11-30
 

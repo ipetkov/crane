@@ -19,7 +19,6 @@ let
   inherit (builtins)
     dirOf
     concatStringsSep
-    hasAttr
     match
     storeDir;
 
@@ -162,6 +161,9 @@ let
         cargoTomlDest = builtins.unsafeDiscardStringContext (removePrefix cargoTomlsBase (toString p));
         parentDir = "$out/${dirOf cargoTomlDest}";
 
+        # NB: do not use string interpolation or toString or else the path checks won't work
+        shallowJoinPath = rest: p + "/../${rest}";
+
         # Override the cleaned Cargo.toml with a build script which points to our dummy
         # source. We need a build script present to cache build-dependencies, which can be
         # achieved by dropping a build.rs file in the source directory. Except that is the most
@@ -187,10 +189,44 @@ let
           else
             cleanedCargoToml;
 
-        safeStubLib =
-          if hasAttr "lib" trimmedCargoToml
-          then cpDummy parentDir (trimmedCargoToml.lib.path or "src/lib.rs")
-          else "";
+
+        hasDir = root: sub: root.${sub} or "" == "directory";
+        hasFile = root: sub: root.${sub} or "" == "regular";
+
+        crateRoot = builtins.readDir (shallowJoinPath ".");
+        srcDir = lib.optionalAttrs (hasDir crateRoot "src") (builtins.readDir (shallowJoinPath "src"));
+        hasLibrs = (trimmedCargoToml.package.autolib or true) && hasFile srcDir "lib.rs";
+        autobins = trimmedCargoToml.package.autobins or true;
+        hasMainrs = autobins && hasFile srcDir "main.rs";
+        srcBinDir = lib.optionalAttrs (autobins && hasDir srcDir "bin") (builtins.readDir (shallowJoinPath "src/bin"));
+
+        # NB: sort the result here to be as deterministic as possible and avoid rebuilds if
+        # directory listings happen to change their order
+        discoveredBins = concatStringsSep " " (lib.sortOn (x: x) (lib.filter (p: p != null)
+          (lib.flip map (lib.attrsToList srcBinDir) ({ name, value }:
+            let
+              short = "src/bin/${name}";
+              long = "${short}/main.rs";
+            in
+            lib.escapeShellArg (
+              if value == "regular"
+              then short
+              else if value == "directory" && builtins.pathExists (shallowJoinPath long)
+              then long
+              else null
+            )
+          ))
+        ));
+
+        stubBins = ''(
+          cd ${parentDir}
+          echo ${discoveredBins} | xargs --no-run-if-empty -n1 dirname | sort -u | xargs --no-run-if-empty mkdir -p
+          echo ${discoveredBins} | xargs --no-run-if-empty -n1 cp -f ${dummyrs}
+        )'';
+
+        safeStubLib = lib.optionalString
+          (trimmedCargoToml ? lib || hasLibrs)
+          (cpDummy parentDir (trimmedCargoToml.lib.path or "src/lib.rs"));
 
         safeStubList = attr: defaultPath:
           let
@@ -205,8 +241,8 @@ let
         cp ${writeTOML "Cargo.toml" trimmedCargoToml} $out/${cargoTomlDest}
       '' + optionalString (trimmedCargoToml ? package) ''
         # To build regular and dev dependencies (cargo build + cargo test)
-        ${cpDummy parentDir "src/lib.rs"}
-        ${cpDummy parentDir "src/bin/crane-dummy-${trimmedCargoToml.package.name or "no-name"}/main.rs"}
+        ${lib.optionalString hasMainrs (cpDummy parentDir "src/main.rs")}
+        ${stubBins}
 
         # Stub all other targets in case they have particular feature combinations
         ${safeStubLib}

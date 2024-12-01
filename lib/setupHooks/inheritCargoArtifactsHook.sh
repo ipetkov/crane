@@ -74,9 +74,21 @@ inheritCargoArtifacts() {
         --executability \
         --exclude 'deps/*.rlib' \
         --exclude 'deps/*.rmeta' \
-        --exclude '.cargo-lock' \
         "${preparedArtifacts}/" \
         "${cargoTargetDir}/"
+
+      # NB: cargo also doesn't like it if `.cargo-lock` files remain with a
+      # timestamp in the distant past so we need to delete them here
+      # NB: `.cargo-lock` files tend to appear in "top level" profile artifact directories.
+      # Those directories usually contain a `*.d` file for each binary target, but these are NOT
+      # content addressed, so we will want to copy them directly so they become writable in place
+      find "${cargoTargetDir}" -name '.cargo-lock' -delete \
+       -execdir bash -c '
+         for f in *.d; do
+           cp --preserve=timestamps --no-preserve=ownership --remove-destination "$(readlink "${f}")" "${f}"
+           chmod u+w "${f}"
+         done
+       ' \;
 
       local linkCandidates=$(mktemp linkCandidatesXXXX.txt)
       find "${preparedArtifacts}" \
