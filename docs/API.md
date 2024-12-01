@@ -1268,6 +1268,9 @@ build caches. More specifically:
   - Any changes to the `[package]` definition such as name and version
   - Any changes to the name or path of any target (such as benches, bins,
     examples, libs, or tests)
+  - Any removal or new definition of a `[[bin]]` target, or, any removal or new
+    definition of a file under `src/bin` when `autolib` is enabled in the
+    `Cargo.toml` file (this setting is `true` by default)
 
 #### Required attributes
 * `src`: a source directory which should be turned into a "dummy" form
