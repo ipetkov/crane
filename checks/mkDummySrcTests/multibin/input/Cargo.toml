@@ -1,0 +1,16 @@
+[package]
+name = "multibin"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["some"]
+some = []
+
+[[bin]]
+name = "alt"
+path = "src/bin/hello.rs"
+
+[[bin]]
+name = "bye"
+required-features = ["some"]

@@ -102,6 +102,8 @@ in
 linkFarmFromDrvs "cleanCargoToml" (lib.flatten [
   (cmpDummySrc "single" ./single)
   (cmpDummySrc "single-alt" ./single-alt)
+  # https://github.com/ipetkov/crane/issues/753
+  (cmpDummySrc "multibin" ./multibin)
   (cmpDummySrc "workspace" ./workspace)
   (cmpDummySrc "workspace-bindeps" ./workspace-bindeps)
   (cmpDummySrc "workspace-inheritance" ./workspace-inheritance)
