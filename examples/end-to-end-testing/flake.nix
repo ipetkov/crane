@@ -74,15 +74,12 @@
 
           touch $out
         '';
-
-        pkgsSupportsPackage = pkg:
-          (lib.elem system pkg.meta.platforms) && !(lib.elem system pkg.meta.badPlatforms);
       in
       {
         checks = {
           inherit workspace;
           # Firefox is broken in some platforms (namely "aarch64-apple-darwin"), skip those
-        } // (lib.optionalAttrs (pkgsSupportsPackage pkgs.firefox) {
+        } // (lib.optionalAttrs (lib.meta.availableOn system pkgs.firefox) {
           inherit runE2ETests;
         });
 
