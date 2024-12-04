@@ -200,13 +200,17 @@ let
         hasMainrs = autobins && hasFile srcDir "main.rs";
         srcBinDir = lib.optionalAttrs (autobins && hasDir srcDir "bin") (builtins.readDir (shallowJoinPath "src/bin"));
 
+        candidatePathsForBin = name: rec {
+          short = "src/bin/${name}";
+          long = "${short}/main.rs";
+        };
+
         # NB: sort the result here to be as deterministic as possible and avoid rebuilds if
         # directory listings happen to change their order
-        discoveredBins = concatStringsSep " " (lib.sortOn (x: x) (lib.filter (p: p != null)
+        discoveredBins = lib.sortOn (x: x) (lib.filter (p: p != null)
           (lib.flip map (lib.attrsToList srcBinDir) ({ name, value }:
             let
-              short = "src/bin/${name}";
-              long = "${short}/main.rs";
+              inherit (candidatePathsForBin name) short long;
             in
             lib.escapeShellArg (
               if value == "regular"
@@ -216,12 +220,28 @@ let
               else null
             )
           ))
+        );
+
+        declaredBins = lib.filter (p: p != null) (lib.flip map (trimmedCargoToml.bin or [ ]) (t:
+          if t ? path
+          then (if lib.elem t.path discoveredBins then null else t.path)
+          else
+            let
+              candidates = candidatePathsForBin t.name;
+              inherit (candidates) long;
+              short = "${candidates.short}.rs";
+            in
+            if lib.any (i: i == short || i == long) discoveredBins
+            then null
+            else short
         ));
+
+        allBins = concatStringsSep " " (discoveredBins ++ declaredBins);
 
         stubBins = ''(
           cd ${parentDir}
-          echo ${discoveredBins} | xargs --no-run-if-empty -n1 dirname | sort -u | xargs --no-run-if-empty mkdir -p
-          echo ${discoveredBins} | xargs --no-run-if-empty -n1 cp -f ${dummyrs}
+          echo ${allBins} | xargs --no-run-if-empty -n1 dirname | sort -u | xargs --no-run-if-empty mkdir -p
+          echo ${allBins} | xargs --no-run-if-empty -n1 cp -f ${dummyrs}
         )'';
 
         safeStubLib = lib.optionalString
@@ -247,7 +267,6 @@ let
         # Stub all other targets in case they have particular feature combinations
         ${safeStubLib}
         ${safeStubList "bench" "benches"}
-        ${safeStubList "bin" "src/bin"}
         ${safeStubList "example" "examples"}
         ${safeStubList "test" "tests"}
       ''
