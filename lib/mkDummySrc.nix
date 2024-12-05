@@ -199,6 +199,7 @@ let
         autobins = trimmedCargoToml.package.autobins or true;
         hasMainrs = autobins && hasFile srcDir "main.rs";
         srcBinDir = lib.optionalAttrs (autobins && hasDir srcDir "bin") (builtins.readDir (shallowJoinPath "src/bin"));
+        srcMainrs = "src/main.rs";
 
         candidatePathsForBin = name: rec {
           short = "src/bin/${name}";
@@ -231,9 +232,12 @@ let
               inherit (candidates) long;
               short = "${candidates.short}.rs";
             in
-            if lib.any (i: i == short || i == long) discoveredBins
-            then null
-            else short
+            if t.name == trimmedCargoToml.package.name
+            then (if hasMainrs then null else srcMainrs)
+            else
+              if lib.any (i: i == short || i == long) discoveredBins
+              then null
+              else short
         ));
 
         allBins = concatStringsSep " " (discoveredBins ++ declaredBins);
@@ -261,7 +265,7 @@ let
         cp ${writeTOML "Cargo.toml" trimmedCargoToml} $out/${cargoTomlDest}
       '' + optionalString (trimmedCargoToml ? package) ''
         # To build regular and dev dependencies (cargo build + cargo test)
-        ${lib.optionalString hasMainrs (cpDummy parentDir "src/main.rs")}
+        ${lib.optionalString hasMainrs (cpDummy parentDir srcMainrs)}
         ${stubBins}
 
         # Stub all other targets in case they have particular feature combinations
