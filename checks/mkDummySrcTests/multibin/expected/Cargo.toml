@@ -5,6 +5,9 @@ path = "src/bin/hello.rs"
 [[bin]]
 name = "bye"
 
+[[bin]]
+name = "multibin"
+
 [features]
 default = ["some"]
 some = []

@@ -1,5 +1,5 @@
 [package]
-name = "multibin"
+name = "multibin" # Loadbearing name matching bin
 version = "0.1.0"
 edition = "2021"
 
@@ -14,3 +14,6 @@ path = "src/bin/hello.rs"
 [[bin]]
 name = "bye"
 required-features = ["some"]
+
+[[bin]]
+name = "multibin" # Name of the package
