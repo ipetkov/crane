@@ -139,8 +139,12 @@ let
       let
         p = head ps;
         extractAttr = attr:
-          if p ? ${attr} then ''
-            ${attr} = "${p.${attr}}"
+          if p ? ${attr} then let
+            patchedAttr = if attr == "branch"
+            then builtins.replaceStrings ["%2F"] ["/"] "${p.${attr}}"
+            else "${p.${attr}}";
+          in ''
+            ${attr} = "${patchedAttr}"
           '' else "";
         sourceValues = concatMapStrings extractAttr ([ "git" ] ++ knownGitParams);
       in
