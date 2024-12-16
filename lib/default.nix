@@ -45,6 +45,7 @@ let
       internalCrateNameForCleanSource = callPackage ./internalCrateNameForCleanSource.nix {
         inherit internalCrateNameFromCargoToml;
       };
+      internalPercentDecode = callPackage ./internalPercentDecode.nix { };
     in
     {
       appendCrateRegistries = input: self.overrideScope (_final: prev: {
@@ -134,7 +135,9 @@ let
       vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };
       vendorMultipleCargoDeps = callPackage ./vendorMultipleCargoDeps.nix { };
       vendorCargoRegistries = callPackage ./vendorCargoRegistries.nix { };
-      vendorGitDeps = callPackage ./vendorGitDeps.nix { };
+      vendorGitDeps = callPackage ./vendorGitDeps.nix {
+        inherit internalPercentDecode;
+      };
       writeTOML = callPackage ./writeTOML.nix { };
     };
 

@@ -1,4 +1,5 @@
 { downloadCargoPackageFromGit
+, internalPercentDecode
 , lib
 , pkgsBuildBuild
 }:
@@ -77,9 +78,13 @@ let
     };
 
   # Local crates will show up in the lock file with no checksum/source
-  lockedPackagesFromGit = filter
+  # NB: cargo started url encoding source urls starting with version 4
+  # but we need to undo that as package fetching and cargo configs expect
+  # the unencoded URLs.
+  lockedPackagesFromGit = map (lib.mapAttrs (_: internalPercentDecode)) (filter
     (p: hasPrefix "git" (p.source or ""))
-    lockPackages;
+    lockPackages
+  );
   lockedGitGroups = groupBy (p: p.id) (map
     (p: (parseGitUrl p) // { package = p; })
     lockedPackagesFromGit
