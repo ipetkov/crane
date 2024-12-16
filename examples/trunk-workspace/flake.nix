@@ -110,9 +110,9 @@
           '';
           # The version of wasm-bindgen-cli here must match the one from Cargo.lock.
           wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
-            version = "0.2.93";
-            hash = "sha256-DDdu5mM3gneraM85pAepBXWn3TMofarVR4NbjMdz3r0=";
-            cargoHash = "sha256-birrg+XABBHHKJxfTKAMSlmTVYLmnmqMDfRnmG6g/YQ=";
+            version = "0.2.99";
+            hash = "sha256-1AN2E9t/lZhbXdVznhTcniy+7ZzlaEp/gwLEAucs6EA=";
+            cargoHash = "sha256-DbwAh8RJtW38LJp+J9Ht8fAROK9OabaJ85D9C/Vkve4=";
             # When updating to a new version comment out the above two lines and
             # uncomment the bottom two lines. Then try to do a build, which will fail
             # but will print out the correct value for `hash`. Replace the value and then
