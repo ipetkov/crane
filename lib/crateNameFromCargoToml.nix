@@ -25,7 +25,12 @@ let
     else throwMsg
   );
 
-  toml = builtins.fromTOML cargoTomlContents;
+  # NB: if `src` is derived via `mkDummySrc` the Cargo.toml will contain store paths
+  # (e.g. build script stubs), which the fromTOML does not like since the context isn't
+  # threaded through (error is `the string ... is not allowed to refer to a store path`).
+  # We can work around this by discarding the context before parsing the TOML since we don't
+  # actually care about any dependency derivations, we just want to parse the name and version
+  toml = builtins.fromTOML (builtins.unsafeDiscardStringContext cargoTomlContents);
 
   debugPath =
     if args ? cargoTomlContents
