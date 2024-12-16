@@ -7,6 +7,11 @@ edition = "2021"
 version = "*"
 git = "https://github.com/BurntSushi/byteorder.git"
 
+[dependencies.crane-test-repo]
+package = "print"
+git = "https://github.com/ipetkov/crane-test-repo"
+branch = "something/or/other"
+
 [dependencies.libc]
 version = "*"
 git = "https://github.com/rust-lang/libc.git"
