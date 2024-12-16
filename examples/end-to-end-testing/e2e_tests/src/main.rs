@@ -34,7 +34,7 @@ pub async fn run(driver: &WebDriver) -> Result<()> {
     assert_eq!(returned_message, "Hello John Doe");
 
     driver.goto("localhost:8000").await?;
-    let users = driver.query(By::Css("li")).all().await?;
+    let users = driver.query(By::Css("li")).all_from_selector().await?;
     assert_eq!(users.len(), 1, "There should be only a single user");
     assert_eq!(users[0].text().await?, "John Doe", "The test user's name should be in the home page");
 
