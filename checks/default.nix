@@ -274,6 +274,15 @@ in
     };
   };
 
+  customDummyWithMkDummySrcNoPname = myLib.buildDepsOnly {
+    dummySrc = myLib.mkDummySrc {
+      src = myLib.cleanCargoSource ./simple;
+      postInstall = ''
+        touch $out/blah.txt
+      '';
+    };
+  };
+
   # https://github.com/ipetkov/crane/pull/234
   nonJsonCargoBuildLog =
     let
