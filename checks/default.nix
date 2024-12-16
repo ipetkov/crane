@@ -629,14 +629,6 @@ in
       fi
     '';
 
-  # Test building a real world example
-  ripgrep = myLib.buildPackage {
-    inherit (pkgs.ripgrep) pname src version;
-    buildInputs = lib.optionals isDarwin [
-      pkgs.libiconv
-    ];
-  };
-
   smoke = callPackage ./smoke.nix { };
   smokeSimple = self.smoke [ "simple" ] self.simple;
   smokeSimpleGit = self.smoke [ "simple-git" ] self.simpleGit;
