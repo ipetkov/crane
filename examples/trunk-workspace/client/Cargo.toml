@@ -3,9 +3,7 @@ name = "client"
 version.workspace = true
 edition.workspace = true
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-gloo = "0.8.0"
+gloo = "0.11.0"
 shared = { version = "0.1.0", path = "../shared" }
-yew = { version = "0.20", features = ["csr"] }
+yew = { version = "0.21", features = ["csr"] }
