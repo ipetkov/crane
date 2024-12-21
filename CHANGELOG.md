@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.24.10
 * **Breaking**: dropped compatibility for nixpkgs-23.11
+* **Breaking** (technically): `buildPackage`'s installation behavior has been
+  split into two steps: binaries are now installed into a temporary directory as
+  a post build hook (to avoid interference from the check phase clobbering
+  resultant binaries with development features enabled) followed by an actual
+  installation (from said directory) during the install phase. If you use a
+  custom build phase with `buildPackage` you may need to ensure the additional
+  post build hook defined in `installFromCargoBuildLogHook` runs (or follow the
+  error messages to resolve any build issues).
 * `mkDummySrc` has been reworked to match cargo's `autobin` detection logic,
   meaning that only real binary targets defined by the project will be dummified
   if they exist (no more injecting `src/bin/crane-dummy-*`). This does mean that
