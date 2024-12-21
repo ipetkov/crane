@@ -223,8 +223,8 @@ install hooks.
   - Default value: `false`
 * `installPhaseCommand`: the command(s) which are expected to install the
   derivation's outputs.
-  - Default value: will look for a cargo build log and install all binary
-    targets listed there
+  - Default value: will look for a temporary installation directory created by
+    `installFromCargoBuildLogHook` and then install all of its contents
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -1877,7 +1877,13 @@ takes two positional arguments:
    * This log can be captured, for example, via `cargo build --message-format
      json-render-diagnostics >cargo-build.json`
 
-**Automatic behavior:** none
+Defines `postBuildInstallFromCargoBuildLog()` which will use a build log produced by
+cargo to find and install any binaries and libraries which have been built into
+a temporary location defined by `$postBuildInstallFromCargoBuildLogOut`
+
+**Automatic behavior:** if `doNotPostBuildInstallCargoBinaries` is not set, then
+`$postBuildInstallFromCargoBuildLogOut` will be set to a temporary directory and
+`postBuildInstallFromCargoBuildLog` will be run as a post build hook.
 
 **Required nativeBuildInputs**: assumes `cargo` is available on the `$PATH`
 

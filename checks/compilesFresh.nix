@@ -36,6 +36,7 @@ let
     inherit installCargoArtifactsMode;
 
     doInstallCargoArtifacts = false;
+    doNotPostBuildInstallCargoBinaries = true;
 
     # NB: explicit call here so that the buildDepsOnly call
     # doesn't inherit our build commands

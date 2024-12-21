@@ -42,7 +42,7 @@ function installFromCargoBuildLog() (
     mkdir -p "${loc}"
 
     while IFS= read -r to_install; do
-      echo installing ${to_install}
+      echo installing ${to_install} in "${loc}"
       cp "${to_install}" "${loc}"
     done
 
@@ -54,3 +54,36 @@ function installFromCargoBuildLog() (
 
   echo searching for bins/libs complete
 )
+
+# NB: unfortunately it seems possible for a `cargo test` run to clobber the actual artifacts
+# we are planning to install (see https://github.com/ipetkov/crane/issues/765). To work around
+# this we'll capture any installables immediately after running and actually install them later
+function postBuildInstallFromCargoBuildLog() (
+  if [ -n "${cargoBuildLog:-}" -a -f "${cargoBuildLog}" ]; then
+    installFromCargoBuildLog "${postBuildInstallFromCargoBuildLogOut}" "${cargoBuildLog}"
+  else
+    cat <<-'EOF'
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+$cargoBuildLog is either undefined or does not point to a valid file location!
+By default the installFromCargoBuildLogHook will expect that cargo's output
+was captured and can be used to determine which binaries should be installed
+(instead of just guessing based on what is present in cargo's target directory)
+
+If you are defining your own custom build step, you have two options:
+1. Set `doNotPostBuildInstallCargoBinaries = true;` and ensure the installation
+   steps are handled as appropriate.
+2. ensure that cargo's build log is captured in a file and point $cargoBuildLog at it
+
+At a minimum, the latter option can be achieved with a build phase that runs:
+     cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)
+     cargo build --release --message-format json-render-diagnostics >"$cargoBuildLog"
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+EOF
+    false
+  fi
+)
+
+if [ -z "${doNotPostBuildInstallCargoBinaries:-}" ]; then
+  postBuildInstallFromCargoBuildLogOut=$(mktemp -d postBuildInstallFromCargoBuildLogOutTempXXX)
+  postBuildHooks+=(postBuildInstallFromCargoBuildLog)
+fi

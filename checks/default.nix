@@ -15,6 +15,20 @@ let
   aarch64Darwin = pkgs.hostPlatform.system == "aarch64-darwin";
 in
 {
+  behaviorChangesWithFeatures =
+    let
+      cmd = myLib.buildPackage {
+        pname = "behaviorChangesWithFeatures";
+        version = "0.0.1";
+        src = myLib.cleanCargoSource ./behaviorChangesWithFeatures;
+        doCheck = true; # Explicitly repro original report
+      };
+    in
+    pkgs.runCommand "behaviorChangesWithFeatures" { } ''
+      diff <(echo prod) <(${cmd}/bin/app)
+      touch $out
+    '';
+
   # https://github.com/ipetkov/crane/issues/411
   bzip2Sys = myLib.buildPackage {
     src = ./bzip2-sys;
