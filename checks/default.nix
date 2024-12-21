@@ -458,6 +458,10 @@ in
       '';
     };
 
+  multiBinSmoke = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./mkDummySrcTests/multibin/input;
+  };
+
   multiOutputDerivation = myLib.buildPackage {
     src = ./simple;
     outputs = [ "out" "doc" ];
