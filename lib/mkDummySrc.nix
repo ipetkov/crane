@@ -231,13 +231,18 @@ let
               candidates = candidatePathsForBin t.name;
               inherit (candidates) long;
               short = "${candidates.short}.rs";
+
+              # If we have a declared target that matches the package name then exactly one of the
+              # following needs to be true for a well-formed cargo project:
+              # * the target has an explictly declared path (handled above)
+              # * the project has a `src/main.rs` file (detected above and handled further below)
+              # * the project has a `src/bin/${name}.rs` file which will show up in discoveredBins
+              # Hence if the target's name matches the package name, we have nothing further to add
+              nothingToAdd = t.name == trimmedCargoToml.package.name
+                # Otherwise if the target was already discovered, nothing else for us to add
+                || lib.any (i: i == short || i == long) discoveredBins;
             in
-            if t.name == trimmedCargoToml.package.name
-            then (if hasMainrs then null else srcMainrs)
-            else
-              if lib.any (i: i == short || i == long) discoveredBins
-              then null
-              else short
+            if nothingToAdd then null else short
         ));
 
         allBins = concatStringsSep " " (discoveredBins ++ declaredBins);

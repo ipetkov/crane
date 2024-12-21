@@ -110,4 +110,10 @@ linkFarmFromDrvs "cleanCargoToml" (lib.flatten [
 
   customized
   customizedDummyrs
+
+  # https://github.com/ipetkov/crane/issues/768
+  (cmpDummySrc "declaredBinWithMainrs" ./declaredBinWithMainrs)
+  (cmpDummySrc "declaredBinWithSrcBin" ./declaredBinWithSrcBin)
+  (cmpDummySrc "omittedBinWithMainrs" ./omittedBinWithMainrs)
+  (cmpDummySrc "omittedBinWithSrcBin" ./omittedBinWithSrcBin)
 ])
