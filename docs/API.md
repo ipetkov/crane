@@ -690,6 +690,8 @@ Except where noted below, all derivation attributes are delegated to
   (e.g. specifying a profile)
   - Default value: `""`
   - Note that all flags from `cargo test` are supported.
+* `cargoNextestPartitionsExtraArgs`: additional flags to be passed in the nextest partition invocation
+  - Default value: `""`
 * `partitions`: The number of separate nextest partitions to run. Useful if the
   test suite takes a long time and can be parallelized across multiple build
   nodes.
@@ -714,6 +716,7 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `cargoLlvmCovExtraArgs`
 * `cargoNextestExtraArgs`
+* `cargoNextestPartitionsExtraArgs`
 * `partitions`
 * `partitionType`
 * `withLlvmCov`

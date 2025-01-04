@@ -11,6 +11,7 @@
 , cargoExtraArgs ? ""
 , cargoLlvmCovExtraArgs ? "--lcov --output-path $out/coverage"
 , cargoNextestExtraArgs ? ""
+, cargoNextestPartitionsExtraArgs ? ""
 , doInstallCargoArtifacts ? true
 , partitions ? 1
 , partitionType ? "count"
@@ -22,6 +23,7 @@ let
     "cargoExtraArgs"
     "cargoLlvmCovExtraArgs"
     "cargoNextestExtraArgs"
+    "cargoNextestPartitionsExtraArgs"
     "partitions"
     "partitionType"
     "withLlvmCov"
@@ -75,11 +77,11 @@ else # First build the tests in one derivation, then run each partition in anoth
       mkCargoDerivation ((mkUpdatedArgs {
         inherit withLlvmCov;
         extraSuffix = "-p${toString n}";
-        moreArgs = builtins.concatStringsSep " " [
+        moreArgs = builtins.concatStringsSep " " ([
           "${mkArchiveArgs archive}"
           "--workspace-remap ."
           "--partition ${partitionType}:${n}/${toString partitions}"
-        ];
+        ] ++ lib.optional (cargoNextestPartitionsExtraArgs != "") cargoNextestPartitionsExtraArgs);
       }) // {
         # Everything we need is already in the archive
         cargoArtifacts = null;
