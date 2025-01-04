@@ -61,7 +61,11 @@ in
 if partitions < 1 then
   throw "paritions must be at least 1 or greater"
 else if partitions == 1 then # Simple case do everything in one derivation
-  mkCargoDerivation (mkUpdatedArgs { inherit withLlvmCov; })
+  mkCargoDerivation
+    (mkUpdatedArgs {
+      inherit withLlvmCov;
+      moreArgs = cargoNextestPartitionsExtraArgs;
+    })
 else # First build the tests in one derivation, then run each partition in another
   let
     mkArchiveArgs = root: "--archive-format tar-zst --archive-file ${root}/archive.tar.zst";
