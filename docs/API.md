@@ -1922,3 +1922,7 @@ Defines `replaceCargoLock()` which handles replacing or inserting a specified
 run as a pre patch hook.
 
 [fileset]: https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset
+
+### `craneLib.craneLib`
+
+A self-reference to the crane lib instance.

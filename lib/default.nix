@@ -48,6 +48,8 @@ let
       internalPercentDecode = callPackage ./internalPercentDecode.nix { };
     in
     {
+      craneLib = self;
+
       appendCrateRegistries = input: self.overrideScope (_final: prev: {
         crateRegistries = prev.crateRegistries // (lib.foldl (a: b: a // b) { } input);
       });
