@@ -144,6 +144,7 @@
             inherit cargoArtifacts;
             partitions = 1;
             partitionType = "count";
+            cargoNextestPartitionsExtraArgs = "--no-tests=pass";
           });
 
           # Ensure that cargo-hakari is up to date

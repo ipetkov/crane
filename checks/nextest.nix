@@ -27,6 +27,7 @@ let
     partitions = 4;
     partitionType = "hash";
     cargoArtifacts = null;
+    cargoNextestPartitionsExtraArgs = "--no-tests=pass";
   };
 
   nextestProcMacro = withLlvmCov: cargoNextest {
@@ -34,6 +35,7 @@ let
     src = ./proc-macro;
     pname = "nextest-proc-macro${lib.optionalString withLlvmCov "-llvm-cov"}";
     cargoArtifacts = null;
+    cargoNextestExtraArgs = "--no-tests=pass";
   };
 in
 linkFarmFromDrvs "nextestTests" [
