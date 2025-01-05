@@ -10,6 +10,8 @@
 
     crane.url = "github:ipetkov/crane";
 
+    deadnix.url = "github:astro/deadnix";
+
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -29,5 +31,7 @@
 
   };
 
-  outputs = _: { };
+  outputs = inputs@{ ... }: {
+    packages.x86_64-linux.deadnix = inputs.deadnix.packages.x86_64-linux.deadnix;
+  };
 }
