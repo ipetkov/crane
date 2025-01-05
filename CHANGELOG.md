@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
 * `cargoNextest` now supports passing `cargoNextestPartitionsExtraArgs` to each
   `cargo nextest` partition run.
 * Add self-reference `craneLib` to crane lib instance.
