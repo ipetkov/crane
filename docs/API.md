@@ -1766,6 +1766,10 @@ directory of vendored crate sources. It takes two positional arguments:
 `configureCargoVendoredDeps "$cargoVendorDir" "$CARGO_HOME/config.toml"` will be
 run as a pre configure hook.
 
+### `craneLib.craneLib`
+
+A self-reference to the crane lib instance.
+
 ### `craneLib.inheritCargoArtifactsHook`
 
 Defines `inheritCargoArtifacts()` which will pre-populate cargo's artifact
@@ -1925,7 +1929,3 @@ Defines `replaceCargoLock()` which handles replacing or inserting a specified
 run as a pre patch hook.
 
 [fileset]: https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset
-
-### `craneLib.craneLib`
-
-A self-reference to the crane lib instance.
