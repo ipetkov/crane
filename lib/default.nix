@@ -73,6 +73,7 @@ let
       cleanCargoToml = callPackage ./cleanCargoToml.nix { };
       configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
       configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
+      craneLib = self;
       craneUtils = callPackage ../pkgs/crane-utils { };
 
       crateNameFromCargoToml = callPackage ./crateNameFromCargoToml.nix {

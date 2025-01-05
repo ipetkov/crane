@@ -1766,6 +1766,10 @@ directory of vendored crate sources. It takes two positional arguments:
 `configureCargoVendoredDeps "$cargoVendorDir" "$CARGO_HOME/config.toml"` will be
 run as a pre configure hook.
 
+### `craneLib.craneLib`
+
+A self-reference to the crane lib instance.
+
 ### `craneLib.inheritCargoArtifactsHook`
 
 Defines `inheritCargoArtifacts()` which will pre-populate cargo's artifact
