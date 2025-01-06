@@ -136,7 +136,15 @@
                 (import (inputFromLock "rust-overlay"))
               ];
             };
-          in
+            fenix = (import (inputFromLock "fenix"));
+            toolchain = fenix.packages.${system}.complete.withComponents [
+              "cargo"
+              "rust-src"
+              "rustc"
+              "rust-analyzer"
+            ];
+            myLibFenix = (mkLib pkgs).overrideToolchain toolchain;
+         in
           pkgsChecks.callPackages ./checks {
             pkgs = pkgsChecks;
             myLib = mkLib pkgsChecks;
@@ -144,6 +152,7 @@
               localSystem = system;
               crossSystem = "wasm32-wasi";
             });
+            myLibFenix = myLibFenix;
           };
       in
       {
