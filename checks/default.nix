@@ -648,6 +648,7 @@ in
       fi
     '';
 
+  # addresses https://github.com/ipetkov/crane/issues/773
   removeReferencesToRustToolchain = 
     let
       myLibFatToolchain = myLib.overrideToolchain (p: p.rust-bin.stable.latest.default.override {
@@ -684,6 +685,7 @@ in
       fi
     '';
 
+  # addresses https://github.com/ipetkov/crane/issues/773
   removeReferencesToRustToolchainFenix = 
     let
      crate = myLibFenix.buildPackage {
