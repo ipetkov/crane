@@ -4,6 +4,7 @@
 , lib
 , mkCargoDerivation
 , removeReferencesToVendoredSourcesHook
+, removeReferencesToRustToolchainHook
 , vendorCargoDeps
 }:
 
@@ -89,5 +90,6 @@ mkCargoDerivation (cleanedArgs // memoizedArgs // {
     # changing PKG_CONFIG_PATH and cause rebuilds of `*-sys` crates.
     installFromCargoBuildLogHook
     removeReferencesToVendoredSourcesHook
+    removeReferencesToRustToolchainHook
   ];
 })
