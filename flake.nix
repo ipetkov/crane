@@ -137,12 +137,12 @@
               ];
             };
             fenix = (import (inputFromLock "fenix"));
-            toolchain = fenix.packages.${system}.complete.withComponents [
+            toolchain = (fenix.packages.${system}.complete.withComponents [
               "cargo"
               "rust-src"
               "rustc"
               "rust-analyzer"
-            ];
+            ]);
             myLibFenix = (mkLib pkgs).overrideToolchain toolchain;
          in
           pkgsChecks.callPackages ./checks {
