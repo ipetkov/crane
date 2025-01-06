@@ -2,4 +2,4 @@
   lib,
   makeSetupHook,
 }:
-  makeSetupHook {} ./removeReferencesToRustToolchain.sh 
+  makeSetupHook { name = "removeReferencesToRustToolchain"; } ./removeReferencesToRustToolchain.sh 
