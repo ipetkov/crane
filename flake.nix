@@ -136,8 +136,8 @@
                 (import (inputFromLock "rust-overlay"))
               ];
             };
-            fenix = (import (inputFromLock "fenix"));
-            toolchain = (fenix.packages.${system}.complete.withComponents [
+            fenix = import (inputFromLock "fenix") { inherit system; };
+            toolchain = (fenix.latest.withComponents [
               "cargo"
               "rust-src"
               "rustc"
