@@ -104,7 +104,7 @@ mkCargoDerivation (args // {
     trunk
     wasm-bindgen-cli
     # Store references are certainly false positives
-    removeReferencesToVendoredSourcesHook
     removeReferencesToRustToolchainHook
+    removeReferencesToVendoredSourcesHook
   ];
 })
