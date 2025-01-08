@@ -1916,6 +1916,21 @@ Any patched binaries on `aarch64-darwin` will be [signed](https://developer.appl
 `removeReferencesToVendoredSources "$out" "$cargoVendorDir"` will be run as a
 post install hook.
 
+### `craneLib.removeReferencesToRustToolchainHook`
+
+Defines `removeReferencesToRustToolchain()` which handles removing all
+references to the Rust toolchain from the installed binaries, which ensures that
+nix does not consider the binaries as having a (runtime) dependency on the toolchain.
+These references usually originate from panic messages. It takes 1 positional
+argument:
+1. the installation directory for the output.
+  * If not specified, the value  of `$out` will be used.
+  * If `out` is not specified, an error will be raised.
+
+**Automatic behavior:** if `doNotRemoveReferencesToVendorDir` is not set, then
+`removeReferencesToRustToolchain() "$out"` will be run as a
+post install hook.
+
 ### `craneLib.replaceCargoLockHook`
 
 Defines `replaceCargoLock()` which handles replacing or inserting a specified
