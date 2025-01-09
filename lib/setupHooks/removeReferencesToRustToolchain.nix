@@ -6,9 +6,9 @@
 }:
 makeSetupHook
 {
-  name = "removeReferencesToRustToolchain";
+  name = "removeReferencesToRustToolchainHook";
   substitutions = {
     storeDir = builtins.storeDir;
   };
   propagatedBuildInputs = [ rustc ];
-} ./removeReferencesToRustToolchain.sh 
+} ./removeReferencesToRustToolchainHook.sh 
