@@ -1928,7 +1928,7 @@ argument:
   * If `out` is not specified, an error will be raised.
 
 **Automatic behavior:** if `doNotRemoveReferencesToVendorDir` is not set, then
-`removeReferencesToRustToolchain() "$out"` will be run as a
+`removeReferencesToRustToolchain "$out"` will be run as a
 post install hook.
 
 ### `craneLib.replaceCargoLockHook`
