@@ -143,7 +143,7 @@
               "rustc"
             ]);
             myLibFenix = (mkLib pkgs).overrideToolchain toolchain;
-         in
+          in
           pkgsChecks.callPackages ./checks {
             pkgs = pkgsChecks;
             myLib = mkLib pkgsChecks;

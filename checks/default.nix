@@ -649,10 +649,10 @@ in
     '';
 
   # addresses https://github.com/ipetkov/crane/issues/773
-  removeReferencesToRustToolchain = 
+  removeReferencesToRustToolchain =
     let
       myLibFatToolchain = myLib.overrideToolchain (p: p.rust-bin.stable.latest.default.override {
-        extensions = [ 
+        extensions = [
           "cargo"
           "rust-src"
           "rustc"
@@ -663,7 +663,7 @@ in
         pname = "test-scrub-toolchain";
         version = "0.1.0";
         src = ./scrub-rust-toolchain;
-        nativeBuildInputs = [] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
+        nativeBuildInputs = [ ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
           pkgs.gcc10
         ];
       };
@@ -685,13 +685,13 @@ in
     '';
 
   # addresses https://github.com/ipetkov/crane/issues/773
-  removeReferencesToRustToolchainFenix = 
+  removeReferencesToRustToolchainFenix =
     let
-     crate = myLibFenix.buildPackage {
+      crate = myLibFenix.buildPackage {
         pname = "test-scrub-toolchain-fenix";
         version = "0.1.0";
         src = ./scrub-rust-toolchain;
-        nativeBuildInputs = [] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
+        nativeBuildInputs = [ ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
           pkgs.gcc10
         ];
       };
