@@ -7,9 +7,9 @@ removeReferencesToRustToolchain() {
     local rustToolchainLocation rustToolchainStoreHash
     rustToolchainLocation=$(rustc --print sysroot)
     echo "Rust toolchain at: $rustToolchainLocation"
-    rustToolchainStoreHash=$(echo "$rustToolchainLocation" | rg "^@storeDir@/([a-z0-9]{32})" -or '$1')
+    rustToolchainStoreHash=$(echo "$rustToolchainLocation" | grep --only-matching '@storeDir@/[a-z0-9]\{32\}')
 
-    find "${installLocation}" -type f -exec sed -i -E "s|@storeDir@/${rustToolchainStoreHash}([^/]*)|@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\1|g" {} +;
+    find "${installLocation}" -type f | xargs --no-run-if-empty sed -i'' "s|${rustToolchainStoreHash}|@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee|g"
     echo "stripping Rust toolchain references done"
 }
 

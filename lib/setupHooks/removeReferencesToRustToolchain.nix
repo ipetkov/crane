@@ -8,5 +8,4 @@ makeSetupHook {
   substitutions = {
     storeDir = builtins.storeDir;
   };
-  propagatedBuildInputs = [ pkgs.ripgrep ];
 } ./removeReferencesToRustToolchain.sh 

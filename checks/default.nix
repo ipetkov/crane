@@ -656,7 +656,6 @@ in
           "cargo"
           "rust-src"
           "rustc"
-          "rust-analyzer"
         ];
       });
 

@@ -241,6 +241,7 @@ environment variables during the build, you can bring them back via
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
 * `installFromCargoBuildLogHook`
+* `removeReferencesToRustToolchainHook`
 * `removeReferencesToVendoredSourcesHook`
 
 ### `craneLib.buildTrunkPackage`
@@ -296,6 +297,8 @@ The following hooks are automatically added as native build inputs:
 * `binaryen`
 * `dart-sass`
 * `trunk`
+* `removeReferencesToRustToolchainHook`
+* `removeReferencesToVendoredSourcesHook`
 
 ### `craneLib.cargoAudit`
 `cargoAudit :: set -> drv`
@@ -1919,10 +1922,10 @@ post install hook.
 ### `craneLib.removeReferencesToRustToolchainHook`
 
 Defines `removeReferencesToRustToolchain()` which handles removing all
-references to the Rust toolchain from the installed binaries, which ensures that
-nix does not consider the binaries as having a (runtime) dependency on the toolchain.
-These references usually originate from panic messages. It takes 1 positional
-argument:
+references to the Rust toolchain from the installed binaries, ensuring that the final
+binaries do not have a (false) runtime dependency on the toolchain (usually due to
+references in panic messages). The current toolchain is detected via `rustc --print sysroot`.
+It takes 1 positional argument:
 1. the installation directory for the output.
   * If not specified, the value  of `$out` will be used.
   * If `out` is not specified, an error will be raised.

@@ -141,7 +141,6 @@
               "cargo"
               "rust-src"
               "rustc"
-              "rust-analyzer"
             ]);
             myLibFenix = (mkLib pkgs).overrideToolchain toolchain;
          in
