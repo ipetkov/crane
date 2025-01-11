@@ -5,6 +5,7 @@
 , mkCargoDerivation
 , dart-sass
 , removeReferencesToVendoredSourcesHook
+, removeReferencesToRustToolchainHook
 , trunk
 , vendorCargoDeps
 , wasm-bindgen-cli
@@ -103,6 +104,7 @@ mkCargoDerivation (args // {
     trunk
     wasm-bindgen-cli
     # Store references are certainly false positives
+    removeReferencesToRustToolchainHook
     removeReferencesToVendoredSourcesHook
   ];
 })

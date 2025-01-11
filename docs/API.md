@@ -241,6 +241,7 @@ environment variables during the build, you can bring them back via
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
 * `installFromCargoBuildLogHook`
+* `removeReferencesToRustToolchainHook`
 * `removeReferencesToVendoredSourcesHook`
 
 ### `craneLib.buildTrunkPackage`
@@ -296,6 +297,8 @@ The following hooks are automatically added as native build inputs:
 * `binaryen`
 * `dart-sass`
 * `trunk`
+* `removeReferencesToRustToolchainHook`
+* `removeReferencesToVendoredSourcesHook`
 
 ### `craneLib.cargoAudit`
 `cargoAudit :: set -> drv`
@@ -1234,15 +1237,16 @@ environment variables during the build, you can bring them back via
 * `stdenv`
 
 #### Native build dependencies and included hooks
-The `cargo` package is automatically appended as a native build input to any
-other `nativeBuildInputs` specified by the caller, along with the following
-hooks:
+The following packages and hooks are automatically appended as a native build
+input to any other `nativeBuildInputs` specified by the caller:
+* `cargo`
 * `cargoHelperFunctionsHook`
 * `configureCargoCommonVarsHook`
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
 * `replaceCargoLockHook`
+* `rustc`
 * `rsync`
 * `zstd`
 
@@ -1893,6 +1897,23 @@ a temporary location defined by `$postBuildInstallFromCargoBuildLogOut`
 `postBuildInstallFromCargoBuildLog` will be run as a post build hook.
 
 **Required nativeBuildInputs**: assumes `cargo` is available on the `$PATH`
+
+### `craneLib.removeReferencesToRustToolchainHook`
+
+Defines `removeReferencesToRustToolchain()` which handles removing all
+references to the Rust toolchain from the installed binaries, ensuring that the final
+binaries do not have a (false) runtime dependency on the toolchain (usually due to
+references in panic messages). The current toolchain is detected via `rustc --print sysroot`.
+It takes 1 positional argument:
+1. the installation directory for the output.
+  * If not specified, the value  of `$out` will be used.
+  * If `out` is not specified, an error will be raised.
+
+**Automatic behavior:** if `doNotRemoveReferencesToVendorDir` is not set, then
+`removeReferencesToRustToolchain "$out"` will be run as a
+post install hook.
+
+**Required nativeBuildInputs**: assumes `rustc` is available on the `$PATH`
 
 ### `craneLib.removeReferencesToVendoredSourcesHook`
 

@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `cargoNextest` now supports passing `cargoNextestPartitionsExtraArgs` to each
   `cargo nextest` partition run.
 * Add self-reference `craneLib` to crane lib instance.
+* Add `removeReferencesToRustToolchainHook`, which, by default, removes
+  references to the Rust toolchain from all installed binaries
+  
+### Changed
+* `buildPackage` now includes `removeReferencesToRustToolchainHook` as a native
+  dependency. To disable automatically removing references to the Rust
+  toolchain, set `doNotRemoveReferencesToRustToolchain = true;`
+* `mkCargoDerivation` now will also append the `rustc` package to the
+  derivation's `nativeBuildInputs`
 
 ## [0.20.0] - 2024-12-21
 

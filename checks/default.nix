@@ -1,4 +1,4 @@
-{ pkgs, myLib, myLibCross }:
+{ pkgs, myLib, myLibCross, myLibFenix, }:
 
 let
   inherit (pkgs) lib;
@@ -610,43 +610,9 @@ in
     src = ./simple;
   };
 
-  # https://github.com/ipetkov/crane/issues/119
-  removeReferencesToVendorDirAndCrates =
-    let
-      crate = myLib.buildPackage {
-        src = ./grpcio-test;
-        nativeBuildInputs = [
-          pkgs.cmake
-        ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-          pkgs.gcc10
-        ];
-        buildInputs = lib.optionals isDarwin [
-          pkgs.libiconv
-        ];
-      };
-
-      extraAllowed = builtins.concatStringsSep "\\|" (lib.optionals isDarwin [
-        ""
-        "libiconv"
-        "libcxx"
-        "apple-framework-CoreFoundation"
-      ]);
-    in
-    pkgs.runCommand "removeReferencesToVendorDir"
-      {
-        nativeBuildInputs = [ pkgs.binutils-unwrapped ];
-      } ''
-      if strings ${crate}/bin/grpcio-test | \
-        grep --only-matching '${builtins.storeDir}/[^/]\+' | \
-        grep --invert-match 'glibc\|gcc${extraAllowed}' | \
-        grep --invert-match '${builtins.storeDir}/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' --count
-      then
-        echo found references to /nix/store sources
-        false
-      else
-        touch $out
-      fi
-    '';
+  illegalReferences = callPackage ./illegalReferences.nix {
+    inherit myLib myLibFenix;
+  };
 
   smoke = callPackage ./smoke.nix { };
   smokeSimple = self.smoke [ "simple" ] self.simple;
