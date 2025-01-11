@@ -137,12 +137,6 @@
               ];
             };
             fenix = import (inputFromLock "fenix") { inherit system; };
-            toolchain = (fenix.latest.withComponents [
-              "cargo"
-              "rust-src"
-              "rustc"
-            ]);
-            myLibFenix = (mkLib pkgs).overrideToolchain toolchain;
           in
           pkgsChecks.callPackages ./checks {
             pkgs = pkgsChecks;
@@ -151,7 +145,11 @@
               localSystem = system;
               crossSystem = "wasm32-wasi";
             });
-            myLibFenix = myLibFenix;
+            myLibFenix = (mkLib pkgs).overrideToolchain (fenix.latest.withComponents [
+              "cargo"
+              "rust-src"
+              "rustc"
+            ]);
           };
       in
       {
