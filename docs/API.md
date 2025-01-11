@@ -1913,6 +1913,8 @@ It takes 1 positional argument:
 `removeReferencesToRustToolchain "$out"` will be run as a
 post install hook.
 
+**Required nativeBuildInputs**: assumes `rustc` is available on the `$PATH`
+
 ### `craneLib.removeReferencesToVendoredSourcesHook`
 
 Defines `removeReferencesToVendoredSources()` which handles removing all

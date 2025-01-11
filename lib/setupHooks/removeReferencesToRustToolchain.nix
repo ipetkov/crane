@@ -1,5 +1,4 @@
 { makeSetupHook
-, rustc
 }:
 makeSetupHook
 {
@@ -7,5 +6,4 @@ makeSetupHook
   substitutions = {
     storeDir = builtins.storeDir;
   };
-  propagatedBuildInputs = [ rustc ];
 } ./removeReferencesToRustToolchainHook.sh 
