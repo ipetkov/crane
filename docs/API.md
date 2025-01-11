@@ -1897,6 +1897,21 @@ a temporary location defined by `$postBuildInstallFromCargoBuildLogOut`
 
 **Required nativeBuildInputs**: assumes `cargo` is available on the `$PATH`
 
+### `craneLib.removeReferencesToRustToolchainHook`
+
+Defines `removeReferencesToRustToolchain()` which handles removing all
+references to the Rust toolchain from the installed binaries, ensuring that the final
+binaries do not have a (false) runtime dependency on the toolchain (usually due to
+references in panic messages). The current toolchain is detected via `rustc --print sysroot`.
+It takes 1 positional argument:
+1. the installation directory for the output.
+  * If not specified, the value  of `$out` will be used.
+  * If `out` is not specified, an error will be raised.
+
+**Automatic behavior:** if `doNotRemoveReferencesToVendorDir` is not set, then
+`removeReferencesToRustToolchain "$out"` will be run as a
+post install hook.
+
 ### `craneLib.removeReferencesToVendoredSourcesHook`
 
 Defines `removeReferencesToVendoredSources()` which handles removing all
@@ -1917,21 +1932,6 @@ Any patched binaries on `aarch64-darwin` will be [signed](https://developer.appl
 **Automatic behavior:** if `cargoVendorDir` is set and
 `doNotRemoveReferencesToVendorDir` is not set, then
 `removeReferencesToVendoredSources "$out" "$cargoVendorDir"` will be run as a
-post install hook.
-
-### `craneLib.removeReferencesToRustToolchainHook`
-
-Defines `removeReferencesToRustToolchain()` which handles removing all
-references to the Rust toolchain from the installed binaries, ensuring that the final
-binaries do not have a (false) runtime dependency on the toolchain (usually due to
-references in panic messages). The current toolchain is detected via `rustc --print sysroot`.
-It takes 1 positional argument:
-1. the installation directory for the output.
-  * If not specified, the value  of `$out` will be used.
-  * If `out` is not specified, an error will be raised.
-
-**Automatic behavior:** if `doNotRemoveReferencesToVendorDir` is not set, then
-`removeReferencesToRustToolchain "$out"` will be run as a
 post install hook.
 
 ### `craneLib.replaceCargoLockHook`
