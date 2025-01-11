@@ -7,6 +7,7 @@
 , installCargoArtifactsHook
 , lib
 , replaceCargoLockHook
+, rustc
 , rsync
 , stdenv
 , vendorCargoDeps
@@ -77,6 +78,7 @@ chosenStdenv.mkDerivation (cleanedArgs // lib.optionalAttrs (cargoLock != null) 
     installCargoArtifactsHook
     replaceCargoLockHook
     rsync
+    rustc
     zstd
   ];
 

@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `buildPackage` now includes `removeReferencesToRustToolchainHook` as a native
   dependency. To disable automatically removing references to the Rust
   toolchain, set `doNotRemoveReferencesToRustToolchain = true;`
+* `mkCargoDerivation` now will also append the `rustc` package to the
+  derivation's `nativeBuildInputs`
 
 ## [0.20.0] - 2024-12-21
 

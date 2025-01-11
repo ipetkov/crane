@@ -1237,15 +1237,16 @@ environment variables during the build, you can bring them back via
 * `stdenv`
 
 #### Native build dependencies and included hooks
-The `cargo` package is automatically appended as a native build input to any
-other `nativeBuildInputs` specified by the caller, along with the following
-hooks:
+The following packages and hooks are automatically appended as a native build
+input to any other `nativeBuildInputs` specified by the caller:
+* `cargo`
 * `cargoHelperFunctionsHook`
 * `configureCargoCommonVarsHook`
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
 * `replaceCargoLockHook`
+* `rustc`
 * `rsync`
 * `zstd`
 
