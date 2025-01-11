@@ -662,7 +662,7 @@ in
       crate = myLibFatToolchain.buildPackage {
         pname = "test-scrub-toolchain";
         version = "0.1.0";
-        src = ./scrub-rust-toolchain;
+        src = ./includes-toolchain-refs;
         nativeBuildInputs = [ ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
           pkgs.gcc10
         ];
@@ -690,7 +690,7 @@ in
       crate = myLibFenix.buildPackage {
         pname = "test-scrub-toolchain-fenix";
         version = "0.1.0";
-        src = ./scrub-rust-toolchain;
+        src = ./includes-toolchain-refs;
         nativeBuildInputs = [ ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
           pkgs.gcc10
         ];
