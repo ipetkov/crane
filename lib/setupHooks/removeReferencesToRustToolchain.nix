@@ -1,8 +1,5 @@
-{ lib
-, pkgs
+{ makeSetupHook
 , rustc
-, makeSetupHook
-,
 }:
 makeSetupHook
 {
