@@ -12,10 +12,10 @@ jobs:
       contents: "read"
     steps:
       - uses: "actions/checkout@v4"
-      - name: "stub checks"
-        run: |
-          echo "_: {}" > ./checks/default.nix
       - uses: "DeterminateSystems/nix-installer-action@main"
+      - name: "allow IFD"
+        run: |
+          echo "allow-import-from-derivation = true" >> /etc/nix/nix.conf
       - uses: "DeterminateSystems/flakehub-push@main"
         with:
           visibility: "public"
