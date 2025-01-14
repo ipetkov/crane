@@ -12,7 +12,9 @@ jobs:
       contents: "read"
     steps:
       - uses: "actions/checkout@v4"
-      - run: echo "_: {}" > ./checks/default.nix
+      - name: "stub checks"
+        run: |
+          echo "_: {}" > ./checks/default.nix
       - uses: "DeterminateSystems/nix-installer-action@main"
       - uses: "DeterminateSystems/flakehub-push@main"
         with:
