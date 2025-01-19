@@ -27,14 +27,14 @@
         # Instead, we just want to update the scope that crane will use by appending
         # our specific toolchain there.
         craneLib = (crane.mkLib pkgs).overrideToolchain (p: p.rust-bin.stable.latest.default.override {
-          targets = [ "wasm32-wasi" ];
+          targets = [ "wasm32-wasip1" ];
         });
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
-          cargoExtraArgs = "--target wasm32-wasi";
+          cargoExtraArgs = "--target wasm32-wasip1";
 
           # Tests currently need to be run via `cargo wasi` which
           # isn't packaged in nixpkgs yet...
