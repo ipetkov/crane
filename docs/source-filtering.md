@@ -57,7 +57,7 @@ let
       # Default files from crane (Rust and cargo files)
       (craneLib.fileset.commonCargoSources unfilteredRoot)
       # Also keep any markdown files
-      (lib.fileset.fileFilter (file: file.hasExt == "md") unfilteredRoot)
+      (lib.fileset.fileFilter (file: file.hasExt "md") unfilteredRoot)
       # Example of a folder for images, icons, etc
       (lib.fileset.maybeMissing ./assets)
     ];
