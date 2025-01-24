@@ -163,6 +163,7 @@
 
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
+            deadnix
             jq
             mdbook
             nix-eval-jobs
