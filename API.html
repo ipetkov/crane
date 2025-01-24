@@ -1,0 +1,2471 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>API Reference - crane</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A Nix library for building cargo projects.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">crane</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane/edit/master/docs/./API.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="api-documentation"><a class="header" href="#api-documentation">API Documentation</a></h1>
+<h2 id="mklib"><a class="header" href="#mklib"><code>mkLib</code></a></h2>
+<p><code>mkLib :: pkgs -&gt; set</code></p>
+<p>Creates a <code>lib</code> instance bound to the specified (and instantiated) <code>pkgs</code> set.
+This is a convenience escape hatch in case you want to use your own custom
+instantiation of nixpkgs with the overlays you may need.</p>
+<pre><code class="language-nix">mkLib (import inputs.nixpkgs { system = "armv7l-linux"; })
+</code></pre>
+<p>Note that if you wish to override a particular package without having to overlay
+it across all of nixpkgs, consider using <code>overrideScope</code>:</p>
+<pre><code class="language-nix">(mkLib pkgs).overrideScope (final: prev: {
+  cargo-tarpaulin = myCustomCargoTarpaulinVersion;
+})
+</code></pre>
+<p>To overlay an entire rust toolchain (e.g. <code>cargo</code>, <code>rustc</code>, <code>clippy</code>, <code>rustfmt</code>,
+etc.) consider using <code>overrideToolchain</code>.</p>
+<h2 id="cranelib"><a class="header" href="#cranelib"><code>craneLib</code></a></h2>
+<p><code>craneLib</code> represents an instantiated value crated by <code>mkLib</code> above.</p>
+<h3 id="cranelibappendcrateregistries"><a class="header" href="#cranelibappendcrateregistries"><code>craneLib.appendCrateRegistries</code></a></h3>
+<p><code>appendCrateRegistries :: [registry mapping] -&gt; new lib</code></p>
+<p>Creates a new <code>lib</code> instance which will make additional registries available for
+use when downloading crate sources. Each entry can be defined using:</p>
+<ul>
+<li><code>registryFromDownloadUrl</code>: if you know the exact <code>dl</code> URL as defined in the
+registry's <code>config.json</code> file</li>
+<li><code>registryFromGitIndex</code>: if you would like the download URL to be inferred from
+the index's source directly.</li>
+<li><code>registryFromSparse</code>: if you would like the download URL to be inferred from
+the index's source directly, and the index is a sparse index.</li>
+</ul>
+<p>See the documentation on each function for more specifics.</p>
+<pre><code class="language-nix">newLib = craneLib.appendCrateRegistries [
+  (craneLib.registryFromDownloadUrl {
+    indexUrl = "https://github.com/rust-lang/crates.io-index";
+    dl = "https://static.crates.io/crates";
+    fetchurlExtraArgs = {};
+  })
+
+  # Or, alternatively
+  (craneLib.registryFromGitIndex {
+    indexUrl = "https://github.com/Hirevo/alexandrie-index";
+    rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
+    fetchurlExtraArgs = {};
+  })
+
+  # Or even
+  (lib.registryFromSparse {
+    indexUrl = "https://index.crates.io/config.json";
+    configSha256 = "1cxgzdm1ipqmgwnq7kgym92axna7pfyhgfla63vl7dvydwn3m52v";
+    fetchurlExtraArgs = {};
+  })
+];
+</code></pre>
+<h3 id="cranelibbuilddepsonly"><a class="header" href="#cranelibbuilddepsonly"><code>craneLib.buildDepsOnly</code></a></h3>
+<p><code>buildDepsOnly :: set -&gt; drv</code></p>
+<p>Create a derivation which will only build all dependencies of a cargo workspace.</p>
+<p>Useful for splitting up cargo projects into two derivations: one which only
+builds dependencies and needs to be rebuilt when a Cargo.lock file changes, and
+another which inherits the cargo artifacts from the first and (quickly) builds
+just the application itself.</p>
+<p>The exact cargo commands being run (or the arguments passed into it) can be
+easily updated to suit your needs. By default all artifacts from running <code>cargo {check,build,test}</code> will be cached.</p>
+<p>In addition to all default and overridden values being set as documented below,
+all derivation attributes are delegated to <code>mkCargoDerivation</code>, and can be used
+to influence its behavior.</p>
+<ul>
+<li><code>cargoArtifacts</code>: set to <code>null</code> since this is our entry point for generating
+cargo artifacts</li>
+<li><code>doInstallCargoArtifacts</code>: set to <code>true</code></li>
+<li><code>pnameSuffix</code>: set to <code>"-deps"</code></li>
+<li><code>src</code>: set to the result of <code>mkDummySrc</code> after applying the arguments set.
+This ensures that we do not need to rebuild the cargo artifacts derivation
+whenever the application source changes.</li>
+<li><code>CRANE_BUILD_DEPS_ONLY</code> is exported as an environment variable, in case this
+is handy for scripts or hooks which may want to customize how they run</li>
+</ul>
+<h4 id="optional-attributes"><a class="header" href="#optional-attributes">Optional attributes</a></h4>
+<ul>
+<li><code>buildPhaseCargoCommand</code>: A command to run during the derivation's build
+phase. Pre and post build hooks will automatically be run.
+<ul>
+<li>Default value: <code>"${cargoCheckCommand} ${cargoExtraArgs}\n${cargoBuildCommand} ${cargoExtraArgs}"</code></li>
+</ul>
+</li>
+<li><code>cargoBuildCommand</code>: A cargo (build) invocation to run during the derivation's build
+phase
+<ul>
+<li>Default value: <code>"cargo build --profile release"</code>
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>cargoCheckCommand</code>: A cargo (check) invocation to run during the derivation's build
+phase (in order to cache additional artifacts)
+<ul>
+<li>Default value: <code>"cargo check --profile release ${cargoCheckExtraArgs}"</code>
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>cargoCheckExtraArgs</code>: additional flags to be passed in the <code>cargoCheckCommand</code>
+invocation
+<ul>
+<li>Default value: <code>"--all-targets"</code> if <code>doCheck</code> is set to true, <code>""</code> otherwise</li>
+</ul>
+</li>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation (e.g.
+enabling specific features)
+<ul>
+<li>Default value: <code>"--locked"</code></li>
+</ul>
+</li>
+<li><code>cargoTestCommand</code>: A cargo invocation to run during the derivation's check
+phase
+<ul>
+<li>Default value: <code>"cargo test --profile release"</code>
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>cargoTestExtraArgs</code>: additional flags to be passed in the <code>cargoTestCommand</code>
+invocation (e.g. enabling specific tests)
+<ul>
+<li>Default value: <code>"--no-run"</code></li>
+</ul>
+</li>
+<li><code>cargoVendorDir</code>: A path (or derivation) of vendored cargo sources which can
+be consumed without network access. Directory structure should basically
+follow the output of <code>cargo vendor</code>.
+<ul>
+<li>Default value: the result of <code>vendorCargoDeps</code> after applying the arguments
+set (with the respective default values). Note if <code>dummySrc</code> is specified,
+it will be used as the <code>src</code> passed into <code>vendorCargoDeps</code></li>
+</ul>
+</li>
+<li><code>checkPhaseCargoCommand</code>: A command to run during the derivation's check
+phase. Pre and post check hooks will automatically be run.
+<ul>
+<li>Default value: <code>"${cargoTestCommand} ${cargoExtraArgs}"</code></li>
+</ul>
+</li>
+<li><code>doCheck</code>: whether the derivation's check phase should be run
+<ul>
+<li>Default value: <code>true</code></li>
+</ul>
+</li>
+<li><code>dummySrc</code>: the "dummy" source to use when building this derivation.
+Automatically derived if not passed in
+<ul>
+<li>Default value: <code>mkDummySrc args.src</code></li>
+</ul>
+</li>
+<li><code>pname</code>: package name of the derivation
+<ul>
+<li>Default value: inherited from calling <code>crateNameFromCargoToml</code>. Note if
+<code>dummySrc</code> is specified, it will be used as the <code>src</code> passed into
+<code>crateNameFromCargoToml</code></li>
+</ul>
+</li>
+<li><code>version</code>: version of the derivation
+<ul>
+<li>Default value: inherited from calling <code>crateNameFromCargoToml</code>. Note if
+<code>dummySrc</code> is specified, it will be used as the <code>src</code> passed into
+<code>crateNameFromCargoToml</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="remove-attributes"><a class="header" href="#remove-attributes">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoBuildCommand</code></li>
+<li><code>cargoCheckCommand</code></li>
+<li><code>cargoCheckExtraArgs</code></li>
+<li><code>cargoExtraArgs</code></li>
+<li><code>cargoTestCommand</code></li>
+<li><code>cargoTestExtraArgs</code></li>
+<li><code>dummySrc</code></li>
+<li><code>outputHashes</code></li>
+<li><code>outputs</code></li>
+</ul>
+<h3 id="cranelibbuildpackage"><a class="header" href="#cranelibbuildpackage"><code>craneLib.buildPackage</code></a></h3>
+<p><code>buildPackage :: set -&gt; drv</code></p>
+<p>A(n opinionated) version of <code>mkCargoDerivation</code> which will install to the output
+any binaries which were built by cargo in this invocation. All options
+understood by <code>mkCargoDerivation</code> apply here as well, with the only difference
+being some additional book keeping necessary to log cargo's results and
+subsequently install from that log.</p>
+<p>Note that only <code>bin</code>, <code>cdylib</code>, <code>dylib</code>, and <code>staticlib</code>, targets will be installed by
+default (namely <code>rlib</code> targets will be ignored), though it is possible to adjust
+the behavior by changing the <code>installPhaseCommand</code> or registering additional
+install hooks.</p>
+<h4 id="optional-attributes-1"><a class="header" href="#optional-attributes-1">Optional attributes</a></h4>
+<ul>
+<li><code>buildPhaseCargoCommand</code>: A command to run during the derivation's build
+phase. Pre and post build hooks will automatically be run.
+<ul>
+<li>Default value: <code>cargoBuildCommand</code> will be invoked along with
+<code>cargoExtraArgs</code> passed in, except cargo's build steps will also be captured
+and written to a log so that it can be used to find the build binaries.</li>
+<li>Note that the default install hook assumes that the build phase will create
+a log of cargo's build results. If you wish to customize this command
+completely, make sure that cargo is run with <code>--message-format json-render-diagnostics</code> and the standard output captured and saved to a
+file. The <code>cargoBuildLog</code> shell variable should point to this log.</li>
+</ul>
+</li>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>Default value: the result of <code>buildDepsOnly</code> after applying the arguments
+set (with the respective default values).</li>
+<li><code>installPhase</code> and <code>installPhaseCommand</code> will be removed, and no
+installation hooks will be run</li>
+</ul>
+</li>
+<li><code>cargoBuildCommand</code>: A cargo invocation to run during the derivation's build
+phase
+<ul>
+<li>Default value: <code>"cargo build --profile release"</code>
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation (e.g.
+enabling specific features)
+<ul>
+<li>Default value: <code>"--locked"</code></li>
+</ul>
+</li>
+<li><code>cargoTestCommand</code>: A cargo invocation to run during the derivation's check
+phase
+<ul>
+<li>Default value: <code>"cargo test --profile release"</code>
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>cargoTestExtraArgs</code>: additional flags to be passed in the <code>cargoTestCommand</code>
+invocation (e.g. enabling specific tests)
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>doCheck</code>: whether the derivation's check phase should be run
+<ul>
+<li>Default value: <code>true</code></li>
+</ul>
+</li>
+<li><code>doInstallCargoArtifacts</code>: controls whether cargo's <code>target</code> directory should
+be copied as an output
+<ul>
+<li>Default value: <code>false</code></li>
+</ul>
+</li>
+<li><code>installPhaseCommand</code>: the command(s) which are expected to install the
+derivation's outputs.
+<ul>
+<li>Default value: will look for a temporary installation directory created by
+<code>installFromCargoBuildLogHook</code> and then install all of its contents</li>
+</ul>
+</li>
+</ul>
+<h4 id="remove-attributes-1"><a class="header" href="#remove-attributes-1">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoBuildCommand</code></li>
+<li><code>cargoExtraArgs</code></li>
+<li><code>cargoTestCommand</code></li>
+<li><code>cargoTestExtraArgs</code></li>
+<li><code>outputHashes</code></li>
+</ul>
+<h4 id="native-build-dependencies-and-included-hooks"><a class="header" href="#native-build-dependencies-and-included-hooks">Native build dependencies and included hooks</a></h4>
+<p>The following hooks are automatically added as native build inputs:</p>
+<ul>
+<li><code>installFromCargoBuildLogHook</code></li>
+<li><code>removeReferencesToRustToolchainHook</code></li>
+<li><code>removeReferencesToVendoredSourcesHook</code></li>
+</ul>
+<h3 id="cranelibbuildtrunkpackage"><a class="header" href="#cranelibbuildtrunkpackage"><code>craneLib.buildTrunkPackage</code></a></h3>
+<p><code>buildTrunkPackage :: set -&gt; drv</code></p>
+<p>Create a derivation which will build a distributable directory for a WASM application.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<h4 id="optional-attributes-2"><a class="header" href="#optional-attributes-2">Optional attributes</a></h4>
+<ul>
+<li><code>buildPhaseCargoCommand</code>: A command to run during the derivation's build
+phase. Pre and post build hooks will automatically be run.
+<ul>
+<li>Default value: <code>trunk build</code> will be invoked along with <code>trunkExtraArgs</code>,
+<code>trunkExtraBuildArgs</code>, and <code>trunkIndexpath</code> passed in. If <code>$CARGO_PROFILE</code>
+is set to <code>release</code> then the <code>--release</code> flag will also be set for the build</li>
+</ul>
+</li>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>Default value: the result of <code>buildDepsOnly</code> after applying the arguments
+set (with the respective default values).</li>
+<li><code>CARGO_BUILD_TARGET</code> will be set to <code>"wasm32-unknown-unknown"</code> if not specified.</li>
+<li><code>doCheck</code> will be set to <code>false</code> if not specified.</li>
+<li><code>installPhase</code> and <code>installPhaseCommand</code> will be removed (in favor of their
+default values provided by <code>buildDepsOnly</code>)</li>
+</ul>
+</li>
+<li><code>installPhaseCommand</code>: the command(s) which are expected to install the
+derivation's outputs.
+<ul>
+<li>Default value: will install trunk's <code>dist</code> output directory</li>
+</ul>
+</li>
+<li><code>trunkExtraArgs</code> pass additional arguments to <code>trunk</code>
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>trunkExtraBuildArgs</code> pass additional arguments to <code>trunk build</code>
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>trunkIndexPath</code> A path to the index.html of your trunk project
+<ul>
+<li>Default value: <code>"./index.html"</code></li>
+</ul>
+</li>
+<li><code>wasm-bindgen-cli</code> The package used to satisfy the <code>wasm-bindgen-cli</code>
+dependency of <code>trunk</code>, the version used here must match the version
+of <code>wasm-bindgen</code> in the <code>Cargo.lock</code> file of your project <em>exactly</em>.
+<ul>
+<li>Default value: <code>pkgs.wasm-bindgen-cli</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="remove-attributes-2"><a class="header" href="#remove-attributes-2">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>trunkExtraArgs</code></li>
+<li><code>trunkExtraBuildArgs</code></li>
+<li><code>trunkIndexPath</code></li>
+</ul>
+<h4 id="native-build-dependencies-and-included-hooks-1"><a class="header" href="#native-build-dependencies-and-included-hooks-1">Native build dependencies and included hooks</a></h4>
+<p>The following hooks are automatically added as native build inputs:</p>
+<ul>
+<li><code>binaryen</code></li>
+<li><code>dart-sass</code></li>
+<li><code>trunk</code></li>
+<li><code>removeReferencesToRustToolchainHook</code></li>
+<li><code>removeReferencesToVendoredSourcesHook</code></li>
+</ul>
+<h3 id="cranelibcargoaudit"><a class="header" href="#cranelibcargoaudit"><code>craneLib.cargoAudit</code></a></h3>
+<p><code>cargoAudit :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo audit</code> invocation in a cargo
+workspace.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo audit -n -d ${advisory-db}</code> in
+the workspace.</li>
+<li><code>cargoArtifacts</code> will be set to <code>null</code> as they are not needed</li>
+<li><code>cargoVendorDir</code> will be set to <code>null</code> as it is not needed</li>
+<li><code>doInstallCargoArtifacts</code> is disabled</li>
+<li><code>pnameSuffix</code> will be set to <code>"-audit"</code></li>
+<li><code>src</code> will be filtered to only keep <code>Cargo.lock</code> files</li>
+</ul>
+<h4 id="required-attributes"><a class="header" href="#required-attributes">Required attributes</a></h4>
+<ul>
+<li><code>advisory-db</code>: A path (or derivation) which contains the advisory database
+<ul>
+<li>It is possible to track the advisory database as a flake input and avoid
+having to manually update hashes or specific revisions to check out</li>
+</ul>
+</li>
+<li><code>src</code>: The project source to audit, it must contain a <code>Cargo.lock</code> file
+<ul>
+<li>Note that the source will internally be filtered to omit any files besides
+<code>Cargo.lock</code>. This avoids having to audit the project again until either the
+advisory database or the dependencies change.</li>
+</ul>
+</li>
+</ul>
+<h4 id="optional-attributes-3"><a class="header" href="#optional-attributes-3">Optional attributes</a></h4>
+<ul>
+<li><code>cargoAuditExtraArgs</code>: additional flags to be passed in the cargo-audit invocation
+<ul>
+<li>Default value: <code>"--ignore yanked"</code></li>
+</ul>
+</li>
+<li><code>pname</code>: the name of the derivation; will <em>not</em> be introspected from a
+<code>Cargo.toml</code> file
+<ul>
+<li>Default value: <code>"crate"</code></li>
+</ul>
+</li>
+<li><code>version</code>: the version of the derivation, will <em>not</em> be introspected from a
+<code>Cargo.toml</code> file
+<ul>
+<li>Default value: <code>"0.0.0"</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="native-build-dependencies"><a class="header" href="#native-build-dependencies">Native build dependencies</a></h4>
+<p>The <code>cargo-audit</code> package is automatically appended as a native build input to any
+other <code>nativeBuildInputs</code> specified by the caller.</p>
+<h4 id="remove-attributes-3"><a class="header" href="#remove-attributes-3">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoAuditExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcargodeny"><a class="header" href="#cranelibcargodeny"><code>craneLib.cargoDeny</code></a></h3>
+<p><code>cargoDeny :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo deny</code> invocation in a cargo
+workspace.</p>
+<p>Note that although <code>cargo deny</code> can serve as a replacement for <code>cargo audit</code>,
+<code>craneLib.cargoDeny</code> does not expose this functionality because <code>cargo deny</code>
+requires the full source tree, rather than working from just the <code>Cargo.lock</code>
+file, meaning it will be re-run when any source file changes, rather than only
+when dependencies change.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run
+<code>cargo --offline $cargoExtraArgs deny $cargoDenyExtraArgs check $cargoDenyChecks</code> in the workspace.</li>
+<li><code>cargoArtifacts</code> will be set to <code>null</code></li>
+<li><code>doInstallCargoArtifacts</code> will be set to <code>false</code></li>
+<li><code>pnameSuffix</code> will be set to <code>"-deny"</code></li>
+</ul>
+<h4 id="optional-attributes-4"><a class="header" href="#optional-attributes-4">Optional attributes</a></h4>
+<ul>
+<li><code>cargoDenyChecks</code>: check types to run
+<ul>
+<li>Default value: <code>"bans licenses sources"</code></li>
+</ul>
+</li>
+<li><code>cargoDenyExtraArgs</code>: additional flags to be passed in the cargo-deny invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="native-build-dependencies-1"><a class="header" href="#native-build-dependencies-1">Native build dependencies</a></h4>
+<p>The <code>cargo-deny</code> package is automatically appended as a native build input to any
+other <code>nativeBuildInputs</code> specified by the caller.</p>
+<h4 id="remove-attributes-4"><a class="header" href="#remove-attributes-4">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoDenyExtraArgs</code></li>
+<li><code>cargoExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcargobuild"><a class="header" href="#cranelibcargobuild"><code>craneLib.cargoBuild</code></a></h3>
+<p><code>cargoBuild :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo build</code> invocation in a cargo
+workspace. Consider using <code>buildPackage</code> if all you need is to build the
+workspace and install the resulting application binaries.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo build --profile release</code> for
+the workspace.
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+<li><code>pnameSuffix</code> will be set to <code>"-build"</code></li>
+</ul>
+<h4 id="required-attributes-1"><a class="header" href="#required-attributes-1">Required attributes</a></h4>
+<ul>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>This can be prepared via <code>buildDepsOnly</code></li>
+<li>Alternatively, any cargo-based derivation which was built with
+<code>doInstallCargoArtifacts = true</code> will work as well</li>
+</ul>
+</li>
+</ul>
+<h4 id="optional-attributes-5"><a class="header" href="#optional-attributes-5">Optional attributes</a></h4>
+<ul>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation (e.g.
+enabling specific features)
+<ul>
+<li>Default value: <code>"--locked"</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="remove-attributes-5"><a class="header" href="#remove-attributes-5">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcargoclippy"><a class="header" href="#cranelibcargoclippy"><code>craneLib.cargoClippy</code></a></h3>
+<p><code>cargoClippy :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo clippy</code> invocation in a cargo
+workspace.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo clippy --profile release</code> for
+the workspace.
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+<li><code>pnameSuffix</code> will be set to <code>"-clippy"</code></li>
+</ul>
+<h4 id="required-attributes-2"><a class="header" href="#required-attributes-2">Required attributes</a></h4>
+<ul>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>This can be prepared via <code>buildDepsOnly</code></li>
+<li>Alternatively, any cargo-based derivation which was built with
+<code>doInstallCargoArtifacts = true</code> will work as well</li>
+</ul>
+</li>
+</ul>
+<h4 id="optional-attributes-6"><a class="header" href="#optional-attributes-6">Optional attributes</a></h4>
+<ul>
+<li><code>cargoClippyExtraArgs</code>: additional flags to be passed in the clippy invocation (e.g.
+deny specific lints)
+<ul>
+<li>Default value: <code>"--all-targets"</code></li>
+</ul>
+</li>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation (e.g.
+enabling specific features)
+<ul>
+<li>Default value: <code>"--locked"</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="native-build-dependencies-2"><a class="header" href="#native-build-dependencies-2">Native build dependencies</a></h4>
+<p>The <code>clippy</code> package is automatically appended as a native build input to any
+other <code>nativeBuildInputs</code> specified by the caller.</p>
+<h4 id="remove-attributes-6"><a class="header" href="#remove-attributes-6">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoClippyExtraArgs</code></li>
+<li><code>cargoExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcargodoc"><a class="header" href="#cranelibcargodoc"><code>craneLib.cargoDoc</code></a></h3>
+<p><code>cargoDoc :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo doc</code> invocation in a cargo
+workspace.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo doc --profile release</code> for
+the workspace.
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+<li><code>doInstallCargoArtifacts</code> will default to <code>false</code> if not specified</li>
+<li><code>pnameSuffix</code> will be set to <code>"-doc"</code></li>
+</ul>
+<h4 id="required-attributes-3"><a class="header" href="#required-attributes-3">Required attributes</a></h4>
+<ul>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>This can be prepared via <code>buildDepsOnly</code></li>
+<li>Alternatively, any cargo-based derivation which was built with
+<code>doInstallCargoArtifacts = true</code> will work as well</li>
+</ul>
+</li>
+</ul>
+<h4 id="optional-attributes-7"><a class="header" href="#optional-attributes-7">Optional attributes</a></h4>
+<ul>
+<li><code>cargoDocExtraArgs</code>: additional flags to be passed in the rustdoc invocation (e.g.
+deny specific lints)
+<ul>
+<li>Default value: <code>"--no-deps"</code></li>
+</ul>
+</li>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation (e.g.
+enabling specific features)
+<ul>
+<li>Default value: <code>"--locked"</code></li>
+</ul>
+</li>
+<li><code>docInstallRoot</code>: defines the exact directory to install to <code>$out/share</code>,
+useful for overriding when compiling different targets. By default will honor
+<code>$CARGO_TARGET_DIR</code> (or default to <code>./target</code> if not set) and
+<code>$CARGO_BUILD_TARGET</code> (if set).
+<ul>
+<li>Default value: <code>"${CARGO_TARGET_DIR:-target}/${CARGO_BUILD_TARGET:-}/doc"</code>
+if such a directory exists, otherwise falls back to
+<code>"${CARGO_TARGET_DIR:-target}/doc"</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="remove-attributes-7"><a class="header" href="#remove-attributes-7">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoDocExtraArgs</code></li>
+<li><code>cargoExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcargodoctest"><a class="header" href="#cranelibcargodoctest"><code>craneLib.cargoDocTest</code></a></h3>
+<p><code>cargoDocTest :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo test --doc</code> invocation in a cargo
+workspace. To run all or any tests for a workspace, consider <code>cargoTest</code>.</p>
+<p>Except where noted below, all derivation attributes are delegated to</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo test --profile release</code> in
+the workspace.
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile is
+selected; setting it to <code>""</code> will omit specifying a profile altogether.</li>
+</ul>
+</li>
+<li><code>pnameSuffix</code> will be set to <code>"-doctest"</code></li>
+</ul>
+<h4 id="optional-attributes-8"><a class="header" href="#optional-attributes-8">Optional attributes</a></h4>
+<ul>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation
+<ul>
+<li>Default value: <code>"--locked"</code></li>
+</ul>
+</li>
+<li><code>cargoTestExtraArgs</code>: additional flags to be passed in the cargo
+invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="cranelibcargofmt"><a class="header" href="#cranelibcargofmt"><code>craneLib.cargoFmt</code></a></h3>
+<p><code>cargoFmt :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo fmt</code> invocation in a cargo
+workspace.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo fmt</code> (in check mode) in the
+workspace.</li>
+<li><code>cargoArtifacts</code> is disabled/cleared</li>
+<li><code>cargoVendorDir</code> is disabled/cleared</li>
+<li><code>pnameSuffix</code> will be set to <code>"-fmt"</code></li>
+</ul>
+<h4 id="optional-attributes-9"><a class="header" href="#optional-attributes-9">Optional attributes</a></h4>
+<ul>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>rustFmtExtraArgs</code>: additional flags to be passed in the rustfmt invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="native-build-dependencies-3"><a class="header" href="#native-build-dependencies-3">Native build dependencies</a></h4>
+<p>The <code>rustfmt</code> package is automatically appended as a native build input to any
+other <code>nativeBuildInputs</code> specified by the caller.</p>
+<h4 id="remove-attributes-8"><a class="header" href="#remove-attributes-8">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoExtraArgs</code></li>
+<li><code>rustFmtExtraArgs</code></li>
+</ul>
+<h3 id="cranelibtaplofmt"><a class="header" href="#cranelibtaplofmt"><code>craneLib.taploFmt</code></a></h3>
+<p><code>taploFmt :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>taplo fmt</code> invocation in a cargo
+workspace.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>taplo fmt</code> (in check mode) in the
+workspace.</li>
+<li><code>cargoArtifacts</code> is disabled/cleared</li>
+<li><code>cargoVendorDir</code> is disabled/cleared</li>
+<li><code>pnameSuffix</code> will be set to <code>"-tomlfmt"</code></li>
+</ul>
+<h4 id="optional-attributes-10"><a class="header" href="#optional-attributes-10">Optional attributes</a></h4>
+<ul>
+<li><code>taploExtraArgs</code>: additional flags to be passed in the taplo invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+</ul>
+<p><code>taplo</code> command line options for setting <code>taploExtraArgs</code> and configuration options
+for <code>taplo.toml</code> config files can be found in the <em>Command Line</em> and <em>Configuration</em>
+sections of the <a href="https://taplo.tamasfe.dev/">taplo documentation</a>.</p>
+<h4 id="native-build-dependencies-4"><a class="header" href="#native-build-dependencies-4">Native build dependencies</a></h4>
+<p>The <code>taplo</code> package is automatically appended as a native build input to any
+other <code>nativeBuildInputs</code> specified by the caller.</p>
+<h4 id="remove-attributes-9"><a class="header" href="#remove-attributes-9">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>taploExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcargollvmcov"><a class="header" href="#cranelibcargollvmcov"><code>craneLib.cargoLlvmCov</code></a></h3>
+<p><code>cargoLlvmCov :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo llvm-cov</code> invocation in a cargo
+workspace.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo llvm-cov test --release</code> in
+the workspace.</li>
+<li><code>installPhaseCommand</code> will be set to <code>""</code>, as the default settings creates
+a file instead of directory at <code>$out</code>.</li>
+<li><code>doInstallCargoArtifacts</code> will be set to <code>false</code> for the same reason as
+<code>installPhaseCommand</code></li>
+<li><code>pnameSuffix</code> will be set to <code>"-llvm-cov"</code></li>
+</ul>
+<h4 id="required-attributes-4"><a class="header" href="#required-attributes-4">Required attributes</a></h4>
+<ul>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>This can be prepared via <code>buildDepsOnly</code></li>
+<li>Alternatively, any cargo-based derivation which was built with
+<code>doInstallCargoArtifacts = true</code> will work as well</li>
+</ul>
+</li>
+</ul>
+<h4 id="optional-attributes-11"><a class="header" href="#optional-attributes-11">Optional attributes</a></h4>
+<ul>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation
+<ul>
+<li>Default value: <code>"--locked"</code></li>
+</ul>
+</li>
+<li><code>cargoLlvmCovCommand</code>: cargo-llvm-cov command to run
+<ul>
+<li>Default value: <code>"test"</code></li>
+</ul>
+</li>
+<li><code>cargoLlvmCovExtraArgs</code>: additional flags to be passed in the cargo
+llvm-cov invocation
+<ul>
+<li>Default value: <code>"--lcov --output-path $out"</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="native-build-dependencies-5"><a class="header" href="#native-build-dependencies-5">Native build dependencies</a></h4>
+<p>The <code>cargo-llvm-cov</code> package is automatically appended as a native build input to any
+other <code>nativeBuildInputs</code> specified by the caller.</p>
+<p>Note that this would require the <code>llvm-tools-preview</code> component for the Rust toolchain,
+which you would need to provide yourself using fenix or rust-overlay.</p>
+<h4 id="remove-attributes-10"><a class="header" href="#remove-attributes-10">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoExtraArgs</code></li>
+<li><code>cargoLlvmCovCommand</code></li>
+<li><code>cargoLlvmCovExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcargonextest"><a class="header" href="#cranelibcargonextest"><code>craneLib.cargoNextest</code></a></h3>
+<p><code>cargoNextest :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo nextest</code> invocation in a cargo
+workspace. Note that <a href="https://github.com/nextest-rs/nextest/issues/16"><code>cargo nextest</code> doesn't run
+doctests</a>, so you may also
+want to build a <code>cargoDocTest</code> derivation.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>checkPhaseCargoCommand</code> will be set to run <code>cargo nextest run --profile release</code>
+for the workspace.
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile
+is selected; setting it to <code>""</code> will omit specifying a profile
+altogether.</li>
+</ul>
+</li>
+<li><code>pnameSuffix</code> will be set to <code>"-nextest"</code> and may include partition numbers</li>
+</ul>
+<h4 id="required-attributes-5"><a class="header" href="#required-attributes-5">Required attributes</a></h4>
+<ul>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>This can be prepared via <code>buildDepsOnly</code></li>
+<li>Alternatively, any cargo-based derivation which was built with
+<code>doInstallCargoArtifacts = true</code> will work as well</li>
+</ul>
+</li>
+</ul>
+<h4 id="optional-attributes-12"><a class="header" href="#optional-attributes-12">Optional attributes</a></h4>
+<ul>
+<li><code>buildPhaseCargoCommand</code>, unless specified, will be set to print the nextest version</li>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation (e.g.
+enabling specific features)
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>cargoLlvmCovExtraArgs</code>: additional flags to be passed in the cargo
+llvm-cov invocation
+<ul>
+<li>Default value: <code>"--lcov --output-path $out/coverage"</code></li>
+</ul>
+</li>
+<li><code>cargoNextestExtraArgs</code>: additional flags to be passed in the nextest invocation
+(e.g. specifying a profile)
+<ul>
+<li>Default value: <code>""</code></li>
+<li>Note that all flags from <code>cargo test</code> are supported.</li>
+</ul>
+</li>
+<li><code>cargoNextestPartitionsExtraArgs</code>: additional flags to be passed in the nextest partition invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>partitions</code>: The number of separate nextest partitions to run. Useful if the
+test suite takes a long time and can be parallelized across multiple build
+nodes.
+<ul>
+<li>Default value: <code>1</code></li>
+</ul>
+</li>
+<li><code>partitionType</code>: The kind of nextest partition to run (e.g. <code>"count"</code> or
+<code>"hash"</code> based).
+<ul>
+<li>Default value: <code>"count"</code></li>
+</ul>
+</li>
+<li><code>withLlvmCov</code>: Whether or not to run nextest through <code>cargo llvm-cov</code>
+<ul>
+<li>Default value: <code>false</code></li>
+<li>Note that setting <code>withLlvmCov = true;</code> is not currently supported if
+<code>partitions &gt; 1</code>.</li>
+</ul>
+</li>
+</ul>
+<h4 id="native-build-dependencies-6"><a class="header" href="#native-build-dependencies-6">Native build dependencies</a></h4>
+<p>The <code>cargo-nextest</code> package is automatically appended as a native build input to any
+other <code>nativeBuildInputs</code> specified by the caller.</p>
+<h4 id="remove-attributes-11"><a class="header" href="#remove-attributes-11">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoExtraArgs</code></li>
+<li><code>cargoLlvmCovExtraArgs</code></li>
+<li><code>cargoNextestExtraArgs</code></li>
+<li><code>cargoNextestPartitionsExtraArgs</code></li>
+<li><code>partitions</code></li>
+<li><code>partitionType</code></li>
+<li><code>withLlvmCov</code></li>
+</ul>
+<h3 id="cranelibcargotarpaulin"><a class="header" href="#cranelibcargotarpaulin"><code>craneLib.cargoTarpaulin</code></a></h3>
+<p><code>cargoTarpaulin :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo tarpaulin</code> invocation in a cargo
+workspace.</p>
+<p>Except where noted below, all derivation attributes are delegated to
+<code>mkCargoDerivation</code>, and can be used to influence its behavior.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo tarpaulin --profile release</code> in
+the workspace.
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile is
+selected; setting it to <code>""</code> will omit specifying a profile altogether.</li>
+</ul>
+</li>
+<li><code>pnameSuffix</code> will be set to <code>"-tarpaulin"</code></li>
+</ul>
+<h4 id="required-attributes-6"><a class="header" href="#required-attributes-6">Required attributes</a></h4>
+<ul>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>This can be prepared via <code>buildDepsOnly</code></li>
+<li>Alternatively, any cargo-based derivation which was built with
+<code>doInstallCargoArtifacts = true</code> will work as well</li>
+</ul>
+</li>
+</ul>
+<h4 id="optional-attributes-13"><a class="header" href="#optional-attributes-13">Optional attributes</a></h4>
+<ul>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>cargoTarpaulinExtraArgs</code>: additional flags to be passed in the cargo
+tarpaulin invocation
+<ul>
+<li>Default value: <code>"--skip-clean --out xml --output-dir $out"</code></li>
+</ul>
+</li>
+<li><code>doNotLinkInheritedArtifacts</code> will be set to <code>true</code> if not specified.</li>
+</ul>
+<h4 id="native-build-dependencies-7"><a class="header" href="#native-build-dependencies-7">Native build dependencies</a></h4>
+<p>The <code>cargo-tarpaulin</code> package is automatically appended as a native build input to any
+other <code>nativeBuildInputs</code> specified by the caller.</p>
+<h4 id="remove-attributes-12"><a class="header" href="#remove-attributes-12">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoExtraArgs</code></li>
+<li><code>cargoTarpaulinExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcargotest"><a class="header" href="#cranelibcargotest"><code>craneLib.cargoTest</code></a></h3>
+<p><code>cargoTest :: set -&gt; drv</code></p>
+<p>Create a derivation which will run a <code>cargo test</code> invocation in a cargo
+workspace.</p>
+<p>Except where noted below, all derivation attributes are delegated to</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code> will be set to run <code>cargo test --profile release</code> in
+the workspace.
+<ul>
+<li><code>CARGO_PROFILE</code> can be set on the derivation to alter which cargo profile is
+selected; setting it to <code>""</code> will omit specifying a profile altogether.</li>
+</ul>
+</li>
+<li><code>pnameSuffix</code> will be set to <code>"-test"</code></li>
+</ul>
+<h4 id="optional-attributes-14"><a class="header" href="#optional-attributes-14">Optional attributes</a></h4>
+<ul>
+<li><code>cargoExtraArgs</code>: additional flags to be passed in the cargo invocation
+<ul>
+<li>Default value: <code>"--locked"</code></li>
+</ul>
+</li>
+<li><code>cargoTestExtraArgs</code>: additional flags to be passed in the cargo
+invocation
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="remove-attributes-13"><a class="header" href="#remove-attributes-13">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoExtraArgs</code></li>
+<li><code>cargoTestExtraArgs</code></li>
+</ul>
+<h4 id="remove-attributes-14"><a class="header" href="#remove-attributes-14">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>mkCargoDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>cargoExtraArgs</code></li>
+<li><code>cargoTestExtraArgs</code></li>
+</ul>
+<h3 id="cranelibcleancargosource"><a class="header" href="#cranelibcleancargosource"><code>craneLib.cleanCargoSource</code></a></h3>
+<p><code>cleanCargoSource :: path or drv -&gt; drv</code></p>
+<p>Cleans a source tree to omit things like version control directories as well
+omit any non-Rust/non-cargo related files. Useful to avoid rebuilding a project
+when unrelated files are changed (e.g. <code>flake.nix</code> or any other nix files).</p>
+<p>The final output will be cleaned by both <code>cleanSource</code> (from nixpkgs) and
+<code>craneLib.filterCargoSources</code>. See each of them for more details on which files are
+kept.</p>
+<p>If it is necessary to customize which files are kept, a custom filter can be
+written (which may want to also call <code>craneLib.filterCargoSources</code>) to achieve the
+desired behavior.</p>
+<pre><code class="language-nix">craneLib.cleanCargoSource ./.
+</code></pre>
+<h3 id="cranelibcleancargotoml"><a class="header" href="#cranelibcleancargotoml"><code>craneLib.cleanCargoToml</code></a></h3>
+<p><code>cleanCargoToml :: set -&gt; set</code></p>
+<p>Cleans all definitions from a Cargo.toml file which are irrelevant for a
+minimal build of a package's dependencies. See <code>mkDummySrc</code> for more information
+on how the result is applied.</p>
+<p>In general, the following types of attributes are kept from the original input:</p>
+<ul>
+<li>basic package definitions (like name and version)</li>
+<li>dependency definitions</li>
+<li>feature definitions</li>
+<li>workspace definitions</li>
+<li>anything pertaining to project structure (like bin/lib targets, tests, etc.)</li>
+</ul>
+<pre><code class="language-nix">craneLib.cleanCargoToml { cargoToml = ./Cargo.toml; }
+# { dependencies = { byteorder = "*"; }; package = { edition = "2021"; name = "simple"; version = "0.1.0"; }; }
+</code></pre>
+<h4 id="input-attributes"><a class="header" href="#input-attributes">Input attributes</a></h4>
+<ul>
+<li><code>cargoToml</code>: a path to a Cargo.toml file</li>
+<li><code>cargoTomlContents</code>: the contents of a Cargo.toml file as a string</li>
+</ul>
+<p>At least one of the above attributes must be specified, or an error will be
+raised during evaluation.</p>
+<h3 id="cranelibcratenamefromcargotoml"><a class="header" href="#cranelibcratenamefromcargotoml"><code>craneLib.crateNameFromCargoToml</code></a></h3>
+<p><code>crateNameFromCargoToml :: set -&gt; set</code></p>
+<p>Extract a crate's name and version from its Cargo.toml file.</p>
+<p>The resulting <code>pname</code> attribute will be populated with the value of the
+Cargo.toml's (top-level) attributes in the following order, where the first
+attribute (with a string value) will be chosen:</p>
+<ol>
+<li><code>package.metadata.crane.name</code></li>
+<li><code>package.name</code></li>
+<li><code>workspace.metadata.crane.name</code></li>
+<li>(Deprecated) <code>workspace.package.name</code></li>
+<li>Otherwise a placeholder name will be used</li>
+</ol>
+<p>The resulting <code>version</code> attribute will be populated with the value of the
+Cargo.toml's (top-level) attributes in the following order, where the first
+attribute (with a string value) will be chosen:</p>
+<ol>
+<li><code>package.version</code></li>
+<li><code>workspace.package.version</code></li>
+<li>Otherwise a placeholder version will be used</li>
+</ol>
+<p>Note that <em>only the root <code>Cargo.toml</code> of the specified source will be checked</em>.
+Directories <strong>will not be crawled</strong> to resolve potential workspace inheritance.</p>
+<pre><code class="language-nix">craneLib.crateNameFromCargoToml { cargoToml = ./Cargo.toml; }
+# { pname = "simple"; version = "0.1.0"; }
+</code></pre>
+<h3 id="cranelibcrateregistries"><a class="header" href="#cranelibcrateregistries"><code>craneLib.crateRegistries</code></a></h3>
+<p><code>crateRegistries :: set</code></p>
+<p>A set of crate registries made available for use in downloading crate sources.
+The keys are registry URLs as used in the Cargo.lock file (e.g.
+"registry+https://...") and the values are the download URL for that registry,
+including any <a href="https://doc.rust-lang.org/cargo/reference/registries.html#index-format">placeholder
+values</a>
+cargo is expected to populate for downloads.</p>
+<p>This definition can be updated via <code>appendCrateRegistries</code>.</p>
+<h4 id="input-attributes-1"><a class="header" href="#input-attributes-1">Input attributes</a></h4>
+<ul>
+<li><code>src</code>: a directory which includes a Cargo.toml file at its root.</li>
+<li><code>cargoToml</code>: a path to a Cargo.toml file</li>
+<li><code>cargoTomlContents</code>: the contents of a Cargo.toml file as a string</li>
+</ul>
+<p>At least one of the above attributes must be specified, or an error will be
+raised during evaluation.</p>
+<h4 id="output-attributes"><a class="header" href="#output-attributes">Output attributes</a></h4>
+<ul>
+<li><code>pname</code>: the name of the crate
+<ul>
+<li>Default value: <code>"cargo-package"</code> if the specified Cargo.toml file did not
+include a name</li>
+</ul>
+</li>
+<li><code>version</code>: the version of the crate
+<ul>
+<li>Default value: <code>"0.0.1"</code> if the specified Cargo.toml file did not
+include a version</li>
+</ul>
+</li>
+</ul>
+<h3 id="cranelibdevshell"><a class="header" href="#cranelibdevshell"><code>craneLib.devShell</code></a></h3>
+<p><code>devShell :: set -&gt; drv</code></p>
+<p>A thin wrapper around
+<a href="https://nixos.org/manual/nixpkgs/stable/#sec-pkgs-mkShell"><code>pkgs.mkShell</code></a> for
+creating development shells for use with <code>nix develop</code> (see <a href="local_development.html">“Local
+Development”</a>). Except where noted below, all derivation
+attributes are passed straight through, so any <code>mkShell</code> behavior can be used
+as expected: namely, all key-value pairs other than those <code>mkShell</code> consumes
+will be set as environment variables in the resulting shell.</p>
+<p>Note that the current toolchain's <code>cargo</code>, <code>clippy</code>, <code>rustc</code>, and <code>rustfmt</code>
+packages will automatically be added to the devShell.</p>
+<h4 id="optional-attributes-15"><a class="header" href="#optional-attributes-15">Optional attributes</a></h4>
+<ul>
+<li><code>checks</code>: A set of checks to inherit inputs from, typically
+<code>self.checks.${system}</code>. Build inputs from the values in this attribute set
+are added to the created shell environment for interactive use.</li>
+<li><code>inputsFrom</code>: A list of extra packages to inherit inputs from. Note that
+these packages are <em>not</em> added to the result environment; use
+<code>packages</code> for that.</li>
+<li><code>packages</code>: A list of extra packages to add to the created shell environment.</li>
+<li><code>shellHook</code>: A string of bash statements that will be executed when the shell
+is entered with <code>nix develop</code>.</li>
+</ul>
+<p>See the <a href="examples/quick-start.html">quick start example</a> for usage in a
+<code>flake.nix</code> file.</p>
+<pre><code class="language-nix">craneLib.devShell {
+  checks = self.checks.${system};
+
+  packages = [
+    pkgs.ripgrep
+  ];
+
+  # Set a `cargo-nextest` profile:
+  NEXTEST_PROFILE = "local";
+}
+</code></pre>
+<pre><code class="language-nix">craneLib.devShell {
+  checks = {
+    my-package-clippy = craneLib.cargoClippy commonArgs;
+    my-package-doc = craneLib.cargoDoc commonArgs;
+    my-package-nextest = craneLib.cargoNextest commonArgs;
+  };
+}
+</code></pre>
+<p>Note that it is possible to override the underlying <code>mkShell</code> (for example to
+customize the build environment further) like so:</p>
+<pre><code class="language-nix">let
+  moldDevShell = craneLib.devShell.override {
+    # For example, use the mold linker
+    mkShell = pkgs.mkShell.override {
+      stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.stdenv;
+    };
+  };
+in
+moldDevShell {
+  packages = [
+    # etc...
+  ];
+}
+</code></pre>
+<h3 id="cranelibdownloadcargopackage"><a class="header" href="#cranelibdownloadcargopackage"><code>craneLib.downloadCargoPackage</code></a></h3>
+<p><code>downloadCargoPackage :: set -&gt; drv</code></p>
+<p>Download a packaged cargo crate (e.g. from crates.io) and prepare it for
+vendoring.</p>
+<p>The registry's <code>fetchurlExtraArgs</code> will be passed through to <code>fetchurl</code> when
+downloading the crate, making it possible to influence interacting with the
+registry's API if necessary.</p>
+<h4 id="required-input-attributes"><a class="header" href="#required-input-attributes">Required input attributes</a></h4>
+<ul>
+<li><code>checksum</code>: the (sha256) checksum recorded in the Cargo.lock file</li>
+<li><code>name</code>: the name of the crate</li>
+<li><code>source</code>: the source key recorded in the Cargo.lock file</li>
+<li><code>version</code>: the version of the crate</li>
+</ul>
+<h4 id="attributes-of-the-vendor-prep-derivation"><a class="header" href="#attributes-of-the-vendor-prep-derivation">Attributes of the vendor-prep derivation</a></h4>
+<ul>
+<li><code>dontBuild</code>: <code>true</code></li>
+<li><code>dontConfigure</code>: <code>true</code></li>
+<li><code>dontFixup</code>: <code>true</code></li>
+<li><code>pname</code>: <code>"cargo-package-"</code> suffixed by the package name in <code>Cargo.lock</code></li>
+<li><code>sourceRoot</code>: <code>"./crate"</code></li>
+<li><code>version</code>: inherited from the package version in <code>Cargo.lock</code></li>
+<li><code>unpackPhase</code>: This phase will:
+<ol>
+<li>run the <code>preUnpack</code> hook</li>
+<li>create an empty directory named <code>./crate</code></li>
+<li>unpack the crate's tarball under <code>./crate</code></li>
+<li>run the <code>postUnpack</code> hook</li>
+</ol>
+</li>
+<li><code>installPhase</code>: This phase will:
+<ol>
+<li>run the <code>preInstall</code> hook</li>
+<li>move the contents of the current directory (i.e. <code>./crate</code> by default) to
+<code>$out</code></li>
+<li>populate <code>$out/.cargo-checksum.json</code></li>
+<li>run the <code>postInstall</code> hook</li>
+</ol>
+</li>
+</ul>
+<h3 id="cranelibdownloadcargopackagefromgit"><a class="header" href="#cranelibdownloadcargopackagefromgit"><code>craneLib.downloadCargoPackageFromGit</code></a></h3>
+<p><code>downloadCargoPackageFromGit :: set -&gt; drv</code></p>
+<p>Download a git repository containing a cargo crate or workspace, and prepare it
+any crates it contains for vendoring.</p>
+<h4 id="required-input-attributes-1"><a class="header" href="#required-input-attributes-1">Required input attributes</a></h4>
+<ul>
+<li><code>git</code>: the URL to the repository</li>
+<li><code>rev</code>: the exact revision to check out</li>
+</ul>
+<h4 id="optional-attributes-16"><a class="header" href="#optional-attributes-16">Optional attributes</a></h4>
+<ul>
+<li><code>allRefs</code>: whether all git refs should be fetched in order to look for the
+specified <code>rev</code>
+<ul>
+<li>Default value: <code>true</code> if <code>ref</code> is set to <code>null</code>, <code>false</code> otherwise</li>
+</ul>
+</li>
+<li><code>ref</code>: the ref (i.e. branch or tag) to which <code>rev</code> belongs to. For branches it
+should be <code>"refs/head/${branch}"</code> and for tags it should be
+<code>"refs/tags/${tag}"</code>
+<ul>
+<li>Default value: <code>null</code></li>
+</ul>
+</li>
+<li><code>sha256</code>: the sha256 hash of the (unpacked) download. If provided <code>fetchgit</code> will be used
+(instead of <code>builtins.fetchGit</code>) which allows for offline evaluations.
+<ul>
+<li>Default value: <code>null</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="attributes-of-the-vendor-prep-derivation-1"><a class="header" href="#attributes-of-the-vendor-prep-derivation-1">Attributes of the vendor-prep derivation</a></h4>
+<ul>
+<li><code>dontBuild</code>: <code>true</code></li>
+<li><code>dontConfigure</code>: <code>true</code></li>
+<li><code>dontFixup</code>: <code>true</code></li>
+<li><code>installPhase</code>: This phase will:
+<ol>
+<li>run the <code>preInstall</code> hook</li>
+<li>Prepare the current directory for vendoring by:
+<ul>
+<li>Searching for all <code>Cargo.toml</code> files</li>
+<li>Copying their parent directory to <code>$out/$crate</code> (where <code>$crate</code> is the
+package name and version as defined in <code>Cargo.toml</code>)</li>
+<li>Populating <code>.cargo-checksum.json</code></li>
+<li>Running <code>crane-resolve-workspace-inheritance</code> on the <code>Cargo.toml</code></li>
+<li>Note that duplicate crates (whose name and version collide) are ignored</li>
+</ul>
+</li>
+<li>run the <code>postInstall</code> hook</li>
+</ol>
+</li>
+<li><code>nativeBuildInputs</code>: A list of the <code>cargo</code>, <code>craneUtils</code>, and <code>jq</code> packages</li>
+<li><code>name</code>: set to <code>"cargo-git"</code></li>
+<li><code>src</code>: the git repo checkout, as determined by the input parameters</li>
+</ul>
+<h3 id="cranelibfindcargofiles"><a class="header" href="#cranelibfindcargofiles"><code>craneLib.findCargoFiles</code></a></h3>
+<p><code>findCargoFiles :: path -&gt; set of lists</code></p>
+<p>Given a path, recursively search it for any <code>Cargo.toml</code>, <code>.cargo/config</code> or
+<code>.cargo/config.toml</code> files.</p>
+<pre><code class="language-nix">craneLib.findCargoFiles ./src
+# { cargoTomls = [ "..." ]; cargoConfigs = [ "..." ]; }
+</code></pre>
+<h3 id="cranelibfiltercargosources"><a class="header" href="#cranelibfiltercargosources"><code>craneLib.filterCargoSources</code></a></h3>
+<p><code>filterCargoSources :: path -&gt; string -&gt; bool</code></p>
+<p>A source filter which when used with <code>cleanSourceWith</code> (from nixpkgs's <code>lib</code>)
+will retain the following files from a given source:</p>
+<ul>
+<li>Cargo files (<code>Cargo.toml</code>, <code>Cargo.lock</code>, <code>.cargo/config.toml</code>, <code>.cargo/config</code>)</li>
+<li>Rust files (files whose name end with <code>.rs</code>)</li>
+<li>TOML files (files whose name end with <code>.toml</code>)</li>
+</ul>
+<pre><code class="language-nix">cleanSourceWith {
+  src = ./.;
+  filter = craneLib.filterCargoSources;
+  name = "source"; # Be reproducible, regardless of the directory name
+}
+</code></pre>
+<p>Note that it is possible to compose source filters, especially if
+<code>filterCargoSources</code> omits files which are relevant to the build. For example:</p>
+<pre><code class="language-nix">let
+  # Only keeps markdown files
+  markdownFilter = path: _type: builtins.match ".*md$" path != null;
+  markdownOrCargo = path: type:
+    (markdownFilter path type) || (craneLib.filterCargoSources path type);
+in
+cleanSourceWith {
+  src = ./.;
+  filter = markdownOrCargo;
+  name = "source"; # Be reproducible, regardless of the directory name
+}
+</code></pre>
+<h3 id="cranelibfilesetcargotomlandlock"><a class="header" href="#cranelibfilesetcargotomlandlock"><code>craneLib.fileset.cargoTomlAndLock</code></a></h3>
+<p><code>cargoTomlAndLock :: path -&gt; fileset</code></p>
+<p>A <a href="https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset">fileset</a> helper which will only include any <code>Cargo.toml</code> and <code>Cargo.lock</code>
+files from the specified path.</p>
+<h3 id="cranelibfilesetcommoncargosources"><a class="header" href="#cranelibfilesetcommoncargosources"><code>craneLib.fileset.commonCargoSources</code></a></h3>
+<p><code>commonCargoSources :: path -&gt; fileset</code></p>
+<p>A <a href="https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset">fileset</a> helper which will only include any files commonly used by cargo
+projects from the specified path. Essentially a union of:</p>
+<ul>
+<li><code>craneLib.fileset.cargoTomlAndLock</code></li>
+<li><code>craneLib.fileset.rust</code></li>
+<li><code>craneLib.fileset.toml</code></li>
+</ul>
+<h3 id="cranelibfilesetconfigtoml"><a class="header" href="#cranelibfilesetconfigtoml"><code>craneLib.fileset.configToml</code></a></h3>
+<p><code>configToml :: path -&gt; fileset</code></p>
+<p>A <a href="https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset">fileset</a> helper which will only include <code>config.toml</code> files from the
+specified path.</p>
+<p>Note that cargo usually only pays attention to <code>config.toml</code> files if they are
+present inside of a directory named <code>.cargo</code>. This fileset will contain any
+<code>config.toml</code> file, even if its parent directory is <em>not</em> named <code>.cargo</code>.</p>
+<h3 id="cranelibfilesetrust"><a class="header" href="#cranelibfilesetrust"><code>craneLib.fileset.rust</code></a></h3>
+<p><code>rust :: path -&gt; fileset</code></p>
+<p>A <a href="https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset">fileset</a> helper which will only include <code>*.rs</code> files from the specified path.</p>
+<h3 id="cranelibfilesettoml"><a class="header" href="#cranelibfilesettoml"><code>craneLib.fileset.toml</code></a></h3>
+<p><code>toml :: path -&gt; fileset</code></p>
+<p>A <a href="https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-fileset">fileset</a> helper which will only include <code>*.toml</code> files from the specified path.</p>
+<h3 id="cranelibmkcargoderivation"><a class="header" href="#cranelibmkcargoderivation"><code>craneLib.mkCargoDerivation</code></a></h3>
+<p><code>mkCargoDerivation :: set -&gt; drv</code></p>
+<p>A thin wrapper around <code>stdenv.mkDerivation</code> which includes common hooks for
+building a derivation using cargo. Except where noted below, all derivation
+attributes are passed straight through, so any common derivation behavior can be
+used as expected: namely all key-value pairs will be set as environment
+variables for the derivation's build script.</p>
+<p>This is a fairly low-level abstraction, so consider using <code>buildPackage</code> or
+<code>cargoBuild</code> if they fit your needs.</p>
+<h4 id="required-attributes-7"><a class="header" href="#required-attributes-7">Required attributes</a></h4>
+<ul>
+<li><code>buildPhaseCargoCommand</code>: A command (likely a cargo invocation) to run during
+the derivation's build phase. Pre and post build hooks will automatically be
+run.</li>
+<li><code>cargoArtifacts</code>: A path (or derivation) which contains an existing cargo
+<code>target</code> directory, which will be reused at the start of the derivation.
+Useful for caching incremental cargo builds.
+<ul>
+<li>This can be prepared via <code>buildDepsOnly</code></li>
+<li>Alternatively, any cargo-based derivation which was built with
+<code>doInstallCargoArtifacts = true</code> will work as well</li>
+</ul>
+</li>
+</ul>
+<h4 id="optional-attributes-17"><a class="header" href="#optional-attributes-17">Optional attributes</a></h4>
+<ul>
+<li><code>buildPhase</code>: the commands used by the build phase of the derivation
+<ul>
+<li>Default value: the build phase will run <code>preBuild</code> hooks, print the cargo
+version, log and evaluate <code>buildPhaseCargoCommand</code>, and run <code>postBuild</code>
+hooks</li>
+</ul>
+</li>
+<li><code>cargoLock</code>: if set will be passed through to the derivation and the path it
+points to will be copied as the workspace <code>Cargo.lock</code>
+<ul>
+<li>Unset by default</li>
+</ul>
+</li>
+<li><code>cargoLockContents</code>: if set and <code>cargoLock</code> is missing or null, its value will
+be written as the workspace <code>Cargo.lock</code>
+<ul>
+<li>Unset by default</li>
+</ul>
+</li>
+<li><code>cargoLockParsed</code>: if set and both <code>cargoLock</code> and <code>cargoLockContents</code> are
+missing or null, its value will be serialized as TOML and the result written
+as the workspace <code>Cargo.lock</code>
+<ul>
+<li>Unset by default</li>
+</ul>
+</li>
+<li><code>cargoVendorDir</code>: A path (or derivation) of vendored cargo sources which can
+be consumed without network access. Directory structure should basically
+follow the output of <code>cargo vendor</code>.
+<ul>
+<li>Default value: the result of <code>vendorCargoDeps</code> after applying the arguments
+set (with the respective default values)</li>
+</ul>
+</li>
+<li><code>checkPhase</code>: the commands used by the check phase of the derivation
+<ul>
+<li>Default value: the check phase will run <code>preCheck</code> hooks, log and evaluate
+<code>checkPhaseCargoCommand</code>, and run <code>postCheck</code> hooks</li>
+</ul>
+</li>
+<li><code>checkPhaseCargoCommand</code>: A command (likely a cargo invocation) to run during
+the derivation's check phase. Pre and post check hooks will automatically be
+run.
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>configurePhase</code>: the commands used by the configure phase of the derivation
+<ul>
+<li>Default value: the configure phase will run <code>preConfigureHooks</code> hooks, then
+run <code>postConfigure</code> hooks</li>
+</ul>
+</li>
+<li><code>doInstallCargoArtifacts</code>: controls whether cargo's <code>target</code> directory should
+be copied as an output
+<ul>
+<li>Default value: <code>true</code></li>
+</ul>
+</li>
+<li><code>installPhase</code>: the commands used by the install phase of the derivation
+<ul>
+<li>Default value: the install phase will run <code>preInstall</code> hooks, log and evaluate
+<code>installPhaseCommand</code>, and run <code>postInstall</code> hooks</li>
+</ul>
+</li>
+<li><code>installPhaseCommand</code>: the command(s) which are expected to install the
+derivation's outputs.
+<ul>
+<li>Default value: <code>"mkdir -p $out"</code></li>
+<li>By default an output directory is created such that any other <code>postInstall</code>
+hooks can successfully run. Consider overriding this value with an
+appropriate installation commands for the package being built.</li>
+</ul>
+</li>
+<li><code>pname</code>: the name of the derivation
+<ul>
+<li>Default value: the package name listed in <code>Cargo.toml</code></li>
+</ul>
+</li>
+<li><code>pnameSuffix</code>: a suffix appended to <code>pname</code>
+<ul>
+<li>Default value: <code>""</code></li>
+</ul>
+</li>
+<li><code>stdenv</code>: the standard build environment to use for this derivation
+<ul>
+<li>Default value: <code>pkgs.stdenv</code></li>
+</ul>
+</li>
+<li><code>version</code>: the version of the derivation
+<ul>
+<li>Default value: the version listed in <code>Cargo.toml</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="remove-attributes-15"><a class="header" href="#remove-attributes-15">Remove attributes</a></h4>
+<p>The following attributes will be removed before being lowered to
+<code>stdenv.mkDerivation</code>. If you absolutely need these attributes present as
+environment variables during the build, you can bring them back via
+<code>.overrideAttrs</code>.</p>
+<ul>
+<li><code>buildPhaseCargoCommand</code></li>
+<li><code>cargoLock</code></li>
+<li><code>cargoLockContents</code></li>
+<li><code>cargoLockParsed</code></li>
+<li><code>checkPhaseCargoCommand</code></li>
+<li><code>installPhaseCommand</code></li>
+<li><code>outputHashes</code></li>
+<li><code>pnameSuffix</code></li>
+<li><code>stdenv</code></li>
+</ul>
+<h4 id="native-build-dependencies-and-included-hooks-2"><a class="header" href="#native-build-dependencies-and-included-hooks-2">Native build dependencies and included hooks</a></h4>
+<p>The following packages and hooks are automatically appended as a native build
+input to any other <code>nativeBuildInputs</code> specified by the caller:</p>
+<ul>
+<li><code>cargo</code></li>
+<li><code>cargoHelperFunctionsHook</code></li>
+<li><code>configureCargoCommonVarsHook</code></li>
+<li><code>configureCargoVendoredDepsHook</code></li>
+<li><code>inheritCargoArtifactsHook</code></li>
+<li><code>installCargoArtifactsHook</code></li>
+<li><code>replaceCargoLockHook</code></li>
+<li><code>rustc</code></li>
+<li><code>rsync</code></li>
+<li><code>zstd</code></li>
+</ul>
+<h3 id="cranelibmkdummysrc"><a class="header" href="#cranelibmkdummysrc"><code>craneLib.mkDummySrc</code></a></h3>
+<p><code>mkDummySrc :: set -&gt; drv</code></p>
+<p>Converts a given source directory of a cargo workspace to the smallest, most
+trivial form needed to build all dependencies such that their artifacts can be
+cached.</p>
+<p>The actual source files of the project itself are ignored/replaced with
+empty programs, such that changes to the source files does not invalidate any
+build caches. More specifically:</p>
+<ul>
+<li>The Cargo.lock file is kept as-is
+<ul>
+<li>Any changes to it will invalidate the build cache</li>
+</ul>
+</li>
+<li>Any cargo configuration files (i.e. files name <code>config</code> or <code>config.toml</code> whose
+parent directory is named <code>.cargo</code>) are kept as-is.
+<ul>
+<li>Any changes to these files will invalidate the build cache</li>
+</ul>
+</li>
+<li>Any files named <code>Cargo.toml</code> are reduced via <code>cleanCargoToml</code> and the result
+is kept. Only the following changes will result in invalidating the build
+cache:
+<ul>
+<li>Any changes to listed dependencies</li>
+<li>Any changes to feature definitions</li>
+<li>Any changes to the workspace member metadata</li>
+<li>Any changes to the <code>[package]</code> definition such as name and version</li>
+<li>Any changes to the name or path of any target (such as benches, bins,
+examples, libs, or tests)</li>
+<li>Any removal or new definition of a <code>[[bin]]</code> target, or, any removal or new
+definition of a file under <code>src/bin</code> when <code>autolib</code> is enabled in the
+<code>Cargo.toml</code> file (this setting is <code>true</code> by default)</li>
+</ul>
+</li>
+</ul>
+<h4 id="required-attributes-8"><a class="header" href="#required-attributes-8">Required attributes</a></h4>
+<ul>
+<li><code>src</code>: a source directory which should be turned into a "dummy" form</li>
+</ul>
+<h4 id="optional-attributes-18"><a class="header" href="#optional-attributes-18">Optional attributes</a></h4>
+<ul>
+<li><code>cargoLock</code>: a path to a Cargo.lock file
+<ul>
+<li>Default value: <code>src + /Cargo.lock</code></li>
+</ul>
+</li>
+<li><code>dummyrs</code>: a path to a file which will be used in place of all dummy rust
+files (e.g. <code>main.rs</code>, <code>lib.rs</code>, etc.). This can be useful to customize dummy
+source files (e.g. enable certain lang features for a given target).
+<ul>
+<li>Default value: an empty <code>fn main</code> declaration and conditionally enabled
+<code>#![no_std]</code> if the <code>target_os</code> cfg is set to <code>"none"</code> or <code>"uefi"</code>.</li>
+</ul>
+</li>
+<li><code>extraDummyScript</code>: additional shell script which will be run inside the builder
+verbatim. Useful for customizing what the dummy sources include by running any
+arbitrary commands.
+<ul>
+<li>Default value: <code>""</code></li>
+<li>Note that this script will run in an environment
+<em>where the original source is not present</em> as doing so would cause a rebuild
+if any part of the source changed. Additional files can be copied to the
+derivation's result, but care must be taken that the derivation only depends
+on (i.e. is rebuilt if) the smallest subset of the original source as
+required.</li>
+<li>Here is an example of how to include an entire directory, in this case
+<code>.cargo</code>, but any other directory would work as well:
+<pre><code class="language-nix">let
+  # The _entire_ source of the project. mkDummySrc will automatically
+  # filter out irrelevant files as described above
+  src = craneLib.path ./.;
+
+  dotCargoOnly = lib.cleanSourceWith {
+    inherit src;
+    # Only keep `*/.cargo/*`
+    filter = path: _type: lib.hasInfix ".cargo" path;
+  };
+in
+mkDummySrc {
+  inherit src;
+
+  # Note that here we scope the path to only contain any `.cargo` directory
+  # and its contents and not any other  directories which may exist at the
+  # root of the project. Also note that the entire path is inside of the
+  # `${ }` which ensures that the derivation only consumes that directory.
+  # Writing `${./.}/.cargo` would incorrectly consume the entire source root,
+  # and therefore rebuild everything when any file changes, which defeats
+  # artifact caching.
+  #
+  # Also note the `--no-target-directory` flag which ensures the results are
+  # copied to `$out/.cargo` instead of something like `$out/HASH-.cargo`
+  extraDummyScript = ''
+    cp -r ${dotCargoOnly} --no-target-directory $out/
+  '';
+}
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="craneliboverridetoolchain"><a class="header" href="#craneliboverridetoolchain"><code>craneLib.overrideToolchain</code></a></h3>
+<p><code>overrideToolchain :: (set -&gt; drv) -&gt; set</code>
+<code>overrideToolchain :: drv -&gt; set</code> (legacy)</p>
+<p>A convenience method to override and use tools (like <code>cargo</code>, <code>clippy</code>,
+<code>rustfmt</code>, <code>rustc</code>, etc.) from one specific toolchain. The input should be a
+single derivation which contains all the tools as binaries. For example, this
+can be the output of <code>oxalica/rust-overlay</code>.</p>
+<p>Note that in order to best support cross compilation, <code>overrideToolchain</code> should
+be provided a function (whose argument is a cross-compilation aware version of
+<code>pkgs</code>) which constructs the toolchain:</p>
+<pre><code class="language-nix">craneLib.overrideToolchain (p: myCustomToolchainForPkgs p)
+</code></pre>
+<h3 id="cranelibpath"><a class="header" href="#cranelibpath"><code>craneLib.path</code></a></h3>
+<p><code>path :: path -&gt; drv</code></p>
+<p><code>path :: set -&gt; drv</code></p>
+<p>A convenience wrapper around <code>builtins.path</code> which will automatically set the
+path's <code>name</code> to the workspace's package name (or a placeholder value of
+<code>"source"</code> if a name cannot be determined).</p>
+<p>It should be used anywhere a relative path like <code>./.</code> or <code>./..</code> is needed so
+that the result is reproducible and caches can be reused. Otherwise the store
+path <a href="https://nix.dev/anti-patterns/language#reproducibility-referencing-top-level-directory-with">will depend on the name of the parent
+directory</a> which may cause unnecessary rebuilds.</p>
+<pre><code class="language-nix">craneLib.path ./.
+# "/nix/store/wbhf6c7wiw9z53hsn487a8wswivwdw81-source"
+</code></pre>
+<pre><code class="language-nix">craneLib.path ./checks/simple
+# "/nix/store/s9scn97c86kqskf7yv5n2k85in5y5cmy-simple"
+</code></pre>
+<p>It is also possible to use as a drop in replacement for <code>builtins.path</code>:</p>
+<pre><code class="language-nix">craneLib.path {
+  path = ./.;
+  name = "asdf";
+}
+# "/nix/store/23zy3c68v789cg8sysgba0rbgbfcjfhn-asdf"
+</code></pre>
+<h3 id="cranelibregistryfromdownloadurl"><a class="header" href="#cranelibregistryfromdownloadurl"><code>craneLib.registryFromDownloadUrl</code></a></h3>
+<p><code>registryFromDownloadUrl :: set -&gt; set</code></p>
+<p>Prepares a crate registry into a format that can be passed directly to
+<code>appendCrateRegistries</code> using the registry's download URL.</p>
+<p>If the registry in question has a stable download URL (which either never
+changes, or it does so very infrequently), then <code>registryFromDownloadUrl</code> is a
+great and lightweight choice for including the registry. To get started, look up
+the
+<a href="https://github.com/rust-lang/crates.io-index/blob/24ecfa9c82456a79ec115736f1fcefc0be375b52/config.json#L2"><code>config.json</code></a> at the registry's root and copy the value of the <code>dl</code> entry.</p>
+<p>If the registry's download endpoint changes more frequently and you would like
+to infer the configuration directly from a git revision, consider using
+<code>registryFromGitIndex</code> as an alternative.</p>
+<p>If the registry needs a special way of accessing crate sources the
+<code>fetchurlExtraArgs</code> set can be used to influence the behavior of fetching the
+crate sources (e.g. by setting <code>curlOptsList</code>)</p>
+<h4 id="required-attributes-9"><a class="header" href="#required-attributes-9">Required attributes</a></h4>
+<ul>
+<li><code>dl</code>: the value of the <code>dl</code> entry in the registry's <code>config.json</code> file</li>
+<li><code>indexUrl</code>: an HTTP URL to the index</li>
+</ul>
+<h4 id="optional-attributes-19"><a class="header" href="#optional-attributes-19">Optional attributes</a></h4>
+<ul>
+<li><code>fetchurlExtraArgs</code>: a set of arguments which will be passed on to the
+<code>fetchurl</code> for each crate being sourced from this registry</li>
+</ul>
+<pre><code class="language-nix">craneLib.registryFromDownloadUrl {
+  dl = "https://static.crates.io/crates";
+  indexUrl = "https://github.com/rust-lang/crates.io-index";
+}
+# {
+#   "registry+https://github.com/rust-lang/crates.io-index" = {
+#     downloadUrl = "https://static.crates.io/crates/{crate}/{version}/download";
+#     fetchurlExtraArgs = {};
+#   };
+# }
+</code></pre>
+<h3 id="cranelibregistryfromgitindex"><a class="header" href="#cranelibregistryfromgitindex"><code>craneLib.registryFromGitIndex</code></a></h3>
+<p><code>registryFromGitIndex :: set -&gt; set</code></p>
+<p>Prepares a crate registry into a format that can be passed directly to
+<code>appendCrateRegistries</code> using a revision of the registry index to infer the
+download URL.</p>
+<p>Note that the specified git revision <em>does not need to track updates to the
+index itself</em> as long as the pinned revision contains the most recent version of
+the <code>config.json</code> file. In other words, this commit revision only needs to be
+updated if the <code>config.json</code> file changes.</p>
+<p>Also note that this approach means that the contents of the entire index at the
+specified revision will be added to the Nix store during evaluation time, and
+that IFD will need to be enabled. If this is unsatisfactory, consider using
+<code>registryFromDownloadUrl</code> as a simpler alternative.</p>
+<p>If the registry needs a special way of accessing crate sources the
+<code>fetchurlExtraArgs</code> set can be used to influence the behavior of fetching the
+crate sources (e.g. by setting <code>curlOptsList</code>)</p>
+<h4 id="required-attributes-10"><a class="header" href="#required-attributes-10">Required attributes</a></h4>
+<ul>
+<li><code>indexUrl</code>: an HTTP URL to the index</li>
+<li><code>rev</code>: any git revision which contains the latest <code>config.json</code> definition</li>
+</ul>
+<h4 id="optional-attributes-20"><a class="header" href="#optional-attributes-20">Optional attributes</a></h4>
+<ul>
+<li><code>fetchurlExtraArgs</code>: a set of arguments which will be passed on to the
+<code>fetchurl</code> for each crate being sourced from this registry</li>
+</ul>
+<pre><code class="language-nix">craneLib.registryFromGitIndex {
+  url = "https://github.com/Hirevo/alexandrie-index";
+  rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
+}
+# {
+#   "registry+https://github.com/Hirevo/alexandrie-index" = {
+#     downloadUrl = "https://crates.polomack.eu/api/v1/crates/{crate}/{version}/download";
+#     fetchurlExtraArgs = {};
+#   };
+# }
+</code></pre>
+<h3 id="cranelibregistryfromsparse"><a class="header" href="#cranelibregistryfromsparse"><code>craneLib.registryFromSparse</code></a></h3>
+<p><code>registryFromSparse :: set -&gt; set</code></p>
+<p>Prepares a (sparse) crate registry into a format that can be passed directly to
+<code>appendCrateRegistries</code> using the registry's download URL.</p>
+<p>If the registry in question has a stable download URL (which either never
+changes, or it does so very infrequently), then <code>registryFromDownloadUrl</code> is a
+great and lightweight choice for including the registry. To get started,
+download the registry's <code>config.json</code> and copy the value of the <code>dl</code> entry.</p>
+<p>If the registry's download endpoint changes more frequently and you would like
+to infer the configuration directly from a git revision, consider using
+<code>registryFromGitIndex</code> as an alternative.</p>
+<p>If the registry needs a special way of accessing crate sources the
+<code>fetchurlExtraArgs</code> set can be used to influence the behavior of fetching the
+crate sources (e.g. by setting <code>curlOptsList</code>)</p>
+<h4 id="required-attributes-11"><a class="header" href="#required-attributes-11">Required attributes</a></h4>
+<ul>
+<li><code>indexUrl</code>: an HTTP URL to the registry's config.json</li>
+<li><code>configSha256</code>: a sha256 hash of the contents of config.json</li>
+</ul>
+<h4 id="optional-attributes-21"><a class="header" href="#optional-attributes-21">Optional attributes</a></h4>
+<ul>
+<li><code>fetchurlExtraArgs</code>: a set of arguments which will be passed on to the
+<code>fetchurl</code> for each crate being sourced from this registry</li>
+</ul>
+<pre><code class="language-nix">craneLib.registryFromSparse {
+  indexUrl = "https://index.crates.io/config.json";
+  configSha256 = "1cxgzdm1ipqmgwnq7kgym92axna7pfyhgfla63vl7dvydwn3m52v";
+}
+# {
+#   "sparse+https://index.crates.io/config.json/" = {
+#     downloadUrl = "https://static.crates.io/crates/{crate}/{version}/download";
+#     fetchurlExtraArgs = { };
+#   };
+# }
+</code></pre>
+<h3 id="craneliburlforcargopackage"><a class="header" href="#craneliburlforcargopackage"><code>craneLib.urlForCargoPackage</code></a></h3>
+<p><code>urlForCargoPackage :: set -&gt; set</code></p>
+<p>Returns info pertaining to the URL for downloading a particular crate if the
+crate's registry is configured (an error will be thrown if it is not).</p>
+<p>The result will contain two attributes:</p>
+<ul>
+<li><code>url</code>: A string representing the URL at which the crate can be fetched</li>
+<li><code>fetchurlExtraArgs</code>: A set of attributes specific to this registry which will
+be passed on to the <code>fetchurl</code> invocation.</li>
+</ul>
+<h4 id="required-input-attributes-2"><a class="header" href="#required-input-attributes-2">Required input attributes</a></h4>
+<ul>
+<li><code>name</code>: the name of the crate</li>
+<li><code>source</code>: the source key recorded in the Cargo.lock file</li>
+<li><code>version</code>: the version of the crate</li>
+</ul>
+<h3 id="cranelibvendorcargodeps"><a class="header" href="#cranelibvendorcargodeps"><code>craneLib.vendorCargoDeps</code></a></h3>
+<p><code>vendorCargoDeps :: set -&gt; drv</code></p>
+<p>Creates a derivation which will download all crates referenced by a Cargo.lock
+file, and prepare a vendored directory which cargo can use for subsequent builds
+without needing network access.</p>
+<p>Each unique crate index will be vendored as its own subdirectory within the
+output of the derivation. A <code>config.toml</code> file will also be placed at the root
+of the output which will contain the necessary configurations to point cargo to
+the vendored directories (i.e. this configuration can be appended to the
+<code>.cargo/config.toml</code> definition of the project).</p>
+<h4 id="input-attributes-2"><a class="header" href="#input-attributes-2">Input attributes</a></h4>
+<ul>
+<li><code>src</code>: a directory which includes a Cargo.lock file at its root.</li>
+<li><code>cargoLock</code>: a path to a Cargo.lock file</li>
+<li><code>cargoLockContents</code>: the contents of a Cargo.lock file as a string</li>
+<li><code>cargoLockParsed</code>: the parsed contents of Cargo.lock as an attribute set</li>
+</ul>
+<p>At least one of the above attributes must be specified, or an error will be
+raised during evaluation.</p>
+<h4 id="optional-attributes-22"><a class="header" href="#optional-attributes-22">Optional attributes</a></h4>
+<ul>
+<li><code>outputHashes</code>: a mapping of package-source to the <code>hash</code> attribute of the
+(unpacked) download. Useful for supporting fully offline evaluations.
+<ul>
+<li>Default value: <code>[]</code></li>
+</ul>
+</li>
+<li><code>overrideVendorCargoPackage</code>: a function that will be called on every crate
+vendored from a cargo registry, which allows for modifying the derivation
+which will unpack the cargo tarball (e.g. to patch the crate source).
+It will be called with the following parameters:
+<ol>
+<li>The <code>Cargo.lock</code> entry for that package (to allow conditional overrides
+based on the package name/version/source, etc.)</li>
+<li>The default <code>downloadCargoPackage</code> derivation</li>
+</ol>
+<ul>
+<li>Default value: <code>_p: drv: drv</code></li>
+</ul>
+</li>
+<li><code>overrideVendorGitCheckout</code>: a function that will be called on every unique
+checkout vendored from a git repository, which allows for modifying the
+derivation which will unpack the cargo crates found in the checkout (e.g. to
+patch the crate sources). It will be called with the following
+parameters:
+<ol>
+<li>A list of the <code>Cargo.lock</code> entries for each package which shares the same
+repo URL and revision to checkout (to allow conditional overrides based on
+the repo/checkout etc.)</li>
+<li>The default <code>downloadCargoPackageFromGit</code> derivation</li>
+</ol>
+<ul>
+<li>Default value: <code>_ps: drv: drv</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="cranelibvendorcargoregistries"><a class="header" href="#cranelibvendorcargoregistries"><code>craneLib.vendorCargoRegistries</code></a></h3>
+<p><code>vendorCargoRegistries :: set -&gt; set</code></p>
+<p>Creates the derivations necessary to download all crates from all registries
+referenced by a <code>Cargo.lock</code> file, and prepare the vendored directories which
+cargo can use for subsequent builds without needing network access.</p>
+<h4 id="input-attributes-3"><a class="header" href="#input-attributes-3">Input attributes</a></h4>
+<ul>
+<li><code>lockPackages</code>: a list of all <code>[[package]]</code> entries found in the project's
+<code>Cargo.lock</code> file (parsed via <code>builtins.fromTOML</code>)</li>
+</ul>
+<h4 id="optional-attributes-23"><a class="header" href="#optional-attributes-23">Optional attributes</a></h4>
+<ul>
+<li><code>cargoConfigs</code>: a list of paths to all <code>.cargo/config.toml</code> files which may
+appear in the project. Ignored if <code>registries</code> is set.
+<ul>
+<li>Default value: <code>[]</code></li>
+</ul>
+</li>
+<li><code>overrideVendorCargoPackage</code>: a function that will be called on every crate
+vendored from a cargo registry, which allows for modifying the derivation
+which will unpack the cargo tarball (e.g. to patch the crate source).
+It will be called with the following parameters:
+<ol>
+<li>The <code>Cargo.lock</code> entry for that package (to allow conditional overrides
+based on the package name/version/source, etc.)</li>
+<li>The default <code>downloadCargoPackage</code> derivation</li>
+</ol>
+<ul>
+<li>Default value: <code>_p: drv: drv</code></li>
+</ul>
+</li>
+<li><code>registries</code>: an attrset of registry names to their index URL. The default
+("crates-io") registry need not be specified, as it will automatically be
+available, but it can be overridden if required.
+<ul>
+<li>Default value: if not specified, <code>cargoConfigs</code> will be used to identify any
+configured registries</li>
+</ul>
+</li>
+</ul>
+<h4 id="output-attributes-1"><a class="header" href="#output-attributes-1">Output attributes</a></h4>
+<ul>
+<li><code>config</code>: the configuration entires needed to point cargo to the vendored
+crates. This is intended to be appended to <code>$CARGO_HOME/config.toml</code> verbatim</li>
+<li><code>sources</code>: an attribute set of all the newly created cargo sources' names to
+their location in the Nix store</li>
+</ul>
+<h3 id="cranelibvendorgitdeps"><a class="header" href="#cranelibvendorgitdeps"><code>craneLib.vendorGitDeps</code></a></h3>
+<p><code>vendorGitDeps :: set -&gt; set</code></p>
+<p>Creates the derivations necessary to download all crates from all git
+dependencies referenced by a <code>Cargo.lock</code> file, and prepare the vendored
+directories which cargo can use for subsequent builds without needing network
+access.</p>
+<h4 id="input-attributes-4"><a class="header" href="#input-attributes-4">Input attributes</a></h4>
+<ul>
+<li><code>lockPackages</code>: a list of all <code>[[package]]</code> entries found in the project's
+<code>Cargo.lock</code> file (parsed via <code>builtins.fromTOML</code>)</li>
+</ul>
+<h4 id="optional-attributes-24"><a class="header" href="#optional-attributes-24">Optional attributes</a></h4>
+<ul>
+<li><code>outputHashes</code>: a mapping of package-source to the <code>hash</code> attribute of the
+(unpacked) download. Useful for supporting fully offline evaluations.
+<ul>
+<li>Default value: <code>[]</code></li>
+</ul>
+</li>
+<li><code>overrideVendorGitCheckout</code>: a function that will be called on every unique
+checkout vendored from a git repository, which allows for modifying the
+derivation which will unpack the cargo crates found in the checkout (e.g. to
+patch the crate sources). It will be called with the following
+parameters:
+<ol>
+<li>A list of the <code>Cargo.lock</code> entries for each package which shares the same
+repo URL and revision to checkout (to allow conditional overrides based on
+the repo/checkout etc.)</li>
+<li>The default <code>downloadCargoPackageFromGit</code> derivation</li>
+</ol>
+<ul>
+<li>Default value: <code>_ps: drv: drv</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="output-attributes-2"><a class="header" href="#output-attributes-2">Output attributes</a></h4>
+<ul>
+<li><code>config</code>: the configuration entires needed to point cargo to the vendored
+sources. This is intended to be appended to <code>$CARGO_HOME/config.toml</code> verbatim</li>
+<li><code>sources</code>: an attribute set of all the newly created cargo sources' names to
+their location in the Nix store</li>
+</ul>
+<h3 id="cranelibvendormultiplecargodeps"><a class="header" href="#cranelibvendormultiplecargodeps"><code>craneLib.vendorMultipleCargoDeps</code></a></h3>
+<p><code>vendorMultipleCargoDeps :: set -&gt; drv</code></p>
+<p>Creates a derivation which will download all crates referenced by several
+<code>Cargo.lock</code> files, and prepare a vendored directory which cargo can use for
+subsequent builds without needing network access. Duplicate packages listed in
+different <code>Cargo.lock</code> files will automatically be filtered out.</p>
+<p>Each unique crate index will be vendored as its own subdirectory within the
+output of the derivation. A <code>config.toml</code> file will also be placed at the root
+of the output which will contain the necessary configurations to point cargo to
+the vendored directories (i.e. this configuration can be appended to the
+<code>.cargo/config.toml</code> definition of the project).</p>
+<h4 id="optional-attributes-25"><a class="header" href="#optional-attributes-25">Optional attributes</a></h4>
+<ul>
+<li><code>cargoConfigs</code>: a list of paths to all <code>.cargo/config.toml</code> files which may
+appear in the project. Ignored if <code>registries</code> is set.
+<ul>
+<li>Default value: <code>[]</code></li>
+</ul>
+</li>
+<li><code>cargoLockContentsList</code>: a list of strings representing the contents of
+different <code>Cargo.lock</code> files to be included while vendoring. The strings will
+automatically be parsed during evaluation.
+<ul>
+<li>Default value: <code>[]</code></li>
+</ul>
+</li>
+<li><code>cargoLockList</code>: a list of paths to different <code>Cargo.lock</code> files to be
+included while vendoring. The paths will automatically be read and parsed
+during evaluation.
+<ul>
+<li>Default value: <code>[]</code></li>
+</ul>
+</li>
+<li><code>cargoLockParsedList</code>: a list of attrsets representing the parsed contents of
+different <code>Cargo.lock</code> files to be included while vendoring.
+<ul>
+<li>Default value: <code>[]</code></li>
+</ul>
+</li>
+<li><code>outputHashes</code>: a mapping of package-source to the <code>hash</code> attribute of the
+(unpacked) download. Useful for supporting fully offline evaluations.
+<ul>
+<li>Default value: <code>[]</code></li>
+</ul>
+</li>
+<li><code>overrideVendorCargoPackage</code>: a function that will be called on every crate
+vendored from a cargo registry, which allows for modifying the derivation
+which will unpack the cargo tarball (e.g. to patch the crate source).
+It will be called with the following parameters:
+<ol>
+<li>The <code>Cargo.lock</code> entry for that package (to allow conditional overrides
+based on the package name/version/source, etc.)</li>
+<li>The default <code>downloadCargoPackage</code> derivation</li>
+</ol>
+<ul>
+<li>Default value: <code>_p: drv: drv</code></li>
+</ul>
+</li>
+<li><code>overrideVendorGitCheckout</code>: a function that will be called on every unique
+checkout vendored from a git repository, which allows for modifying the
+derivation which will unpack the cargo crates found in the checkout (e.g. to
+patch the crate sources). It will be called with the following
+parameters:
+<ol>
+<li>A list of the <code>Cargo.lock</code> entries for each package which shares the same
+repo URL and revision to checkout (to allow conditional overrides based on
+the repo/checkout etc.)</li>
+<li>The default <code>downloadCargoPackageFromGit</code> derivation</li>
+</ol>
+<ul>
+<li>Default value: <code>_ps: drv: drv</code></li>
+</ul>
+</li>
+<li><code>registries</code>: an attrset of registry names to their index URL. The default
+("crates-io") registry need not be specified, as it will automatically be
+available, but it can be overridden if required.
+<ul>
+<li>Default value: if not specified, <code>cargoConfigs</code> will be used to identify any
+configured registries</li>
+</ul>
+</li>
+</ul>
+<h3 id="cranelibwritetoml"><a class="header" href="#cranelibwritetoml"><code>craneLib.writeTOML</code></a></h3>
+<p><code>writeTOML :: String -&gt; String -&gt; drv</code></p>
+<p>Takes a file name and an attribute set, converts the set to a TOML document and
+writes it to a file with the given name.</p>
+<pre><code class="language-nix">craneLib.writeTOML "foo.toml" { foo.bar = "baz"; }
+# «derivation /nix/store/...-foo.toml.drv»
+</code></pre>
+<h2 id="hooks"><a class="header" href="#hooks">Hooks</a></h2>
+<h3 id="cranelibcargohelperfunctionshook"><a class="header" href="#cranelibcargohelperfunctionshook"><code>craneLib.cargoHelperFunctionsHook</code></a></h3>
+<p>Defines helper functions for internal use. It is probably not a great idea to
+depend on these directly as their behavior can change at any time, but it is
+worth documenting them just in case:</p>
+<ul>
+<li>Defines a <code>cargo()</code> function which will immediately invoke the <code>cargo</code> command
+found on the <code>$PATH</code> after echoing the exact arguments that were passed in.
+Useful for automatically logging all cargo invocations to the log.</li>
+<li>Defines a <code>cargoWithProfile()</code> function which will invoke <code>cargo</code> with the
+provided arguments. If <code>$CARGO_PROFILE</code> is set, then <code>--profile $CARGO_PROFILE</code> will be injected into the <code>cargo</code> invocation
+<ul>
+<li>Note: a default value of <code>$CARGO_PROFILE</code> is set via
+<code>configureCargoCommonVarsHook</code>. You can set <code>CARGO_PROFILE = "something"</code> in
+your derivation to change which profile is used, or set <code>CARGO_PROFILE = "";</code> to omit it altogether.</li>
+</ul>
+</li>
+</ul>
+<h3 id="cranelibconfigurecargocommonvarshook"><a class="header" href="#cranelibconfigurecargocommonvarshook"><code>craneLib.configureCargoCommonVarsHook</code></a></h3>
+<p>Defines <code>configureCargoCommonVars()</code> which will set various common cargo-related
+variables, such as honoring the amount of parallelism dictated by Nix, disabling
+incremental artifacts, etc. More specifically:</p>
+<ul>
+<li><code>CARGO_BUILD_INCREMENTAL</code> is set to <code>false</code> if not already defined</li>
+<li><code>CARGO_BUILD_JOBS</code> is set to <code>$NIX_BUILD_CORES</code> if not already defined</li>
+<li><code>CARGO_HOME</code> is set to <code>$PWD/.cargo-home</code> if not already defined.
+<ul>
+<li>The directory that <code>CARGO_HOME</code> points to will be created</li>
+</ul>
+</li>
+<li><code>CARGO_PROFILE</code> is set to <code>release</code> if not already defined.
+<ul>
+<li>Note that this is is used internally specify a cargo profile (e.g. <code>cargo build --profile release</code>) and not something natively understood by cargo.</li>
+</ul>
+</li>
+<li><code>RUST_TEST_THREADS</code> is set to <code>$NIX_BUILD_CORES</code> if not already defined</li>
+</ul>
+<p><strong>Automatic behavior:</strong> runs as a post-patch hook</p>
+<h3 id="cranelibconfigurecargovendoreddepshook"><a class="header" href="#cranelibconfigurecargovendoreddepshook"><code>craneLib.configureCargoVendoredDepsHook</code></a></h3>
+<p>Defines <code>configureCargoVendoredDeps()</code> which will prepare cargo to use a
+directory of vendored crate sources. It takes two positional arguments:</p>
+<ol>
+<li>a path to the vendored sources
+<ul>
+<li>If not specified, the value of <code>$cargoVendorDir</code> will be used</li>
+<li>If <code>cargoVendorDir</code> is not specified, an error will be raised</li>
+</ul>
+</li>
+<li>a path to a cargo config file to modify
+<ul>
+<li>If not specified, the value of <code>$CARGO_HOME/config.toml</code> will be used</li>
+<li>This cargo config file will be appended with a stanza which will instruct
+cargo to use the vendored sources (instead of downloading the sources
+directly) as follows:
+<ul>
+<li>If the vendored directory path contains a file named <code>config.toml</code>,
+then its contents will be appended to the specified cargo config path.</li>
+<li>Otherwise the entire vendored directory path will be treated as if it
+only vendors the crates.io index and will be configured as such.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>Automatic behavior:</strong> if <code>cargoVendorDir</code> is set, then
+<code>configureCargoVendoredDeps "$cargoVendorDir" "$CARGO_HOME/config.toml"</code> will be
+run as a pre configure hook.</p>
+<h3 id="cranelibcranelib"><a class="header" href="#cranelibcranelib"><code>craneLib.craneLib</code></a></h3>
+<p>A self-reference to the crane lib instance.</p>
+<h3 id="cranelibinheritcargoartifactshook"><a class="header" href="#cranelibinheritcargoartifactshook"><code>craneLib.inheritCargoArtifactsHook</code></a></h3>
+<p>Defines <code>inheritCargoArtifacts()</code> which will pre-populate cargo's artifact
+directory using a previous derivation. It takes two positional arguments:</p>
+<ol>
+<li>a path to the previously prepared artifacts
+<ul>
+<li>If not specified, the value of <code>$cargoArtifacts</code> will be used</li>
+<li>If <code>cargoArtifacts</code> is not specified, an error will be raised</li>
+<li>If the specified path is a directory which contains a file called
+<code>target.tar.zst</code>, then that file will be used as specified below</li>
+<li>If the specified path is a file (and not a directory) it is assumed that it
+contains a zstd compressed tarball and will be decompressed and unpacked
+into the specified cargo artifacts directory</li>
+<li>If the specified path is a directory which contains another directory
+called <code>target</code>, then that directory will be used as specified below</li>
+<li>If the specified path is a directory, its contents will be copied into the
+specified cargo artifacts directory</li>
+<li>The previously prepared artifacts are expected to be a zstd compressed
+tarball</li>
+</ul>
+</li>
+<li>the path to cargo's artifact directory, where the previously prepared
+artifacts should be unpacked
+<ul>
+<li>If not specified, the value of <code>$CARGO_TARGET_DIR</code> will be used</li>
+<li>If <code>CARGO_TARGET_DIR</code> is not set, cargo's default target location  (i.e.
+<code>./target</code>) will be used.</li>
+</ul>
+</li>
+</ol>
+<p>Note that as an optimization, some dependency artifacts will be symlinked
+instead of (deeply) copied to <code>$CARGO_TARGET_DIR</code>. To disable this behavior set
+<code>doNotLinkInheritedArtifacts</code>, and all artifacts will be copied as plain,
+writable files.</p>
+<p><strong>Automatic behavior:</strong> if <code>cargoArtifacts</code> is set, then
+<code>inheritCargoArtifacts "$cargoArtifacts" "$CARGO_TARGET_DIR"</code> will be run as a
+post patch hook.</p>
+<p><strong>Required nativeBuildInputs</strong>: assumes <code>zstd</code> is available on the <code>$PATH</code></p>
+<h3 id="cranelibinstallcargoartifactshook"><a class="header" href="#cranelibinstallcargoartifactshook"><code>craneLib.installCargoArtifactsHook</code></a></h3>
+<p>Defines <code>compressAndInstallCargoArtifactsDir()</code> which handles installing
+cargo's artifact directory to the derivation's output as a zstd compressed
+tarball. It takes two positional arguments:</p>
+<ol>
+<li>the installation directory for the output.
+<ul>
+<li>An error will be raised if not specified</li>
+<li>Cargo's artifact directory will be compressed as a reproducible tarball
+with zstd compression. It will be written to this directory and named
+<code>target.tar.zstd</code></li>
+</ul>
+</li>
+<li>the path to cargo's artifact directory
+<ul>
+<li>An error will be raised if not specified</li>
+</ul>
+</li>
+</ol>
+<p>If <code>$zstdCompressionExtraArgs</code> is set, <code>compressAndInstallCargoArtifactsDir()</code>
+will pass its contents along to <code>zstd</code> when compressing artifacts.</p>
+<p>Defines <code>dedupAndInstallCargoArtifactsDir()</code> which handles installing
+cargo's artifact directory to the derivation's output after deduplicating
+identical files against a directory of previously prepared cargo artifacts.
+It takes three positional arguments:</p>
+<ol>
+<li>the installation directory for the output.
+<ul>
+<li>An error will be raised if not specified</li>
+<li>If the specified path is a directory which exists then the current cargo
+artifacts will be compared with the contents of said directory. Any files
+whose contents and paths match will be symbolically linked together to
+reduce the size of the data stored in the Nix store.</li>
+</ul>
+</li>
+<li>the path to cargo's artifact directory
+<ul>
+<li>An error will be raised if not specified</li>
+</ul>
+</li>
+<li>a path to the previously prepared cargo artifacts
+<ul>
+<li>An error will be raised if not specified</li>
+<li><code>/dev/null</code> can be specified here if there is no previous directory to
+deduplicate against</li>
+</ul>
+</li>
+</ol>
+<p>Defines <code>prepareAndInstallCargoArtifactsDir()</code> which handles installing cargo's
+artifact directory to the derivation's output. It takes three positional
+arguments:</p>
+<ol>
+<li>the installation directory for the output.
+<ul>
+<li>If not specified, the value of <code>$out</code> will be used</li>
+<li>Cargo's artifact directory will be installed based on the installation mode
+selected below</li>
+</ul>
+</li>
+<li>the path to cargo's artifact directory
+<ul>
+<li>If not specified, the value of <code>$CARGO_TARGET_DIR</code> will be used</li>
+<li>If <code>CARGO_TARGET_DIR</code> is not set, cargo's default target location  (i.e.
+<code>./target</code>) will be used.</li>
+</ul>
+</li>
+<li>the installation mode to apply
+<ul>
+<li>If specified, the value of <code>$installCargoArtifactsMode</code> will be used,
+otherwise, a default value of <code>"use-zstd"</code> will be used</li>
+<li>If set to "use-symlink" then <code>dedupAndInstallCargoArtifactsDir()</code> will be
+used.
+<ul>
+<li>If <code>$cargoArtifacts</code> is defined and <code>$cargoArtifacts/target</code> is a valid
+directory, it will be used during file deduplication</li>
+</ul>
+</li>
+<li>If set to "use-zstd" then <code>compressAndInstallCargoArtifactsDir()</code> will be
+used.</li>
+<li>Otherwise an error will be raised if the mode is not recognized</li>
+</ul>
+</li>
+</ol>
+<p><strong>Automatic behavior:</strong> if <code>doInstallCargoArtifacts</code> is set to <code>1</code>, then
+<code>prepareAndInstallCargoArtifactsDir "$out" "$CARGO_TARGET_DIR"</code> will be run as a
+post install hook.</p>
+<p><strong>Required nativeBuildInputs</strong>: assumes <code>zstd</code> is available on the <code>$PATH</code></p>
+<h3 id="cranelibinstallfromcargobuildloghook"><a class="header" href="#cranelibinstallfromcargobuildloghook"><code>craneLib.installFromCargoBuildLogHook</code></a></h3>
+<p>Defines <code>installFromCargoBuildLog()</code> which will use a build log produced by
+cargo to find and install any binaries and libraries which have been built. It
+takes two positional arguments:</p>
+<ol>
+<li>a path to where artifacts should be installed
+<ul>
+<li>If not specified, the value of <code>$out</code> will be used</li>
+<li>Binaries will be installed in a <code>bin</code> subdirectory</li>
+<li>Libraries will be installed in a <code>lib</code> subdirectory
+<ul>
+<li>Note that only library targets with the <code>staticlib</code> and <code>cdylib</code>
+crate-types will be installed. Library targets with the <code>rlib</code> crate-type
+will be ignored</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>a path to a JSON formatted build log written by cargo
+<ul>
+<li>If not specified, the value of <code>$cargoBuildLog</code> will be used</li>
+<li>If <code>cargoBuildLog</code> is not set, an error will be raised</li>
+<li>This log can be captured, for example, via <code>cargo build --message-format json-render-diagnostics &gt;cargo-build.json</code></li>
+</ul>
+</li>
+</ol>
+<p>Defines <code>postBuildInstallFromCargoBuildLog()</code> which will use a build log produced by
+cargo to find and install any binaries and libraries which have been built into
+a temporary location defined by <code>$postBuildInstallFromCargoBuildLogOut</code></p>
+<p><strong>Automatic behavior:</strong> if <code>doNotPostBuildInstallCargoBinaries</code> is not set, then
+<code>$postBuildInstallFromCargoBuildLogOut</code> will be set to a temporary directory and
+<code>postBuildInstallFromCargoBuildLog</code> will be run as a post build hook.</p>
+<p><strong>Required nativeBuildInputs</strong>: assumes <code>cargo</code> is available on the <code>$PATH</code></p>
+<h3 id="cranelibremovereferencestorusttoolchainhook"><a class="header" href="#cranelibremovereferencestorusttoolchainhook"><code>craneLib.removeReferencesToRustToolchainHook</code></a></h3>
+<p>Defines <code>removeReferencesToRustToolchain()</code> which handles removing all
+references to the Rust toolchain from the installed binaries, ensuring that the final
+binaries do not have a (false) runtime dependency on the toolchain (usually due to
+references in panic messages). The current toolchain is detected via <code>rustc --print sysroot</code>.
+It takes 1 positional argument:</p>
+<ol>
+<li>the installation directory for the output.</li>
+</ol>
+<ul>
+<li>If not specified, the value  of <code>$out</code> will be used.</li>
+<li>If <code>out</code> is not specified, an error will be raised.</li>
+</ul>
+<p><strong>Automatic behavior:</strong> if <code>doNotRemoveReferencesToVendorDir</code> is not set, then
+<code>removeReferencesToRustToolchain "$out"</code> will be run as a
+post install hook.</p>
+<p><strong>Required nativeBuildInputs</strong>: assumes <code>rustc</code> is available on the <code>$PATH</code></p>
+<h3 id="cranelibremovereferencestovendoredsourceshook"><a class="header" href="#cranelibremovereferencestovendoredsourceshook"><code>craneLib.removeReferencesToVendoredSourcesHook</code></a></h3>
+<p>Defines <code>removeReferencesToVendoredSources()</code> which handles removing all
+references to vendored sources from the installed binaries, which ensures that
+nix does not consider the binaries as having a (runtime) dependency on the
+sources themselves. It takes two positional arguments:</p>
+<ol>
+<li>the installation directory for the output.
+<ul>
+<li>If not specified, the value of <code>$out</code> will be used</li>
+<li>If <code>out</code> is not specified, an error will be raised</li>
+</ul>
+</li>
+<li>a path to the vendored sources
+<ul>
+<li>If not specified, the value of <code>$cargoVendorDir</code> will be used</li>
+<li>If <code>cargoVendorDir</code> is not specified, an error will be raised</li>
+<li>Note: it is expected that this directory has the exact structure as would
+be produced by <code>craneLib.vendorCargoDeps</code></li>
+</ul>
+</li>
+</ol>
+<p>Any patched binaries on <code>aarch64-darwin</code> will be <a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Introduction/Introduction.html">signed</a>. You can disable this functionality by setting <code>doNotSign</code>.</p>
+<p><strong>Automatic behavior:</strong> if <code>cargoVendorDir</code> is set and
+<code>doNotRemoveReferencesToVendorDir</code> is not set, then
+<code>removeReferencesToVendoredSources "$out" "$cargoVendorDir"</code> will be run as a
+post install hook.</p>
+<h3 id="cranelibreplacecargolockhook"><a class="header" href="#cranelibreplacecargolockhook"><code>craneLib.replaceCargoLockHook</code></a></h3>
+<p>Defines <code>replaceCargoLock()</code> which handles replacing or inserting a specified
+<code>Cargo.lock</code> file in the current directory. It takes one positional argument:</p>
+<ol>
+<li>a file which will be copied to <code>Cargo.lock</code> in the current directory
+<ul>
+<li>If not specified, the value of <code>$cargoLock</code> will be used</li>
+<li>If <code>$cargoLock</code> is not set, an error will be raised</li>
+</ul>
+</li>
+</ol>
+<p><strong>Automatic behavior:</strong> if <code>cargoLock</code> is set and
+<code>doNotReplaceCargoLock</code> is not set, then <code>replaceCargoLock "$cargoLock"</code> will be
+run as a pre patch hook.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="patching_dependency_sources.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="faq/faq.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="patching_dependency_sources.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="faq/faq.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
