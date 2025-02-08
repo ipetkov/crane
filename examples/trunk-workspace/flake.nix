@@ -109,16 +109,24 @@
             cd ..
           '';
           # The version of wasm-bindgen-cli here must match the one from Cargo.lock.
-          wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
-            version = "0.2.99";
-            hash = "sha256-1AN2E9t/lZhbXdVznhTcniy+7ZzlaEp/gwLEAucs6EA=";
-            cargoHash = "sha256-DbwAh8RJtW38LJp+J9Ht8fAROK9OabaJ85D9C/Vkve4=";
-            # When updating to a new version comment out the above two lines and
-            # uncomment the bottom two lines. Then try to do a build, which will fail
-            # but will print out the correct value for `hash`. Replace the value and then
-            # repeat the process but this time the printed value will be for `cargoHash`
-            # hash = lib.fakeHash;
-            # cargoHash = lib.fakeHash;
+          # When updating to a new version replace the hash values with lib.fakeHash,
+          # then try to do a build, which will fail but will print out the correct value
+          # for `hash`. Replace the value and then repeat the process but this time the
+          # printed value will be for the second `hash` below
+          wasm-bindgen-cli = pkgs.buildWasmBindgenCli rec {
+            src = pkgs.fetchCrate {
+              pname = "wasm-bindgen-cli";
+              version = "0.2.99";
+              hash = "sha256-1AN2E9t/lZhbXdVznhTcniy+7ZzlaEp/gwLEAucs6EA=";
+              # hash = lib.fakeHash;
+            };
+
+            cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+              inherit src;
+              inherit (src) pname version;
+              hash = "sha256-HGcqXb2vt6nAvPXBZOJn7nogjIoAgXno2OJBE1trHpc=";
+              # hash = lib.fakeHash;
+            };
           };
         });
       in
