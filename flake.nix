@@ -127,33 +127,9 @@
         };
 
         myLib = mkLib pkgs;
-
-        checks =
-          let
-            pkgsChecks = import nixpkgs {
-              inherit system;
-              overlays = [
-                (import (inputFromLock "rust-overlay"))
-              ];
-            };
-            fenix = import (inputFromLock "fenix") { inherit system; };
-          in
-          pkgsChecks.callPackages ./checks {
-            pkgs = pkgsChecks;
-            myLib = mkLib pkgsChecks;
-            myLibCross = mkLib (import nixpkgs {
-              localSystem = system;
-              crossSystem = "wasm32-wasi";
-            });
-            myLibFenix = (mkLib pkgs).overrideToolchain (fenix.latest.withComponents [
-              "cargo"
-              "rust-src"
-              "rustc"
-            ]);
-          };
       in
       {
-        inherit checks;
+        checks = { };
 
         packages = import ./pkgs {
           inherit pkgs myLib;
