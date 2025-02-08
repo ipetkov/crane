@@ -44,8 +44,8 @@ jobs:
       with:
         name: crane
         authToken: ${{ github.ref == 'refs/heads/master' && secrets.CACHIX_AUTH_TOKEN || '' }}
-    - name: flake checks
-      run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh . ${{ matrix.nixpkgs-override }}
+    - run: nix flake check -L .#
+    - run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh ./test ${{ matrix.nixpkgs-override }}
     - name: extra tests
       run: nix develop --accept-flake-config --command ./extra-tests/test.sh
 
