@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.24.10
-* **Breaking**: dropped compatibility for nixpkgs-23.11
+* **Breaking**: dropped compatibility for nixpkgs-24.05
 * **Breaking** (technically): `buildPackage`'s installation behavior has been
   split into two steps: binaries are now installed into a temporary directory as
   a post build hook (to avoid interference from the check phase clobbering
@@ -144,7 +144,7 @@ A republish of 0.19.2 which was incorrectly tagged.
 
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.18.2
-* **Breaking**: dropped compatibility for nixpkgs-23.11.
+* **Breaking**: dropped compatibility for nixpkgs-23.11
 * The guidance around using (both) `cleanCargoSource` and `path` has been
   updated. Namely, it is no longer necessary to call both (e.g.
   `craneLib.cleanCargoSource (craneLib.path ./.)`): it is recommended to either
