@@ -3,17 +3,18 @@
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
 , crateNameFromCargoToml
+, mkCrossToolchainEnv
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
 , lib
 , replaceCargoLockHook
 , rustc
 , rsync
-, stdenv
 , vendorCargoDeps
 , writeText
 , writeTOML
 , zstd
+, pkgs
 }:
 
 args@{
@@ -32,8 +33,28 @@ args@{
 , ...
 }:
 let
+  # Warn if an stdenv selector function is required (e.g. when cross compiling) while only a single stdenv instance is given
+  stdenvSelectorWarnMsg = ''
+    mkCargoDerivation's stdenv argument was set to a specific stdenv instance
+    while an stdenv selector function is required. Consider specifying a
+    function which selects an stdenv for any given `pkgs` instantiation:
+
+    {
+      ...
+      stdenv = p: p.clangStdenv;
+      ...
+    }
+  '';
+
+  stdenvSelector =
+    if args ? stdenv && lib.isFunction args.stdenv then args.stdenv
+    else lib.warnIf (args ? stdenv) stdenvSelectorWarnMsg (p: p.stdenv);
+
+  chosenStdenv =
+    if args ? stdenv && !(lib.isFunction args.stdenv) then args.stdenv
+    else stdenvSelector pkgs;
+
   crateName = crateNameFromCargoToml args;
-  chosenStdenv = args.stdenv or stdenv;
   cleanedArgs = builtins.removeAttrs args [
     "buildPhaseCargoCommand"
     "cargoLock"
@@ -54,9 +75,11 @@ let
     else null;
   cargoLock = args.cargoLock or cargoLockFromContents;
 in
-chosenStdenv.mkDerivation (cleanedArgs // lib.optionalAttrs (cargoLock != null) {
-  inherit cargoLock;
-} // {
+chosenStdenv.mkDerivation (
+  lib.optionalAttrs (!(args.noCrossToolchainEnv or false) && pkgs.buildPlatform != pkgs.hostPlatform) (mkCrossToolchainEnv stdenvSelector)
+  // cleanedArgs
+  // lib.optionalAttrs (cargoLock != null) { inherit cargoLock; }
+  // {
   inherit cargoArtifacts;
 
   pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";

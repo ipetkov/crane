@@ -1215,10 +1215,16 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - Default value: the package name listed in `Cargo.toml`
 * `pnameSuffix`: a suffix appended to `pname`
   - Default value: `""`
-* `stdenv`: the standard build environment to use for this derivation
-  - Default value: `pkgs.stdenv`
+* `stdenv`: selects the standard build environment to use for this derivation.
+  Either a function accepting an instantiation of `pkgs` (preferred), or an
+  instance of `stdenv` if cross compilation isn't a concern.
+  - Default value: `p: p.stdenv`
 * `version`: the version of the derivation
   - Default value: the version listed in `Cargo.toml`
+* `noCrossToolchainEnv`: disables the default configuration of the
+  cross-compilation toolchain using `mkCrossToolchainEnv`. Useful if you want to
+  perform this configuration yourself.
+  - Default value: `false`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -1333,6 +1339,18 @@ build caches. More specifically:
     }
     ```
 
+
+### `craneLib.mkCrossToolchainEnv`
+
+`overrideToolchain :: (set -> drv) -> set`
+
+A method which returns a set of environment variables to configure the Rust
+toolchain for cross compilation. This configures both the target and host
+toolchains, setting environment variables both for `cargo` as well as for the
+`cc` crate.
+
+The input should be a function which takes an instantiation of `pkgs`, returning
+the `stdenv` to use for this target.
 
 ### `craneLib.overrideToolchain`
 
