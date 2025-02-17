@@ -7,5 +7,5 @@ rustPlatform.buildRustPackage {
   version = "0.0.1";
 
   src = lib.sourceFilesBySuffices ./. [ ".rs" ".toml" ".lock" ];
-  cargoLock = { lockFile = ./Cargo.lock; };
+  cargoLock.lockFile = ./Cargo.lock;
 }
