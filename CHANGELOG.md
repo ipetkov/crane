@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.20.2] - 2025-02-17
 
 ### Changed
-* `pkgs/crane-utils` using `useFetchCargoVendor` instead of `fetchCargoTarball` as it is now deprecated.
+* `craneUtils` (used internally for vendoring git dependencies) now uses
+  `importCargoLock` to fetch its own dependencies instead of the (now
+  deprecated) `fetchCargoTarball` method.
 
 ## [0.20.1] - 2025-02-08
 
