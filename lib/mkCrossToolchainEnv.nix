@@ -31,7 +31,10 @@ let
       "CARGO_TARGET_${cargoEnv}_RUNNER" = stdenv.hostPlatform.emulator nativePkgs;
     });
 in
-lib.mergeAttrsList [
+if pkgs.buildPlatform == pkgs.hostPlatform
+then { }
+else
+  lib.mergeAttrsList [
   {
     # Set the target we want to build for (= our host platform)
     CARGO_BUILD_TARGET = pkgs.hostPlatform.rust.rustcTarget;

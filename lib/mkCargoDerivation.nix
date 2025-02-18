@@ -76,7 +76,7 @@ let
   cargoLock = args.cargoLock or cargoLockFromContents;
 in
 chosenStdenv.mkDerivation (
-  lib.optionalAttrs (!(args.noCrossToolchainEnv or false) && pkgs.buildPlatform != pkgs.hostPlatform) (mkCrossToolchainEnv stdenvSelector)
+  lib.optionalAttrs (!(args.noCrossToolchainEnv or false)) (mkCrossToolchainEnv stdenvSelector)
   // cleanedArgs
   // lib.optionalAttrs (cargoLock != null) { inherit cargoLock; }
   // {

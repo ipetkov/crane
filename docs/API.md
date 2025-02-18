@@ -1347,7 +1347,8 @@ build caches. More specifically:
 A method which returns a set of environment variables to configure the Rust
 toolchain for cross compilation. This configures both the target and host
 toolchains, setting environment variables both for `cargo` as well as for the
-`cc` crate.
+`cc` crate. If the given `pkgs` instance is not set up for cross compilation, an
+empty set is returned.
 
 The input should be a function which takes an instantiation of `pkgs`, returning
 the `stdenv` to use for this target.
