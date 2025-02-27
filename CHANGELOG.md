@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Fixed
+* `mkDummySrc` now supports embedded proc-macros.
+
+### Fixed
 * `buildTrunkPackage` no longer ignores `installPhase` and `installPhaseCommand` args.
 
 ## [0.20.2] - 2025-02-17
