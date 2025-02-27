@@ -162,7 +162,8 @@ let
         '';
 
         dummyMain = builtins.concatStringsSep ""
-          [ dummyBase
+          [
+            dummyBase
             ''
 
               pub fn main() {}
@@ -170,14 +171,14 @@ let
           ];
 
         isProcMacro = toml:
-        let
-          hasLib = builtins.hasAttr "lib" toml;
-          libAttr = builtins.getAttr "lib" toml;
-          crate-type =
-            if hasLib && builtins.hasAttr "crate-type" libAttr
-            then builtins.getAttr "crate-type" libAttr
-            else [];
-        in
+          let
+            hasLib = builtins.hasAttr "lib" toml;
+            libAttr = builtins.getAttr "lib" toml;
+            crate-type =
+              if hasLib && builtins.hasAttr "crate-type" libAttr
+              then builtins.getAttr "crate-type" libAttr
+              else [ ];
+          in
           if hasLib
           then
             (builtins.hasAttr "proc-macro" libAttr)
@@ -187,7 +188,7 @@ let
           else false;
 
         # Add the main() fn if the crate is not a proc-macro
-        dummyText = 
+        dummyText =
           if isProcMacro cleanedCargoToml
           then dummyBase
           else dummyMain;
