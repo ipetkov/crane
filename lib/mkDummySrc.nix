@@ -193,7 +193,7 @@ let
           else dummyMain;
 
         dummyrs = args.dummyrs or (writeText "dummy.rs" dummyText);
-        dummyMainRs = args.dummyrs or (writeText "dummyMain.rs" dummyMain);
+        dummyBuildScript = args.dummyrs or (writeText "dummyBuild.rs" dummyMain);
 
         cpDummy = prefix: path: ''
           mkdir -p ${prefix}/${dirOf path}
@@ -215,7 +215,7 @@ let
             recursiveUpdate
               cleanedCargoToml
               {
-                package.build = dummyMainRs;
+                package.build = dummyBuildScript;
               }
           else
             cleanedCargoToml;
