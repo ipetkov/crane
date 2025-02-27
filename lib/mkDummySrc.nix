@@ -173,11 +173,17 @@ let
         let
           hasLib = builtins.hasAttr "lib" toml;
           libAttr = builtins.getAttr "lib" toml;
+          crate-type =
+            if hasLib && builtins.hasAttr "crate-type" libAttr
+            then builtins.getAttr "crate-type" libAttr
+            else [];
         in
           if hasLib
           then
             (builtins.hasAttr "proc-macro" libAttr)
             || (builtins.hasAttr "proc_macro" libAttr)
+            || (builtins.elem "proc-macro" crate-type)
+            || (builtins.elem "proc_macro" crate-type)
           else false;
 
         # Add the main() fn if the crate is not a proc-macro
