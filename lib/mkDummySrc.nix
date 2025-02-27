@@ -129,28 +129,6 @@ let
         lib.any filter allUncleanFiles;
     };
 
-  dummyrs = args.dummyrs or (writeText "dummy.rs" ''
-    #![allow(clippy::all)]
-    #![allow(dead_code)]
-    #![cfg_attr(any(target_os = "none", target_os = "uefi"), no_std)]
-    #![cfg_attr(any(target_os = "none", target_os = "uefi"), no_main)]
-
-    #[allow(unused_extern_crates)]
-    extern crate core;
-
-    #[cfg_attr(any(target_os = "none", target_os = "uefi"), panic_handler)]
-    fn panic(_info: &::core::panic::PanicInfo<'_>) -> ! {
-        loop {}
-    }
-
-    pub fn main() {}
-  '');
-
-  cpDummy = prefix: path: ''
-    mkdir -p ${prefix}/${dirOf path}
-    cp -f ${dummyrs} ${prefix}/${path}
-  '';
-
   copyAndStubCargoTomls = concatStrings (map
     (p:
       let
@@ -164,6 +142,65 @@ let
         # NB: do not use string interpolation or toString or else the path checks won't work
         shallowJoinPath = rest: p + "/../${rest}";
 
+        cleanedCargoToml = cleanCargoToml {
+          cargoToml = p;
+        };
+
+        dummyBase = ''
+          #![allow(clippy::all)]
+          #![allow(dead_code)]
+          #![cfg_attr(any(target_os = "none", target_os = "uefi"), no_std)]
+          #![cfg_attr(any(target_os = "none", target_os = "uefi"), no_main)]
+
+          #[allow(unused_extern_crates)]
+          extern crate core;
+
+          #[cfg_attr(any(target_os = "none", target_os = "uefi"), panic_handler)]
+          fn panic(_info: &::core::panic::PanicInfo<'_>) -> ! {
+              loop {}
+          }
+        '';
+
+        dummyMain = builtins.concatStringsSep ""
+          [
+            dummyBase
+            ''
+
+              pub fn main() {}
+            ''
+          ];
+
+        isProcMacro = toml:
+          let
+            hasLib = builtins.hasAttr "lib" toml;
+            libAttr = builtins.getAttr "lib" toml;
+            crate-type =
+              if hasLib && builtins.hasAttr "crate-type" libAttr
+              then builtins.getAttr "crate-type" libAttr
+              else [ ];
+          in
+          if hasLib
+          then
+            (builtins.hasAttr "proc-macro" libAttr)
+            || (builtins.hasAttr "proc_macro" libAttr)
+            || (builtins.elem "proc-macro" crate-type)
+            || (builtins.elem "proc_macro" crate-type)
+          else false;
+
+        # Add the main() fn if the crate is not a proc-macro
+        dummyText =
+          if isProcMacro cleanedCargoToml
+          then dummyBase
+          else dummyMain;
+
+        dummyrs = args.dummyrs or (writeText "dummy.rs" dummyText);
+        dummyBuildScript = args.dummyrs or (writeText "dummyBuild.rs" dummyMain);
+
+        cpDummy = prefix: path: ''
+          mkdir -p ${prefix}/${dirOf path}
+          cp -f ${dummyrs} ${prefix}/${path}
+        '';
+
         # Override the cleaned Cargo.toml with a build script which points to our dummy
         # source. We need a build script present to cache build-dependencies, which can be
         # achieved by dropping a build.rs file in the source directory. Except that is the most
@@ -174,21 +211,15 @@ let
         # file point directly to our dummy source in the store.
         # https://github.com/ipetkov/crane/issues/117
         trimmedCargoToml =
-          let
-            cleanedCargoToml = cleanCargoToml {
-              cargoToml = p;
-            };
-          in
           # Only update if we have a `package` definition, workspaces Cargo.tomls don't need updating
           if cleanedCargoToml ? package then
             recursiveUpdate
               cleanedCargoToml
               {
-                package.build = dummyrs;
+                package.build = dummyBuildScript;
               }
           else
             cleanedCargoToml;
-
 
         hasDir = root: sub: root.${sub} or "" == "directory";
         hasFile = root: sub: root.${sub} or "" == "regular";
