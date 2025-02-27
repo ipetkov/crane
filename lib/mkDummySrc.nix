@@ -161,6 +161,14 @@ let
           }
         '';
 
+        dummyMain = builtins.concatStringsSep ""
+          [ dummyBase
+            ''
+
+              pub fn main() {}
+            ''
+          ];
+
         isProcMacro = toml:
         let
           hasLib = builtins.hasAttr "lib" toml;
@@ -173,17 +181,13 @@ let
           else false;
 
         # Add the main() fn if the crate is not a proc-macro
-        dummyText = builtins.concatStringsSep ""
-          [ dummyBase
-            (if isProcMacro cleanedCargoToml
-            then ""
-            else ''
-
-              pub fn main() {}
-            '')
-          ];
+        dummyText = 
+          if isProcMacro cleanedCargoToml
+          then dummyBase
+          else dummyMain;
 
         dummyrs = args.dummyrs or (writeText "dummy.rs" dummyText);
+        dummyMainRs = args.dummyrs or (writeText "dummyMain.rs" dummyMain);
 
         cpDummy = prefix: path: ''
           mkdir -p ${prefix}/${dirOf path}
@@ -205,7 +209,7 @@ let
             recursiveUpdate
               cleanedCargoToml
               {
-                package.build = dummyrs;
+                package.build = dummyMainRs;
               }
           else
             cleanedCargoToml;
