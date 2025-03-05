@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* `cleanCargoToml` now preserves the `proc-macro` attribute of any defined
+  targets
+
 ### Fixed
 * `mkDummySrc` now supports embedded proc-macros.
 
