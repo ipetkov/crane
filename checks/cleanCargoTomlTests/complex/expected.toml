@@ -3,42 +3,50 @@ cargo-features = ["some unstable features"]
 edition = "2015"
 name = "bench1"
 path = "src/bench1.rs"
+proc-macro = false
 
 [[bench]]
 edition = "2018"
 name = "bench2"
 path = "src/bench2.rs"
+proc-macro = false
 
 [[bin]]
 edition = "2015"
 name = "bin1"
 path = "src/bin1.rs"
+proc-macro = false
 
 [[bin]]
 edition = "2018"
 name = "bin2"
 path = "src/bin2.rs"
+proc-macro = false
 
 [[example]]
 crate-type = ["staticlib"]
 edition = "2015"
 name = "example1"
 path = "src/example1.rs"
+proc-macro = false
 
 [[example]]
 edition = "2018"
 name = "example2"
 path = "src/example2.rs"
+proc-macro = false
 
 [[test]]
 edition = "2015"
 name = "test1"
 path = "src/test1.rs"
+proc-macro = false
 
 [[test]]
 edition = "2018"
 name = "test2"
 path = "src/test2.rs"
+proc-macro = false
 
 [build-dependencies.corge]
 version = "6"
@@ -69,6 +77,7 @@ crate-type = ["lib", "rlib"]
 edition = "2021"
 name = "foo"
 path = "src/lib.rs"
+proc-macro = false
 
 [package]
 edition = "2021"

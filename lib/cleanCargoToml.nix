@@ -45,8 +45,6 @@ let
     "bench"
     "doc"
     "plugin"
-    "proc-macro"
-    "proc_macro"
     "harness"
     "required-features" # only affects selection of a target, does not actually enable any features
     "required_features" # only affects selection of a target, does not actually enable any features
@@ -58,6 +56,8 @@ let
     # "name"              # let cargo manage targets/collisions/etc.
     # "crate-type"        # some tools may try to inspect crate types (e.g. wasm-pack), retain the
     #                     # definition to honor the project structure
+    # "proc-macro"        # If we have a proc-macro dependency in the workspace, rustc may try to
+    #                     # compile `proc-macro2` for the target system
   ];
 
   cleanWorkspace = workspace: removeAttrs workspace [
