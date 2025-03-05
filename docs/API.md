@@ -1909,9 +1909,9 @@ It takes 1 positional argument:
   * If not specified, the value  of `$out` will be used.
   * If `out` is not specified, an error will be raised.
 
-**Automatic behavior:** if `doNotRemoveReferencesToVendorDir` is not set, then
-`removeReferencesToRustToolchain "$out"` will be run as a
-post install hook.
+**Automatic behavior:** if `doNotRemoveReferencesToRustToolchain` is not set,
+then `removeReferencesToRustToolchain "$out"` will be run as a post install
+hook.
 
 **Required nativeBuildInputs**: assumes `rustc` is available on the `$PATH`
 
