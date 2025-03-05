@@ -524,6 +524,10 @@ in
     src = myLib.cleanCargoSource ./proc-macro;
   };
 
+  procMacroCrateType = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./proc-macro-crate-type;
+  };
+
   simple = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple;
   };
