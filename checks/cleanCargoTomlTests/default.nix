@@ -36,4 +36,6 @@ linkFarmFromDrvs "cleanCargoToml" [
   (cmpCleanCargoToml "complex" ./complex)
   # https://github.com/ipetkov/crane/issues/610
   (cmpCleanCargoToml "complex-underscores" ./complex-underscores)
+  #https://github.com/ipetkov/crane/issues/800
+  (cmpCleanCargoToml "proc-macro" ./proc-macro)
 ]

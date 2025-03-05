@@ -1,0 +1,19 @@
+[[bin]]
+name = "foo"
+proc-macro = false
+
+[[bin]]
+name = "bar"
+proc-macro = true
+
+[[bin]]
+name = "baz"
+proc_macro = false
+
+[[bin]]
+name = "bez"
+proc_macro = true
+
+[[bin]]
+name = "biz"
+crate-type = ["proc-macro"]
