@@ -1,4 +1,9 @@
 {
+  nixConfig = {
+    extra-substituters = [ "https://crane.cachix.org" ];
+    extra-trusted-public-keys = [ "crane.cachix.org-1:8Scfpmn9w+hGdXH/Q9tTLiYAE/2dnJYRJP7kl80GuRk=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-latest-release.url = "github:NixOS/nixpkgs/release-24.11";
@@ -26,7 +31,6 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   outputs = inputs@{ ... }: inputs.flake-utils.lib.eachDefaultSystem (system:
