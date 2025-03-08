@@ -74,9 +74,11 @@ let
     then writeTOML "Cargo.lock" args.cargoLockParsed
     else null;
   cargoLock = args.cargoLock or cargoLockFromContents;
+
+  crossEnv = lib.optionalAttrs (!(args.noCrossToolchainEnv or false)) (mkCrossToolchainEnv stdenvSelector);
 in
 chosenStdenv.mkDerivation (
-  lib.optionalAttrs (!(args.noCrossToolchainEnv or false)) (mkCrossToolchainEnv stdenvSelector)
+  (builtins.removeAttrs crossEnv ["nativeBuildInputs"])
   // cleanedArgs
   // lib.optionalAttrs (cargoLock != null) { inherit cargoLock; }
   // {
@@ -92,7 +94,7 @@ chosenStdenv.mkDerivation (
   # access. Directory structure should basically follow the output of `cargo vendor`.
   cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
+  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ crossEnv.nativeBuildInputs ++ [
     cargo
     cargoHelperFunctionsHook
     configureCargoCommonVarsHook

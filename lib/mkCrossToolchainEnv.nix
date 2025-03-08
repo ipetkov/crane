@@ -5,9 +5,12 @@
 let
   nativePkgs = pkgs.pkgsBuildBuild;
 
+  hostStdenv = stdenvSelector pkgs.pkgsBuildHost;
+  targetStdenv = stdenvSelector pkgs.pkgsHostTarget;
+
   varsForPlatform = buildKind: stdenv:
     let
-      ccPrefix = "${stdenv.cc}/bin/${stdenv.cc.targetPrefix}";
+      ccPrefix = stdenv.cc.targetPrefix;
       cargoEnv = stdenv.hostPlatform.rust.cargoEnvVarTarget;
     in
     {
@@ -38,11 +41,14 @@ else
   {
     # Set the target we want to build for (= our host platform)
     CARGO_BUILD_TARGET = pkgs.hostPlatform.rust.rustcTarget;
+
+    # Pull in any compilers we need
+    nativeBuildInputs = [hostStdenv.cc targetStdenv.cc];
   }
 
   # NOTE: "host" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "build" nixpkgs platform
-  (varsForPlatform "HOST" (stdenvSelector pkgs.pkgsBuildHost))
+  (varsForPlatform "HOST" hostStdenv)
 
   # NOTE: "target" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "host" nixpkgs platform
-  (varsForPlatform "TARGET" (stdenvSelector pkgs.pkgsHostTarget))
+  (varsForPlatform "TARGET" targetStdenv)
 ]

@@ -1344,7 +1344,7 @@ build caches. More specifically:
 
 `overrideToolchain :: (set -> drv) -> set`
 
-A method which returns a set of environment variables to configure the Rust
+A method which returns a set of derivation arguments to configure the Rust
 toolchain for cross compilation. This configures both the target and host
 toolchains, setting environment variables both for `cargo` as well as for the
 `cc` crate. If the given `pkgs` instance is not set up for cross compilation, an
