@@ -38,17 +38,17 @@ if pkgs.buildPlatform == pkgs.hostPlatform
 then { }
 else
   lib.mergeAttrsList [
-  {
-    # Set the target we want to build for (= our host platform)
-    CARGO_BUILD_TARGET = pkgs.hostPlatform.rust.rustcTarget;
+    {
+      # Set the target we want to build for (= our host platform)
+      CARGO_BUILD_TARGET = pkgs.hostPlatform.rust.rustcTarget;
 
-    # Pull in any compilers we need
-    nativeBuildInputs = [hostStdenv.cc targetStdenv.cc];
-  }
+      # Pull in any compilers we need
+      nativeBuildInputs = [ hostStdenv.cc targetStdenv.cc ];
+    }
 
-  # NOTE: "host" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "build" nixpkgs platform
-  (varsForPlatform "HOST" hostStdenv)
+    # NOTE: "host" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "build" nixpkgs platform
+    (varsForPlatform "HOST" hostStdenv)
 
-  # NOTE: "target" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "host" nixpkgs platform
-  (varsForPlatform "TARGET" targetStdenv)
-]
+    # NOTE: "target" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "host" nixpkgs platform
+    (varsForPlatform "TARGET" targetStdenv)
+  ]

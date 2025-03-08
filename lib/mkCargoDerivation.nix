@@ -78,57 +78,58 @@ let
   crossEnv = lib.optionalAttrs (!(args.noCrossToolchainEnv or false)) (mkCrossToolchainEnv stdenvSelector);
 in
 chosenStdenv.mkDerivation (
-  (builtins.removeAttrs crossEnv ["nativeBuildInputs"])
+  (builtins.removeAttrs crossEnv [ "nativeBuildInputs" ])
   // cleanedArgs
   // lib.optionalAttrs (cargoLock != null) { inherit cargoLock; }
-  // {
-  inherit cargoArtifacts;
+    // {
+    inherit cargoArtifacts;
 
-  pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
-  version = args.version or crateName.version;
+    pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
+    version = args.version or crateName.version;
 
-  # Controls whether cargo's `target` directory should be copied as an output
-  doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;
+    # Controls whether cargo's `target` directory should be copied as an output
+    doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;
 
-  # A directory of vendored cargo sources which can be consumed without network
-  # access. Directory structure should basically follow the output of `cargo vendor`.
-  cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
+    # A directory of vendored cargo sources which can be consumed without network
+    # access. Directory structure should basically follow the output of `cargo vendor`.
+    cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ crossEnv.nativeBuildInputs ++ [
-    cargo
-    cargoHelperFunctionsHook
-    configureCargoCommonVarsHook
-    configureCargoVendoredDepsHook
-    inheritCargoArtifactsHook
-    installCargoArtifactsHook
-    replaceCargoLockHook
-    rsync
-    rustc
-    zstd
-  ];
+    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ crossEnv.nativeBuildInputs ++ [
+      cargo
+      cargoHelperFunctionsHook
+      configureCargoCommonVarsHook
+      configureCargoVendoredDepsHook
+      inheritCargoArtifactsHook
+      installCargoArtifactsHook
+      replaceCargoLockHook
+      rsync
+      rustc
+      zstd
+    ];
 
-  buildPhase = args.buildPhase or ''
-    runHook preBuild
-    cargo --version
-    ${buildPhaseCargoCommand}
-    runHook postBuild
-  '';
+    buildPhase = args.buildPhase or ''
+      runHook preBuild
+      cargo --version
+      ${buildPhaseCargoCommand}
+      runHook postBuild
+    '';
 
-  checkPhase = args.checkPhase or ''
-    runHook preCheck
-    ${checkPhaseCargoCommand}
-    runHook postCheck
-  '';
+    checkPhase = args.checkPhase or ''
+      runHook preCheck
+      ${checkPhaseCargoCommand}
+      runHook postCheck
+    '';
 
-  configurePhase = args.configurePhase or ''
-    runHook preConfigure
-    echo default configurePhase, nothing to do
-    runHook postConfigure
-  '';
+    configurePhase = args.configurePhase or ''
+      runHook preConfigure
+      echo default configurePhase, nothing to do
+      runHook postConfigure
+    '';
 
-  installPhase = args.installPhase or ''
-    runHook preInstall
-    ${installPhaseCommand}
-    runHook postInstall
-  '';
-})
+    installPhase = args.installPhase or ''
+      runHook preInstall
+      ${installPhaseCommand}
+      runHook postInstall
+    '';
+  }
+)
