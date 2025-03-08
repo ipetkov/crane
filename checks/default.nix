@@ -535,6 +535,11 @@ in
 
   simple = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple;
+    # https://github.com/ipetkov/crane/issues/808
+    preInstall = ''
+      mkdir -p $out/foo
+      touch "$out/foo/bar baz"
+    '';
   };
 
   simpleNoDeps = myLib.buildPackage {

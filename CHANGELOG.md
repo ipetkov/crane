@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `buildTrunkPackage` no longer ignores `installPhase` and `installPhaseCommand` args.
 * `removeReferencesToRustToolchainHook` now handles file names which contain
   whitespace
+* `removeReferencesToVendoredSourcesHook` now handles file names which contain
+  whitespace
 
 ## [0.20.2] - 2025-02-17
 

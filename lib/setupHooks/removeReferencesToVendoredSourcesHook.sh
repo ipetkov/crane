@@ -7,10 +7,10 @@ removeReferencesToVendoredSources() {
   (
     exec 3>&1
     echo stripping references to cargoVendorDir from:
-    find "${installLocation}" -type f |
-      sort |
-      tee -a >(cat >&3) |
-      xargs --no-run-if-empty sed -i'' -f <(
+    find "${installLocation}" -type f -print0 |
+      sort -z |
+      tee -a >(tr '\0' '\n' >&3) |
+      xargs -0 --no-run-if-empty sed -i'' -f <(
         echo -n 's!@storeDir@/\(eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
         (
@@ -19,8 +19,8 @@ removeReferencesToVendoredSources() {
 
           # Include the individual crates themselves in case
           # something else slips in a reference to them
-          find -L "${vendoredDir}" -mindepth 1 -maxdepth 1 -type d | \
-            xargs -I DIR find -H DIR -type l -exec readlink '{}' \;
+          find -L "${vendoredDir}" -mindepth 1 -maxdepth 1 -type d -print0 | \
+            xargs -0 -I DIR find -H DIR -type l -exec readlink '{}' \;
         ) |
           grep --only-matching '@storeDir@/[a-z0-9]\{32\}' |
           sort -u |
