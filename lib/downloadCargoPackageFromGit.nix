@@ -11,6 +11,10 @@ let
   inherit (pkgsBuildBuild)
     fetchgit
     stdenv;
+
+  namePrefix = "cargo-git-";
+  # 211 minus one for the `-` separator
+  maxNameLen = 210;
 in
 { git
 , rev
@@ -35,9 +39,15 @@ let
         fetchSubmodules = true;
         fetchLFS = true;
       };
+
+  remainingLen = maxNameLen - (lib.stringLength namePrefix) - (lib.stringLength rev);
+  nameFromUrl =
+    if (lib.stringLength git) > remainingLen
+    then lib.substring 0 remainingLen git
+    else git;
 in
 stdenv.mkDerivation {
-  name = "cargo-git";
+  name = "${namePrefix}${nameFromUrl}-${rev}";
   src = repo;
 
   dontConfigure = true;
