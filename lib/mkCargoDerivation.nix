@@ -3,17 +3,18 @@
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
 , crateNameFromCargoToml
+, mkCrossToolchainEnv
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
 , lib
 , replaceCargoLockHook
 , rustc
 , rsync
-, stdenv
 , vendorCargoDeps
 , writeText
 , writeTOML
 , zstd
+, pkgs
 }:
 
 args@{
@@ -32,8 +33,28 @@ args@{
 , ...
 }:
 let
+  # Warn if an stdenv selector function is required (e.g. when cross compiling) while only a single stdenv instance is given
+  stdenvSelectorWarnMsg = ''
+    mkCargoDerivation's stdenv argument was set to a specific stdenv instance
+    while an stdenv selector function is required. Consider specifying a
+    function which selects an stdenv for any given `pkgs` instantiation:
+
+    {
+      ...
+      stdenv = p: p.clangStdenv;
+      ...
+    }
+  '';
+
+  stdenvSelector =
+    if args ? stdenv && lib.isFunction args.stdenv then args.stdenv
+    else lib.warnIf (args ? stdenv) stdenvSelectorWarnMsg (p: p.stdenv);
+
+  chosenStdenv =
+    if args ? stdenv && !(lib.isFunction args.stdenv) then args.stdenv
+    else stdenvSelector pkgs;
+
   crateName = crateNameFromCargoToml args;
-  chosenStdenv = args.stdenv or stdenv;
   cleanedArgs = builtins.removeAttrs args [
     "buildPhaseCargoCommand"
     "cargoLock"
@@ -53,57 +74,62 @@ let
     then writeTOML "Cargo.lock" args.cargoLockParsed
     else null;
   cargoLock = args.cargoLock or cargoLockFromContents;
+
+  crossEnv = lib.optionalAttrs (!(args.noCrossToolchainEnv or false)) (mkCrossToolchainEnv stdenvSelector);
 in
-chosenStdenv.mkDerivation (cleanedArgs // lib.optionalAttrs (cargoLock != null) {
-  inherit cargoLock;
-} // {
-  inherit cargoArtifacts;
+chosenStdenv.mkDerivation (
+  (builtins.removeAttrs crossEnv [ "nativeBuildInputs" ])
+  // cleanedArgs
+  // lib.optionalAttrs (cargoLock != null) { inherit cargoLock; }
+    // {
+    inherit cargoArtifacts;
 
-  pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
-  version = args.version or crateName.version;
+    pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
+    version = args.version or crateName.version;
 
-  # Controls whether cargo's `target` directory should be copied as an output
-  doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;
+    # Controls whether cargo's `target` directory should be copied as an output
+    doInstallCargoArtifacts = args.doInstallCargoArtifacts or true;
 
-  # A directory of vendored cargo sources which can be consumed without network
-  # access. Directory structure should basically follow the output of `cargo vendor`.
-  cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
+    # A directory of vendored cargo sources which can be consumed without network
+    # access. Directory structure should basically follow the output of `cargo vendor`.
+    cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
-    cargo
-    cargoHelperFunctionsHook
-    configureCargoCommonVarsHook
-    configureCargoVendoredDepsHook
-    inheritCargoArtifactsHook
-    installCargoArtifactsHook
-    replaceCargoLockHook
-    rsync
-    rustc
-    zstd
-  ];
+    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ crossEnv.nativeBuildInputs ++ [
+      cargo
+      cargoHelperFunctionsHook
+      configureCargoCommonVarsHook
+      configureCargoVendoredDepsHook
+      inheritCargoArtifactsHook
+      installCargoArtifactsHook
+      replaceCargoLockHook
+      rsync
+      rustc
+      zstd
+    ];
 
-  buildPhase = args.buildPhase or ''
-    runHook preBuild
-    cargo --version
-    ${buildPhaseCargoCommand}
-    runHook postBuild
-  '';
+    buildPhase = args.buildPhase or ''
+      runHook preBuild
+      cargo --version
+      ${buildPhaseCargoCommand}
+      runHook postBuild
+    '';
 
-  checkPhase = args.checkPhase or ''
-    runHook preCheck
-    ${checkPhaseCargoCommand}
-    runHook postCheck
-  '';
+    checkPhase = args.checkPhase or ''
+      runHook preCheck
+      ${checkPhaseCargoCommand}
+      runHook postCheck
+    '';
 
-  configurePhase = args.configurePhase or ''
-    runHook preConfigure
-    echo default configurePhase, nothing to do
-    runHook postConfigure
-  '';
+    configurePhase = args.configurePhase or ''
+      runHook preConfigure
+      echo default configurePhase, nothing to do
+      runHook postConfigure
+    '';
 
-  installPhase = args.installPhase or ''
-    runHook preInstall
-    ${installPhaseCommand}
-    runHook postInstall
-  '';
-})
+    installPhase = args.installPhase or ''
+      runHook preInstall
+      ${installPhaseCommand}
+      runHook postInstall
+    '';
+  }
+)
