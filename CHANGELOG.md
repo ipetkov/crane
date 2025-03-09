@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   deprecated) `fetchCargoTarball` method.
 * `cleanCargoToml` now preserves the `proc-macro` attribute of any defined
   targets
+* Vendoring git dependencies now respects Cargo.toml `includes` and `excludes`
 
 ### Fixed
 * `buildTrunkPackage` no longer ignores `installPhase` and `installPhaseCommand` args.
