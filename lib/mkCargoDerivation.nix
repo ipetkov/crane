@@ -33,6 +33,8 @@ args@{
 , ...
 }:
 let
+  argsStdenv = args.stdenv or (p: p.stdenv);
+
   # Warn if an stdenv selector function is required (e.g. when cross compiling) while only a single stdenv instance is given
   stdenvSelectorWarnMsg = ''
     mkCargoDerivation's stdenv argument was set to a specific stdenv instance
@@ -47,12 +49,14 @@ let
   '';
 
   stdenvSelector =
-    if args ? stdenv && lib.isFunction args.stdenv then args.stdenv
-    else lib.warnIf (args ? stdenv) stdenvSelectorWarnMsg (p: p.stdenv);
+    if lib.isFunction argsStdenv
+    then argsStdenv
+    else lib.warn stdenvSelectorWarnMsg (p: p.stdenv);
 
   chosenStdenv =
-    if args ? stdenv && !(lib.isFunction args.stdenv) then args.stdenv
-    else stdenvSelector pkgs;
+    if lib.isFunction argsStdenv
+    then argsStdenv pkgs
+    else argsStdenv;
 
   crateName = crateNameFromCargoToml args;
   cleanedArgs = builtins.removeAttrs args [
@@ -94,7 +98,7 @@ chosenStdenv.mkDerivation (
     # access. Directory structure should basically follow the output of `cargo vendor`.
     cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
-    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ crossEnv.nativeBuildInputs ++ [
+    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ (crossEnv.nativeBuildInputs or [ ]) ++ [
       cargo
       cargoHelperFunctionsHook
       configureCargoCommonVarsHook
