@@ -43,16 +43,15 @@ args@{
 , ...
 }:
 let
+  # Pick the default package stdenv if none is provided
   argsStdenv = args.stdenv or (p: p.stdenv);
   stdenvSelector =
     if lib.isFunction argsStdenv
     then argsStdenv
-    else lib.warn stdenvSelectorWarnMsg (p: p.stdenv);
+    # If not a function, warn and return the value as is
+    else lib.warn stdenvSelectorWarnMsg (_: argsStdenv);
 
-  chosenStdenv =
-    if lib.isFunction argsStdenv
-    then argsStdenv pkgs
-    else argsStdenv;
+  chosenStdenv = stdenvSelector pkgs;
 
   crateName = crateNameFromCargoToml args;
   cleanedArgs = builtins.removeAttrs args [
@@ -75,7 +74,9 @@ let
     else null;
   cargoLock = args.cargoLock or cargoLockFromContents;
 
-  crossEnv = lib.optionalAttrs (!(args.noCrossToolchainEnv or false)) (mkCrossToolchainEnv stdenvSelector);
+  crossEnv = lib.optionalAttrs
+    (!(args.noCrossToolchainEnv or false))
+    (mkCrossToolchainEnv stdenvSelector);
 
   baseDrvArgs = crossEnv
     // cleanedArgs
