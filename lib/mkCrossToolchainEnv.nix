@@ -34,7 +34,7 @@ let
       "CARGO_TARGET_${cargoEnv}_RUNNER" = stdenv.hostPlatform.emulator nativePkgs;
     });
 in
-lib.optionalAttrs (pkgs.buildPlatform != pkgs.hostPlatform) lib.mergeAttrsList [
+lib.optionalAttrs (pkgs.buildPlatform != pkgs.hostPlatform) (lib.mergeAttrsList [
   {
     # Set the target we want to build for (= our host platform)
     # The configureCargoCommonVars setup hook will set CARGO_BUILD_TARGET to this value if the user hasn't specified their own target to use
@@ -49,4 +49,4 @@ lib.optionalAttrs (pkgs.buildPlatform != pkgs.hostPlatform) lib.mergeAttrsList [
 
   # NOTE: "target" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "host" nixpkgs platform
   (varsForPlatform "TARGET" targetStdenv)
-]
+])
