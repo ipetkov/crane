@@ -103,8 +103,8 @@ let
       installCargoArtifactsHook = callPackage ./setupHooks/installCargoArtifacts.nix { };
       installFromCargoBuildLogHook = callPackage ./setupHooks/installFromCargoBuildLog.nix { };
       mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
-      mkDummySrc = callPackage ./mkDummySrc.nix { };
       mkCrossToolchainEnv = callPackage ./mkCrossToolchainEnv.nix { };
+      mkDummySrc = callPackage ./mkDummySrc.nix { };
 
       overrideToolchain = toolchainArg: self.overrideScope (_final: _prev:
         let
