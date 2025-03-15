@@ -3,18 +3,18 @@
 , configureCargoCommonVarsHook
 , configureCargoVendoredDepsHook
 , crateNameFromCargoToml
-, mkCrossToolchainEnv
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
 , lib
+, mkCrossToolchainEnv
+, pkgs
 , replaceCargoLockHook
-, rustc
 , rsync
+, rustc
 , vendorCargoDeps
 , writeText
 , writeTOML
 , zstd
-, pkgs
 }:
 
 args@{
