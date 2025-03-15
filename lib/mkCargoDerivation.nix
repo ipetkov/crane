@@ -17,6 +17,16 @@
 , zstd
 }:
 
+let
+  # Warn if an stdenv selector function is required (e.g. when cross compiling) while only a single stdenv instance is given
+  stdenvSelectorWarnMsg = ''
+    mkCargoDerivation's stdenv argument was set to a specific stdenv instance
+    while an stdenv selector function is recommended. Consider specifying a
+    function which selects an stdenv for any given `pkgs` instantiation:
+
+    stdenv = p: p.stdenv;
+  '';
+in
 args@{
   # A directory to an existing cargo `target` directory, which will be reused
   # at the start of the derivation. Useful for caching incremental cargo builds.
@@ -34,20 +44,6 @@ args@{
 }:
 let
   argsStdenv = args.stdenv or (p: p.stdenv);
-
-  # Warn if an stdenv selector function is required (e.g. when cross compiling) while only a single stdenv instance is given
-  stdenvSelectorWarnMsg = ''
-    mkCargoDerivation's stdenv argument was set to a specific stdenv instance
-    while an stdenv selector function is required. Consider specifying a
-    function which selects an stdenv for any given `pkgs` instantiation:
-
-    {
-      ...
-      stdenv = p: p.clangStdenv;
-      ...
-    }
-  '';
-
   stdenvSelector =
     if lib.isFunction argsStdenv
     then argsStdenv
