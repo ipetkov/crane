@@ -75,7 +75,7 @@ let
   cargoLock = args.cargoLock or cargoLockFromContents;
 
   crossEnv = lib.optionalAttrs
-    (!(args.noCrossToolchainEnv or false))
+    (args.doIncludeCrossToolchainEnv or true)
     (mkCrossToolchainEnv stdenvSelector);
 
   baseDrvArgs = crossEnv

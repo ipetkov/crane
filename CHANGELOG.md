@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   using the newly added `mkCrossToolchainEnv` function. To select the utilized
   cross compiler, the `stdenv` argument now also accepts a selector function,
   taking an arbitrary `pkgs` instantiation as an argument. This behavior can be
-  turned off using the `noCrossToolchainEnv` argument.
+  turned off using the `doIncludeCrossToolchainEnv` argument.
   
 ### Changed
 * `buildPackage` now includes `removeReferencesToRustToolchainHook` as a native

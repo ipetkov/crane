@@ -1199,6 +1199,10 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
 * `configurePhase`: the commands used by the configure phase of the derivation
   - Default value: the configure phase will run `preConfigureHooks` hooks, then
     run `postConfigure` hooks
+* `doIncludeCrossToolchainEnv`: enables the default configuration of the
+  cross-compilation toolchain using `mkCrossToolchainEnv`. Useful if you want to
+  perform this configuration yourself.
+  - Default value: `true`
 * `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
   be copied as an output
   - Default value: `true`
@@ -1221,10 +1225,6 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - Default value: `p: p.stdenv`
 * `version`: the version of the derivation
   - Default value: the version listed in `Cargo.toml`
-* `noCrossToolchainEnv`: disables the default configuration of the
-  cross-compilation toolchain using `mkCrossToolchainEnv`. Useful if you want to
-  perform this configuration yourself.
-  - Default value: `false`
 
 #### Remove attributes
 The following attributes will be removed before being lowered to

@@ -33,7 +33,7 @@ configureCargoCommonVars() {
         echo 'NOTICE: setting the following environment variables for cross-compilation purposes'
         echo ' - if this is unwanted, you can set them to a non-empty value'
         echo ' - alternatively, you can disable the built-in cross compilation support'
-        echo '   by setting `noCrossToolchainEnv = false` in the derivation'
+        echo '   by setting `doIncludeCrossToolchainEnv = false` in the derivation'
       fi
 
       local value="${!craneVar}"
