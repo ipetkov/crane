@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.20.2] - 2025-03-08
+
+### Changed
+* `craneUtils` (used internally for vendoring git dependencies) now uses
+  `importCargoLock` to fetch its own dependencies instead of the (now
+  deprecated) `fetchCargoTarball` method.
+* `cleanCargoToml` now preserves the `proc-macro` attribute of any defined
+  targets
+* Vendoring git dependencies now respects Cargo.toml `includes` and `excludes`
+
+### Fixed
+* `buildTrunkPackage` no longer ignores `installPhase` and `installPhaseCommand` args.
+* `mkDummySrc` now supports embedded proc-macros.
+* `removeReferencesToRustToolchainHook` now handles file names which contain
+  whitespace
+* `removeReferencesToVendoredSourcesHook` now handles file names which contain
+  whitespace
+
 ## [0.20.1] - 2025-02-08
 
 ### Added
@@ -847,6 +865,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.20.2]: https://github.com/ipetkov/crane/compare/v0.20.1...v0.20.2
 [0.20.1]: https://github.com/ipetkov/crane/compare/v0.20.0...v0.20.1
 [0.20.0]: https://github.com/ipetkov/crane/compare/v0.19.4...v0.20.0
 [0.19.4]: https://github.com/ipetkov/crane/compare/v0.19.3...v0.19.4

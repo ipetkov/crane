@@ -1041,6 +1041,12 @@ any crates it contains for vendoring.
   - Default value: `null`
 
 #### Attributes of the vendor-prep derivation
+* `depsBuildBuild`: a list of the following packages:
+   - `cargo`
+   - `craneUtils`
+   - `jq`
+   - `remarshal`
+   - `ripgrep`
 * `dontBuild`: `true`
 * `dontConfigure`: `true`
 * `dontFixup`: `true`
@@ -1054,7 +1060,6 @@ any crates it contains for vendoring.
       - Running `crane-resolve-workspace-inheritance` on the `Cargo.toml`
       - Note that duplicate crates (whose name and version collide) are ignored
    1. run the `postInstall` hook
-* `nativeBuildInputs`: A list of the `cargo`, `craneUtils`, and `jq` packages
 * `name`: set to `"cargo-git"`
 * `src`: the git repo checkout, as determined by the input parameters
 
@@ -1931,9 +1936,9 @@ It takes 1 positional argument:
   * If not specified, the value  of `$out` will be used.
   * If `out` is not specified, an error will be raised.
 
-**Automatic behavior:** if `doNotRemoveReferencesToVendorDir` is not set, then
-`removeReferencesToRustToolchain "$out"` will be run as a
-post install hook.
+**Automatic behavior:** if `doNotRemoveReferencesToRustToolchain` is not set,
+then `removeReferencesToRustToolchain "$out"` will be run as a post install
+hook.
 
 **Required nativeBuildInputs**: assumes `rustc` is available on the `$PATH`
 

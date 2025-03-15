@@ -11,7 +11,7 @@ let
     let
       actual = runCommand "trim-actual-${name}" { } ''
         cp --recursive ${orig_actual} --no-target-directory $out --no-preserve=mode,ownership
-        find $out -name Cargo.toml | xargs sed -i"" 's!/nix/store/[^-]\+-dummy.rs!cranespecific-dummy.rs!'
+        find $out -name Cargo.toml | xargs sed -i"" 's!/nix/store/[^-]\+-dummy\(Build\)\?.rs!cranespecific-dummy.rs!'
       '';
 
       # 23.05 has remarshal 0.14 which sorts keys by default

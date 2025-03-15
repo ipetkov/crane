@@ -524,8 +524,22 @@ in
     src = myLib.cleanCargoSource ./proc-macro;
   };
 
+  procMacroCrossCompile = myLib.buildDepsOnly {
+    CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
+    src = myLib.cleanCargoSource ./proc-macro;
+  };
+
+  procMacroCrateType = myLib.buildPackage {
+    src = myLib.cleanCargoSource ./proc-macro-crate-type;
+  };
+
   simple = myLib.buildPackage {
     src = myLib.cleanCargoSource ./simple;
+    # https://github.com/ipetkov/crane/issues/808
+    preInstall = ''
+      mkdir -p $out/foo
+      touch "$out/foo/bar baz"
+    '';
   };
 
   simpleNoDeps = myLib.buildPackage {
