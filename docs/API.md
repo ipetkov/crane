@@ -1256,6 +1256,23 @@ input to any other `nativeBuildInputs` specified by the caller:
 * `rsync`
 * `zstd`
 
+### `craneLib.mkCrossToolchainEnv`
+
+`mkCrossToolchainEnv :: (set -> drv) -> set`
+
+A method which returns a set of derivation arguments to configure the Rust
+toolchain for cross compilation. This configures both the target and host
+toolchains, setting environment variables both for `cargo` as well as for the
+`cc` crate. If the given `pkgs` instance is not set up for cross compilation, an
+empty set is returned.
+
+The input should be a function which takes an instantiation of `pkgs`, returning
+the `stdenv` to use for this target.
+
+```nix
+mkCrossToolchainEnv (p: p.clangStdenv)
+```
+
 ### `craneLib.mkDummySrc`
 
 `mkDummySrc :: set -> drv`
@@ -1338,20 +1355,6 @@ build caches. More specifically:
       '';
     }
     ```
-
-
-### `craneLib.mkCrossToolchainEnv`
-
-`overrideToolchain :: (set -> drv) -> set`
-
-A method which returns a set of derivation arguments to configure the Rust
-toolchain for cross compilation. This configures both the target and host
-toolchains, setting environment variables both for `cargo` as well as for the
-`cc` crate. If the given `pkgs` instance is not set up for cross compilation, an
-empty set is returned.
-
-The input should be a function which takes an instantiation of `pkgs`, returning
-the `stdenv` to use for this target.
 
 ### `craneLib.overrideToolchain`
 
