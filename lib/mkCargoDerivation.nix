@@ -81,8 +81,7 @@ let
 
   crossEnv = lib.optionalAttrs (!(args.noCrossToolchainEnv or false)) (mkCrossToolchainEnv stdenvSelector);
 
-  baseDrvArgs =
-    (builtins.removeAttrs crossEnv [ "nativeBuildInputs" ])
+  baseDrvArgs = crossEnv
     // cleanedArgs
     // lib.optionalAttrs (cargoLock != null) { inherit cargoLock; };
 in
