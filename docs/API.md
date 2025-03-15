@@ -1215,9 +1215,9 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - Default value: the package name listed in `Cargo.toml`
 * `pnameSuffix`: a suffix appended to `pname`
   - Default value: `""`
-* `stdenv`: selects the standard build environment to use for this derivation.
-  Either a function accepting an instantiation of `pkgs` (preferred), or an
-  instance of `stdenv` if cross compilation isn't a concern.
+* `stdenv`: a function to select the standard build environment to use for this
+  derivation. For backwards compatibility a non-function value (i.e. `stdenv =
+  pkgs.stdenv;`) will still be accepted.
   - Default value: `p: p.stdenv`
 * `version`: the version of the derivation
   - Default value: the version listed in `Cargo.toml`
