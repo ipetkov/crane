@@ -346,7 +346,7 @@ in
   # https://github.com/ipetkov/crane/issues/188
   depsOnlySourceName = myLib.buildPackage {
     src = ./highs-sys-test;
-    stdenv = pkgs.clangStdenv;
+    stdenv = p: p.clangStdenv;
     LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
     nativeBuildInputs = with pkgs; [
       cmake
@@ -580,7 +580,7 @@ in
   };
   simpleAltStdenv = myLib.buildPackage {
     src = ./simple;
-    stdenv = pkgs.gcc12Stdenv;
+    stdenv = p: p.gcc12Stdenv;
   };
   # https://github.com/ipetkov/crane/issues/104
   simpleWithCmake = myLib.buildPackage {
