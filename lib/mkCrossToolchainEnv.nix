@@ -37,7 +37,8 @@ in
 lib.optionalAttrs (pkgs.buildPlatform != pkgs.hostPlatform) lib.mergeAttrsList [
   {
     # Set the target we want to build for (= our host platform)
-    CARGO_BUILD_TARGET = pkgs.hostPlatform.rust.rustcTarget;
+    # The configureCargoCommonVars setup hook will set CARGO_BUILD_TARGET to this value if the user hasn't specified their own target to use
+    CRANE_CROSS_BUILD_TARGET = pkgs.hostPlatform.rust.rustcTarget;
 
     # Pull in any compilers we need
     nativeBuildInputs = [ hostStdenv.cc targetStdenv.cc ];

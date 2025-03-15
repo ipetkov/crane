@@ -17,6 +17,23 @@ configureCargoCommonVars() {
   # Used by `cargoWithProfile` to specify a cargo profile to use.
   # Not exported since it is not natively understood by cargo.
   CARGO_PROFILE=${CARGO_PROFILE-release}
+
+  # Apply CRANE_CROSS_XYZ variables, setting CARGO_XYZ accordingly unless said
+  # variable has already been set elsewhere.
+  for craneVar in ${!CRANE_CROSS_*}; do
+    cargoVar="${craneVar/#CRANE_CROSS_/CARGO_}"
+    value="${!craneVar}"
+    if [ -z "${!cargoVar}" ]; then
+      # Be loud about this in case the user is unaware that we set this
+      # variable, and as a result we break their build setup in some way
+      echo "NOTICE: setting $cargoVar to '$value' for cross-compilation purposes"
+      echo " - if this is unwanted, you can either set $cargoVar yourself, or you can unset $craneVar"
+      echo " - alternatively, you can disable crane's built-in cross compilation support by setting noCrossToolchainEnv to false"
+      export $cargoVar=$value
+    else
+      echo "ignoring cross-compilation env var $craneVar='$value' because $cargoVar has already been set to '${!cargoVar}'"
+    fi
+  done
 }
 
 # NB: run after patching, but before other configure hooks so that we can set
