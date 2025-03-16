@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   cross-compilation environment variables and derivation arguments
 
 ### Changed
+* Vendoring git dependencies now respects Cargo.toml `includes` and `excludes`
 * `mkCargoDerivation` now configures the cross-compilation toolchain by default
   using the newly added `mkCrossToolchainEnv` function. To select the utilized
   cross compiler, the `stdenv` argument now also accepts a selector function,
@@ -25,7 +26,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   deprecated) `fetchCargoTarball` method.
 * `cleanCargoToml` now preserves the `proc-macro` attribute of any defined
   targets
-* Vendoring git dependencies now respects Cargo.toml `includes` and `excludes`
 
 ### Fixed
 * `buildTrunkPackage` no longer ignores `installPhase` and `installPhaseCommand` args.
