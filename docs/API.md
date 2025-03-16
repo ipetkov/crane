@@ -1204,6 +1204,10 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
 * `configurePhase`: the commands used by the configure phase of the derivation
   - Default value: the configure phase will run `preConfigureHooks` hooks, then
     run `postConfigure` hooks
+* `doIncludeCrossToolchainEnv`: enables the default configuration of the
+  cross-compilation toolchain using `mkCrossToolchainEnv`. Useful if you want to
+  perform this configuration yourself.
+  - Default value: `true`
 * `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
   be copied as an output
   - Default value: `true`
@@ -1220,8 +1224,10 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - Default value: the package name listed in `Cargo.toml`
 * `pnameSuffix`: a suffix appended to `pname`
   - Default value: `""`
-* `stdenv`: the standard build environment to use for this derivation
-  - Default value: `pkgs.stdenv`
+* `stdenv`: a function to select the standard build environment to use for this
+  derivation. For backwards compatibility a non-function value (i.e. `stdenv =
+  pkgs.stdenv;`) will still be accepted.
+  - Default value: `p: p.stdenv`
 * `version`: the version of the derivation
   - Default value: the version listed in `Cargo.toml`
 
@@ -1254,6 +1260,23 @@ input to any other `nativeBuildInputs` specified by the caller:
 * `rustc`
 * `rsync`
 * `zstd`
+
+### `craneLib.mkCrossToolchainEnv`
+
+`mkCrossToolchainEnv :: (set -> drv) -> set`
+
+A method which returns a set of derivation arguments to configure the Rust
+toolchain for cross compilation. This configures both the target and host
+toolchains, setting environment variables both for `cargo` as well as for the
+`cc` crate. If the given `pkgs` instance is not set up for cross compilation, an
+empty set is returned.
+
+The input should be a function which takes an instantiation of `pkgs`, returning
+the `stdenv` to use for this target.
+
+```nix
+mkCrossToolchainEnv (p: p.clangStdenv)
+```
 
 ### `craneLib.mkDummySrc`
 
@@ -1337,7 +1360,6 @@ build caches. More specifically:
       '';
     }
     ```
-
 
 ### `craneLib.overrideToolchain`
 

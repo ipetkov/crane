@@ -6,16 +6,27 @@
 , inheritCargoArtifactsHook
 , installCargoArtifactsHook
 , lib
+, mkCrossToolchainEnv
+, pkgs
 , replaceCargoLockHook
-, rustc
 , rsync
-, stdenv
+, rustc
 , vendorCargoDeps
 , writeText
 , writeTOML
 , zstd
 }:
 
+let
+  # Warn if an stdenv selector function is required (e.g. when cross compiling) while only a single stdenv instance is given
+  stdenvSelectorWarnMsg = ''
+    mkCargoDerivation's stdenv argument was set to a specific stdenv instance
+    while an stdenv selector function is recommended. Consider specifying a
+    function which selects an stdenv for any given `pkgs` instantiation:
+
+    stdenv = p: p.stdenv;
+  '';
+in
 args@{
   # A directory to an existing cargo `target` directory, which will be reused
   # at the start of the derivation. Useful for caching incremental cargo builds.
@@ -32,8 +43,17 @@ args@{
 , ...
 }:
 let
+  # Pick the default package stdenv if none is provided
+  argsStdenv = args.stdenv or (p: p.stdenv);
+  stdenvSelector =
+    if lib.isFunction argsStdenv
+    then argsStdenv
+    # If not a function, warn and return the value as is
+    else lib.warn stdenvSelectorWarnMsg (_: argsStdenv);
+
+  chosenStdenv = stdenvSelector pkgs;
+
   crateName = crateNameFromCargoToml args;
-  chosenStdenv = args.stdenv or stdenv;
   cleanedArgs = builtins.removeAttrs args [
     "buildPhaseCargoCommand"
     "cargoLock"
@@ -53,10 +73,16 @@ let
     then writeTOML "Cargo.lock" args.cargoLockParsed
     else null;
   cargoLock = args.cargoLock or cargoLockFromContents;
+
+  crossEnv = lib.optionalAttrs
+    (args.doIncludeCrossToolchainEnv or true)
+    (mkCrossToolchainEnv stdenvSelector);
+
+  baseDrvArgs = crossEnv
+    // cleanedArgs
+    // lib.optionalAttrs (cargoLock != null) { inherit cargoLock; };
 in
-chosenStdenv.mkDerivation (cleanedArgs // lib.optionalAttrs (cargoLock != null) {
-  inherit cargoLock;
-} // {
+chosenStdenv.mkDerivation (baseDrvArgs // {
   inherit cargoArtifacts;
 
   pname = "${args.pname or crateName.pname}${args.pnameSuffix or ""}";
@@ -69,7 +95,7 @@ chosenStdenv.mkDerivation (cleanedArgs // lib.optionalAttrs (cargoLock != null) 
   # access. Directory structure should basically follow the output of `cargo vendor`.
   cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [
+  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ (crossEnv.nativeBuildInputs or [ ]) ++ [
     cargo
     cargoHelperFunctionsHook
     configureCargoCommonVarsHook

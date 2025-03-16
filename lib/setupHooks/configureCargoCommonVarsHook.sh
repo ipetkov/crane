@@ -17,6 +17,34 @@ configureCargoCommonVars() {
   # Used by `cargoWithProfile` to specify a cargo profile to use.
   # Not exported since it is not natively understood by cargo.
   CARGO_PROFILE=${CARGO_PROFILE-release}
+
+  # Apply __CRANE_EXPORT_XYZ variables, setting XYZ accordingly unless said
+  # variable has already been set elsewhere.
+  local craneVar
+  local didPreamble=""
+  for craneVar in ${!__CRANE_EXPORT_*}; do
+    local var="${craneVar#__CRANE_EXPORT_}"
+    if [ -z "${!var}" ]; then
+      # Be loud about this in case the user is unaware that we set this
+      # variable, and as a result we break their build setup in some way
+      if [ -z "${didPreamble}" ]; then
+        local didPreamble="1"
+        echo '----------------------------------------------------------------------------------'
+        echo 'NOTICE: setting the following environment variables for cross-compilation purposes'
+        echo ' - if this is unwanted, you can set them to a non-empty value'
+        echo ' - alternatively, you can disable the built-in cross compilation support'
+        echo '   by setting `doIncludeCrossToolchainEnv = false` in the derivation'
+      fi
+
+      local value="${!craneVar}"
+      echo "${var}"="${value}"
+      export "${var}"="${value}"
+    fi
+  done
+
+  if [ -n "${didPreamble}" ]; then
+    echo '----------------------------------------------------------------------------------'
+  fi
 }
 
 # NB: run after patching, but before other configure hooks so that we can set
