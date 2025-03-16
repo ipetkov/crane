@@ -9,6 +9,7 @@ stdenvSelector:
 let
   hostStdenv = stdenvSelector pkgs.pkgsBuildHost;
   targetStdenv = stdenvSelector pkgs.pkgsHostTarget;
+  chosenStdenv = stdenvSelector pkgs;
 
   varsForPlatform = buildKind: stdenv:
     let
@@ -37,11 +38,11 @@ let
       "${cranePrefix}${buildKind}_AR" = "${ccPrefix}ar";
     };
 in
-lib.optionalAttrs (pkgs.buildPlatform != pkgs.hostPlatform) (lib.mergeAttrsList [
+lib.optionalAttrs (chosenStdenv.buildPlatform != chosenStdenv.hostPlatform) (lib.mergeAttrsList [
   {
     # Set the target we want to build for (= our host platform)
     # The configureCargoCommonVars setup hook will set CARGO_BUILD_TARGET to this value if the user hasn't specified their own target to use
-    "${cranePrefix}CARGO_BUILD_TARGET" = pkgs.hostPlatform.rust.rustcTarget;
+    "${cranePrefix}CARGO_BUILD_TARGET" = chosenStdenv.hostPlatform.rust.rustcTarget;
 
     # Pull in any compilers we need
     nativeBuildInputs = [ hostStdenv.cc targetStdenv.cc ];
