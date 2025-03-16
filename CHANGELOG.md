@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `mkCrossToolchainEnv` is now available for setting up some default
+  cross-compilation environment variables and derivation arguments
+
+### Changed
+* `mkCargoDerivation` now configures the cross-compilation toolchain by default
+  using the newly added `mkCrossToolchainEnv` function. To select the utilized
+  cross compiler, the `stdenv` argument now also accepts a selector function,
+  taking an arbitrary `pkgs` instantiation as an argument. This behavior can be
+  turned off by setting `doIncludeCrossToolchainEnv = false;`.
+
 ## [0.20.2] - 2025-03-08
 
 ### Changed
@@ -32,11 +43,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Add self-reference `craneLib` to crane lib instance.
 * Add `removeReferencesToRustToolchainHook`, which, by default, removes
   references to the Rust toolchain from all installed binaries
-* `mkCargoDerivation` now configures the cross-compilation toolchain by default
-  using the newly added `mkCrossToolchainEnv` function. To select the utilized
-  cross compiler, the `stdenv` argument now also accepts a selector function,
-  taking an arbitrary `pkgs` instantiation as an argument. This behavior can be
-  turned off using the `doIncludeCrossToolchainEnv` argument.
   
 ### Changed
 * `buildPackage` now includes `removeReferencesToRustToolchainHook` as a native
