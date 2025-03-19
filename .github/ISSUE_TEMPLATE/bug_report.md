@@ -16,4 +16,10 @@ assignees: ''
 -->
 
 **Reproduction**
-<!-- Please provide a(n ideally minimal) flake that reproduces the issue, and specify which output needs to be built that shows the error -->
+<!--
+    Please provide a(n ideally minimal,) fully self-contained flake that
+    reproduces the issue, and specify which output needs to be built that shows
+    the error.
+
+    A partial snippet is not enough to fully investigate potential issues.
+-->
