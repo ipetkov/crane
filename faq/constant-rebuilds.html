@@ -1,0 +1,304 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Constantly rebuilding from scratch - crane</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A Nix library for building cargo projects.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "ayu";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">crane</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane/edit/master/docs/./faq/constant-rebuilds.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="im-getting-rebuilds-all-of-the-time-especially-when-i-change-flakenix"><a class="header" href="#im-getting-rebuilds-all-of-the-time-especially-when-i-change-flakenix">I'm getting rebuilds all of the time, especially when I change <code>flake.nix</code></a></h2>
+<p>Nix will rebuild a derivation if any of its inputs change, which includes any
+file contained by the source that is passed in. For example, if the build
+expression specifies <code>src = ./.;</code> then the crate will be rebuilt when <em>any</em> file
+changes (including "unrelated" changes to <code>flake.nix</code>)!</p>
+<p>There are two main ways to avoid unnecessary builds:</p>
+<ol>
+<li>Use a <a href="https://nixos.org/manual/nixpkgs/unstable/#sec-functions-library-sources">source cleaning</a> function which can omit any files know to not be
+needed while building the crate (for example, all <code>*.nix</code> sources,
+<code>flake.lock</code>, and so on). For example <code>cleanCargoSource</code> (see [API docs] for
+details) implements some good defaults for ignoring irrelevant files which
+are not needed by cargo.</li>
+<li>Another option is to put the crate's source files into its own subdirectory
+(e.g. <code>./mycrate</code>) and then set the build expression's source to that
+subdirectory (e.g. <code>src = ./mycrate;</code>). Then, changes to files <em>outside</em> of
+that directory will be ignored and will not cause a rebuild</li>
+</ol>
+<p>In certain (especially non-trivial) crane-based workflows, it's possible that
+a change to a given file might trigger rebuilds of certain seemingly unrelated derivations.
+This is most often caused by a subtle bug introducing undesired derivation inputs.</p>
+<h3 id="debugging-with-nix-diff"><a class="header" href="#debugging-with-nix-diff">Debugging with nix-diff</a></h3>
+<p>An efficient way to debug such problems is to use <a href="https://github.com/Gabriella439/nix-diff"><code>nix-diff</code></a> to compare the derivation build plans:</p>
+<pre><code class="language-sh"># nix-diff does not support direct flake-urls so we'll need
+# to get the actual derivation name
+nix show-derivation .#affectedOutput | nix run nixpkgs#jq -- -r 'keys[0]' &gt; before_drv
+echo &gt;&gt; ./file/triggering/rebuild # cause a rebuild
+nix show-derivation .#affectedOutput | nix run nixpkgs#jq -- -r 'keys[0]' &gt; after_drv
+nix run nixpkgs#nix-diff "$(cat before_drv)" "$(cat after_drv)"
+</code></pre>
+<h3 id="debugging-with-just-nix"><a class="header" href="#debugging-with-just-nix">Debugging with just <code>nix</code></a></h3>
+<p>Another way to debug such problems is to use <code>nix derivation show -r</code> to compare the derivation build plans:</p>
+<pre><code class="language-sh">nix derivation show -r .#affectedOutput &gt; before
+echo &gt;&gt; ./file/triggering/rebuild # cause a rebuild
+nix derivation show -r .#affectedOutput &gt; after
+diff -u before after
+</code></pre>
+<p>The difference in the highest-level derivation should point to a direct cause of the rebuild (possibly a different lower-level input derivation which can be compared recursively).</p>
+<h2 id="ive-used-a-source-filter-but-cargo-is-still-rebuilding-all-dependencies-from-scratch"><a class="header" href="#ive-used-a-source-filter-but-cargo-is-still-rebuilding-all-dependencies-from-scratch">I've used a source filter but cargo is still rebuilding all dependencies from scratch!</a></h2>
+<p>Another source of artifact invalidation is if</p>
+<ul>
+<li>A different set of dependency crates are being built between derivations</li>
+</ul>
+<pre><code class="language-nix">let
+  src = ...;
+in
+craneLib.buildPackage {
+  inherit src;
+
+  cargoArtifacts = craneLib.buildDepsOnly {
+    inherit src;
+    cargoExtraArgs = "-p foo"; # Only build the `foo` crate
+  };
+
+  # Oops, we're only building the `bar` crate now
+  # any dependency crates used by `bar` but not by `foo`
+  # will get built from scratch!
+  cargoExtraArgs = "-p bar";
+}
+</code></pre>
+<ul>
+<li>Another reason could be using different feature flags between derivations,
+which result in setting <em>different</em> feature flags for dependency crates
+themselves and causing a rebuild</li>
+</ul>
+<pre><code class="language-nix">let
+  src = ...;
+in
+craneLib.buildPackage {
+  inherit src;
+
+  cargoArtifacts = craneLib.buildDepsOnly {
+    inherit src;
+    cargoExtraArgs = "--no-default-features"; # Don't use any workspace features
+  };
+
+  # Oops, we're now building with an additional downstream feature flag which
+  # needs to build more crates which we do not have cached!
+  cargoExtraArgs = "--features feature-which-enables-downstream-feature";
+}
+</code></pre>
+<p>If in doubt, double check that the same set of <code>-p</code>/<code>--package</code> and
+<code>--features</code>/<code>--no-default-features</code>/<code>--all-features</code> flags are used between all
+<code>buildDepsOnly</code>/<code>cargoBuild</code>/<code>cargoClippy</code>/<code>buildPackage</code> derivations.</p>
+<h3 id="mixing-package-and-workspace-definitions-in-the-top-level-cargotoml"><a class="header" href="#mixing-package-and-workspace-definitions-in-the-top-level-cargotoml">Mixing <code>[package]</code> and <code>[workspace]</code> definitions in the top-level <code>Cargo.toml</code></a></h3>
+<p>Another potential pitfall is defining both <code>[package]</code> and <code>[workspace]</code> in the
+project's top-level <code>Cargo.toml</code> file. Although cargo allows <em>both</em> to be
+defined, doing so results in cargo only operating on that package by default
+(unless the <code>--workspace</code> flag is passed in).</p>
+<p>Any subsequent derivations which attempt to build with <code>-p another-crate</code> might
+not have their dependencies fully cached. Our recommendation is to only define
+<code>[package]</code> in the top-level <code>Cargo.toml</code> if the workspace contains a single
+crate; otherwise only <code>[workspace]</code> should be defined.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../faq/ifd-error.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../faq/rebuilds-with-different-toolchains.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../faq/ifd-error.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../faq/rebuilds-with-different-toolchains.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
