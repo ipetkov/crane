@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v30
+    - uses: cachix/install-nix-action@v31
       with:
         install_url: ${{ matrix.install_url }}
     - uses: cachix/cachix-action@v16
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v30
+    - uses: cachix/install-nix-action@v31
     - uses: cachix/cachix-action@v16
       with:
         name: crane
@@ -91,7 +91,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v30
+    - uses: cachix/install-nix-action@v31
     - uses: cachix/cachix-action@v16
       with:
         name: crane
@@ -120,7 +120,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v30
+    - uses: cachix/install-nix-action@v31
     - name: check formatting
       run: nix fmt --accept-flake-config -- --check .
     - name: check for dead code
