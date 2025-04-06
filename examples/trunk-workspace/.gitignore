@@ -1,1 +1,3 @@
-client/dist
+/client/dist
+/target
+result*
