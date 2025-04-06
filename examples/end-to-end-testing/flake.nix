@@ -84,7 +84,7 @@
         });
 
         devShells.default = pkgs.mkShell {
-          BuildInputs = with pkgs; [
+          buildInputs = with pkgs; [
             rustc
             cargo
           ] ++ (lib.optionals (!pkgs.stdenv.isDarwin) [
