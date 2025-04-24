@@ -6,12 +6,6 @@
 
     crane.url = "github:ipetkov/crane";
 
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.rust-analyzer-src.follows = "";
-    };
-
     flake-utils.url = "github:numtide/flake-utils";
 
     advisory-db = {
@@ -20,7 +14,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, fenix, flake-utils, advisory-db, ... }:
+  outputs = { self, nixpkgs, crane, flake-utils, advisory-db, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -45,13 +39,6 @@
           # Additional environment variables can be set directly
           # MY_CUSTOM_VAR = "some value";
         };
-
-        craneLibLLvmTools = craneLib.overrideToolchain
-          (fenix.packages.${system}.complete.withComponents [
-            "cargo"
-            "llvm-tools"
-            "rustc"
-          ]);
 
         # Build *just* the cargo dependencies, so we can reuse
         # all of that work (e.g. via cachix) when running in CI
@@ -117,10 +104,6 @@
 
         packages = {
           default = my-crate;
-        } // lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
-          my-crate-llvm-coverage = craneLibLLvmTools.cargoLlvmCov (commonArgs // {
-            inherit cargoArtifacts;
-          });
         };
 
         apps.default = flake-utils.lib.mkApp {
