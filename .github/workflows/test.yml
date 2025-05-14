@@ -122,6 +122,6 @@ jobs:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v31
     - name: check formatting
-      run: nix fmt --accept-flake-config -- --check .
+      run: nix fmt -- --ci
     - name: check for dead code
       run: nix develop .# --command deadnix .

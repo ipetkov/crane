@@ -126,24 +126,26 @@
           inherit system;
         };
 
+        formatter = pkgs.nixfmt-tree;
+
         myLib = mkLib pkgs;
       in
       {
+        inherit formatter;
+
         checks = { };
 
         packages = import ./pkgs {
           inherit pkgs myLib;
         };
 
-        formatter = pkgs.nixpkgs-fmt;
-
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
             deadnix
+            formatter
             jq
             mdbook
             nix-eval-jobs
-            nixpkgs-fmt
             taplo
           ];
         };
