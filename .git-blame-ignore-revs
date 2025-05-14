@@ -2,3 +2,5 @@
 9eb8357f53cc2bff06b0727e6560f6a8fd6759b0
 # run nixpkgs-fmt
 35fd8fcbb0974fadac39d30e0991f978c646d909
+# Switch to nixfmt-tree
+2b2b564e8988e2701f8ba5a0863102c22b476bf3
