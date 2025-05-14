@@ -1,7 +1,7 @@
-{ makeSetupHook
+{
+  makeSetupHook,
 }:
 
-makeSetupHook
-{
+makeSetupHook {
   name = "installCargoArtifactsHook";
 } ./installCargoArtifactsHook.sh

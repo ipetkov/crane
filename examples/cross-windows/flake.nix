@@ -14,12 +14,21 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { nixpkgs, crane, fenix, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      nixpkgs,
+      crane,
+      fenix,
+      flake-utils,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        toolchain = with fenix.packages.${system};
+        toolchain =
+          with fenix.packages.${system};
           combine [
             minimal.rustc
             minimal.cargo

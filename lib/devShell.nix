@@ -1,14 +1,16 @@
-{ cargo
-, clippy
-, mkShell
-, rustc
-, rustfmt
+{
+  cargo,
+  clippy,
+  mkShell,
+  rustc,
+  rustfmt,
 }:
 
-{ checks ? { }
-, inputsFrom ? [ ]
-, packages ? [ ]
-, ...
+{
+  checks ? { },
+  inputsFrom ? [ ],
+  packages ? [ ],
+  ...
 }@args:
 let
   inherit (builtins) removeAttrs;
@@ -19,13 +21,16 @@ let
     "nativeBuildInputs"
   ];
 in
-mkShell (cleanedArgs // {
-  inputsFrom = builtins.attrValues checks ++ inputsFrom;
+mkShell (
+  cleanedArgs
+  // {
+    inputsFrom = builtins.attrValues checks ++ inputsFrom;
 
-  packages = [
-    rustc
-    cargo
-    clippy
-    rustfmt
-  ] ++ packages;
-})
+    packages = [
+      rustc
+      cargo
+      clippy
+      rustfmt
+    ] ++ packages;
+  }
+)

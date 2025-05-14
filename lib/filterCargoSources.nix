@@ -1,4 +1,5 @@
-{ lib
+{
+  lib,
 }:
 
 orig_path: type:

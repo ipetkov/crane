@@ -1,32 +1,37 @@
-{ cleanCargoToml
-, findCargoFiles
-, lib
-, pkgsBuildBuild
-, writeTOML
+{
+  cleanCargoToml,
+  findCargoFiles,
+  lib,
+  pkgsBuildBuild,
+  writeTOML,
 }:
 
 let
   inherit (pkgsBuildBuild)
     runCommand
-    writeText;
+    writeText
+    ;
 in
-{ src
-, cargoLock ? null
-, extraDummyScript ? ""
-, ...
+{
+  src,
+  cargoLock ? null,
+  extraDummyScript ? "",
+  ...
 }@args:
 let
   inherit (builtins)
     dirOf
     concatStringsSep
     match
-    storeDir;
+    storeDir
+    ;
 
   inherit (lib)
     last
     optionalString
     recursiveUpdate
-    removePrefix;
+    removePrefix
+    ;
 
   inherit (lib.strings) concatStrings;
 
@@ -91,10 +96,7 @@ let
   # whose prefix won't match the paths we observe when we try to clean the source a bit further down
   # (Nix optimizes multiple filters by running them all once against the original source).
   # https://github.com/ipetkov/crane/issues/46
-  origSrc =
-    if src ? _isLibCleanSourceWith
-    then src.origSrc
-    else src;
+  origSrc = if src ? _isLibCleanSourceWith then src.origSrc else src;
 
   uncleanSrcBasePath = builtins.unsafeDiscardStringContext ((toString origSrc) + "/");
   uncleanFiles = findCargoFiles origSrc;
@@ -104,33 +106,31 @@ let
 
   cleanSrc =
     let
-      allUncleanFiles = map
-        (p: removePrefix uncleanSrcBasePath (toString p))
-        # Allow the default `Cargo.lock` location to be picked up here
-        # (if it exists) so it automattically appears in the cleaned source
-        (uncleanFiles.cargoConfigs ++ [ "Cargo.lock" ]);
+      allUncleanFiles =
+        map (p: removePrefix uncleanSrcBasePath (toString p))
+          # Allow the default `Cargo.lock` location to be picked up here
+          # (if it exists) so it automattically appears in the cleaned source
+          (uncleanFiles.cargoConfigs ++ [ "Cargo.lock" ]);
     in
     lib.cleanSourceWith {
       inherit src;
       name = "cleaned-mkDummySrc";
-      filter = path: type:
+      filter =
+        path: type:
         let
           # using `path` can have weird consequences here with alternative store paths
           # so we cannot assume `uncleanSrcBasePath` will be a strict prefix. Thus we
           # chop off anything up to and including its value
           # https://github.com/ipetkov/crane/issues/446
           strippedPath = lib.last (lib.splitString uncleanSrcBasePath path);
-          filter = x:
-            if type == "directory" then
-              lib.hasPrefix strippedPath x
-            else
-              x == strippedPath;
+          filter = x: if type == "directory" then lib.hasPrefix strippedPath x else x == strippedPath;
         in
         lib.any filter allUncleanFiles;
     };
 
-  copyAndStubCargoTomls = concatStrings (map
-    (p:
+  copyAndStubCargoTomls = concatStrings (
+    map (
+      p:
       let
         # Safety: all the paths here are fully processed/consumed at evaluation time, so it is is
         # safe to throw away any context (to the Nix store) the original path may have carried.
@@ -161,37 +161,35 @@ let
           }
         '';
 
-        dummyMain = builtins.concatStringsSep ""
-          [
-            dummyBase
-            ''
+        dummyMain = builtins.concatStringsSep "" [
+          dummyBase
+          ''
 
-              pub fn main() {}
-            ''
-          ];
+            pub fn main() {}
+          ''
+        ];
 
-        isProcMacro = toml:
+        isProcMacro =
+          toml:
           let
             hasLib = builtins.hasAttr "lib" toml;
             libAttr = builtins.getAttr "lib" toml;
             crate-type =
-              if hasLib && builtins.hasAttr "crate-type" libAttr
-              then builtins.getAttr "crate-type" libAttr
-              else [ ];
+              if hasLib && builtins.hasAttr "crate-type" libAttr then
+                builtins.getAttr "crate-type" libAttr
+              else
+                [ ];
           in
-          if hasLib
-          then
+          if hasLib then
             (builtins.hasAttr "proc-macro" libAttr)
             || (builtins.hasAttr "proc_macro" libAttr)
             || (builtins.elem "proc-macro" crate-type)
             || (builtins.elem "proc_macro" crate-type)
-          else false;
+          else
+            false;
 
         # Add the main() fn if the crate is not a proc-macro
-        dummyText =
-          if isProcMacro cleanedCargoToml
-          then dummyBase
-          else dummyMain;
+        dummyText = if isProcMacro cleanedCargoToml then dummyBase else dummyMain;
 
         dummyrs = args.dummyrs or (writeText "dummy.rs" dummyText);
         dummyBuildScript = args.dummyrs or (writeText "dummyBuild.rs" dummyMain);
@@ -213,11 +211,9 @@ let
         trimmedCargoToml =
           # Only update if we have a `package` definition, workspaces Cargo.tomls don't need updating
           if cleanedCargoToml ? package then
-            recursiveUpdate
-              cleanedCargoToml
-              {
-                package.build = dummyBuildScript;
-              }
+            recursiveUpdate cleanedCargoToml {
+              package.build = dummyBuildScript;
+            }
           else
             cleanedCargoToml;
 
@@ -229,7 +225,9 @@ let
         hasLibrs = (trimmedCargoToml.package.autolib or true) && hasFile srcDir "lib.rs";
         autobins = trimmedCargoToml.package.autobins or true;
         hasMainrs = autobins && hasFile srcDir "main.rs";
-        srcBinDir = lib.optionalAttrs (autobins && hasDir srcDir "bin") (builtins.readDir (shallowJoinPath "src/bin"));
+        srcBinDir = lib.optionalAttrs (autobins && hasDir srcDir "bin") (
+          builtins.readDir (shallowJoinPath "src/bin")
+        );
         srcMainrs = "src/main.rs";
 
         candidatePathsForBin = name: rec {
@@ -239,56 +237,66 @@ let
 
         # NB: sort the result here to be as deterministic as possible and avoid rebuilds if
         # directory listings happen to change their order
-        discoveredBins = lib.sortOn (x: x) (lib.filter (p: p != null)
-          (lib.flip map (lib.attrsToList srcBinDir) ({ name, value }:
-            let
-              inherit (candidatePathsForBin name) short long;
-            in
-            lib.escapeShellArg (
-              if value == "regular"
-              then short
-              else if value == "directory" && builtins.pathExists (shallowJoinPath long)
-              then long
-              else null
+        discoveredBins = lib.sortOn (x: x) (
+          lib.filter (p: p != null) (
+            lib.flip map (lib.attrsToList srcBinDir) (
+              { name, value }:
+              let
+                inherit (candidatePathsForBin name) short long;
+              in
+              lib.escapeShellArg (
+                if value == "regular" then
+                  short
+                else if value == "directory" && builtins.pathExists (shallowJoinPath long) then
+                  long
+                else
+                  null
+              )
             )
-          ))
+          )
         );
 
-        declaredBins = lib.filter (p: p != null) (lib.flip map (trimmedCargoToml.bin or [ ]) (t:
-          if t ? path
-          then (if lib.elem t.path discoveredBins then null else t.path)
-          else
-            let
-              candidates = candidatePathsForBin t.name;
-              inherit (candidates) long;
-              short = "${candidates.short}.rs";
+        declaredBins = lib.filter (p: p != null) (
+          lib.flip map (trimmedCargoToml.bin or [ ]) (
+            t:
+            if t ? path then
+              (if lib.elem t.path discoveredBins then null else t.path)
+            else
+              let
+                candidates = candidatePathsForBin t.name;
+                inherit (candidates) long;
+                short = "${candidates.short}.rs";
 
-              # If we have a declared target that matches the package name then exactly one of the
-              # following needs to be true for a well-formed cargo project:
-              # * the target has an explictly declared path (handled above)
-              # * the project has a `src/main.rs` file (detected above and handled further below)
-              # * the project has a `src/bin/${name}.rs` file which will show up in discoveredBins
-              # Hence if the target's name matches the package name, we have nothing further to add
-              nothingToAdd = t.name == trimmedCargoToml.package.name
-                # Otherwise if the target was already discovered, nothing else for us to add
-                || lib.any (i: i == short || i == long) discoveredBins;
-            in
-            if nothingToAdd then null else short
-        ));
+                # If we have a declared target that matches the package name then exactly one of the
+                # following needs to be true for a well-formed cargo project:
+                # * the target has an explictly declared path (handled above)
+                # * the project has a `src/main.rs` file (detected above and handled further below)
+                # * the project has a `src/bin/${name}.rs` file which will show up in discoveredBins
+                # Hence if the target's name matches the package name, we have nothing further to add
+                nothingToAdd =
+                  t.name == trimmedCargoToml.package.name
+                  # Otherwise if the target was already discovered, nothing else for us to add
+                  || lib.any (i: i == short || i == long) discoveredBins;
+              in
+              if nothingToAdd then null else short
+          )
+        );
 
         allBins = concatStringsSep " " (discoveredBins ++ declaredBins);
 
-        stubBins = ''(
-          cd ${parentDir}
-          echo ${allBins} | xargs --no-run-if-empty -n1 dirname | sort -u | xargs --no-run-if-empty mkdir -p
-          echo ${allBins} | xargs --no-run-if-empty -n1 cp -f ${dummyrs}
-        )'';
+        stubBins = ''
+          (
+                    cd ${parentDir}
+                    echo ${allBins} | xargs --no-run-if-empty -n1 dirname | sort -u | xargs --no-run-if-empty mkdir -p
+                    echo ${allBins} | xargs --no-run-if-empty -n1 cp -f ${dummyrs}
+                  )'';
 
-        safeStubLib = lib.optionalString
-          (trimmedCargoToml ? lib || hasLibrs)
-          (cpDummy parentDir (trimmedCargoToml.lib.path or "src/lib.rs"));
+        safeStubLib = lib.optionalString (trimmedCargoToml ? lib || hasLibrs) (
+          cpDummy parentDir (trimmedCargoToml.lib.path or "src/lib.rs")
+        );
 
-        safeStubList = attr: defaultPath:
+        safeStubList =
+          attr: defaultPath:
           let
             targetList = trimmedCargoToml.${attr} or [ ];
             paths = map (t: t.path or "${defaultPath}/${t.name}.rs") targetList;
@@ -299,7 +307,8 @@ let
       ''
         mkdir -p ${parentDir}
         cp ${writeTOML "Cargo.toml" trimmedCargoToml} $out/${cargoTomlDest}
-      '' + optionalString (trimmedCargoToml ? package) ''
+      ''
+      + optionalString (trimmedCargoToml ? package) ''
         # To build regular and dev dependencies (cargo build + cargo test)
         ${lib.optionalString hasMainrs (cpDummy parentDir srcMainrs)}
         ${stubBins}
@@ -310,16 +319,12 @@ let
         ${safeStubList "example" "examples"}
         ${safeStubList "test" "tests"}
       ''
-    )
-    cargoTomls
+    ) cargoTomls
   );
 
   # Since we allow the caller to provide a path to *some* Cargo.lock file
   # we include it in our dummy build only if it was explicitly specified.
-  copyCargoLock =
-    if cargoLock == null
-    then ""
-    else "cp ${cargoLock} $out/Cargo.lock";
+  copyCargoLock = if cargoLock == null then "" else "cp ${cargoLock} $out/Cargo.lock";
 
   # Note that the name we choose for the dummy source output is load bearing:
   # some CMake projects will error out (thinking their caches are invalidated)
@@ -336,10 +341,13 @@ let
       # https://github.com/ipetkov/crane/issues/242
       nameWithoutHash = match "/([a-z0-9]{32}-)+(.*)" srcStorePath;
     in
-    if (nameWithoutHash == null)
+    if
+      (nameWithoutHash == null)
     # Fall back to a static name if the matching fails for any reason
-    then "dummy-src"
-    else last nameWithoutHash;
+    then
+      "dummy-src"
+    else
+      last nameWithoutHash;
 in
 runCommand sourceName { } ''
   mkdir -p $out

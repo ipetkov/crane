@@ -1,8 +1,9 @@
-{ buildDepsOnly
-, cargoClippy
-, crateNameFromCargoToml
-, linkFarmFromDrvs
-, mkDummySrc
+{
+  buildDepsOnly,
+  cargoClippy,
+  crateNameFromCargoToml,
+  linkFarmFromDrvs,
+  mkDummySrc,
 }:
 
 let
@@ -11,39 +12,44 @@ let
     inherit src;
   };
 in
-linkFarmFromDrvs "clippy-tests" (builtins.attrValues {
-  clippytest = cargoClippy {
-    inherit cargoArtifacts src;
-  };
-
-  dummySrc = cargoClippy ((crateNameFromCargoToml { inherit src; }) // {
-    cargoArtifacts = null;
-    src = mkDummySrc {
-      inherit src;
+linkFarmFromDrvs "clippy-tests" (
+  builtins.attrValues {
+    clippytest = cargoClippy {
+      inherit cargoArtifacts src;
     };
-  });
 
-  checkWarnings = cargoClippy {
-    inherit cargoArtifacts src;
-    pname = "checkWarnings";
+    dummySrc = cargoClippy (
+      (crateNameFromCargoToml { inherit src; })
+      // {
+        cargoArtifacts = null;
+        src = mkDummySrc {
+          inherit src;
+        };
+      }
+    );
 
-    cargoClippyExtraArgs = "--all-targets 2>clippy.log";
-    installPhaseCommand = ''
-      grep 'warning: use of `println!`' <clippy.log
-      mkdir -p $out
-    '';
-  };
+    checkWarnings = cargoClippy {
+      inherit cargoArtifacts src;
+      pname = "checkWarnings";
 
-  denyWarnings = cargoClippy {
-    inherit cargoArtifacts src;
-    pname = "denyWarnings";
+      cargoClippyExtraArgs = "--all-targets 2>clippy.log";
+      installPhaseCommand = ''
+        grep 'warning: use of `println!`' <clippy.log
+        mkdir -p $out
+      '';
+    };
 
-    cargoClippyExtraArgs = ''
-      --all-targets -- --deny warnings 2>clippy.log || [ "0" != "$?" ]
-    '';
-    installPhaseCommand = ''
-      grep 'error: use of `println!`' <clippy.log
-      mkdir -p $out
-    '';
-  };
-})
+    denyWarnings = cargoClippy {
+      inherit cargoArtifacts src;
+      pname = "denyWarnings";
+
+      cargoClippyExtraArgs = ''
+        --all-targets -- --deny warnings 2>clippy.log || [ "0" != "$?" ]
+      '';
+      installPhaseCommand = ''
+        grep 'error: use of `println!`' <clippy.log
+        mkdir -p $out
+      '';
+    };
+  }
+)

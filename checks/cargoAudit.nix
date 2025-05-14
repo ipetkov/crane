@@ -1,19 +1,22 @@
-{ cargoAudit
-, fetchFromGitHub
-, linkFarmFromDrvs
-, runCommand
+{
+  cargoAudit,
+  fetchFromGitHub,
+  linkFarmFromDrvs,
+  runCommand,
 }:
 
 let
-  auditWith = src: cargoAudit {
-    inherit src;
-    advisory-db = fetchFromGitHub {
-      owner = "rustsec";
-      repo = "advisory-db";
-      rev = "36df8a4efc6f2da4ccc7ced0d431136f473b2001";
-      sha256 = "sha256-9eSrCrsSNyl79JMH7LrlCpn9a8lYJ01daZNxUDBKMEo=";
+  auditWith =
+    src:
+    cargoAudit {
+      inherit src;
+      advisory-db = fetchFromGitHub {
+        owner = "rustsec";
+        repo = "advisory-db";
+        rev = "36df8a4efc6f2da4ccc7ced0d431136f473b2001";
+        sha256 = "sha256-9eSrCrsSNyl79JMH7LrlCpn9a8lYJ01daZNxUDBKMEo=";
+      };
     };
-  };
 
   simpleWithAuditToml = (auditWith ./simple-with-audit-toml);
 

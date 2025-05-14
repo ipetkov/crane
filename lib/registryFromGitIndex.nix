@@ -1,9 +1,11 @@
-{ registryFromDownloadUrl
+{
+  registryFromDownloadUrl,
 }:
 
-{ indexUrl
-, rev
-, fetchurlExtraArgs ? { }
+{
+  indexUrl,
+  rev,
+  fetchurlExtraArgs ? { },
 }:
 
 let
@@ -21,10 +23,11 @@ let
       throw "registry index is missing a config.json file";
 
   config = builtins.fromJSON configContents;
-  dl = config.dl or (throw ''
-    registry config does not have a "dl" endpoint:
-    ${configContents}
-  '');
+  dl =
+    config.dl or (throw ''
+      registry config does not have a "dl" endpoint:
+      ${configContents}
+    '');
 in
 registryFromDownloadUrl {
   inherit dl indexUrl fetchurlExtraArgs;

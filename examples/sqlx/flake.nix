@@ -9,8 +9,16 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      crane,
+      flake-utils,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
@@ -38,14 +46,16 @@
             pkgs.pkg-config
           ];
 
-          buildInputs = [
-            # Add additional build inputs here
-            pkgs.openssl
-          ] ++ lib.optionals pkgs.stdenv.isDarwin [
-            # Additional darwin specific inputs can be set here
-            pkgs.libiconv
-            pkgs.darwin.apple_sdk.frameworks.Security
-          ];
+          buildInputs =
+            [
+              # Add additional build inputs here
+              pkgs.openssl
+            ]
+            ++ lib.optionals pkgs.stdenv.isDarwin [
+              # Additional darwin specific inputs can be set here
+              pkgs.libiconv
+              pkgs.darwin.apple_sdk.frameworks.Security
+            ];
 
           # Additional environment variables can be set directly
           # MY_CUSTOM_VAR = "some value";
@@ -57,19 +67,22 @@
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
-        my-crate = craneLib.buildPackage (commonArgs // {
-          inherit cargoArtifacts;
+        my-crate = craneLib.buildPackage (
+          commonArgs
+          // {
+            inherit cargoArtifacts;
 
-          nativeBuildInputs = (commonArgs.nativeBuildInputs or [ ]) ++ [
-            pkgs.sqlx-cli
-          ];
+            nativeBuildInputs = (commonArgs.nativeBuildInputs or [ ]) ++ [
+              pkgs.sqlx-cli
+            ];
 
-          preBuild = ''
-            export DATABASE_URL=sqlite:./db.sqlite3
-            sqlx database create
-            sqlx migrate run
-          '';
-        });
+            preBuild = ''
+              export DATABASE_URL=sqlite:./db.sqlite3
+              sqlx database create
+              sqlx migrate run
+            '';
+          }
+        );
       in
       {
         checks = {
@@ -94,5 +107,6 @@
             pkgs.sqlx-cli
           ];
         };
-      });
+      }
+    );
 }

@@ -1,22 +1,29 @@
-{ mkCargoDerivation
+{
+  mkCargoDerivation,
 }:
 
-{ cargoArtifacts
-, cargoExtraArgs ? "--locked"
-, cargoTestExtraArgs ? ""
-, ...
+{
+  cargoArtifacts,
+  cargoExtraArgs ? "--locked",
+  cargoTestExtraArgs ? "",
+  ...
 }@origArgs:
 let
-  args = (builtins.removeAttrs origArgs [
-    "cargoExtraArgs"
-    "cargoTestExtraArgs"
-  ]);
+  args = (
+    builtins.removeAttrs origArgs [
+      "cargoExtraArgs"
+      "cargoTestExtraArgs"
+    ]
+  );
 in
-mkCargoDerivation (args // {
-  inherit cargoArtifacts;
-  doCheck = args.doCheck or true;
+mkCargoDerivation (
+  args
+  // {
+    inherit cargoArtifacts;
+    doCheck = args.doCheck or true;
 
-  pnameSuffix = "-test";
-  buildPhaseCargoCommand = "";
-  checkPhaseCargoCommand = "cargoWithProfile test ${cargoExtraArgs} ${cargoTestExtraArgs}";
-})
+    pnameSuffix = "-test";
+    buildPhaseCargoCommand = "";
+    checkPhaseCargoCommand = "cargoWithProfile test ${cargoExtraArgs} ${cargoTestExtraArgs}";
+  }
+)

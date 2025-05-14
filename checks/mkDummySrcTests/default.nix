@@ -1,13 +1,15 @@
-{ lib
-, linkFarmFromDrvs
-, mkDummySrc
-, remarshal
-, runCommand
-, writeText
+{
+  lib,
+  linkFarmFromDrvs,
+  mkDummySrc,
+  remarshal,
+  runCommand,
+  writeText,
 }:
 
 let
-  doCompare = name: expected: orig_actual:
+  doCompare =
+    name: expected: orig_actual:
     let
       actual = runCommand "trim-actual-${name}" { } ''
         cp --recursive ${orig_actual} --no-target-directory $out --no-preserve=mode,ownership
@@ -17,9 +19,7 @@ let
       # 23.05 has remarshal 0.14 which sorts keys by default
       # starting with version 0.16 ordering is preserved unless
       # --sort-keys is specified
-      sortKeys = lib.optionalString
-        (lib.strings.versionAtLeast remarshal.version "0.16.0")
-        "--sort-keys";
+      sortKeys = lib.optionalString (lib.strings.versionAtLeast remarshal.version "0.16.0") "--sort-keys";
     in
     runCommand "compare-${name}" { } ''
       echo ${expected} ${actual}
@@ -36,8 +36,8 @@ let
       touch $out
     '';
 
-
-  cmpDummySrcRaw = name: expected: input:
+  cmpDummySrcRaw =
+    name: expected: input:
     let
       dummySrc = mkDummySrc {
         src = input;
@@ -45,7 +45,8 @@ let
     in
     doCompare name expected dummySrc;
 
-  cmpDummySrc = name: path:
+  cmpDummySrc =
+    name: path:
     let
       expected = path + "/expected";
       input = path + "/input";
@@ -53,8 +54,10 @@ let
       # Regression test for https://github.com/ipetkov/crane/issues/46
       filteredInput = lib.cleanSourceWith {
         src = input;
-        filter = path: type:
-          type == "directory" || lib.any (s: lib.hasPrefix s (builtins.baseNameOf path)) [
+        filter =
+          path: type:
+          type == "directory"
+          || lib.any (s: lib.hasPrefix s (builtins.baseNameOf path)) [
             "Cargo"
             "config"
           ];
@@ -99,21 +102,23 @@ let
       '';
     });
 in
-linkFarmFromDrvs "cleanCargoToml" (lib.flatten [
-  (cmpDummySrc "single" ./single)
-  (cmpDummySrc "single-alt" ./single-alt)
-  # https://github.com/ipetkov/crane/issues/753
-  (cmpDummySrc "multibin" ./multibin)
-  (cmpDummySrc "workspace" ./workspace)
-  (cmpDummySrc "workspace-bindeps" ./workspace-bindeps)
-  (cmpDummySrc "workspace-inheritance" ./workspace-inheritance)
+linkFarmFromDrvs "cleanCargoToml" (
+  lib.flatten [
+    (cmpDummySrc "single" ./single)
+    (cmpDummySrc "single-alt" ./single-alt)
+    # https://github.com/ipetkov/crane/issues/753
+    (cmpDummySrc "multibin" ./multibin)
+    (cmpDummySrc "workspace" ./workspace)
+    (cmpDummySrc "workspace-bindeps" ./workspace-bindeps)
+    (cmpDummySrc "workspace-inheritance" ./workspace-inheritance)
 
-  customized
-  customizedDummyrs
+    customized
+    customizedDummyrs
 
-  # https://github.com/ipetkov/crane/issues/768
-  (cmpDummySrc "declaredBinWithMainrs" ./declaredBinWithMainrs)
-  (cmpDummySrc "declaredBinWithSrcBin" ./declaredBinWithSrcBin)
-  (cmpDummySrc "omittedBinWithMainrs" ./omittedBinWithMainrs)
-  (cmpDummySrc "omittedBinWithSrcBin" ./omittedBinWithSrcBin)
-])
+    # https://github.com/ipetkov/crane/issues/768
+    (cmpDummySrc "declaredBinWithMainrs" ./declaredBinWithMainrs)
+    (cmpDummySrc "declaredBinWithSrcBin" ./declaredBinWithSrcBin)
+    (cmpDummySrc "omittedBinWithMainrs" ./omittedBinWithMainrs)
+    (cmpDummySrc "omittedBinWithSrcBin" ./omittedBinWithSrcBin)
+  ]
+)

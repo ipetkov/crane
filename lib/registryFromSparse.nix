@@ -1,8 +1,9 @@
 { registryFromDownloadUrl, lib }:
 
-{ indexUrl
-, configSha256
-, fetchurlExtraArgs ? { }
+{
+  indexUrl,
+  configSha256,
+  fetchurlExtraArgs ? { },
 }:
 
 let
@@ -13,10 +14,11 @@ let
   }}";
 
   config = builtins.fromJSON configContents;
-  dl = config.dl or (throw ''
-    registry config does not have a "dl" endpoint:
-    ${configContents}
-  '');
+  dl =
+    config.dl or (throw ''
+      registry config does not have a "dl" endpoint:
+      ${configContents}
+    '');
 in
 registryFromDownloadUrl {
   inherit dl fetchurlExtraArgs;

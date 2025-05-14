@@ -1,10 +1,12 @@
-{ mkCargoDerivation
-, rustfmt
+{
+  mkCargoDerivation,
+  rustfmt,
 }:
 
-{ cargoExtraArgs ? ""
-, rustFmtExtraArgs ? ""
-, ...
+{
+  cargoExtraArgs ? "",
+  rustFmtExtraArgs ? "",
+  ...
 }@origArgs:
 let
   args = builtins.removeAttrs origArgs [
@@ -12,17 +14,20 @@ let
     "rustFmtExtraArgs"
   ];
 in
-mkCargoDerivation (args // {
-  cargoArtifacts = null;
-  cargoVendorDir = null;
-  pnameSuffix = "-fmt";
+mkCargoDerivation (
+  args
+  // {
+    cargoArtifacts = null;
+    cargoVendorDir = null;
+    pnameSuffix = "-fmt";
 
-  buildPhaseCargoCommand = "cargo fmt ${cargoExtraArgs} -- --check ${rustFmtExtraArgs}";
+    buildPhaseCargoCommand = "cargo fmt ${cargoExtraArgs} -- --check ${rustFmtExtraArgs}";
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ rustfmt ];
+    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ rustfmt ];
 
-  preInstallPhases = [ "ensureTargetDir" ] ++ (args.preInstallPhases or [ ]);
-  ensureTargetDir = ''
-    mkdir -p ''${CARGO_TARGET_DIR:-target}
-  '';
-})
+    preInstallPhases = [ "ensureTargetDir" ] ++ (args.preInstallPhases or [ ]);
+    ensureTargetDir = ''
+      mkdir -p ''${CARGO_TARGET_DIR:-target}
+    '';
+  }
+)

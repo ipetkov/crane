@@ -8,13 +8,17 @@
     extra-trusted-public-keys = [ "crane.cachix.org-1:8Scfpmn9w+hGdXH/Q9tTLiYAE/2dnJYRJP7kl80GuRk=" ];
   };
 
-  outputs = { ... }:
+  outputs =
+    { ... }:
     let
-      mkLib = pkgs: import ./default.nix {
-        inherit pkgs;
-      };
+      mkLib =
+        pkgs:
+        import ./default.nix {
+          inherit pkgs;
+        };
       nodes = (builtins.fromJSON (builtins.readFile ./test/flake.lock)).nodes;
-      inputFromLock = name:
+      inputFromLock =
+        name:
         let
           locked = nodes.${name}.locked;
         in
@@ -23,18 +27,22 @@
           sha256 = locked.narHash;
         };
 
-      eachSystem = systems: f:
+      eachSystem =
+        systems: f:
         let
           # Merge together the outputs for all systems.
-          op = attrs: system:
+          op =
+            attrs: system:
             let
               ret = f system;
-              op = attrs: key: attrs //
-                {
-                  ${key} = (attrs.${key} or { })
-                    // { ${system} = ret.${key}; };
-                }
-              ;
+              op =
+                attrs: key:
+                attrs
+                // {
+                  ${key} = (attrs.${key} or { }) // {
+                    ${system} = ret.${key};
+                  };
+                };
             in
             builtins.foldl' op attrs (builtins.attrNames ret);
         in
@@ -119,7 +127,9 @@
           path = ./examples/trunk-workspace;
         };
       };
-    } // eachDefaultSystem (system:
+    }
+    // eachDefaultSystem (
+      system:
       let
         nixpkgs = inputFromLock "nixpkgs";
         pkgs = import nixpkgs {
@@ -149,5 +159,6 @@
             taplo
           ];
         };
-      });
+      }
+    );
 }

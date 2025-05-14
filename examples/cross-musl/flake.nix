@@ -14,17 +14,28 @@
     };
   };
 
-  outputs = { nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
+  outputs =
+    {
+      nixpkgs,
+      crane,
+      flake-utils,
+      rust-overlay,
+      ...
+    }:
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [ (import rust-overlay) ];
         };
 
-        craneLib = (crane.mkLib pkgs).overrideToolchain (p: p.rust-bin.stable.latest.default.override {
-          targets = [ "x86_64-unknown-linux-musl" ];
-        });
+        craneLib = (crane.mkLib pkgs).overrideToolchain (
+          p:
+          p.rust-bin.stable.latest.default.override {
+            targets = [ "x86_64-unknown-linux-musl" ];
+          }
+        );
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;
@@ -40,5 +51,6 @@
         };
 
         packages.default = my-crate;
-      });
+      }
+    );
 }

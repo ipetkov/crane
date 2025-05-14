@@ -1,9 +1,9 @@
-{ makeSetupHook
-, pkgsBuildBuild
+{
+  makeSetupHook,
+  pkgsBuildBuild,
 }:
 
-makeSetupHook
-{
+makeSetupHook {
   name = "installFromCargoBuildLogHook";
   substitutions = {
     jq = "${pkgsBuildBuild.jq}/bin/jq";

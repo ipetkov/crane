@@ -1,14 +1,14 @@
-{ lib
-, makeSetupHook
-, pkgsBuildBuild
-, stdenv
+{
+  lib,
+  makeSetupHook,
+  pkgsBuildBuild,
+  stdenv,
 }:
 
 let
   darwinCodeSign = stdenv.targetPlatform.isDarwin && stdenv.targetPlatform.isAarch64;
 in
-makeSetupHook
-{
+makeSetupHook {
   name = "removeReferencesToVendoredSourcesHook";
   substitutions = {
     storeDir = builtins.storeDir;

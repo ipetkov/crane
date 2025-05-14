@@ -1,4 +1,5 @@
-{ cargoDeny
+{
+  cargoDeny,
 }:
 
 cargoDeny {

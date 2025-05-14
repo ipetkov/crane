@@ -1,12 +1,10 @@
-{ internalCrateNameFromCargoToml
+{
+  internalCrateNameFromCargoToml,
 }:
 
 src:
 let
-  origSrc =
-    if src ? _isLibCleanSourceWith
-    then src.origSrc
-    else src;
+  origSrc = if src ? _isLibCleanSourceWith then src.origSrc else src;
 
   cargoTomlContents =
     let
@@ -15,11 +13,6 @@ let
       cargoTomlContents = builtins.readFile cargoToml;
       toml = builtins.tryEval (builtins.fromTOML cargoTomlContents);
     in
-    if builtins.pathExists cargoToml
-    then
-      if toml.success then toml.value else emptyToml
-    else
-      emptyToml;
+    if builtins.pathExists cargoToml then if toml.success then toml.value else emptyToml else emptyToml;
 in
-  (internalCrateNameFromCargoToml cargoTomlContents).pname or "source"
-
+(internalCrateNameFromCargoToml cargoTomlContents).pname or "source"

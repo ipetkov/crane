@@ -14,18 +14,32 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      crane,
+      flake-utils,
+      rust-overlay,
+      ...
+    }:
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [ (import rust-overlay) ];
         };
 
-        rustToolchainFor = p: p.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override {
-          extensions = [ "rust-src" ];
-          targets = [ "x86_64-unknown-linux-gnu" ];
-        });
+        rustToolchainFor =
+          p:
+          p.rust-bin.selectLatestNightlyWith (
+            toolchain:
+            toolchain.default.override {
+              extensions = [ "rust-src" ];
+              targets = [ "x86_64-unknown-linux-gnu" ];
+            }
+          );
         rustToolchain = rustToolchainFor pkgs;
 
         # NB: we don't need to overlay our custom toolchain for the *entire*
@@ -80,5 +94,6 @@
           packages = [
           ];
         };
-      });
+      }
+    );
 }

@@ -1,4 +1,5 @@
-{ writeShellScript
+{
+  writeShellScript,
 }:
 
 # A rustc wrapper which can conditionally refuse to re-build crates.

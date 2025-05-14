@@ -1,24 +1,30 @@
-{ pkgsBuildBuild
-, urlForCargoPackage
+{
+  pkgsBuildBuild,
+  urlForCargoPackage,
 }:
 
 let
   inherit (pkgsBuildBuild)
     fetchurl
-    stdenv;
+    stdenv
+    ;
 in
-{ name
-, version
-, checksum
-, ...
+{
+  name,
+  version,
+  checksum,
+  ...
 }@args:
 let
   pkgInfo = urlForCargoPackage args;
-  tarball = fetchurl (pkgInfo.fetchurlExtraArgs // {
-    inherit (pkgInfo) url;
-    name = "${name}-${version}";
-    sha256 = checksum;
-  });
+  tarball = fetchurl (
+    pkgInfo.fetchurlExtraArgs
+    // {
+      inherit (pkgInfo) url;
+      name = "${name}-${version}";
+      sha256 = checksum;
+    }
+  );
 in
 stdenv.mkDerivation {
   inherit version;

@@ -1,11 +1,13 @@
-{ mkCargoDerivation
-, cargo-llvm-cov
+{
+  mkCargoDerivation,
+  cargo-llvm-cov,
 }:
 
-{ cargoExtraArgs ? "--locked"
-, cargoLlvmCovCommand ? "test"
-, cargoLlvmCovExtraArgs ? "--lcov --output-path $out"
-, ...
+{
+  cargoExtraArgs ? "--locked",
+  cargoLlvmCovCommand ? "test",
+  cargoLlvmCovExtraArgs ? "--lcov --output-path $out",
+  ...
 }@origArgs:
 
 let
@@ -16,16 +18,19 @@ let
   ];
 in
 
-mkCargoDerivation (args // {
-  pnameSuffix = "-llvm-cov";
+mkCargoDerivation (
+  args
+  // {
+    pnameSuffix = "-llvm-cov";
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-llvm-cov ];
+    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-llvm-cov ];
 
-  doInstallCargoArtifacts = false;
+    doInstallCargoArtifacts = false;
 
-  buildPhaseCargoCommand = ''
-    cargoWithProfile llvm-cov "${cargoLlvmCovCommand}" ${cargoExtraArgs} ${cargoLlvmCovExtraArgs}
-  '';
+    buildPhaseCargoCommand = ''
+      cargoWithProfile llvm-cov "${cargoLlvmCovCommand}" ${cargoExtraArgs} ${cargoLlvmCovExtraArgs}
+    '';
 
-  installPhaseCommand = "";
-})
+    installPhaseCommand = "";
+  }
+)

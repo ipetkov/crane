@@ -1,11 +1,13 @@
-{ cargo-deny
-, mkCargoDerivation
+{
+  cargo-deny,
+  mkCargoDerivation,
 }:
 
-{ cargoDenyExtraArgs ? ""
-, cargoDenyChecks ? "bans licenses sources"
-, cargoExtraArgs ? ""
-, ...
+{
+  cargoDenyExtraArgs ? "",
+  cargoDenyChecks ? "bans licenses sources",
+  cargoExtraArgs ? "",
+  ...
 }@origArgs:
 let
   args = builtins.removeAttrs origArgs [
@@ -13,15 +15,18 @@ let
     "cargoExtraArgs"
   ];
 in
-mkCargoDerivation (args // {
-  buildPhaseCargoCommand = ''
-    cargo --offline ${cargoExtraArgs} \
-      deny ${cargoDenyExtraArgs} check ${cargoDenyChecks}
-  '';
+mkCargoDerivation (
+  args
+  // {
+    buildPhaseCargoCommand = ''
+      cargo --offline ${cargoExtraArgs} \
+        deny ${cargoDenyExtraArgs} check ${cargoDenyChecks}
+    '';
 
-  cargoArtifacts = null;
-  doInstallCargoArtifacts = false;
-  pnameSuffix = "-deny";
+    cargoArtifacts = null;
+    doInstallCargoArtifacts = false;
+    pnameSuffix = "-deny";
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-deny ];
-})
+    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-deny ];
+  }
+)

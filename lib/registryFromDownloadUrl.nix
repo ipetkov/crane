@@ -1,11 +1,13 @@
-{ lib
+{
+  lib,
 }:
 
 # https://doc.rust-lang.org/cargo/reference/registries.html
-{ dl
-, indexUrl
-, registryPrefix ? "registry+"
-, fetchurlExtraArgs ? { }
+{
+  dl,
+  indexUrl,
+  registryPrefix ? "registry+",
+  fetchurlExtraArgs ? { },
 }:
 let
   matches = m: builtins.match ".*${lib.escapeRegex m}.*" dl;
@@ -20,9 +22,7 @@ let
   fullDownloadUrl = if hasMarker then dl else "${dl}/{crate}/{version}/download";
 
   registryIndexUrl =
-    if lib.hasPrefix registryPrefix indexUrl
-    then indexUrl
-    else "${registryPrefix}${indexUrl}";
+    if lib.hasPrefix registryPrefix indexUrl then indexUrl else "${registryPrefix}${indexUrl}";
 in
 {
   "${registryIndexUrl}" = {

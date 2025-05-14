@@ -1,4 +1,4 @@
-{}:
+{ }:
 
 let
   codes = {
@@ -36,6 +36,4 @@ let
     "%7D" = "}";
   };
 in
-builtins.replaceStrings
-  (builtins.attrNames codes)
-  (builtins.attrValues codes)
+builtins.replaceStrings (builtins.attrNames codes) (builtins.attrValues codes)

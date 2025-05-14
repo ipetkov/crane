@@ -14,8 +14,17 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, advisory-db, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      crane,
+      flake-utils,
+      advisory-db,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
@@ -29,12 +38,14 @@
           inherit src;
           strictDeps = true;
 
-          buildInputs = [
-            # Add additional build inputs here
-          ] ++ lib.optionals pkgs.stdenv.isDarwin [
-            # Additional darwin specific inputs can be set here
-            pkgs.libiconv
-          ];
+          buildInputs =
+            [
+              # Add additional build inputs here
+            ]
+            ++ lib.optionals pkgs.stdenv.isDarwin [
+              # Additional darwin specific inputs can be set here
+              pkgs.libiconv
+            ];
 
           # Additional environment variables can be set directly
           # MY_CUSTOM_VAR = "some value";
@@ -53,16 +64,18 @@
           doCheck = false;
         };
 
-        fileSetForCrate = crate: lib.fileset.toSource {
-          root = ./.;
-          fileset = lib.fileset.unions [
-            ./Cargo.toml
-            ./Cargo.lock
-            (craneLib.fileset.commonCargoSources ./crates/my-common)
-            (craneLib.fileset.commonCargoSources ./crates/my-workspace-hack)
-            (craneLib.fileset.commonCargoSources crate)
-          ];
-        };
+        fileSetForCrate =
+          crate:
+          lib.fileset.toSource {
+            root = ./.;
+            fileset = lib.fileset.unions [
+              ./Cargo.toml
+              ./Cargo.lock
+              (craneLib.fileset.commonCargoSources ./crates/my-common)
+              (craneLib.fileset.commonCargoSources ./crates/my-workspace-hack)
+              (craneLib.fileset.commonCargoSources crate)
+            ];
+          };
 
         # Build the top-level crates of the workspace as individual derivations.
         # This allows consumers to only depend on (and build) only what they need.
@@ -72,16 +85,22 @@
         # Note that the cargo workspace must define `workspace.members` using wildcards,
         # otherwise, omitting a crate (like we do below) will result in errors since
         # cargo won't be able to find the sources for all members.
-        my-cli = craneLib.buildPackage (individualCrateArgs // {
-          pname = "my-cli";
-          cargoExtraArgs = "-p my-cli";
-          src = fileSetForCrate ./crates/my-cli;
-        });
-        my-server = craneLib.buildPackage (individualCrateArgs // {
-          pname = "my-server";
-          cargoExtraArgs = "-p my-server";
-          src = fileSetForCrate ./crates/my-server;
-        });
+        my-cli = craneLib.buildPackage (
+          individualCrateArgs
+          // {
+            pname = "my-cli";
+            cargoExtraArgs = "-p my-cli";
+            src = fileSetForCrate ./crates/my-cli;
+          }
+        );
+        my-server = craneLib.buildPackage (
+          individualCrateArgs
+          // {
+            pname = "my-server";
+            cargoExtraArgs = "-p my-server";
+            src = fileSetForCrate ./crates/my-server;
+          }
+        );
       in
       {
         checks = {
@@ -94,14 +113,20 @@
           # Note that this is done as a separate derivation so that
           # we can block the CI if there are issues here, but not
           # prevent downstream consumers from building our crate by itself.
-          my-workspace-clippy = craneLib.cargoClippy (commonArgs // {
-            inherit cargoArtifacts;
-            cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-          });
+          my-workspace-clippy = craneLib.cargoClippy (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+              cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+            }
+          );
 
-          my-workspace-doc = craneLib.cargoDoc (commonArgs // {
-            inherit cargoArtifacts;
-          });
+          my-workspace-doc = craneLib.cargoDoc (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+            }
+          );
 
           # Check formatting
           my-workspace-fmt = craneLib.cargoFmt {
@@ -127,12 +152,15 @@
           # Run tests with cargo-nextest
           # Consider setting `doCheck = false` on other crate derivations
           # if you do not want the tests to run twice
-          my-workspace-nextest = craneLib.cargoNextest (commonArgs // {
-            inherit cargoArtifacts;
-            partitions = 1;
-            partitionType = "count";
-            cargoNextestPartitionsExtraArgs = "--no-tests=pass";
-          });
+          my-workspace-nextest = craneLib.cargoNextest (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+              partitions = 1;
+              partitionType = "count";
+              cargoNextestPartitionsExtraArgs = "--no-tests=pass";
+            }
+          );
 
           # Ensure that cargo-hakari is up to date
           my-workspace-hakari = craneLib.mkCargoDerivation {
@@ -178,5 +206,6 @@
             pkgs.cargo-hakari
           ];
         };
-      });
+      }
+    );
 }

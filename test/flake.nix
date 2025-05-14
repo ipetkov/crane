@@ -33,39 +33,49 @@
     };
   };
 
-  outputs = inputs@{ ... }: inputs.flake-utils.lib.eachDefaultSystem (system:
-    let
-      mkLib = pkgs: import ../default.nix {
-        inherit pkgs;
-      };
-      nixpkgs = inputs.nixpkgs;
-      pkgs = import nixpkgs {
-        inherit system;
-      };
+  outputs =
+    inputs@{ ... }:
+    inputs.flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        mkLib =
+          pkgs:
+          import ../default.nix {
+            inherit pkgs;
+          };
+        nixpkgs = inputs.nixpkgs;
+        pkgs = import nixpkgs {
+          inherit system;
+        };
 
-      pkgsChecks = import nixpkgs {
-        inherit system;
-        overlays = [
-          (import inputs.rust-overlay)
-        ];
-      };
-      fenix = import inputs.fenix {
-        inherit system;
-      };
-    in
-    {
-      checks = pkgsChecks.callPackages ../checks {
-        pkgs = pkgsChecks;
-        myLib = mkLib pkgsChecks;
-        myLibCross = mkLib (import nixpkgs {
-          localSystem = system;
-          crossSystem = "wasm32-wasi";
-        });
-        myLibFenix = (mkLib pkgs).overrideToolchain (fenix.latest.withComponents [
-          "cargo"
-          "rust-src"
-          "rustc"
-        ]);
-      };
-    });
+        pkgsChecks = import nixpkgs {
+          inherit system;
+          overlays = [
+            (import inputs.rust-overlay)
+          ];
+        };
+        fenix = import inputs.fenix {
+          inherit system;
+        };
+      in
+      {
+        checks = pkgsChecks.callPackages ../checks {
+          pkgs = pkgsChecks;
+          myLib = mkLib pkgsChecks;
+          myLibCross = mkLib (
+            import nixpkgs {
+              localSystem = system;
+              crossSystem = "wasm32-wasi";
+            }
+          );
+          myLibFenix = (mkLib pkgs).overrideToolchain (
+            fenix.latest.withComponents [
+              "cargo"
+              "rust-src"
+              "rustc"
+            ]
+          );
+        };
+      }
+    );
 }

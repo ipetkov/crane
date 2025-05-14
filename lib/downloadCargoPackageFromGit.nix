@@ -1,37 +1,42 @@
-{ lib
-, cargo
-, craneUtils
-, jq
-, pkgsBuildBuild
-, remarshal
-, ripgrep
+{
+  lib,
+  cargo,
+  craneUtils,
+  jq,
+  pkgsBuildBuild,
+  remarshal,
+  ripgrep,
 }:
 
 let
   inherit (pkgsBuildBuild)
     fetchgit
-    stdenv;
+    stdenv
+    ;
 
   namePrefix = "cargo-git-";
   # 211 minus one for the `-` separator
   maxNameLen = 210;
 in
-{ git
-, rev
-, ref ? null
-, hash ? null
-, allRefs ? ref == null
+{
+  git,
+  rev,
+  ref ? null,
+  hash ? null,
+  allRefs ? ref == null,
 }:
 let
   maybeRef = lib.optionalAttrs (ref != null) { inherit ref; };
   repo =
     if hash == null then
-      builtins.fetchGit
-        (maybeRef // {
+      builtins.fetchGit (
+        maybeRef
+        // {
           inherit allRefs rev;
           url = git;
           submodules = true;
-        })
+        }
+      )
     else
       fetchgit {
         inherit rev hash;
@@ -42,9 +47,7 @@ let
 
   remainingLen = maxNameLen - (lib.stringLength namePrefix) - (lib.stringLength rev);
   nameFromUrl =
-    if (lib.stringLength git) > remainingLen
-    then lib.substring 0 remainingLen git
-    else git;
+    if (lib.stringLength git) > remainingLen then lib.substring 0 remainingLen git else git;
 in
 stdenv.mkDerivation {
   name = "${namePrefix}${nameFromUrl}-${rev}";

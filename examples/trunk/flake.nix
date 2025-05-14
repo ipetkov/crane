@@ -14,8 +14,17 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      crane,
+      flake-utils,
+      rust-overlay,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -24,11 +33,13 @@
 
         inherit (pkgs) lib;
 
-        rustToolchainFor = p: p.rust-bin.stable.latest.default.override {
-          # Set the build targets supported by the toolchain,
-          # wasm32-unknown-unknown is required for trunk
-          targets = [ "wasm32-unknown-unknown" ];
-        };
+        rustToolchainFor =
+          p:
+          p.rust-bin.stable.latest.default.override {
+            # Set the build targets supported by the toolchain,
+            # wasm32-unknown-unknown is required for trunk
+            targets = [ "wasm32-unknown-unknown" ];
+          };
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchainFor;
 
         # When filtering sources, we want to allow assets other than .rs files
@@ -38,10 +49,13 @@
           fileset = lib.fileset.unions [
             # Default files from crane (Rust and cargo files)
             (craneLib.fileset.commonCargoSources unfilteredRoot)
-            (lib.fileset.fileFilter
-              (file: lib.any file.hasExt [ "html" "scss" ])
-              unfilteredRoot
-            )
+            (lib.fileset.fileFilter (
+              file:
+              lib.any file.hasExt [
+                "html"
+                "scss"
+              ]
+            ) unfilteredRoot)
             # Example of a folder for images, icons, etc
             (lib.fileset.maybeMissing ./assets)
           ];
@@ -54,47 +68,55 @@
           # We must force the target, otherwise cargo will attempt to use your native target
           CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
 
-          buildInputs = [
-            # Add additional build inputs here
-          ] ++ lib.optionals pkgs.stdenv.isDarwin [
-            # Additional darwin specific inputs can be set here
-            pkgs.libiconv
-          ];
+          buildInputs =
+            [
+              # Add additional build inputs here
+            ]
+            ++ lib.optionals pkgs.stdenv.isDarwin [
+              # Additional darwin specific inputs can be set here
+              pkgs.libiconv
+            ];
         };
 
         # Build *just* the cargo dependencies, so we can reuse
         # all of that work (e.g. via cachix) when running in CI
-        cargoArtifacts = craneLib.buildDepsOnly (commonArgs // {
-          # You cannot run cargo test on a wasm build
-          doCheck = false;
-        });
+        cargoArtifacts = craneLib.buildDepsOnly (
+          commonArgs
+          // {
+            # You cannot run cargo test on a wasm build
+            doCheck = false;
+          }
+        );
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
         # This derivation is a directory you can put on a webserver.
-        my-app = craneLib.buildTrunkPackage (commonArgs // {
-          inherit cargoArtifacts;
-          # The version of wasm-bindgen-cli here must match the one from Cargo.lock.
-          # When updating to a new version replace the hash values with lib.fakeHash,
-          # then try to do a build, which will fail but will print out the correct value
-          # for `hash`. Replace the value and then repeat the process but this time the
-          # printed value will be for the second `hash` below
-          wasm-bindgen-cli = pkgs.buildWasmBindgenCli rec {
-            src = pkgs.fetchCrate {
-              pname = "wasm-bindgen-cli";
-              version = "0.2.100";
-              hash = "sha256-3RJzK7mkYFrs7C/WkhW9Rr4LdP5ofb2FdYGz1P7Uxog=";
-              # hash = lib.fakeHash;
-            };
+        my-app = craneLib.buildTrunkPackage (
+          commonArgs
+          // {
+            inherit cargoArtifacts;
+            # The version of wasm-bindgen-cli here must match the one from Cargo.lock.
+            # When updating to a new version replace the hash values with lib.fakeHash,
+            # then try to do a build, which will fail but will print out the correct value
+            # for `hash`. Replace the value and then repeat the process but this time the
+            # printed value will be for the second `hash` below
+            wasm-bindgen-cli = pkgs.buildWasmBindgenCli rec {
+              src = pkgs.fetchCrate {
+                pname = "wasm-bindgen-cli";
+                version = "0.2.100";
+                hash = "sha256-3RJzK7mkYFrs7C/WkhW9Rr4LdP5ofb2FdYGz1P7Uxog=";
+                # hash = lib.fakeHash;
+              };
 
-            cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-              inherit src;
-              inherit (src) pname version;
-              hash = "sha256-qsO12332HSjWCVKtf1cUePWWb9IdYUmT+8OPj/XP2WE=";
-              # hash = lib.fakeHash;
+              cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+                inherit src;
+                inherit (src) pname version;
+                hash = "sha256-qsO12332HSjWCVKtf1cUePWWb9IdYUmT+8OPj/XP2WE=";
+                # hash = lib.fakeHash;
+              };
             };
-          };
-        });
+          }
+        );
 
         # Quick example on how to serve the app,
         # This is just an example, not useful for production environments
@@ -113,10 +135,13 @@
           # Note that this is done as a separate derivation so that
           # we can block the CI if there are issues here, but not
           # prevent downstream consumers from building our crate by itself.
-          my-app-clippy = craneLib.cargoClippy (commonArgs // {
-            inherit cargoArtifacts;
-            cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-          });
+          my-app-clippy = craneLib.cargoClippy (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+              cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+            }
+          );
 
           # Check formatting
           my-app-fmt = craneLib.cargoFmt {
@@ -142,5 +167,6 @@
             pkgs.trunk
           ];
         };
-      });
+      }
+    );
 }

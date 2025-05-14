@@ -1,13 +1,14 @@
-{ lib
-, stdenv
-, makeScopeWithSplicing'
-, splicePackages
-, pkgsBuildBuild
-, pkgsBuildHost
-, pkgsBuildTarget
-, pkgsHostHost
-, pkgsHostTarget
-, pkgsTargetTarget
+{
+  lib,
+  stdenv,
+  makeScopeWithSplicing',
+  splicePackages,
+  pkgsBuildBuild,
+  pkgsBuildHost,
+  pkgsBuildTarget,
+  pkgsHostHost,
+  pkgsHostTarget,
+  pkgsTargetTarget,
 }:
 
 let
@@ -24,20 +25,34 @@ let
     "rustfmt"
   ];
 
-  spliceToolchain = toolchainFn:
+  spliceToolchain =
+    toolchainFn:
     let
       splices = {
-        pkgsBuildBuild = { toolchain = toolchainFn pkgsBuildBuild; };
-        pkgsBuildHost = { toolchain = toolchainFn pkgsBuildHost; };
-        pkgsBuildTarget = { toolchain = toolchainFn pkgsBuildTarget; };
-        pkgsHostHost = { toolchain = toolchainFn pkgsHostHost; };
-        pkgsHostTarget = { toolchain = toolchainFn pkgsHostTarget; };
-        pkgsTargetTarget = lib.optionalAttrs (pkgsTargetTarget?newScope) { toolchain = toolchainFn pkgsTargetTarget; };
+        pkgsBuildBuild = {
+          toolchain = toolchainFn pkgsBuildBuild;
+        };
+        pkgsBuildHost = {
+          toolchain = toolchainFn pkgsBuildHost;
+        };
+        pkgsBuildTarget = {
+          toolchain = toolchainFn pkgsBuildTarget;
+        };
+        pkgsHostHost = {
+          toolchain = toolchainFn pkgsHostHost;
+        };
+        pkgsHostTarget = {
+          toolchain = toolchainFn pkgsHostTarget;
+        };
+        pkgsTargetTarget = lib.optionalAttrs (pkgsTargetTarget ? newScope) {
+          toolchain = toolchainFn pkgsTargetTarget;
+        };
       };
     in
     (splicePackages splices).toolchain;
 
-  scopeFn = self:
+  scopeFn =
+    self:
     let
       inherit (self) callPackage;
 
@@ -48,9 +63,13 @@ let
       internalPercentDecode = callPackage ./internalPercentDecode.nix { };
     in
     {
-      appendCrateRegistries = input: self.overrideScope (_final: prev: {
-        crateRegistries = prev.crateRegistries // (lib.foldl (a: b: a // b) { } input);
-      });
+      appendCrateRegistries =
+        input:
+        self.overrideScope (
+          _final: prev: {
+            crateRegistries = prev.crateRegistries // (lib.foldl (a: b: a // b) { } input);
+          }
+        );
 
       buildDepsOnly = callPackage ./buildDepsOnly.nix { };
       buildPackage = callPackage ./buildPackage.nix { };
@@ -106,22 +125,22 @@ let
       mkCrossToolchainEnv = callPackage ./mkCrossToolchainEnv.nix { };
       mkDummySrc = callPackage ./mkDummySrc.nix { };
 
-      overrideToolchain = toolchainArg: self.overrideScope (_final: _prev:
-        let
-          toolchain =
-            if lib.isFunction toolchainArg
-            then spliceToolchain toolchainArg
-            else toolchainArg;
-          needsSplicing = stdenv.buildPlatform != stdenv.hostPlatform && toolchain?__spliced == false;
-          warningMsg = ''
-            craneLib.overrideToolchain requires a spliced toolchain when cross-compiling. Consider specifying
-            a function which constructs a toolchain for any given `pkgs` instantiation:
+      overrideToolchain =
+        toolchainArg:
+        self.overrideScope (
+          _final: _prev:
+          let
+            toolchain = if lib.isFunction toolchainArg then spliceToolchain toolchainArg else toolchainArg;
+            needsSplicing = stdenv.buildPlatform != stdenv.hostPlatform && toolchain ? __spliced == false;
+            warningMsg = ''
+              craneLib.overrideToolchain requires a spliced toolchain when cross-compiling. Consider specifying
+              a function which constructs a toolchain for any given `pkgs` instantiation:
 
-            (crane.mkLib pkgs).overrideToolchain (p: ...)
-          '';
-        in
-        lib.warnIf needsSplicing warningMsg (lib.genAttrs attrsForToolchainOverride (_: toolchain))
-      );
+              (crane.mkLib pkgs).overrideToolchain (p: ...)
+            '';
+          in
+          lib.warnIf needsSplicing warningMsg (lib.genAttrs attrsForToolchainOverride (_: toolchain))
+        );
 
       path = callPackage ./path.nix {
         inherit internalCrateNameForCleanSource;
@@ -130,8 +149,12 @@ let
       registryFromDownloadUrl = callPackage ./registryFromDownloadUrl.nix { };
       registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
       registryFromSparse = callPackage ./registryFromSparse.nix { };
-      removeReferencesToRustToolchainHook = callPackage ./setupHooks/removeReferencesToRustToolchain.nix { };
-      removeReferencesToVendoredSourcesHook = callPackage ./setupHooks/removeReferencesToVendoredSources.nix { };
+      removeReferencesToRustToolchainHook =
+        callPackage ./setupHooks/removeReferencesToRustToolchain.nix
+          { };
+      removeReferencesToVendoredSourcesHook =
+        callPackage ./setupHooks/removeReferencesToVendoredSources.nix
+          { };
       replaceCargoLockHook = callPackage ./setupHooks/replaceCargoLockHook.nix { };
       taploFmt = callPackage ./taploFmt.nix { };
       urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
@@ -152,10 +175,12 @@ let
       selfBuildTarget = lib.makeScope pkgsBuildTarget.newScope scopeFn;
       selfHostHost = lib.makeScope pkgsHostHost.newScope scopeFn;
       selfHostTarget = lib.makeScope pkgsHostTarget.newScope scopeFn;
-      selfTargetTarget = lib.optionalAttrs (pkgsTargetTarget?newScope) (lib.makeScope pkgsTargetTarget.newScope scopeFn);
+      selfTargetTarget = lib.optionalAttrs (pkgsTargetTarget ? newScope) (
+        lib.makeScope pkgsTargetTarget.newScope scopeFn
+      );
     };
-    keep = self: lib.optionalAttrs (self?cargo)
-      (lib.genAttrs attrsForToolchainOverride (n: self.${n}));
+    keep =
+      self: lib.optionalAttrs (self ? cargo) (lib.genAttrs attrsForToolchainOverride (n: self.${n}));
   };
 in
 lib.warnIf isUnsupported msg (craneSpliced)

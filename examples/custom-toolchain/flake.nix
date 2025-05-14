@@ -14,8 +14,17 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      crane,
+      flake-utils,
+      rust-overlay,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -26,9 +35,12 @@
         # pkgs (which would require rebuidling anything else which uses rust).
         # Instead, we just want to update the scope that crane will use by appending
         # our specific toolchain there.
-        craneLib = (crane.mkLib pkgs).overrideToolchain (p: p.rust-bin.stable.latest.default.override {
-          targets = [ "wasm32-wasip1" ];
-        });
+        craneLib = (crane.mkLib pkgs).overrideToolchain (
+          p:
+          p.rust-bin.stable.latest.default.override {
+            targets = [ "wasm32-wasip1" ];
+          }
+        );
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;
@@ -40,12 +52,14 @@
           # isn't packaged in nixpkgs yet...
           doCheck = false;
 
-          buildInputs = [
-            # Add additional build inputs here
-          ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
-            # Additional darwin specific inputs can be set here
-            pkgs.libiconv
-          ];
+          buildInputs =
+            [
+              # Add additional build inputs here
+            ]
+            ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+              # Additional darwin specific inputs can be set here
+              pkgs.libiconv
+            ];
         };
       in
       {
@@ -70,5 +84,6 @@
           packages = [
           ];
         };
-      });
+      }
+    );
 }

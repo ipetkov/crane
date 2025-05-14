@@ -1,13 +1,15 @@
-{ mkCargoDerivation
-, cargo-tarpaulin
-, lib
+{
+  mkCargoDerivation,
+  cargo-tarpaulin,
+  lib,
 }:
 let
   xml = if lib.versionOlder cargo-tarpaulin.version "0.27.0" then "Xml" else "xml";
 in
-{ cargoExtraArgs ? ""
-, cargoTarpaulinExtraArgs ? "--skip-clean --out ${xml} --output-dir $out"
-, ...
+{
+  cargoExtraArgs ? "",
+  cargoTarpaulinExtraArgs ? "--skip-clean --out ${xml} --output-dir $out",
+  ...
 }@origArgs:
 let
   args = builtins.removeAttrs origArgs [
@@ -15,13 +17,16 @@ let
     "cargoTarpaulinExtraArgs"
   ];
 in
-mkCargoDerivation (args // {
-  buildPhaseCargoCommand = "cargoWithProfile tarpaulin ${cargoExtraArgs} ${cargoTarpaulinExtraArgs}";
+mkCargoDerivation (
+  args
+  // {
+    buildPhaseCargoCommand = "cargoWithProfile tarpaulin ${cargoExtraArgs} ${cargoTarpaulinExtraArgs}";
 
-  pnameSuffix = "-tarpaulin";
+    pnameSuffix = "-tarpaulin";
 
-  # With `--skip-clean` cargo-tarpaulin tries to mutate dependency files in place
-  doNotLinkInheritedArtifacts = args.doNotLinkInheritedArtifacts or true;
+    # With `--skip-clean` cargo-tarpaulin tries to mutate dependency files in place
+    doNotLinkInheritedArtifacts = args.doNotLinkInheritedArtifacts or true;
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-tarpaulin ];
-})
+    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ cargo-tarpaulin ];
+  }
+)

@@ -1,5 +1,6 @@
-{ lib
-, pkgs
+{
+  lib,
+  pkgs,
 }:
 let
   nativePkgs = pkgs.pkgsBuildBuild;
@@ -11,17 +12,20 @@ let
   targetStdenv = stdenvSelector pkgs.pkgsHostTarget;
   chosenStdenv = stdenvSelector pkgs;
 
-  varsForPlatform = buildKind: stdenv:
+  varsForPlatform =
+    buildKind: stdenv:
     let
       ccPrefix = stdenv.cc.targetPrefix;
       cargoEnv = stdenv.hostPlatform.rust.cargoEnvVarTarget;
       # Configure an emulator for the platform (if we need one, and there's one available)
-      runnerAvailable = !(stdenv.buildPlatform.canExecute stdenv.hostPlatform)
+      runnerAvailable =
+        !(stdenv.buildPlatform.canExecute stdenv.hostPlatform)
         && stdenv.hostPlatform.emulatorAvailable nativePkgs;
     in
     (lib.optionalAttrs runnerAvailable {
       "${cranePrefix}CARGO_TARGET_${cargoEnv}_RUNNER" = stdenv.hostPlatform.emulator nativePkgs;
-    }) // {
+    })
+    // {
       # Point cargo to the correct linker
       "${cranePrefix}CARGO_TARGET_${cargoEnv}_LINKER" = "${ccPrefix}cc";
 
@@ -38,19 +42,24 @@ let
       "${cranePrefix}${buildKind}_AR" = "${ccPrefix}ar";
     };
 in
-lib.optionalAttrs (chosenStdenv.buildPlatform != chosenStdenv.hostPlatform) (lib.mergeAttrsList [
-  {
-    # Set the target we want to build for (= our host platform)
-    # The configureCargoCommonVars setup hook will set CARGO_BUILD_TARGET to this value if the user hasn't specified their own target to use
-    "${cranePrefix}CARGO_BUILD_TARGET" = chosenStdenv.hostPlatform.rust.rustcTarget;
+lib.optionalAttrs (chosenStdenv.buildPlatform != chosenStdenv.hostPlatform) (
+  lib.mergeAttrsList [
+    {
+      # Set the target we want to build for (= our host platform)
+      # The configureCargoCommonVars setup hook will set CARGO_BUILD_TARGET to this value if the user hasn't specified their own target to use
+      "${cranePrefix}CARGO_BUILD_TARGET" = chosenStdenv.hostPlatform.rust.rustcTarget;
 
-    # Pull in any compilers we need
-    nativeBuildInputs = [ hostStdenv.cc targetStdenv.cc ];
-  }
+      # Pull in any compilers we need
+      nativeBuildInputs = [
+        hostStdenv.cc
+        targetStdenv.cc
+      ];
+    }
 
-  # NOTE: "host" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "build" nixpkgs platform
-  (varsForPlatform "HOST" hostStdenv)
+    # NOTE: "host" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "build" nixpkgs platform
+    (varsForPlatform "HOST" hostStdenv)
 
-  # NOTE: "target" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "host" nixpkgs platform
-  (varsForPlatform "TARGET" targetStdenv)
-])
+    # NOTE: "target" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "host" nixpkgs platform
+    (varsForPlatform "TARGET" targetStdenv)
+  ]
+)

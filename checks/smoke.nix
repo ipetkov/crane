@@ -1,4 +1,5 @@
-{ runCommand
+{
+  runCommand,
 }:
 
 bins: drv:

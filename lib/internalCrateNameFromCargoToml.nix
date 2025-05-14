@@ -1,12 +1,14 @@
-{ lib
+{
+  lib,
 }:
 
 let
   firstNonNull = lib.lists.findFirst lib.isString null;
-  wpnDeprecated = val: debugPath: lib.warnIf
-    (val != null)
-    "`workspace.package.name` is deprecated, please use `workspace.metadata.crane.name` in ${debugPath}"
-    val;
+  wpnDeprecated =
+    val: debugPath:
+    lib.warnIf (val != null)
+      "`workspace.package.name` is deprecated, please use `workspace.metadata.crane.name` in ${debugPath}"
+      val;
 in
 toml: debugPath:
 lib.filterAttrs (_: v: v != null) {

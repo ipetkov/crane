@@ -1,8 +1,7 @@
-{ makeSetupHook
+{
+  makeSetupHook,
 }:
 
-makeSetupHook
-{
+makeSetupHook {
   name = "inheritCargoArtifactsHook";
 } ./inheritCargoArtifactsHook.sh
-

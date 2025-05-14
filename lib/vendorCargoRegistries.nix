@@ -1,11 +1,13 @@
-{ downloadCargoPackage
-, lib
-, pkgsBuildBuild
+{
+  downloadCargoPackage,
+  lib,
+  pkgsBuildBuild,
 }:
 
 let
   inherit (pkgsBuildBuild)
-    runCommandLocal;
+    runCommandLocal
+    ;
 
   inherit (builtins)
     attrNames
@@ -17,7 +19,8 @@ let
     length
     mapAttrs
     placeholder
-    readFile;
+    readFile
+    ;
 
   inherit (lib)
     concatMapStrings
@@ -31,7 +34,8 @@ let
     mapAttrsToList
     nameValuePair
     removePrefix
-    warnIf;
+    warnIf
+    ;
 
   inherit (lib.lists) unique;
 
@@ -41,38 +45,50 @@ let
 
   removeProtocol = s: removePrefix "registry+" (removePrefix "sparse+" s);
 in
-{ cargoConfigs ? [ ]
-, lockPackages
-, overrideVendorCargoPackage ? _: drv: drv
-, ...
+{
+  cargoConfigs ? [ ],
+  lockPackages,
+  overrideVendorCargoPackage ? _: drv: drv,
+  ...
 }@args:
 let
   # Local crates will show up in the lock file with no checksum/source,
   # so should filter them out without trying to download them
-  lockedPackagesFromRegistry = filter
-    (p: p ? checksum && hasRegistryProtocolPrefix (p.source or ""))
-    lockPackages;
+  lockedPackagesFromRegistry = filter (
+    p: p ? checksum && hasRegistryProtocolPrefix (p.source or "")
+  ) lockPackages;
   lockedRegistryGroups = groupBy (p: p.source) lockedPackagesFromRegistry;
 
   vendorCrate = p: overrideVendorCargoPackage p (downloadCargoPackage p);
-  vendorSingleRegistry = packages: runCommandLocal "vendor-registry" { } ''
-    mkdir -p $out
-    ${concatMapStrings (p: ''
-      ln -s ${escapeShellArg (vendorCrate p)} $out/${escapeShellArg "${p.name}-${p.version}"}
-    '') packages}
-  '';
+  vendorSingleRegistry =
+    packages:
+    runCommandLocal "vendor-registry" { } ''
+      mkdir -p $out
+      ${concatMapStrings (p: ''
+        ln -s ${escapeShellArg (vendorCrate p)} $out/${escapeShellArg "${p.name}-${p.version}"}
+      '') packages}
+    '';
 
   # Registries configured in cargo config
   parsedCargoConfigTomls = map (p: builtins.fromTOML (readFile p)) cargoConfigs;
   allCargoRegistries = flatten (map (c: c.registries or [ ]) parsedCargoConfigTomls);
-  allCargoRegistryPairs = flatten (map (mapAttrsToList (name: value: { inherit name value; })) allCargoRegistries);
+  allCargoRegistryPairs = flatten (
+    map (mapAttrsToList (name: value: { inherit name value; })) allCargoRegistries
+  );
   allCargoRegistryPairsWithIndex = filter (r: r ? value.index) allCargoRegistryPairs;
-  configuredRegistries = mapAttrs (_: map (r: r.value.index)) (groupBy (x: x.name) allCargoRegistryPairsWithIndex);
+  configuredRegistries = mapAttrs (_: map (r: r.value.index)) (
+    groupBy (x: x.name) allCargoRegistryPairsWithIndex
+  );
 
   # Registries referenced in Cargo.lock that are missing from cargo config
-  existingRegistries = foldl (acc: r: acc // { ${removeProtocol r.value.index} = true; }) { "https://github.com/rust-lang/crates.io-index" = true; } allCargoRegistryPairsWithIndex;
-  missingPackageRegistries = filter (r: !(existingRegistries ? ${r}))
-    (map (p: removeProtocol p.source) (filter (p: p ? source && (! hasPrefix "git+" p.source)) lockPackages));
+  existingRegistries = foldl (acc: r: acc // { ${removeProtocol r.value.index} = true; }) {
+    "https://github.com/rust-lang/crates.io-index" = true;
+  } allCargoRegistryPairsWithIndex;
+  missingPackageRegistries = filter (r: !(existingRegistries ? ${r})) (
+    map (p: removeProtocol p.source) (
+      filter (p: p ? source && (!hasPrefix "git+" p.source)) lockPackages
+    )
+  );
 
   missingPackageRegistriesMsg = ''
     unable to find registry name/url configurations for the registries below:
@@ -89,27 +105,31 @@ let
   '';
 
   # Append the default crates.io registry, but allow it to be overridden
-  registries = {
-    "crates-io" = [ "https://github.com/rust-lang/crates.io-index" ];
-  } // (
-    if args ? registries
-    then mapAttrs (_: val: [ val ]) args.registries
-    else warnIf (builtins.length missingPackageRegistries > 0) missingPackageRegistriesMsg configuredRegistries
-  );
+  registries =
+    {
+      "crates-io" = [ "https://github.com/rust-lang/crates.io-index" ];
+    }
+    // (
+      if args ? registries then
+        mapAttrs (_: val: [ val ]) args.registries
+      else
+        warnIf (
+          builtins.length missingPackageRegistries > 0
+        ) missingPackageRegistriesMsg configuredRegistries
+    );
 
-  sources = mapAttrs'
-    (url: packages: nameValuePair (hash url) (vendorSingleRegistry packages))
-    lockedRegistryGroups;
+  sources = mapAttrs' (
+    url: packages: nameValuePair (hash url) (vendorSingleRegistry packages)
+  ) lockedRegistryGroups;
 
-  configLocalSources = concatMapStrings
-    (hashedUrl: ''
-      [source.nix-sources-${hashedUrl}]
-      directory = "${placeholder "out"}/${hashedUrl}"
-    '')
-    (attrNames sources);
+  configLocalSources = concatMapStrings (hashedUrl: ''
+    [source.nix-sources-${hashedUrl}]
+    directory = "${placeholder "out"}/${hashedUrl}"
+  '') (attrNames sources);
 
   # e.g. hasSparse x if either has sparse+x, or x starts with sparse+ and has x.
-  hasRegistryWithProtocol = (lrg: protocol: u:
+  hasRegistryWithProtocol = (
+    lrg: protocol: u:
     (hasAttr "${protocol}+${u}" lrg) || ((lib.hasPrefix protocol u) && (hasAttr u lrg))
   );
   hasSparseRegistry = hasRegistryWithProtocol lockedRegistryGroups "sparse";
@@ -117,33 +137,33 @@ let
 
   hasRegistry = (u: (hasSparseRegistry u) || (hasLegacyRegistry u));
 
-  configReplaceRegistries = mapAttrsToList
-    (name: urls:
+  configReplaceRegistries = mapAttrsToList (
+    name: urls:
+    let
+      actuallyConfigured = unique (filter hasRegistry urls);
+      numConfigured = length actuallyConfigured;
+    in
+    if numConfigured == 0 then
+      ""
+    else if numConfigured > 1 then
+      throw ''
+        there are multiple distinct registries configured with the same name.
+        please ensure that each unique registry name is used with exactly one registry url.
+        ${name} is used with:
+        ${concatStringsSep "\n" urls}
+      ''
+    else
       let
-        actuallyConfigured = unique (filter hasRegistry urls);
-        numConfigured = length actuallyConfigured;
+        url = head actuallyConfigured;
+        prefixedUrl = if hasRegistryProtocolPrefix url then url else "registry+${url}";
+        hashed = hash prefixedUrl;
       in
-      if numConfigured == 0 then ""
-      else if numConfigured > 1 then
-        throw ''
-          there are multiple distinct registries configured with the same name.
-          please ensure that each unique registry name is used with exactly one registry url.
-          ${name} is used with:
-          ${concatStringsSep "\n" urls}
-        ''
-      else
-        let
-          url = head actuallyConfigured;
-          prefixedUrl = if hasRegistryProtocolPrefix url then url else "registry+${url}";
-          hashed = hash prefixedUrl;
-        in
-        ''
-          [source.${escapeShellArg name}]
-          registry = "${url}"
-          replace-with = "nix-sources-${hashed}"
-        ''
-    )
-    registries;
+      ''
+        [source.${escapeShellArg name}]
+        registry = "${url}"
+        replace-with = "nix-sources-${hashed}"
+      ''
+  ) registries;
 in
 {
   inherit sources;

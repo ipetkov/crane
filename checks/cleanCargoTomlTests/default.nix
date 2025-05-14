@@ -1,13 +1,15 @@
-{ cleanCargoToml
-, lib
-, linkFarmFromDrvs
-, remarshal
-, runCommand
-, writeTOML
+{
+  cleanCargoToml,
+  lib,
+  linkFarmFromDrvs,
+  remarshal,
+  runCommand,
+  writeTOML,
 }:
 
 let
-  cmpCleanCargoToml = name: path:
+  cmpCleanCargoToml =
+    name: path:
     let
       cleaned = cleanCargoToml {
         cargoToml = path + "/Cargo.toml";
@@ -18,9 +20,7 @@ let
       # 23.05 has remarshal 0.14 which sorts keys by default
       # starting with version 0.16 ordering is preserved unless
       # --sort-keys is specified
-      sortKeys = lib.optionalString
-        (lib.strings.versionAtLeast remarshal.version "0.16.0")
-        "--sort-keys";
+      sortKeys = lib.optionalString (lib.strings.versionAtLeast remarshal.version "0.16.0") "--sort-keys";
     in
     runCommand "compare-${name}" { } ''
       function reformat {

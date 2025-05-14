@@ -1,5 +1,6 @@
-{ fileset
-, lib
+{
+  fileset,
+  lib,
 }:
 
 path:

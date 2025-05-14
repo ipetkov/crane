@@ -1,13 +1,19 @@
-{ buildPackage
-, cargoBuild
-, compilesFresh
-, lib
-, linkFarmFromDrvs
-, runCommand
+{
+  buildPackage,
+  cargoBuild,
+  compilesFresh,
+  lib,
+  linkFarmFromDrvs,
+  runCommand,
 }:
 
 let
-  mkTests = { pname, cargoExtraArgs, runResult }:
+  mkTests =
+    {
+      pname,
+      cargoExtraArgs,
+      runResult,
+    }:
     let
       crate = buildPackage {
         inherit cargoExtraArgs pname;

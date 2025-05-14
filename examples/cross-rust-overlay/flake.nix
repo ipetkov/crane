@@ -14,8 +14,16 @@
     };
   };
 
-  outputs = { nixpkgs, crane, flake-utils, rust-overlay, ... }:
-    flake-utils.lib.eachDefaultSystem (localSystem:
+  outputs =
+    {
+      nixpkgs,
+      crane,
+      flake-utils,
+      rust-overlay,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      localSystem:
       let
         # Replace with the system you want to build for
         crossSystem = "aarch64-linux";
@@ -37,11 +45,12 @@
         # Normally you can stick this function into its own file and pass
         # its path to `callPackage`.
         crateExpression =
-          { openssl
-          , libiconv
-          , lib
-          , pkg-config
-          , stdenv
+          {
+            openssl,
+            libiconv,
+            lib,
+            pkg-config,
+            stdenv,
           }:
           craneLib.buildPackage {
             src = craneLib.cleanCargoSource ./.;
@@ -53,11 +62,13 @@
             # script can find the location of openssl. Note that we don't
             # need to specify the rustToolchain here since it was already
             # overridden above.
-            nativeBuildInputs = [
-              pkg-config
-            ] ++ lib.optionals stdenv.buildPlatform.isDarwin [
-              libiconv
-            ];
+            nativeBuildInputs =
+              [
+                pkg-config
+              ]
+              ++ lib.optionals stdenv.buildPlatform.isDarwin [
+                libiconv
+              ];
 
             # Dependencies which need to be built for the platform on which
             # the binary will run. In this case, we need to compile openssl
@@ -85,5 +96,6 @@
             ${pkgs.pkgsBuildBuild.qemu}/bin/qemu-aarch64 ${my-crate}/bin/cross-rust-overlay
           '';
         };
-      });
+      }
+    );
 }

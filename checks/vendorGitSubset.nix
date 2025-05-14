@@ -1,11 +1,12 @@
 # Regression test for https://github.com/ipetkov/crane/issues/60
 
-{ buildPackage
-, lib
-, linkFarmFromDrvs
-, runCommand
-, vendorGitDeps
-, outputHashes ? { }
+{
+  buildPackage,
+  lib,
+  linkFarmFromDrvs,
+  runCommand,
+  vendorGitDeps,
+  outputHashes ? { },
 }:
 
 let
@@ -29,9 +30,10 @@ let
     tokio-util-0.7.3
     EOF
 
-    ${builtins.concatStringsSep "\n" (builtins.map
-      (s: "ls -1 ${lib.escapeShellArg s} >>./actual")
-      (builtins.attrValues vendoredGit.sources)
+    ${builtins.concatStringsSep "\n" (
+      builtins.map (s: "ls -1 ${lib.escapeShellArg s} >>./actual") (
+        builtins.attrValues vendoredGit.sources
+      )
     )}
 
     diff ./expected ./actual

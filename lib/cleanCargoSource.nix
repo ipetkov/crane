@@ -1,9 +1,11 @@
-{ filterCargoSources
-, internalCrateNameForCleanSource
-, lib
+{
+  filterCargoSources,
+  internalCrateNameForCleanSource,
+  lib,
 }:
 
-src: lib.cleanSourceWith {
+src:
+lib.cleanSourceWith {
   # Apply the default source cleaning from nixpkgs
   src = lib.cleanSource src;
 

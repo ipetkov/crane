@@ -14,8 +14,17 @@
     };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, advisory-db, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      crane,
+      flake-utils,
+      advisory-db,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
@@ -29,12 +38,14 @@
           inherit src;
           strictDeps = true;
 
-          buildInputs = [
-            # Add additional build inputs here
-          ] ++ lib.optionals pkgs.stdenv.isDarwin [
-            # Additional darwin specific inputs can be set here
-            pkgs.libiconv
-          ];
+          buildInputs =
+            [
+              # Add additional build inputs here
+            ]
+            ++ lib.optionals pkgs.stdenv.isDarwin [
+              # Additional darwin specific inputs can be set here
+              pkgs.libiconv
+            ];
 
           # Additional environment variables can be set directly
           # MY_CUSTOM_VAR = "some value";
@@ -46,9 +57,12 @@
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
-        my-crate = craneLib.buildPackage (commonArgs // {
-          inherit cargoArtifacts;
-        });
+        my-crate = craneLib.buildPackage (
+          commonArgs
+          // {
+            inherit cargoArtifacts;
+          }
+        );
       in
       {
         checks = {
@@ -61,14 +75,20 @@
           # Note that this is done as a separate derivation so that
           # we can block the CI if there are issues here, but not
           # prevent downstream consumers from building our crate by itself.
-          my-crate-clippy = craneLib.cargoClippy (commonArgs // {
-            inherit cargoArtifacts;
-            cargoClippyExtraArgs = "--all-targets -- --deny warnings";
-          });
+          my-crate-clippy = craneLib.cargoClippy (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+              cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+            }
+          );
 
-          my-crate-doc = craneLib.cargoDoc (commonArgs // {
-            inherit cargoArtifacts;
-          });
+          my-crate-doc = craneLib.cargoDoc (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+            }
+          );
 
           # Check formatting
           my-crate-fmt = craneLib.cargoFmt {
@@ -94,12 +114,15 @@
           # Run tests with cargo-nextest
           # Consider setting `doCheck = false` on `my-crate` if you do not want
           # the tests to run twice
-          my-crate-nextest = craneLib.cargoNextest (commonArgs // {
-            inherit cargoArtifacts;
-            partitions = 1;
-            partitionType = "count";
-            cargoNextestPartitionsExtraArgs = "--no-tests=pass";
-          });
+          my-crate-nextest = craneLib.cargoNextest (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+              partitions = 1;
+              partitionType = "count";
+              cargoNextestPartitionsExtraArgs = "--no-tests=pass";
+            }
+          );
         };
 
         packages = {
@@ -122,5 +145,6 @@
             # pkgs.ripgrep
           ];
         };
-      });
+      }
+    );
 }

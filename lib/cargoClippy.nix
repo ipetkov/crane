@@ -1,11 +1,13 @@
-{ clippy
-, mkCargoDerivation
+{
+  clippy,
+  mkCargoDerivation,
 }:
 
-{ cargoArtifacts
-, cargoClippyExtraArgs ? "--all-targets"
-, cargoExtraArgs ? "--locked"
-, ...
+{
+  cargoArtifacts,
+  cargoClippyExtraArgs ? "--all-targets",
+  cargoExtraArgs ? "--locked",
+  ...
 }@origArgs:
 let
   args = builtins.removeAttrs origArgs [
@@ -13,11 +15,14 @@ let
     "cargoExtraArgs"
   ];
 in
-mkCargoDerivation (args // {
-  inherit cargoArtifacts;
-  pnameSuffix = "-clippy";
+mkCargoDerivation (
+  args
+  // {
+    inherit cargoArtifacts;
+    pnameSuffix = "-clippy";
 
-  buildPhaseCargoCommand = "cargoWithProfile clippy ${cargoExtraArgs} ${cargoClippyExtraArgs}";
+    buildPhaseCargoCommand = "cargoWithProfile clippy ${cargoExtraArgs} ${cargoClippyExtraArgs}";
 
-  nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ clippy ];
-})
+    nativeBuildInputs = (args.nativeBuildInputs or [ ]) ++ [ clippy ];
+  }
+)

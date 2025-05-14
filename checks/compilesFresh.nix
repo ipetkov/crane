@@ -1,17 +1,15 @@
-{ buildDepsOnly
-, linkFarmFromDrvs
-, jq
+{
+  buildDepsOnly,
+  linkFarmFromDrvs,
+  jq,
 }:
 
 expectedArg: mkDrv: args:
 let
-  runCargoAndCheckFreshness = cmd: extra:
+  runCargoAndCheckFreshness =
+    cmd: extra:
     let
-      expected =
-        if builtins.isAttrs expectedArg then
-          expectedArg.${cmd} or ""
-        else
-          expectedArg;
+      expected = if builtins.isAttrs expectedArg then expectedArg.${cmd} or "" else expectedArg;
     in
     ''
       cargo ${cmd} \
@@ -32,41 +30,48 @@ let
       fi
     '';
 
-  drvArgs = installCargoArtifactsMode: mkDrv (args // {
-    inherit installCargoArtifactsMode;
+  drvArgs =
+    installCargoArtifactsMode:
+    mkDrv (
+      args
+      // {
+        inherit installCargoArtifactsMode;
 
-    doInstallCargoArtifacts = false;
-    doNotPostBuildInstallCargoBinaries = true;
+        doInstallCargoArtifacts = false;
+        doNotPostBuildInstallCargoBinaries = true;
 
-    # NB: explicit call here so that the buildDepsOnly call
-    # doesn't inherit our build commands
-    cargoArtifacts = buildDepsOnly args;
+        # NB: explicit call here so that the buildDepsOnly call
+        # doesn't inherit our build commands
+        cargoArtifacts = buildDepsOnly args;
 
-    nativeBuildInputs = [ jq ];
+        nativeBuildInputs = [ jq ];
 
-    buildPhase = ''
-      runHook preBuild
+        buildPhase = ''
+          runHook preBuild
 
-      ${runCargoAndCheckFreshness "check" ""}
-      ${runCargoAndCheckFreshness "build" ""}
+          ${runCargoAndCheckFreshness "check" ""}
+          ${runCargoAndCheckFreshness "build" ""}
 
-      runHook postBuild
-    '';
+          runHook postBuild
+        '';
 
-    checkPhase = ''
-      runHook preCheck
+        checkPhase = ''
+          runHook preCheck
 
-      ${runCargoAndCheckFreshness "test" "--no-run"}
+          ${runCargoAndCheckFreshness "test" "--no-run"}
 
-      runHook postCheck
-    '';
+          runHook postCheck
+        '';
 
-    installPhase = ''
-      touch $out
-    '';
-  });
+        installPhase = ''
+          touch $out
+        '';
+      }
+    );
 in
-linkFarmFromDrvs "compiles-fresh" (map drvArgs [
-  "use-zstd"
-  "use-symlink"
-])
+linkFarmFromDrvs "compiles-fresh" (
+  map drvArgs [
+    "use-zstd"
+    "use-symlink"
+  ]
+)
