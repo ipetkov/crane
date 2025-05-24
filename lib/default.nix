@@ -12,7 +12,7 @@
 }:
 
 let
-  minSupported = "24.11";
+  minSupported = "25.05";
   current = lib.concatStringsSep "." (lib.lists.sublist 0 2 (lib.splitVersion lib.version));
   isUnsupported = lib.versionOlder current minSupported;
   msg = "crane requires at least nixpkgs-${minSupported}, supplied nixpkgs-${current}";
