@@ -44,10 +44,14 @@ let
     );
 
   lock = args.cargoLockParsed or (builtins.fromTOML cargoLockContents);
+
+  toml = builtins.fromTOML (readFile (src + "/Cargo.toml"));
+
+  patch = lib.attrsets.foldlAttrs (acc: registry: value: acc // value) {} (toml.patch or {});
 in
 vendorMultipleCargoDeps (
   {
-    inherit cargoConfigs;
+    inherit cargoConfigs patch src;
     cargoLockParsedList = [ lock ];
     outputHashes = args.outputHashes or { };
     overrideVendorCargoPackage = args.overrideVendorCargoPackage or (_: drv: drv);
