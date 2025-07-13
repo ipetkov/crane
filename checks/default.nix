@@ -2,6 +2,7 @@
   pkgs,
   myLib,
   myLibCross,
+  myLibWindows,
   myLibFenix,
 }:
 
@@ -919,6 +920,12 @@ onlyDrvs (
             );
           }
         );
+
+      windows-smoke = myLibWindows.buildPackage {
+        strictDeps = true;
+        pname = "window";
+        src = myLibWindows.cleanCargoSource ./windows;
+      };
     }
   )
 )

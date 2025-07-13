@@ -68,6 +68,15 @@
               crossSystem = "wasm32-wasi";
             }
           );
+          myLibWindows = mkLib (
+            import nixpkgs {
+              localSystem = system;
+              crossSystem = {
+                config = "x86_64-w64-mingw32";
+                libc = "msvcrt";
+              };
+            }
+          );
           myLibFenix = (mkLib pkgs).overrideToolchain (
             fenix.latest.withComponents [
               "cargo"
