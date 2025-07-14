@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.28.3
 * **Breaking**: dropped compatibility for nixpkgs-24.11
+* `registryFromSparse` now passes `fetchurlExtraArgs` to the initial query for the
+  registry's `config.json`
 
 ## [0.20.3] - 2025-04-23
 

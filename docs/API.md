@@ -1514,9 +1514,9 @@ If the registry's download endpoint changes more frequently and you would like
 to infer the configuration directly from a git revision, consider using
 `registryFromGitIndex` as an alternative.
 
-If the registry needs a special way of accessing crate sources the
-`fetchurlExtraArgs` set can be used to influence the behavior of fetching the
-crate sources (e.g. by setting `curlOptsList`)
+If the registry needs a special way of accessing crate sources (such as for
+authorization), the `fetchurlExtraArgs` set can be used to influence the
+behavior of fetching the crate sources (e.g. by setting `curlOptsList`)
 
 #### Required attributes
 * `indexUrl`: an HTTP URL to the registry's config.json
@@ -1524,7 +1524,8 @@ crate sources (e.g. by setting `curlOptsList`)
 
 #### Optional attributes
 * `fetchurlExtraArgs`: a set of arguments which will be passed on to the
-  `fetchurl` for each crate being sourced from this registry
+  `fetchurl` for each crate being sourced from this registry, and to the
+  initial query for the registry's `config.json`.
 
 ```nix
 craneLib.registryFromSparse {
