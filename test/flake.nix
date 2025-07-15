@@ -68,6 +68,13 @@
               crossSystem = "wasm32-wasi";
             }
           );
+          myLibFenix = (mkLib pkgs).overrideToolchain (
+            fenix.latest.withComponents [
+              "cargo"
+              "rust-src"
+              "rustc"
+            ]
+          );
           myLibWindows = mkLib (
             import nixpkgs {
               localSystem = system;
@@ -77,13 +84,7 @@
               };
             }
           );
-          myLibFenix = (mkLib pkgs).overrideToolchain (
-            fenix.latest.withComponents [
-              "cargo"
-              "rust-src"
-              "rustc"
-            ]
-          );
+          myLibWindowsCross = mkLib nixpkgs.legacyPackages.${system}.pkgsCross.mingwW64;
         };
       }
     );
