@@ -921,9 +921,9 @@ onlyDrvs (
           }
         );
 
-      windows-smoke = myLibWindows.buildPackage {
+      windows = myLibWindows.buildPackage {
         strictDeps = true;
-        pname = "window";
+        pname = "windows";
         src = myLibWindows.cleanCargoSource ./windows;
       };
     }
