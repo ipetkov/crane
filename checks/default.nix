@@ -3,6 +3,8 @@
   myLib,
   myLibCross,
   myLibFenix,
+  myLibWindows,
+  myLibWindowsCross,
 }:
 
 let
@@ -919,6 +921,18 @@ onlyDrvs (
             );
           }
         );
+
+      windows = myLibWindows.buildPackage {
+        strictDeps = true;
+        pname = "windows";
+        src = myLibWindows.cleanCargoSource ./windows;
+      };
+
+      windowsCross = myLibWindowsCross.buildPackage {
+        strictDeps = true;
+        pname = "windowsCross";
+        src = myLibWindows.cleanCargoSource ./windows;
+      };
     }
   )
 )

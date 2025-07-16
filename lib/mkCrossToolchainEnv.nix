@@ -22,7 +22,12 @@ let
         !(stdenv.buildPlatform.canExecute stdenv.hostPlatform)
         && stdenv.hostPlatform.emulatorAvailable nativePkgs;
     in
-    (lib.optionalAttrs runnerAvailable {
+    # Most non-trivial crates require this, lots of hacks are done for this.
+    (lib.optionalAttrs chosenStdenv.hostPlatform.isMinGW {
+      "${cranePrefix}CARGO_TARGET_${cargoEnv}_RUSTFLAGS" =
+        "-L native=${pkgs.pkgsHostTarget.windows.pthreads}/lib";
+    })
+    // (lib.optionalAttrs runnerAvailable {
       "${cranePrefix}CARGO_TARGET_${cargoEnv}_RUNNER" = stdenv.hostPlatform.emulator nativePkgs;
     })
     // {

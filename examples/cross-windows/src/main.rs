@@ -1,5 +1,9 @@
+use std::thread;
+
 fn main() {
-    println!("hello world");
+    thread::spawn(move || {
+        println!("hello world");
+    });
 }
 
 #[test]

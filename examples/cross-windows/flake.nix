@@ -6,57 +6,45 @@
 
     crane.url = "github:ipetkov/crane";
 
-    fenix = {
-      url = "github:nix-community/fenix";
+    flake-utils.url = "github:numtide/flake-utils";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
     {
       nixpkgs,
       crane,
-      fenix,
       flake-utils,
+      rust-overlay,
       ...
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+          overlays = [ (import rust-overlay) ];
+          localSystem = system;
+          crossSystem = {
+            config = "x86_64-w64-mingw32";
+            libc = "msvcrt";
+          };
+        };
 
-        toolchain =
-          with fenix.packages.${system};
-          combine [
-            minimal.rustc
-            minimal.cargo
-            targets.x86_64-pc-windows-gnu.latest.rust-std
-          ];
-
-        craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
+        craneLib = (crane.mkLib pkgs).overrideToolchain (
+          p:
+          p.rust-bin.stable.latest.default.override {
+            targets = [ "x86_64-pc-windows-gnu" ];
+          }
+        );
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;
 
           strictDeps = true;
-          doCheck = false;
-
-          CARGO_BUILD_TARGET = "x86_64-pc-windows-gnu";
-
-          # fixes issues related to libring
-          TARGET_CC = "${pkgs.pkgsCross.mingwW64.stdenv.cc}/bin/${pkgs.pkgsCross.mingwW64.stdenv.cc.targetPrefix}cc";
-
-          #fixes issues related to openssl
-          OPENSSL_DIR = "${pkgs.openssl.dev}";
-          OPENSSL_LIB_DIR = "${pkgs.openssl.out}/lib";
-          OPENSSL_INCLUDE_DIR = "${pkgs.openssl.dev}/include/";
-
-          depsBuildBuild = with pkgs; [
-            pkgsCross.mingwW64.stdenv.cc
-            pkgsCross.mingwW64.windows.pthreads
-          ];
         };
       in
       {

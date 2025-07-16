@@ -75,6 +75,16 @@
               "rustc"
             ]
           );
+          myLibWindows = mkLib (
+            import nixpkgs {
+              localSystem = system;
+              crossSystem = {
+                config = "x86_64-w64-mingw32";
+                libc = "msvcrt";
+              };
+            }
+          );
+          myLibWindowsCross = mkLib nixpkgs.legacyPackages.${system}.pkgsCross.mingwW64;
         };
       }
     );
