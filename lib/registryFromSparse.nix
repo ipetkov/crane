@@ -1,4 +1,8 @@
-{ registryFromDownloadUrl, lib, pkgsBuildBuild }:
+{
+  registryFromDownloadUrl,
+  lib,
+  pkgsBuildBuild,
+}:
 
 {
   indexUrl,
@@ -10,10 +14,13 @@ let
   inherit (pkgsBuildBuild) fetchurl;
 
   slashTerminatedIndexUrl = if lib.hasSuffix "/" indexUrl then indexUrl else "${indexUrl}/";
-  configContents = builtins.readFile "${fetchurl (fetchurlExtraArgs // {
-    url = "${slashTerminatedIndexUrl}config.json";
-    sha256 = configSha256;
-  })}";
+  configContents = builtins.readFile "${fetchurl (
+    fetchurlExtraArgs
+    // {
+      url = "${slashTerminatedIndexUrl}config.json";
+      sha256 = configSha256;
+    }
+  )}";
 
   config = builtins.fromJSON configContents;
   dl =
