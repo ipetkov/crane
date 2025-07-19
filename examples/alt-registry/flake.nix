@@ -50,6 +50,10 @@
           #  configSha256 = "d16740883624df970adac38c70e35cf077a2a105faa3862f8f99a65da96b14a3";
           #  fetchurlExtraArgs = {
           #    # Extra parameters which will be passed to the fetchurl invocation for each crate
+          #    curlOptsList = [
+          #      "--header"
+          #      "Authorization: API_TOKEN"
+          #    ];
           #  };
           #})
 
