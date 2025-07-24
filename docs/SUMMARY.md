@@ -48,6 +48,7 @@
   * [A git dependency fails to find a file by a relative path](./faq/git-dep-cannot-find-relative-path.md)
   * [Controlling whether or not hooks run during `buildDepsOnly`](./faq/control-when-hooks-run.md)
   * [Missing files during `checks` when filtering with filesets](./faq/missing-files-during-checks.md)
+  * [I want to cross compile aws-lc-sys to windows using mingw](./faq/cross-compiling-aws-lc-sys.md)
 ---
 * [Advanced Techniques](./advanced/advanced.md)
   * [Overriding function behavior](./advanced/overriding-function-behavior.md)
