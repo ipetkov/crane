@@ -31,6 +31,7 @@ mkShell (
       cargo
       clippy
       rustfmt
-    ] ++ packages;
+    ]
+    ++ packages;
   }
 )

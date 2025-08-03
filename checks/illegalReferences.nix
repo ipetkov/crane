@@ -83,13 +83,12 @@ let
   removeReferencesToVendorDirAndCrates = checkRefs "removeReferencesToVendorDir" (
     myLib.buildPackage {
       src = ./grpcio-test;
-      nativeBuildInputs =
-        [
-          pkgs.cmake
-        ]
-        ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-          pkgs.gcc10
-        ];
+      nativeBuildInputs = [
+        pkgs.cmake
+      ]
+      ++ pkgs.lib.optional pkgs.stdenv.isLinux [
+        pkgs.gcc10
+      ];
       buildInputs = lib.optionals isDarwin [
         pkgs.libiconv
       ];

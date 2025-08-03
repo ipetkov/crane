@@ -68,14 +68,13 @@
           # We must force the target, otherwise cargo will attempt to use your native target
           CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
 
-          buildInputs =
-            [
-              # Add additional build inputs here
-            ]
-            ++ lib.optionals pkgs.stdenv.isDarwin [
-              # Additional darwin specific inputs can be set here
-              pkgs.libiconv
-            ];
+          buildInputs = [
+            # Add additional build inputs here
+          ]
+          ++ lib.optionals pkgs.stdenv.isDarwin [
+            # Additional darwin specific inputs can be set here
+            pkgs.libiconv
+          ];
         };
 
         # Build *just* the cargo dependencies, so we can reuse

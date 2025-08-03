@@ -30,14 +30,13 @@
           src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
-          buildInputs =
-            [
-              # Add additional build inputs here
-            ]
-            ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
-              # Additional darwin specific inputs can be set here
-              pkgs.libiconv
-            ];
+          buildInputs = [
+            # Add additional build inputs here
+          ]
+          ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+            # Additional darwin specific inputs can be set here
+            pkgs.libiconv
+          ];
         };
 
         my-crate = craneLib.buildPackage (

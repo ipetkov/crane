@@ -88,14 +88,13 @@
             '';
       in
       {
-        checks =
-          {
-            inherit workspace;
-            # Firefox is broken in some platforms (namely "aarch64-apple-darwin"), skip those
-          }
-          // (lib.optionalAttrs (lib.meta.availableOn system pkgs.firefox) {
-            inherit runE2ETests;
-          });
+        checks = {
+          inherit workspace;
+          # Firefox is broken in some platforms (namely "aarch64-apple-darwin"), skip those
+        }
+        // (lib.optionalAttrs (lib.meta.availableOn system pkgs.firefox) {
+          inherit runE2ETests;
+        });
 
         devShells.default = pkgs.mkShell {
           buildInputs =

@@ -105,18 +105,17 @@ let
   '';
 
   # Append the default crates.io registry, but allow it to be overridden
-  registries =
-    {
-      "crates-io" = [ "https://github.com/rust-lang/crates.io-index" ];
-    }
-    // (
-      if args ? registries then
-        mapAttrs (_: val: [ val ]) args.registries
-      else
-        warnIf (
-          builtins.length missingPackageRegistries > 0
-        ) missingPackageRegistriesMsg configuredRegistries
-    );
+  registries = {
+    "crates-io" = [ "https://github.com/rust-lang/crates.io-index" ];
+  }
+  // (
+    if args ? registries then
+      mapAttrs (_: val: [ val ]) args.registries
+    else
+      warnIf (
+        builtins.length missingPackageRegistries > 0
+      ) missingPackageRegistriesMsg configuredRegistries
+  );
 
   sources = mapAttrs' (
     url: packages: nameValuePair (hash url) (vendorSingleRegistry packages)

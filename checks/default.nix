@@ -730,14 +730,13 @@ onlyDrvs (
           nativeBuildInputs = [
             pkgs.pkg-config
           ];
-          buildInputs =
-            [
-              pkgs.openssl
-            ]
-            ++ lib.optionals isDarwin [
-              pkgs.libiconv
-              pkgs.darwin.apple_sdk.frameworks.Security
-            ];
+          buildInputs = [
+            pkgs.openssl
+          ]
+          ++ lib.optionals isDarwin [
+            pkgs.libiconv
+            pkgs.darwin.apple_sdk.frameworks.Security
+          ];
         }
       );
 

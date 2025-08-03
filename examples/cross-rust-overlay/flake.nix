@@ -62,13 +62,12 @@
             # script can find the location of openssl. Note that we don't
             # need to specify the rustToolchain here since it was already
             # overridden above.
-            nativeBuildInputs =
-              [
-                pkg-config
-              ]
-              ++ lib.optionals stdenv.buildPlatform.isDarwin [
-                libiconv
-              ];
+            nativeBuildInputs = [
+              pkg-config
+            ]
+            ++ lib.optionals stdenv.buildPlatform.isDarwin [
+              libiconv
+            ];
 
             # Dependencies which need to be built for the platform on which
             # the binary will run. In this case, we need to compile openssl
