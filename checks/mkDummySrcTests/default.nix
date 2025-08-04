@@ -59,7 +59,7 @@ let
           type == "directory"
           || lib.any (s: lib.hasPrefix s (builtins.baseNameOf path)) [
             "Cargo"
-            "config"
+            "config.toml"
           ];
       };
     in
