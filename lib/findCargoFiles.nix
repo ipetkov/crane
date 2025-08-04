@@ -20,7 +20,7 @@ let
         name: type:
         let
           cur = dir + "/${name}";
-          isConfig = parentIsDotCargo && (name == "config" || name == "config.toml");
+          isConfig = parentIsDotCargo && (name == "config.toml" || name == "config");
           isCargoToml = name == "Cargo.toml";
         in
         if type == "directory" then
