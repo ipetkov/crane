@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.21.0] - 2025-07-19
 
+### Added
+* A sourcemap is automatically set up for `dontStrip` builds to map source code
+  file paths to their correct location within the Nix store. This behavior can
+  also be controlled using the `doSetupSourceMap` option.
+
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.28.3
 * **Breaking**: dropped compatibility for nixpkgs-24.11
