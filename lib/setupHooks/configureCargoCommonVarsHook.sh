@@ -14,6 +14,13 @@ configureCargoCommonVars() {
   # cargo to honor the definition used in the build profile
   export CARGO_BUILD_INCREMENTAL=${CARGO_BUILD_INCREMENTAL-false}
 
+  # Configure a source mapping when doing a debug build so that debug symbols
+  # reference the right source files; this ensures that debuggers can find the
+  # correct source code files
+  if [[ "${doSetupSourceMap-${dontStrip-}}" ]]; then
+    export RUSTFLAGS="--remap-path-prefix $PWD=$src $RUSTFLAGS"
+  fi
+
   # Used by `cargoWithProfile` to specify a cargo profile to use.
   # Not exported since it is not natively understood by cargo.
   CARGO_PROFILE=${CARGO_PROFILE-release}
