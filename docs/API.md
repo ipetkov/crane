@@ -1213,6 +1213,12 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   dependency on the source code stored within the Nix store, but in return
   debuggers / other tools are able to resolve source file references to the
   correct files.
+  
+  The option is set using the `CARGO_BUILD_RUSTFLAGS` environment variable,
+  meaning it will not override any existing rustc flags you have set. However,
+  the option may not be applied if you have set any `rustflags` configuration
+  options with higher priority (e.g. target / `cfg()`-specific); in this case
+  you will have to setup source mapping yourself.
   - Default value: value of `dontStrip`
 * `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
   be copied as an output
