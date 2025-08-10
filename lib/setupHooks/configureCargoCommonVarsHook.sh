@@ -18,7 +18,7 @@ configureCargoCommonVars() {
   # reference the right source files; this ensures that debuggers can find the
   # correct source code files
   if [[ "${doSetupSourceMap-${dontStrip-}}" ]]; then
-    export RUSTFLAGS="--remap-path-prefix $PWD=$src $RUSTFLAGS"
+    export CARGO_BUILD_RUSTFLAGS="--remap-path-prefix=$PWD=$src $CARGO_BUILD_RUSTFLAGS"
   fi
 
   # Used by `cargoWithProfile` to specify a cargo profile to use.
