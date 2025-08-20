@@ -92,6 +92,8 @@ to influence its behavior.
 * `src`: set to the result of `mkDummySrc` after applying the arguments set.
   This ensures that we do not need to rebuild the cargo artifacts derivation
   whenever the application source changes.
+* `srcForRemapPathPrefix` is set `args.src`, if present, or the calculated value
+  of `dummySrc` as described below
 * `CRANE_BUILD_DEPS_ONLY` is exported as an environment variable, in case this
   is handy for scripts or hooks which may want to customize how they run
 
@@ -1208,18 +1210,6 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   cross-compilation toolchain using `mkCrossToolchainEnv`. Useful if you want to
   perform this configuration yourself.
   - Default value: `true`
-* `doSetupSourceMap`: controls whether crane automatically sets up a source map
-  using the [`--remap-path-prefix`] option. The output of the derivation gains a
-  dependency on the source code stored within the Nix store, but in return
-  debuggers / other tools are able to resolve source file references to the
-  correct files.
-  
-  The option is set using the `CARGO_BUILD_RUSTFLAGS` environment variable,
-  meaning it will not override any existing rustc flags you have set. However,
-  the option may not be applied if you have set any `rustflags` configuration
-  options with higher priority (e.g. target / `cfg()`-specific); in this case
-  you will have to setup source mapping yourself.
-  - Default value: value of `dontStrip`
 * `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
   be copied as an output
   - Default value: `true`
@@ -1270,6 +1260,7 @@ input to any other `nativeBuildInputs` specified by the caller:
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
+* `remapPathPrefixHook`
 * `replaceCargoLockHook`
 * `rustc`
 * `rsync`
@@ -1939,6 +1930,35 @@ a temporary location defined by `$postBuildInstallFromCargoBuildLogOut`
 `postBuildInstallFromCargoBuildLog` will be run as a post build hook.
 
 **Required nativeBuildInputs**: assumes `cargo` is available on the `$PATH`
+
+### `craneLib.remapSourcePathPrefixHook`
+
+Defines `configureRustcRemapPathPrefix()` which can be used to set up a source
+map using the [`--remap-path-prefix`] option. The output of the derivation gains
+a dependency on the source code stored within the Nix store, but in return
+debuggers / other tools are able to resolve source file references to the
+correct files.
+
+The option is set by appending to the `CARGO_BUILD_RUSTFLAGS` environment variable,
+meaning it will not override any existing rustc flags you have set. However, the
+option may not be applied if you have set any `rustflags` configuration options
+with higher priority (e.g. target / `cfg()`-specific); in this case you will
+have to setup source mapping yourself.
+
+`configureRustcRemapPathPrefix()` takes two positional arguments:
+1. a path to where the source will map *to*, i.e. the project sources.
+   * If not specified, the value of `$srcForRemapPathPrefix` will be used, if
+     defined to a non-empty value
+   * Otherwise, the value of `$src` will be used, if defined to a non-empty
+     value
+   * Otherwise, an error will be raised
+1. a path to where the source will map *from*, i.e. the current working
+   directory
+   * If not specified, the current working directory will be used
+
+**Automatic behavior:** runs as a pre-build hook if either `doRemapPathPrefix`
+is set to a non-empty value, or if `doRemapPathPrefix` is *not set* and
+`dontStrip` is set to a non-empty value
 
 ### `craneLib.removeReferencesToRustToolchainHook`
 

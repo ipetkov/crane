@@ -4,7 +4,7 @@ configureCargoCommonVars() {
   # Set a CARGO_HOME if it doesn't exist so cargo does not go
   # looking for a non-existent HOME directory
   export CARGO_HOME=${CARGO_HOME:-${PWD}/.cargo-home}
-  mkdir -p ${CARGO_HOME}
+  mkdir -p "${CARGO_HOME}"
 
   export CARGO_BUILD_JOBS=${CARGO_BUILD_JOBS:-$NIX_BUILD_CORES}
   export RUST_TEST_THREADS=${RUST_TEST_THREADS:-$NIX_BUILD_CORES}
@@ -13,13 +13,6 @@ configureCargoCommonVars() {
   # while building with nix. Allow a declared-but-empty variable which will tell
   # cargo to honor the definition used in the build profile
   export CARGO_BUILD_INCREMENTAL=${CARGO_BUILD_INCREMENTAL-false}
-
-  # Configure a source mapping when doing a debug build so that debug symbols
-  # reference the right source files; this ensures that debuggers can find the
-  # correct source code files
-  if [[ "${doSetupSourceMap-${dontStrip-}}" ]]; then
-    export CARGO_BUILD_RUSTFLAGS="--remap-path-prefix=$PWD=${cleanSrc-$src} $CARGO_BUILD_RUSTFLAGS"
-  fi
 
   # Used by `cargoWithProfile` to specify a cargo profile to use.
   # Not exported since it is not natively understood by cargo.
@@ -40,6 +33,7 @@ configureCargoCommonVars() {
         echo 'NOTICE: setting the following environment variables for cross-compilation purposes'
         echo ' - if this is unwanted, you can set them to a non-empty value'
         echo ' - alternatively, you can disable the built-in cross compilation support'
+        # shellcheck disable=SC2016
         echo '   by setting `doIncludeCrossToolchainEnv = false` in the derivation'
       fi
 

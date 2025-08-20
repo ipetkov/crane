@@ -55,10 +55,10 @@ mkCargoDerivation (
     inherit doCheck;
 
     src = dummySrc;
+    srcForRemapPathPrefix = args.src or dummySrc;
     pnameSuffix = "-deps";
     pname = args.pname or crateName.pname;
     version = args.version or crateName.version;
-    cleanSrc = args.src or dummySrc;
 
     cargoArtifacts = null;
     cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps argsMaybeDummySrcOverride);
