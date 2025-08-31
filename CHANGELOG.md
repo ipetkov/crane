@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   correct location within the Nix store. By default this hook will run for any
   `dontStrip = true` builds, but can otherwise be controlled using
   `doRemapPathPrefix`.
+* Do not try to use std for the amdgpu target
 
 ## [0.21.0] - 2025-07-19
 
