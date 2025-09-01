@@ -6,12 +6,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-### Added
-* Add `remapSourcePathPrefixHook`, which can map source code file paths to their
-  correct location within the Nix store. By default this hook will run for any
-  `dontStrip = true` builds, but can otherwise be controlled using
-  `doRemapPathPrefix`.
-
 ## [0.21.0] - 2025-07-19
 
 ### Changed
