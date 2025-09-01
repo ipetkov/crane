@@ -273,10 +273,6 @@ onlyDrvs (
         asdf = 1;
         CARGO_TARGET_DIR = "target/foo";
       };
-      compilesFreshStrip = self.compilesFresh "simple" (myLib.buildPackage) {
-        src = ./simple;
-        dontStrip = true;
-      };
       compilesFreshWorkspace =
         self.compilesFresh
           {

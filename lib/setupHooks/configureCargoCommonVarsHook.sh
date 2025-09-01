@@ -4,7 +4,7 @@ configureCargoCommonVars() {
   # Set a CARGO_HOME if it doesn't exist so cargo does not go
   # looking for a non-existent HOME directory
   export CARGO_HOME=${CARGO_HOME:-${PWD}/.cargo-home}
-  mkdir -p "${CARGO_HOME}"
+  mkdir -p ${CARGO_HOME}
 
   export CARGO_BUILD_JOBS=${CARGO_BUILD_JOBS:-$NIX_BUILD_CORES}
   export RUST_TEST_THREADS=${RUST_TEST_THREADS:-$NIX_BUILD_CORES}
@@ -33,7 +33,6 @@ configureCargoCommonVars() {
         echo 'NOTICE: setting the following environment variables for cross-compilation purposes'
         echo ' - if this is unwanted, you can set them to a non-empty value'
         echo ' - alternatively, you can disable the built-in cross compilation support'
-        # shellcheck disable=SC2016
         echo '   by setting `doIncludeCrossToolchainEnv = false` in the derivation'
       fi
 
