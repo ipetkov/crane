@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+* The default dummy source used by `mkDummySrc` now additionally works for the
+  `amdgpu` target out of the box
+
 ## [0.21.0] - 2025-07-19
 
 ### Changed
