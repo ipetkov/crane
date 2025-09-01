@@ -9,7 +9,6 @@
   lib,
   mkCrossToolchainEnv,
   pkgs,
-  remapPathPrefixHook,
   replaceCargoLockHook,
   rsync,
   rustc,
@@ -110,7 +109,6 @@ chosenStdenv.mkDerivation (
         configureCargoVendoredDepsHook
         inheritCargoArtifactsHook
         installCargoArtifactsHook
-        remapPathPrefixHook
         replaceCargoLockHook
         rsync
         rustc
