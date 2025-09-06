@@ -22,16 +22,16 @@ removeReferencesToVendoredSources() {
           find -L "${vendoredDir}" -mindepth 1 -maxdepth 1 -type d -print0 | \
             xargs -0 -I DIR find -H DIR -type l -exec readlink '{}' \;
         ) |
-          grep --only-matching '@storeDir@/[a-z0-9]\{32\}' |
+          grep --ignore-case --only-matching '@storeDir@/[a-z0-9]\{32\}' |
           sort -u |
-          while read crateSource; do
+          while read -r crateSource; do
             echo -n '\|'"${crateSource#@storeDir@/}";
           done || true # Handle if vendoredDir doesn't point to the store
 
-        echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!g'
+        echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!gi'
       )
 
-    echo stripping references done
+    echo 'stripping references done'
   )
 
   @signIfRequired@

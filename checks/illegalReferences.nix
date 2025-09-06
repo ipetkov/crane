@@ -87,7 +87,7 @@ let
         pkgs.cmake
       ]
       ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-        pkgs.gcc10
+        pkgs.gcc
       ];
       buildInputs = lib.optionals isDarwin [
         pkgs.libiconv
