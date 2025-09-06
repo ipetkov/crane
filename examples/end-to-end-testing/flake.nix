@@ -35,15 +35,6 @@
         workspace = craneLib.buildPackage {
           inherit src;
           doCheck = false;
-          nativeBuildInputs = lib.optionals pkgs.stdenv.isDarwin (
-            with pkgs.darwin.apple_sdk.frameworks;
-            [
-              pkgs.libiconv
-              CoreFoundation
-              Security
-              SystemConfiguration
-            ]
-          );
         };
 
         # The script inlined for brevity, consider extracting it

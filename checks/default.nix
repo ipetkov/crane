@@ -669,7 +669,7 @@ onlyDrvs (
       };
       simpleAltStdenv = myLib.buildPackage {
         src = ./simple;
-        stdenv = p: p.gcc12Stdenv;
+        stdenv = p: p.gccStdenv;
       };
       # https://github.com/ipetkov/crane/issues/104
       simpleWithCmake = myLib.buildPackage {
@@ -732,10 +732,6 @@ onlyDrvs (
           ];
           buildInputs = [
             pkgs.openssl
-          ]
-          ++ lib.optionals isDarwin [
-            pkgs.libiconv
-            pkgs.darwin.apple_sdk.frameworks.Security
           ];
         }
       );
@@ -790,7 +786,7 @@ onlyDrvs (
           expected = mkVendor myLib;
           actual = mkVendor myLibCross;
         in
-        pkgs.runCommand "vendorIsCrossAgnostic" { } ''
+        pkgs.runCommandNoCC "vendorIsCrossAgnostic" { } ''
           if [[ "${expected}" == "${actual}" ]]; then
             touch $out
           else
