@@ -60,7 +60,7 @@ let
         nativeBuildInputs =
           [ ]
           ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-            pkgs.gcc10
+            pkgs.gcc
           ];
       }
     );
@@ -74,7 +74,7 @@ let
       nativeBuildInputs =
         [ ]
         ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-          pkgs.gcc10
+          pkgs.gcc
         ];
     }
   );

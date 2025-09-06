@@ -65,7 +65,7 @@
           myLibCross = mkLib (
             import nixpkgs {
               localSystem = system;
-              crossSystem = "wasm32-wasi";
+              crossSystem = "wasm32-unknown-none";
             }
           );
           myLibFenix = (mkLib pkgs).overrideToolchain (
