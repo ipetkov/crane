@@ -20,7 +20,7 @@ mkCargoDerivation (
   args
   // {
     inherit cargoArtifacts;
-    doCheck = args.doCheck or true;
+    doCheck = true;
 
     pnameSuffix = "-test";
     buildPhaseCargoCommand = "";

@@ -659,7 +659,7 @@ environment variables during the build, you can bring them back via
 
 `cargoNextest :: set -> drv`
 
-Create a derivation which will run a `cargo nextest` invocation in a cargo
+Create a derivation which will always run a `cargo nextest` invocation in a cargo
 workspace. Note that [`cargo nextest` doesn't run
 doctests](https://github.com/nextest-rs/nextest/issues/16), so you may also
 want to build a `cargoDocTest` derivation.
@@ -771,7 +771,7 @@ environment variables during the build, you can bring them back via
 
 `cargoTest :: set -> drv`
 
-Create a derivation which will run a `cargo test` invocation in a cargo
+Create a derivation which will always run a `cargo test` invocation in a cargo
 workspace.
 
 Except where noted below, all derivation attributes are delegated to
