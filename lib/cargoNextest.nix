@@ -42,7 +42,7 @@ let
     // {
       inherit cargoArtifacts;
       pnameSuffix = "-nextest${extraSuffix}";
-      doCheck = args.doCheck or true;
+      doCheck = true;
 
       buildPhaseCargoCommand =
         args.buildPhaseCargoCommand or ''
