@@ -1,24 +1,28 @@
 cargo-features = ["some unstable features"]
 [[bench]]
 edition = "2015"
+harness = true
 name = "bench1"
 path = "src/bench1.rs"
 proc-macro = false
 
 [[bench]]
 edition = "2018"
+harness = true
 name = "bench2"
 path = "src/bench2.rs"
 proc-macro = false
 
 [[bin]]
 edition = "2015"
+harness = false
 name = "bin1"
 path = "src/bin1.rs"
 proc-macro = false
 
 [[bin]]
 edition = "2018"
+harness = true
 name = "bin2"
 path = "src/bin2.rs"
 proc-macro = false
@@ -26,24 +30,28 @@ proc-macro = false
 [[example]]
 crate-type = ["staticlib"]
 edition = "2015"
+harness = true
 name = "example1"
 path = "src/example1.rs"
 proc-macro = false
 
 [[example]]
 edition = "2018"
+harness = true
 name = "example2"
 path = "src/example2.rs"
 proc-macro = false
 
 [[test]]
 edition = "2015"
+harness = true
 name = "test1"
 path = "src/test1.rs"
 proc-macro = false
 
 [[test]]
 edition = "2018"
+harness = true
 name = "test2"
 path = "src/test2.rs"
 proc-macro = false
@@ -75,6 +83,7 @@ foofeature = []
 [lib]
 crate-type = ["lib", "rlib"]
 edition = "2021"
+harness = true
 name = "foo"
 path = "src/lib.rs"
 proc-macro = false

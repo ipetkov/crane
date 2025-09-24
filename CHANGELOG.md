@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `amdgpu` target out of the box
 * `removeReferencesToRustToolchainHook` now handles exclusions case
   insensitively
+* `cleanCargoToml` now retains targets' `harness` attribute if defined
 
 ## [0.21.0] - 2025-07-19
 

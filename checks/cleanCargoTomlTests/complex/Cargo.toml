@@ -55,7 +55,7 @@ bench = true
 doc = true
 plugin = false
 proc-macro = false
-harness = true
+harness = false
 edition = "2015"
 required-features = ["bin1feature1", "bin1feature2"]
 

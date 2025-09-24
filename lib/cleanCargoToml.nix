@@ -49,7 +49,6 @@ let
       "bench"
       "doc"
       "plugin"
-      "harness"
       "required-features" # only affects selection of a target, does not actually enable any features
       "required_features" # only affects selection of a target, does not actually enable any features
 
@@ -62,6 +61,8 @@ let
       #                     # definition to honor the project structure
       # "proc-macro"        # If we have a proc-macro dependency in the workspace, rustc may try to
       #                     # compile `proc-macro2` for the target system
+      # "harness"           # Controls how tests are compiled and run, which might have implications
+      #                     # on additional scripts which try to run the tests during buildDepsOnly
     ];
 
   cleanWorkspace =
