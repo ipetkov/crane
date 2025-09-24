@@ -51,13 +51,6 @@ let
           cargo nextest --version
         '';
 
-      # Work around Nextest bug: https://github.com/nextest-rs/nextest/issues/267
-      preCheck =
-        (args.preCheck or "")
-        + lib.optionalString stdenv.isDarwin ''
-          export DYLD_FALLBACK_LIBRARY_PATH=$(${rustc}/bin/rustc --print sysroot)/lib
-        '';
-
       checkPhaseCargoCommand = ''
         ${
           if withLlvmCov then "cargo llvm-cov nextest ${cargoLlvmCovExtraArgs}" else "cargo nextest ${cmd}"
