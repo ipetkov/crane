@@ -147,7 +147,7 @@ bench = true
 doc = true
 plugin = false
 proc_macro = false
-harness = true
+harness = false
 edition = "2018"
 required_features = ["bench2feature1", "bench2feature2"]
 
