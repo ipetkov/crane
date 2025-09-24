@@ -10,7 +10,7 @@ compressAndInstallCargoArtifactsDir() {
     export SOURCE_DATE_EPOCH=1
 
     dynTar() (
-      cd "${cargoTargetDir}"
+      cd "${cargoTargetDir}" || false
       if [ -n "${doCompressAndInstallFullArchive}" ]; then
         >&2 echo "compressing and installing full archive of ${cargoTargetDir} to ${dest} as requested"
         tar "$@" .
@@ -34,15 +34,19 @@ compressAndInstallCargoArtifactsDir() {
       fi
     )
 
-    dynTar \
-      --sort=name \
-      --mtime="@${SOURCE_DATE_EPOCH}" \
-      --owner=0 \
-      --group=0 \
-      --mode=u+w \
-      --numeric-owner \
-      --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-      -c | zstd "-T${NIX_BUILD_CORES:-0}" -o "${dest}" ${zstdCompressionExtraArgs:-}
+    if [[ -d "${cargoTargetDir}" ]]; then
+      dynTar \
+        --sort=name \
+        --mtime="@${SOURCE_DATE_EPOCH}" \
+        --owner=0 \
+        --group=0 \
+        --mode=u+w \
+        --numeric-owner \
+        --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
+        -c | zstd "-T${NIX_BUILD_CORES:-0}" -o "${dest}" ${zstdCompressionExtraArgs:-}
+    else
+      echo "'${cargoTargetDir}' does not exist, will NOT output to ${dest}"
+    fi
   )
 }
 

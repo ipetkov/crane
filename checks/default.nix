@@ -487,6 +487,13 @@ onlyDrvs (
         src = ./illegal-bin;
       };
 
+      installCargoArtifactsMissing = myLib.cargoTest {
+        src = ./simple;
+        doCheck = false;
+        cargoArtifacts = null;
+        installCargoArtifactsMode = "use-zstd";
+      };
+
       manyLibs = myLib.buildPackage {
         src = ./with-libs;
         cargoArtifacts = null;
