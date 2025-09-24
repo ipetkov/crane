@@ -70,6 +70,19 @@ let
         (args.nativeBuildInputs or [ ])
         ++ [ cargo-nextest ]
         ++ lib.lists.optional withLlvmCov cargo-llvm-cov;
+
+      # Load bearing prepend here, in case the caller sets `preConfigure = "no newline";`
+      # we don't want to get a syntax error here (given how these are concatenated)
+      preConfigure = ''
+        if [[ -z "''${doCheck:-}" ]]; then
+          echo '#####################################################'
+          echo '##                                                 ##'
+          echo '## doCheck is not set, nextest tests will not run! ##'
+          echo '##                                                 ##'
+          echo '#####################################################'
+        fi
+      ''
+      + (args.preConfigure or "");
     };
 in
 if partitions < 1 then
