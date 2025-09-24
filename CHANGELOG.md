@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `cleanCargoToml` now retains targets' `harness` attribute if defined
 * `cargoTest`, `cargoDocTest`, and `cargoNextest` will log a warning if `doCheck
   = false;`
+* Fix Windows pthreads being added to non-Windows platforms
 
 ## [0.21.0] - 2025-07-19
 
