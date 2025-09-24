@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `removeReferencesToRustToolchainHook` now handles exclusions case
   insensitively
 * `cleanCargoToml` now retains targets' `harness` attribute if defined
+* `cargoTest`, `cargoDocTest`, and `cargoNextest` will log a warning if `doCheck
+  = false;`
 
 ## [0.21.0] - 2025-07-19
 
