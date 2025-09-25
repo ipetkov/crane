@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.21.1] - 2025-09-24
+
 ### Fixed
 * The default dummy source used by `mkDummySrc` now additionally works for the
   `amdgpu` target out of the box
@@ -893,6 +895,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.21.1]: https://github.com/ipetkov/crane/compare/v0.21.0...v0.21.1
 [0.21.0]: https://github.com/ipetkov/crane/compare/v0.20.3...v0.21.0
 [0.20.3]: https://github.com/ipetkov/crane/compare/v0.20.2...v0.20.3
 [0.20.2]: https://github.com/ipetkov/crane/compare/v0.20.1...v0.20.2
