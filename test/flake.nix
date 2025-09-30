@@ -84,7 +84,6 @@
               };
             }
           );
-          myLibWindowsCross = mkLib nixpkgs.legacyPackages.${system}.pkgsCross.mingwW64;
         };
       }
     );
