@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Fixed
+
+* Fix Windows pthreads being added to non-Windows platforms
+
 ## [0.21.1] - 2025-09-24
 
 ### Fixed
