@@ -36,7 +36,7 @@ jobs:
             nixpkgs-override: "--override-input nixpkgs $(./ci/ref-from-lock.sh ./test#nixpkgs-latest-release)"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: cachix/install-nix-action@v31
       with:
         install_url: ${{ matrix.install_url }}
@@ -70,7 +70,7 @@ jobs:
           - trunk
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: cachix/install-nix-action@v31
     - uses: cachix/cachix-action@v16
       with:
@@ -90,7 +90,7 @@ jobs:
       fail-fast: false
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: cachix/install-nix-action@v31
     - uses: cachix/cachix-action@v16
       with:
@@ -119,7 +119,7 @@ jobs:
   lints:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: cachix/install-nix-action@v31
     - name: check formatting
       run: nix fmt -- --ci

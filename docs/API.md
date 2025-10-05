@@ -525,6 +525,7 @@ Create a derivation which will run a `cargo test --doc` invocation in a cargo
 workspace. To run all or any tests for a workspace, consider `cargoTest`.
 
 Except where noted below, all derivation attributes are delegated to
+`mkCargoDerivation`, and can be used to influence its behavior.
 * `buildPhaseCargoCommand` will be set to run `cargo test --profile release` in
   the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
@@ -775,6 +776,7 @@ Create a derivation which will run a `cargo test` invocation in a cargo
 workspace.
 
 Except where noted below, all derivation attributes are delegated to
+`mkCargoDerivation`, and can be used to influence its behavior.
 * `buildPhaseCargoCommand` will be set to run `cargo test --profile release` in
   the workspace.
   - `CARGO_PROFILE` can be set on the derivation to alter which cargo profile is
