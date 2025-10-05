@@ -1,34 +1,32 @@
 {
   lib,
   pkgs,
+  pkgsBuildBuild,
+  pkgsBuildHost,
+  pkgsHostTarget,
 }:
 let
-  nativePkgs = pkgs.pkgsBuildBuild;
   cranePrefix = "__CRANE_EXPORT_";
 in
 stdenvSelector:
 let
-  hostStdenv = stdenvSelector pkgs.pkgsBuildHost;
-  targetStdenv = stdenvSelector pkgs.pkgsHostTarget;
-  chosenStdenv = stdenvSelector pkgs;
-
   varsForPlatform =
-    buildKind: stdenv:
+    buildKind: chosenPkgs:
     let
-      ccPrefix = stdenv.cc.targetPrefix;
-      cargoEnv = stdenv.hostPlatform.rust.cargoEnvVarTarget;
+      chosenStdenv = stdenvSelector chosenPkgs;
+      ccPrefix = chosenStdenv.cc.targetPrefix;
+      cargoEnv = chosenStdenv.hostPlatform.rust.cargoEnvVarTarget;
       # Configure an emulator for the platform (if we need one, and there's one available)
       runnerAvailable =
-        !(stdenv.buildPlatform.canExecute stdenv.hostPlatform)
-        && stdenv.hostPlatform.emulatorAvailable nativePkgs;
+        !(chosenStdenv.buildPlatform.canExecute chosenStdenv.hostPlatform)
+        && chosenStdenv.hostPlatform.emulatorAvailable pkgsBuildBuild;
     in
     # Most non-trivial crates require this, lots of hacks are done for this.
     (lib.optionalAttrs chosenStdenv.hostPlatform.isMinGW {
-      "${cranePrefix}CARGO_TARGET_${cargoEnv}_RUSTFLAGS" =
-        "-L native=${pkgs.pkgsHostTarget.windows.pthreads}/lib";
+      "${cranePrefix}CARGO_TARGET_${cargoEnv}_RUSTFLAGS" = "-L native=${chosenPkgs.windows.pthreads}/lib";
     })
     // (lib.optionalAttrs runnerAvailable {
-      "${cranePrefix}CARGO_TARGET_${cargoEnv}_RUNNER" = stdenv.hostPlatform.emulator nativePkgs;
+      "${cranePrefix}CARGO_TARGET_${cargoEnv}_RUNNER" = chosenStdenv.hostPlatform.emulator pkgsBuildBuild;
     })
     // {
       # Point cargo to the correct linker
@@ -46,25 +44,27 @@ let
       "${cranePrefix}${buildKind}_CXX" = "${ccPrefix}c++";
       "${cranePrefix}${buildKind}_AR" = "${ccPrefix}ar";
     };
+
+  # Host platform is same as what Cargo should build the binary for
+  selectedStdenv = stdenvSelector pkgs;
 in
-lib.optionalAttrs (chosenStdenv.buildPlatform != chosenStdenv.hostPlatform) (
+lib.optionalAttrs (selectedStdenv.buildPlatform != selectedStdenv.hostPlatform) (
   lib.mergeAttrsList [
     {
-      # Set the target we want to build for (= our host platform)
+      # Set the target we want to build for (= Cargo target platform, Nixpkgs host platform)
       # The configureCargoCommonVars setup hook will set CARGO_BUILD_TARGET to this value if the user hasn't specified their own target to use
-      "${cranePrefix}CARGO_BUILD_TARGET" = chosenStdenv.hostPlatform.rust.rustcTarget;
+      "${cranePrefix}CARGO_BUILD_TARGET" = selectedStdenv.hostPlatform.rust.rustcTarget;
 
       # Pull in any compilers we need
       nativeBuildInputs = [
-        hostStdenv.cc
-        targetStdenv.cc
+        (stdenvSelector pkgsBuildHost).cc
+        (stdenvSelector pkgsHostTarget).cc
       ];
     }
 
-    # NOTE: "host" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "build" nixpkgs platform
-    (varsForPlatform "HOST" hostStdenv)
-
-    # NOTE: "target" here isn't the nixpkgs platform; it's a "build kind" corresponding to the "host" nixpkgs platform
-    (varsForPlatform "TARGET" targetStdenv)
+    # NOTE: This is Cargo's host platform (i.e. the platform Cargo runs on) and Nixpkgs's build platform.
+    (varsForPlatform "HOST" pkgsBuildHost)
+    # NOTE: This is Cargo's target platform (i.e. the platform Cargo builds for) and Nixpkgs's host platform.
+    (varsForPlatform "TARGET" pkgsHostTarget)
   ]
 )
