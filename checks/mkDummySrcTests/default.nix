@@ -15,11 +15,6 @@ let
         cp --recursive ${orig_actual} --no-target-directory $out --no-preserve=mode,ownership
         find $out -name Cargo.toml | xargs sed -i"" 's!/nix/store/[^-]\+-dummy\(Build\)\?.rs!cranespecific-dummy.rs!'
       '';
-
-      # 23.05 has remarshal 0.14 which sorts keys by default
-      # starting with version 0.16 ordering is preserved unless
-      # --sort-keys is specified
-      sortKeys = lib.optionalString (lib.strings.versionAtLeast remarshal.version "0.16.0") "--sort-keys";
     in
     runCommand "compare-${name}" { } ''
       echo ${expected} ${actual}
@@ -29,7 +24,7 @@ let
       find ./expected ./actual \
         -name Cargo.toml \
         -exec mv '{}' '{}.bak' \; \
-        -exec ${remarshal}/bin/remarshal ${sortKeys} --if toml -i '{}.bak' --of toml -o '{}' \;
+        -exec ${remarshal}/bin/remarshal --sort-keys --if toml -i '{}.bak' --of toml -o '{}' \;
       find ./expected ./actual -name Cargo.toml.bak -delete
 
       diff -r ./expected ./actual
