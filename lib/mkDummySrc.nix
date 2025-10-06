@@ -192,7 +192,7 @@ let
         dummyText = if isProcMacro cleanedCargoToml then dummyBase else dummyMain;
 
         dummyrs = args.dummyrs or (writeText "dummy.rs" dummyText);
-        dummyBuildScript = args.dummyrs or (writeText "dummyBuild.rs" dummyMain);
+        dummyBuildScript = args.dummyBuildrs or args.dummyrs or (writeText "dummyBuild.rs" dummyMain);
 
         cpDummy = prefix: path: ''
           mkdir -p ${prefix}/${dirOf path}

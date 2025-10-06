@@ -1320,6 +1320,11 @@ build caches. More specifically:
   source files (e.g. enable certain lang features for a given target).
   - Default value: an empty `fn main` declaration and conditionally enabled
     `#![no_std]` if the `target_os` cfg is set to `"none"` or `"uefi"`.
+* `dummyBuildrs`: similar to `dummyrs` but will only be used in place of build
+  scripts
+  - Default value: `dummyrs`, if specified, otherwise, an empty `fn main`
+    declaration and conditionally enabled `#![no_std]` if the `target_os` cfg is
+    set to `"none"` or `"uefi"`.
 * `extraDummyScript`: additional shell script which will be run inside the builder
   verbatim. Useful for customizing what the dummy sources include by running any
   arbitrary commands.

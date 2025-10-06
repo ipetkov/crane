@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-### Fixed
+### Changed
+* `mkDummySrc` now accepts `dummyBuildrs` to customize the dummy source used for
+  build scripts specifically. If not specified, the value of `dummyrs` will be
+  used, otherwise, the existing default dummy build script will be used.
 
+### Fixed
 * Fix Windows pthreads being added to non-Windows platforms when cross compiling
 
 ## [0.21.1] - 2025-09-24
