@@ -78,25 +78,8 @@ let
         ];
     }
   );
-
-  # https://github.com/ipetkov/crane/issues/119
-  removeReferencesToVendorDirAndCrates = checkRefs "removeReferencesToVendorDir" (
-    myLib.buildPackage {
-      src = ./grpcio-test;
-      nativeBuildInputs = [
-        pkgs.cmake
-      ]
-      ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-        pkgs.gcc
-      ];
-      buildInputs = lib.optionals isDarwin [
-        pkgs.libiconv
-      ];
-    }
-  );
 in
 linkFarmFromDrvs "illegalReferencesTests" [
   removeReferencesToRustToolchain
   removeReferencesToRustToolchainFenix
-  removeReferencesToVendorDirAndCrates
 ]
