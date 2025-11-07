@@ -22,8 +22,8 @@ onlyDrvs (
           extensions = [ "llvm-tools" ];
         }
       );
-      x64Linux = pkgs.hostPlatform.system == "x86_64-linux";
-      aarch64Darwin = pkgs.hostPlatform.system == "aarch64-darwin";
+      x64Linux = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
+      aarch64Darwin = pkgs.stdenv.hostPlatform.system == "aarch64-darwin";
     in
     {
       behaviorChangesWithFeatures =
@@ -792,7 +792,7 @@ onlyDrvs (
           expected = mkVendor myLib;
           actual = mkVendor myLibCross;
         in
-        pkgs.runCommandNoCC "vendorIsCrossAgnostic" { } ''
+        pkgs.runCommand "vendorIsCrossAgnostic" { } ''
           if [[ "${expected}" == "${actual}" ]]; then
             touch $out
           else
