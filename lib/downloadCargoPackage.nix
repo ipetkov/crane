@@ -21,7 +21,7 @@ let
     pkgInfo.fetchurlExtraArgs
     // {
       inherit (pkgInfo) url;
-      name = "${name}-${version}";
+      name = "cargo-src-${name}-${version}";
       sha256 = checksum;
     }
   );
