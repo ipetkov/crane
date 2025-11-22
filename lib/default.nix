@@ -146,6 +146,7 @@ let
         inherit internalCrateNameForCleanSource;
       };
 
+      remapPathPrefixHook = callPackage ./setupHooks/remapPathPrefixHook.nix { };
       registryFromDownloadUrl = callPackage ./registryFromDownloadUrl.nix { };
       registryFromGitIndex = callPackage ./registryFromGitIndex.nix { };
       registryFromSparse = callPackage ./registryFromSparse.nix { };
