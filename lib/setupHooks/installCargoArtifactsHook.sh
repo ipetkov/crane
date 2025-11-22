@@ -35,6 +35,7 @@ compressAndInstallCargoArtifactsDir() {
     )
 
     if [[ -d "${cargoTargetDir}" ]]; then
+      # shellcheck disable=SC2086
       dynTar \
         --sort=name \
         --mtime="@${SOURCE_DATE_EPOCH}" \

@@ -9,12 +9,12 @@ configureCargoVendoredDepsHook() {
   # doing and has its own source replacement going on, it can happily
   # ignore the changes we are trying to make!
   if [[ -f "${vendoredDir}/config.toml" ]]; then
-    echo will append ${cargoConfig} with contents of ${vendoredDir}/config.toml
+    echo "will append ${cargoConfig} with contents of ${vendoredDir}/config.toml"
     cat "${vendoredDir}/config.toml" >>"${cargoConfig}"
     return
   fi
 
-  echo setting source replacement config in ${cargoConfig} using vendored directory ${vendoredDir}
+  echo "setting source replacement config in ${cargoConfig} using vendored directory ${vendoredDir}"
   cat >>"${cargoConfig}" <<EOF
 
 [source.crates-io]

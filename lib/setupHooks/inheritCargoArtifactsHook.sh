@@ -90,7 +90,8 @@ inheritCargoArtifacts() {
          done
        ' \;
 
-      local linkCandidates=$(mktemp linkCandidatesXXXX.txt)
+      local linkCandidates
+      linkCandidates="$(mktemp linkCandidatesXXXX.txt)"
       find "${preparedArtifacts}" \
         '(' -path '*/deps/*.rlib' -or -path '*/deps/*.rmeta' ')' \
         -printf "%P\n" \
@@ -100,14 +101,14 @@ inheritCargoArtifacts() {
       cat "${linkCandidates}" \
         | xargs --no-run-if-empty -n1 dirname \
         | sort -u \
-        | (cd "${cargoTargetDir}"; xargs --no-run-if-empty mkdir -p)
+        | (cd "${cargoTargetDir}" || exit 1; xargs --no-run-if-empty mkdir -p)
 
       # Lastly do the actual symlinking
       cat "${linkCandidates}" \
-        | xargs -P ${NIX_BUILD_CORES} -I '##{}##' ln -s "${preparedArtifacts}/##{}##" "${cargoTargetDir}/##{}##"
+        | xargs -P "${NIX_BUILD_CORES:-0}" -I '##{}##' ln -s "${preparedArtifacts}/##{}##" "${cargoTargetDir}/##{}##"
     fi
   else
-    echo unable to copy cargo artifacts, \"${preparedArtifacts}\" looks invalid
+    echo "unable to copy cargo artifacts, \"${preparedArtifacts}\" looks invalid"
     false
   fi
 }

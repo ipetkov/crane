@@ -10,11 +10,11 @@ cargo() {
 # Injects `--profile $CARGO_PROFILE` into a particular cargo invocation
 # if the environment variable is set
 cargoWithProfile() {
-  local profileArgs
+  local profileArgs=()
   if [[ "${CARGO_PROFILE}" == "release" ]]; then
-    profileArgs="--release"
-  else
-    profileArgs="${CARGO_PROFILE:+--profile ${CARGO_PROFILE}}"
+    profileArgs+=("--release")
+  elif [[ -n "${CARGO_PROFILE:-}" ]]; then
+    profileArgs+=("--profile" "${CARGO_PROFILE}")
   fi
-  cargo "${@:1:1}" ${profileArgs} "${@:2}"
+  cargo "${@:1:1}" "${profileArgs[@]}" "${@:2}"
 }
