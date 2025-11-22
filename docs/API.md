@@ -1961,6 +1961,11 @@ have to setup source mapping yourself.
    * This removes the hash part of the store path from the build fingerprint,
      which can be helpful to bypass unnecessary rebuilds resulting from usage of
      e.g. `buildDepsOnly` / `mkDummySrc`
+   * The neutered store paths are restored back to their full "unneutered"
+     counterparts using the `fixupNeuteredRustcRemapPathPrefix` setup hook,
+     which is automatically registered as a `postBuildHook` whenever
+     `configureRustcRemapPathPrefix` decides to apply neutering to a Nix store
+     path 
 
 **Automatic behavior:** runs as a pre-build hook if either `doRemapPathPrefix`
 is set to a non-empty value, or if `doRemapPathPrefix` is *not set* and
