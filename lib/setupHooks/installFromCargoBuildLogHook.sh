@@ -3,11 +3,11 @@ function installFromCargoBuildLog() (
   local log=${2:-${cargoBuildLog:?not defined}}
 
   if ! [ -f "${log}" ]; then
-    echo unable to install, cargo build log does not exist at: ${log}
+    echo "unable to install, cargo build log does not exist at: ${log}"
     false
   fi
 
-  echo searching for bins/libs to install from cargo build log at ${log}
+  echo "searching for bins/libs to install from cargo build log at ${log}"
 
   local logs
   logs=$(@jq@ -R 'fromjson?' <"${log}")
@@ -19,7 +19,9 @@ function installFromCargoBuildLog() (
   local select_non_deps_artifact='select(contains("/deps/artifact/") | not)'
 
   # Only install binaries and libraries from the current workspace as a sanity check
-  local members="$(command cargo metadata --format-version 1 | @jq@ -c '.workspace_members')"
+  local members
+  members="$(command cargo metadata --format-version 1 | @jq@ -c '.workspace_members')"
+  # shellcheck disable=SC2016
   local select_non_test_members='select(.reason == "compiler-artifact" and .profile.test == false)
     | select(.package_id as $pid
       | '"${members}"'
@@ -42,7 +44,7 @@ function installFromCargoBuildLog() (
     mkdir -p "${loc}"
 
     while IFS= read -r to_install; do
-      echo installing ${to_install} in "${loc}"
+      echo "installing ${to_install} in ${loc}"
       cp "${to_install}" "${loc}"
     done
 
@@ -59,7 +61,7 @@ function installFromCargoBuildLog() (
 # we are planning to install (see https://github.com/ipetkov/crane/issues/765). To work around
 # this we'll capture any installables immediately after running and actually install them later
 function postBuildInstallFromCargoBuildLog() (
-  if [ -n "${cargoBuildLog:-}" -a -f "${cargoBuildLog}" ]; then
+  if [ -n "${cargoBuildLog:-}" ] && [ -f "${cargoBuildLog}" ]; then
     installFromCargoBuildLog "${postBuildInstallFromCargoBuildLogOut}" "${cargoBuildLog}"
   else
     cat <<-'EOF'
