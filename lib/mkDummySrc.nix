@@ -332,7 +332,9 @@ let
   # will unpack sources by stripping their prefix (e.g. to something like
   # `/build/whatever/...`) so by copying the portion of the name after the Nix hash,
   # we can consistently unpack to the same path instead of unpacking to something like
-  # `/build/dummy-src/...`).
+  # `/build/dummy-src/...`). This is also required for rustc source remapping to not
+  # trigger unnecessary rebuilds because of build fingerprint mismatches between
+  # `buildDepsOnly` and `buildPackage`.
   sourceName =
     let
       # NB: we just want to get the source's name but not depend on it

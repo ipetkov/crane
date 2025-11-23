@@ -1258,6 +1258,7 @@ input to any other `nativeBuildInputs` specified by the caller:
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
+* `remapPathPrefixHook`
 * `replaceCargoLockHook`
 * `rustc`
 * `rsync`
@@ -1932,6 +1933,45 @@ a temporary location defined by `$postBuildInstallFromCargoBuildLogOut`
 `postBuildInstallFromCargoBuildLog` will be run as a post build hook.
 
 **Required nativeBuildInputs**: assumes `cargo` is available on the `$PATH`
+
+### `craneLib.remapSourcePathPrefixHook`
+
+Defines `configureRustcRemapPathPrefix()` which can be used to set up a source
+map using the [`--remap-path-prefix`] option. The output of the derivation gains
+a dependency on the source code stored within the Nix store, but in return
+debuggers / other tools are able to resolve source file references to the
+correct files.
+
+The option is set by appending to the `CARGO_BUILD_RUSTFLAGS` environment variable,
+meaning it will not override any existing rustc flags you have set. However, the
+option may not be applied if you have set any `rustflags` configuration options
+with higher priority (e.g. target / `cfg()`-specific); in this case you will
+have to setup source mapping yourself.
+
+`configureRustcRemapPathPrefix()` takes three positional arguments:
+1. a path to where the source will map *to*, i.e. the project sources.
+   * If not specified, the value of `$src` will be used, if defined to a
+     non-empty value
+   * Otherwise, an error will be raised
+2. a path to where the source will map *from*, i.e. the current working
+   directory
+   * If not specified, the current working directory will be used
+3. `neuter` if remappings to Nix store paths should be "neutered" as part of the
+   build process (the default behavior)
+   * This removes the hash part of the store path from the build fingerprint,
+     which can be helpful to bypass unnecessary rebuilds resulting from usage of
+     e.g. `buildDepsOnly` / `mkDummySrc`
+   * The neutered store paths are restored back to their full "unneutered"
+     counterparts using the `fixupNeuteredRustcRemapPathPrefix` setup hook,
+     which is automatically registered as a `postBuildHook` whenever
+     `configureRustcRemapPathPrefix` decides to apply neutering to a Nix store
+     path 
+
+**Automatic behavior:** runs as a pre-build hook if either `doRemapPathPrefix`
+is set to a non-empty value, or if `doRemapPathPrefix` is *not set* and
+`dontStrip` is set to a non-empty value
+
+[`--remap-path-prefix`]: https://doc.rust-lang.org/rustc/command-line-arguments.html#--remap-path-prefix-remap-source-names-in-output
 
 ### `craneLib.removeReferencesToRustToolchainHook`
 
