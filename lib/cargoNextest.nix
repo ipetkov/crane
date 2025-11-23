@@ -1,9 +1,7 @@
 {
   cargo-llvm-cov,
   cargo-nextest,
-  rustc,
   lib,
-  stdenv,
   mkCargoDerivation,
   runCommand,
 }:
