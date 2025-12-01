@@ -105,7 +105,7 @@ stdenv.mkDerivation {
         (
           cd "$(dirname "$cargoToml")"
 
-          crateFiles="$(rg --follow --files --ignore-file=<(
+          crateFiles="$(rg -uuu --follow --files --ignore-file=<(
             remarshal -i "$cargoToml" -if toml -of json \
               | jq -r '.package | if has("include") then .include | map("!\(.)" | sub("^!!"; "")) else .exclude // [] end| .[]?'
             echo '!/Cargo.toml'

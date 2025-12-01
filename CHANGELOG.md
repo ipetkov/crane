@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `dontStrip = true` builds, but can otherwise be controlled using
   `doRemapPathPrefix`.
 
+### Fixed
+* Missing files in git dependencies that have a .ignore file
+
 ## [0.21.2] - 2025-11-07
 
 ### Changed
