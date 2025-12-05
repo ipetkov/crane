@@ -13,7 +13,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `doRemapPathPrefix`.
 
 ### Fixed
-* Missing files in git dependencies that have a .ignore file
+* `downloadCargoPackageFromGit` now correctly includes any files listed in a
+  `.ignore` file (but otherwise not listed in `.gitignore`) when unpacking git
+  checkouts.
 
 ## [0.21.2] - 2025-11-07
 
