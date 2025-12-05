@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `dontStrip = true` builds, but can otherwise be controlled using
   `doRemapPathPrefix`.
 
+### Fixed
+* `downloadCargoPackageFromGit` now correctly includes any files listed in a
+  `.ignore` file (but otherwise not listed in `.gitignore`) when unpacking git
+  checkouts.
+
 ## [0.21.2] - 2025-11-07
 
 ### Changed
