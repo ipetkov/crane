@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.21.3] - 2025-12-04
+
 ### Added
 * Add `remapSourcePathPrefixHook`, which can map source code file paths to their
   correct location within the Nix store. By default this hook will run for any
@@ -916,6 +918,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.21.3]: https://github.com/ipetkov/crane/compare/v0.21.2...v0.21.3
 [0.21.2]: https://github.com/ipetkov/crane/compare/v0.21.1...v0.21.2
 [0.21.1]: https://github.com/ipetkov/crane/compare/v0.21.0...v0.21.1
 [0.21.0]: https://github.com/ipetkov/crane/compare/v0.20.3...v0.21.0
