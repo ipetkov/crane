@@ -105,6 +105,9 @@ stdenv.mkDerivation {
         (
           cd "$(dirname "$cargoToml")"
 
+          # NB: we tell ripgrep to ignore any ignore files (via -uuu) since we are manually
+          # applying the includes/excludes defined in Cargo.toml. Since this is a fresh git
+          # checkout, it will not include any files listed in .gitignore anyway!
           crateFiles="$(rg -uuu --follow --files --ignore-file=<(
             remarshal -i "$cargoToml" -if toml -of json \
               | jq -r '.package | if has("include") then .include | map("!\(.)" | sub("^!!"; "")) else .exclude // [] end| .[]?'
