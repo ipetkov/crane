@@ -15,7 +15,7 @@ let
   chosenPython = pkgs.python3;
 in
 craneLib.buildPackage {
-  env.PYO3_PYTHON = "${chosenPython}/bin/python";
+  env.PYO3_PYTHON = chosenPython.interpreter;
   nativeBuildInputs = [
     chosenPython
   ];
