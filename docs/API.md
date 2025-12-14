@@ -135,6 +135,10 @@ to influence its behavior.
 * `checkPhaseCargoCommand`: A command to run during the derivation's check
   phase. Pre and post check hooks will automatically be run.
   - Default value: `"${cargoTestCommand} ${cargoExtraArgs}"`
+* `noCompressDebugSectionsSet`: Controls whether (DWARF) debug sections are
+  compressed via the `remapPathPrefixHook`.
+  - Default value: `''` if the `stdenv.hostPlatform` uses ELF as the execution
+    format, `'1'` otherwise.
 * `doCheck`: whether the derivation's check phase should be run
   - Default value: `true`
 * `dummySrc`: the "dummy" source to use when building this derivation.
