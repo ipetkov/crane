@@ -29,8 +29,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # NB: current latest release of 2.33.0 has bugs
+          - install_url: https://releases.nixos.org/nix/nix-2.31.2/install
             # Latest and greatest release of Nix
-          - install_url: https://nixos.org/nix/install
+          #- install_url: https://nixos.org/nix/install
             # The 25.11 branch ships with Nix 2.31.2
           - install_url: https://releases.nixos.org/nix/nix-2.31.2/install
             nixpkgs-override: "--override-input nixpkgs $(./ci/ref-from-lock.sh ./test#nixpkgs-latest-release)"
