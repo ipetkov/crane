@@ -100,6 +100,11 @@ chosenStdenv.mkDerivation (
     # access. Directory structure should basically follow the output of `cargo vendor`.
     cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps args);
 
+    # compressing debug sections is only supported on elf formats (i.e. not darwin)
+    noCompressDebugSectionsSet =
+      args.noCompressDebugSectionsSet
+        or (lib.optionalString (chosenStdenv.hostPlatform.parsed.kernel.execFormat.name != "elf") "1");
+
     nativeBuildInputs =
       (args.nativeBuildInputs or [ ])
       ++ (crossEnv.nativeBuildInputs or [ ])
