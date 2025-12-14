@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * **Breaking**: dropped compatibility for Nix versions below 2.31.2
 * **Breaking**: dropped compatibility for nixpkgs-25.05
 
+### Fixed
+* `mkCargoDerivation` will now set `noCompressDebugSectionsSet` to disable
+  compressing debug sections (when `remapPathPrefixHook` is active and running)
+  on platforms which do not support it
+
 ## [0.21.3] - 2025-12-04
 
 ### Added
