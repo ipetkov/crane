@@ -38,6 +38,9 @@ jobs:
             nixpkgs-override: "--override-input nixpkgs $(./ci/ref-from-lock.sh ./test#nixpkgs-latest-release)"
     runs-on: ubuntu-latest
     steps:
+    - uses: wimpysworld/nothing-but-nix@v6
+      with:
+        nix-permission-edict: true
     - uses: actions/checkout@v6
     - uses: cachix/install-nix-action@v31
       with:
