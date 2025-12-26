@@ -1940,6 +1940,8 @@ a temporary location defined by `$postBuildInstallFromCargoBuildLogOut`
 
 ### `craneLib.remapSourcePathPrefixHook`
 
+> Note: this hook is not supported when building on Darwin and will do nothing
+
 Defines `configureRustcRemapPathPrefix()` which can be used to set up a source
 map using the [`--remap-path-prefix`] option. The output of the derivation gains
 a dependency on the source code stored within the Nix store, but in return

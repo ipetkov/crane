@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.31.2
 * **Breaking**: dropped compatibility for nixpkgs-25.05
+* `remapPathPrefixHook` is now do nothing when building on Darwin since the
+  current implementation results in validating build caches due to Nix behavior
+  differences between Linux and Darwin.
 
 ### Fixed
 * `mkCargoDerivation` will now set `noCompressDebugSectionsSet` to disable
