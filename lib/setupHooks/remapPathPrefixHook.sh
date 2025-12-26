@@ -1,4 +1,6 @@
 configureRustcRemapPathPrefix() {
+  @isDarwin@
+
   local remapTo="${1:-${src:?not defined}}"
   local remapFrom="${2:-$(pwd)}"
   local doNeuter="${3:-neuter}"
