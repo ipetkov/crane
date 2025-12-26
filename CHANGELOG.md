@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.22.0] - 2025-12-26
+
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.31.2
 * **Breaking**: dropped compatibility for nixpkgs-25.05
@@ -930,6 +932,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.22.0]: https://github.com/ipetkov/crane/compare/v0.21.3...v0.22.0
 [0.21.3]: https://github.com/ipetkov/crane/compare/v0.21.2...v0.21.3
 [0.21.2]: https://github.com/ipetkov/crane/compare/v0.21.1...v0.21.2
 [0.21.1]: https://github.com/ipetkov/crane/compare/v0.21.0...v0.21.1
