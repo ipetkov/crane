@@ -272,10 +272,6 @@ onlyDrvs (
         asdf = 1;
         CARGO_TARGET_DIR = "target/foo";
       };
-      compilesFreshStrip = self.compilesFresh "simple" (myLib.buildPackage) {
-        src = ./simple;
-        dontStrip = true;
-      };
       compilesFreshWorkspace =
         self.compilesFresh
           {
@@ -673,10 +669,6 @@ onlyDrvs (
       simpleNoProfile = myLib.buildPackage {
         src = ./simple;
         CARGO_PROFILE = "";
-      };
-      simpleNoStrip = myLib.buildPackage {
-        src = ./simple;
-        dontStrip = true;
       };
       simpleOnlyTests = myLib.buildPackage {
         src = myLib.cleanCargoSource ./simple-only-tests;
