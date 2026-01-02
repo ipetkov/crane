@@ -135,10 +135,6 @@ to influence its behavior.
 * `checkPhaseCargoCommand`: A command to run during the derivation's check
   phase. Pre and post check hooks will automatically be run.
   - Default value: `"${cargoTestCommand} ${cargoExtraArgs}"`
-* `noCompressDebugSectionsSet`: Controls whether (DWARF) debug sections are
-  compressed via the `remapPathPrefixHook`.
-  - Default value: `''` if the `stdenv.hostPlatform` uses ELF as the execution
-    format, `'1'` otherwise.
 * `doCheck`: whether the derivation's check phase should be run
   - Default value: `true`
 * `dummySrc`: the "dummy" source to use when building this derivation.
@@ -1262,7 +1258,6 @@ input to any other `nativeBuildInputs` specified by the caller:
 * `configureCargoVendoredDepsHook`
 * `inheritCargoArtifactsHook`
 * `installCargoArtifactsHook`
-* `remapPathPrefixHook`
 * `replaceCargoLockHook`
 * `rustc`
 * `rsync`
@@ -1938,9 +1933,17 @@ a temporary location defined by `$postBuildInstallFromCargoBuildLogOut`
 
 **Required nativeBuildInputs**: assumes `cargo` is available on the `$PATH`
 
-### `craneLib.remapSourcePathPrefixHook`
+### `craneLib.remapPathPrefixHook`
 
-> Note: this hook is not supported when building on Darwin and will do nothing
+> Note: this hook's implementation relies on the derivation source path being
+> mounted on the same location between the `buildDepsOnly` and the "real" build.
+> On NixOS, this happens to be something like `/build/${drv.src.name}`, but
+> *outside* of NixOS (e.g. Nix installations on Darwin or any other Linux
+> distro, including things like GitHub Actions installs) this path will look
+> something like `/nix/var/nix/builds/${drv.name}.drv`, where the derivation's
+> name *does differ* on the `buildDepsOnly` build. Because of this, cargo will
+> observe a change in `CARGO_BUILD_RUSTFLAGS` and result in external
+> (dependency) crates being recompiled from scratch!
 
 Defines `configureRustcRemapPathPrefix()` which can be used to set up a source
 map using the [`--remap-path-prefix`] option. The output of the derivation gains

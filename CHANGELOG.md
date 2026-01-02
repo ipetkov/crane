@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* **Breaking**: `mkCargoDerivation` now no longer automatically includes the
+  `remapPathPrefixHook` as a nativeBuildInput. Unfortunately, this hook's
+  implementation will lead to cache invalidation if built on a Nix
+  implementation outside of NixOS (see the API documentation for more details).
+  Thus using this hook is now *opt-in*.
+
 ## [0.22.0] - 2025-12-26
 
 ### Changed
