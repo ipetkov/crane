@@ -10,8 +10,10 @@ let
     [target "name"]       # let cargo manage targets/collisions/etc.
     [target "crate-type"] # some tools may try to inspect crate types (e.g. wasm-pack), retain the
                           # definition to honor the project structure
+    [target "crate_type"]
     [target "proc-macro"] # If we have a proc-macro dependency in the workspace, rustc may try to
                           # compile `proc-macro2` for the target system
+    [target "proc_macro"]
     [target "harness"]    # Controls how tests are compiled and run, which might have implications
                           # on additional scripts which try to run the tests during buildDepsOnly
   ];
@@ -19,9 +21,12 @@ let
   # https://doc.rust-lang.org/cargo/reference/manifest.html
   pathsToKeepDefault = [
     ["build-dependencies"] # We want to build and cache these
+    ["build_dependencies"]
     ["cargo-features"]     # Just in case some special depencency-related features are needed
+    ["cargo_features"]
     ["dependencies"]       # We want build and cache these
     ["dev-dependencies"]   # We want to build and cache these
+    ["dev_dependencies"]
     ["features"]           # Keep this as is, some deps may be compiled with different feature combinations
     ["patch"]              # Configures sources as the project wants
     ["profile"]            # This could influence how dependencies are built/optimized
@@ -35,6 +40,7 @@ let
     ["package" "workspace"]  # Keep project structure as is
     # https://doc.rust-lang.org/cargo/reference/workspaces.html
     ["workspace" "default-members"] # Keep project structure as is
+    ["workspace" "default_members"]
     ["workspace" "exclude"]         # Keep project structure as is
     ["workspace" "dependencies"]    # We want to build and cache these
     ["workspace" "members"]         # Keep project structure as is
