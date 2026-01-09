@@ -849,8 +849,13 @@ craneLib.cleanCargoToml { cargoToml = ./Cargo.toml; }
 #### Input attributes
 * `cargoToml`: a path to a Cargo.toml file
 * `cargoTomlContents`: the contents of a Cargo.toml file as a string
+* `pathsModifier`: a function which is passed the list of paths normally kept
+  in the Cargo.toml file, and is expected to return a modified list of paths.
+  This can be used to further filter or expand which paths are kept in the
+  result.
+  - Default value: `x: x` (the identity function)
 
-At least one of the above attributes must be specified, or an error will be
+At least one of the `cargoToml` and `cargoTomlContents` attributes must be specified, or an error will be
 raised during evaluation.
 
 ### `craneLib.crateNameFromCargoToml`
