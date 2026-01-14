@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-* `cleanCargoToml` can now be customized using the `pathsModifier` argument to
-  either add or remove additional paths to clean from the Cargo.toml file.
+* `cleanCargoToml` can now be customized using the `filter` argument
+* `mkDummySrc` can now pass the `cargoTomlFilter` argument to `cleanCargoToml` as the
+  `filter` argument for convenience
+* `craneLib.filters` exposes two filters `cargoTomlRetainlist` and `cargoTomlDiscardlist` for
+  composition of custom filters for `cleanCargoToml`
 
 ### Changed
 * **Breaking**: `mkCargoDerivation` now no longer automatically includes the
