@@ -1316,7 +1316,7 @@ build caches. More specifically:
   parent directory is named `.cargo`) are kept as-is.
   - Any changes to these files will invalidate the build cache
 * Any files named `Cargo.toml` are reduced via `cleanCargoToml` and the result
-  is kept. Only the following changes will result in invalidating the build
+  is kept. By default only the following changes will result in invalidating the build
   cache:
   - Any changes to listed dependencies
   - Any changes to feature definitions
@@ -1334,6 +1334,8 @@ build caches. More specifically:
 #### Optional attributes
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
+* `cargoTomlFilter`: a filter used to process each path found in each `Cargo.toml`
+  file. Passed in as `craneLib.cleanCargoToml`'s `filter` argument.
 * `dummyrs`: a path to a file which will be used in place of all dummy rust
   files (e.g. `main.rs`, `lib.rs`, etc.). This can be useful to customize dummy
   source files (e.g. enable certain lang features for a given target).
