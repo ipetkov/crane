@@ -89,7 +89,9 @@ let
       cleanCargoSource = callPackage ./cleanCargoSource.nix {
         inherit internalCrateNameForCleanSource;
       };
-      cleanCargoToml = callPackage ./cleanCargoToml.nix { };
+      cleanCargoToml = callPackage ./cleanCargoToml.nix {
+        defaultFilter = self.filters.cargoTomlDiscardlist;
+      };
       configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
       configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
       craneLib = self;
