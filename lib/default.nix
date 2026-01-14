@@ -109,6 +109,11 @@ let
       downloadCargoPackageFromGit = callPackage ./downloadCargoPackageFromGit.nix { };
       filterCargoSources = callPackage ./filterCargoSources.nix { };
 
+      filters = {
+        cargoTomlDiscardlist = callPackage ./filters/cargoTomlDiscardlist.nix { };
+        cargoTomlRetainlist = callPackage ./filters/cargoTomlRetainlist.nix { };
+      };
+
       fileset = {
         cargoTomlAndLock = callPackage ./fileset/cargoTomlAndLock.nix { };
         commonCargoSources = callPackage ./fileset/commonCargoSources.nix { };
