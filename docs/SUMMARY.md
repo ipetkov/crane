@@ -22,6 +22,7 @@
   * [End-to-End Testing](./examples/end-to-end-testing.md)
   * [Building with SQLx](./examples/sqlx.md)
 * [Source filtering and filesets](./source-filtering.md)
+* [Cargo.toml manifest filtering](./manifest-filtering.md)
 * [Local development](./local_development.md)
 * [Custom cargo commands](./custom_cargo_commands.md)
 * [Customizing builds](./customizing_builds.md)
