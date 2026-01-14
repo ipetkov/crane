@@ -118,6 +118,9 @@ path = "my/local/bar3"
 [replace."foo2:0.1.0"]
 git = "https://github.com/example/foo2"
 
+[some-unrecognized-object]
+some-unrecognized-field = "some value"
+
 [target]
 [target."cfg(target_arch = \"x86\")".dependencies]
 garply = "8"
