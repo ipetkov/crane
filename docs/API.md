@@ -1116,6 +1116,22 @@ cleanSourceWith {
 }
 ```
 
+### `craneLib.filters.cargoTomlDiscardlist`
+
+`cargoTomlDiscardlist :: [string] -> bool`
+
+A filter function which can be passed to `craneLib.cleanCargoToml` to omit
+common Cargo.toml attributes which are irrelevant for a minimal build of a
+package's dependencies.
+
+### `craneLib.filters.cargoTomlRetainlist`
+
+`cargoTomlRetainlist :: [string] -> bool`
+
+A filter function which can be passed to `craneLib.cleanCargoToml` to only
+retain common Cargo.toml attributes which are relevant for a minimal build of
+a package's dependencies.
+
 ### `craneLib.fileset.cargoTomlAndLock`
 
 `cargoTomlAndLock :: path -> fileset`
