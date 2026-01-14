@@ -142,9 +142,14 @@ let
         # NB: do not use string interpolation or toString or else the path checks won't work
         shallowJoinPath = rest: p + "/../${rest}";
 
-        cleanedCargoToml = cleanCargoToml {
-          cargoToml = p;
-        };
+        cleanedCargoToml = cleanCargoToml (
+          {
+            cargoToml = p;
+          }
+          // lib.optionalAttrs (args ? cargoTomlFilter) {
+            filter = args.cargoTomlFilter;
+          }
+        );
 
         dummyBase = ''
           #![allow(clippy::all)]
