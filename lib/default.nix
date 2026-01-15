@@ -90,7 +90,7 @@ let
         inherit internalCrateNameForCleanSource;
       };
       cleanCargoToml = callPackage ./cleanCargoToml.nix {
-        defaultFilter = self.filters.cargoTomlConservative;
+        cargoTomlFilterDefault = self.filters.cargoTomlConservative;
       };
       configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
       configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
