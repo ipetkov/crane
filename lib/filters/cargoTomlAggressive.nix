@@ -53,6 +53,6 @@ let
   ++ (pathsToKeepPerTarget "test")
   ++ (pathsToKeepPerTarget "bench");
 
-  cargoTomlRetainlist = path: builtins.any (lib.lists.hasPrefix path) pathsToKeep;
+  cargoTomlAggressive = path: builtins.any (lib.lists.hasPrefix path) pathsToKeep;
 in
-cargoTomlRetainlist
+cargoTomlAggressive

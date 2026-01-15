@@ -3,7 +3,7 @@
 }:
 
 let
-  # See ./cargoTomlRetainlist.nix for the fields intentionally retained with explanations.
+  # See ./cargoTomlAggressive.nix for the fields intentionally retained with explanations.
   # This should be the complement of that list.
 
   pathsToRemovePerTarget = target: [
@@ -57,6 +57,6 @@ let
   ++ (pathsToRemovePerTarget "test")
   ++ (pathsToRemovePerTarget "bench");
 
-  cargoTomlDiscardlist = path: !builtins.any (p: lib.lists.hasPrefix p path) pathsToRemove;
+  cargoTomlConservative = path: !builtins.any (p: lib.lists.hasPrefix p path) pathsToRemove;
 in
-cargoTomlDiscardlist
+cargoTomlConservative

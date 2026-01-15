@@ -19,9 +19,9 @@ resolution using `craneLib.cleanCargoToml`.
 It is possible to customize this filter using `craneLib.mkDummySrc`'s
 `cargoManifestFilter` argument. `crane` provides two filters out of the box,
 which you can use as-is or compose with your own filters:
-- `craneLib.filters.cargoTomlDiscardlist`: omits a predefined list of irrelevant
+- `craneLib.filters.cargoTomlConservative`: omits a predefined list of irrelevant
   fields from the manifests. It keeps any unknown fields. (Default)
-- `craneLib.filters.cargoTomlRetainlist`: only keeps a predefined list of
+- `craneLib.filters.cargoTomlAggressive`: only keeps a predefined list of
   relevant fields in the manifests. It omits any unknown fields.
 
 To use these in `craneLib.buildDepsOnly`, you can do the following:
@@ -34,7 +34,7 @@ craneLib.buildDepsOnly {
     # other arguments ...
     dummySrc = craneLib.mkDummySrc {
       inherit src;
-      cargoManifestFilter = craneLib.filters.cargoTomlRetainlist;
+      cargoManifestFilter = craneLib.filters.cargoTomlAggressive;
     };
 }
 ```
@@ -51,7 +51,7 @@ let
     lib.lists.hasPrefix path ["workspace" "metadata" "my-tool"];
   cargoTomlFilter = path:
     cargoTomlMyTool path ||
-    craneLib.filters.cargoTomlRetainlist path;
+    craneLib.filters.cargoTomlAggressive path;
 in
 craneLib.mkDummySrc {
   inherit src;
@@ -69,7 +69,7 @@ let
     !lib.lists.hasPrefix ["package" "version"] path;
   cargoTomlFilter = path:
     cargoTomlStripVersion path &&
-    craneLib.filters.cargoTomlRetainlist path;
+    craneLib.filters.cargoTomlAggressive path;
 in
 craneLib.mkDummySrc {
   inherit src;
@@ -77,9 +77,9 @@ craneLib.mkDummySrc {
 };
 ```
 
-### `cargoTomlDiscardlist` vs `cargoTomlRetainlist`
+### `filters.cargoTomlConservative` vs `filters.cargoTomlAggressive`
 
-`craneLib.filters.cargoTomlRetainlist` is stricuter and will result in less
+`craneLib.filters.cargoTomlAggressive` is stricuter and will result in less
 rebuilds, but it comes with the following caveats:
 - It will omit any unknown fields, which may be relevant if you are using
   custom tools beyond `cargo`. You can include those fields by composing your
@@ -87,5 +87,5 @@ rebuilds, but it comes with the following caveats:
 - If you add a field to your `Cargo.toml` which was just recently added to
   the manifest specification, you need to keep your `crane` version up to date
   to ensure that the field is included in the retainlist. With
-  `cargoTomlDiscardlist` this is not an issue, as unknown fields are kept by
+  `cargoTomlConservative` this is not an issue, as unknown fields are kept by
   default.

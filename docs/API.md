@@ -851,7 +851,7 @@ craneLib.cleanCargoToml { cargoToml = ./Cargo.toml; }
 * `cargoTomlContents`: the contents of a Cargo.toml file as a string
 * `filter`: a filter (`[String] -> Boolean`) which is passed each path found in the Cargo.toml
   file, and is expected to return whether that path should be kept in the result.
-  - Default value: `craneLib.filters.cargoTomlDiscardlist`
+  - Default value: `craneLib.filters.cargoTomlConservative`
 
 At least one of the `cargoToml` and `cargoTomlContents` attributes must be specified, or an error will be
 raised during evaluation.
@@ -1114,21 +1114,22 @@ cleanSourceWith {
 }
 ```
 
-### `craneLib.filters.cargoTomlDiscardlist`
+### `craneLib.filters.cargoTomlAggressive`
 
-`cargoTomlDiscardlist :: [string] -> bool`
-
-A filter function which can be passed to `craneLib.cleanCargoToml` to omit
-common Cargo.toml attributes which are irrelevant for a minimal build of a
-package's dependencies.
-
-### `craneLib.filters.cargoTomlRetainlist`
-
-`cargoTomlRetainlist :: [string] -> bool`
+`cargoTomlAggressive :: [string] -> bool`
 
 A filter function which can be passed to `craneLib.cleanCargoToml` to only
 retain common Cargo.toml attributes which are relevant for a minimal build of
-a package's dependencies.
+a package's dependencies. It strips out unknown attributes by default.
+
+
+### `craneLib.filters.cargoTomlConservative`
+
+`cargoTomlConservative :: [string] -> bool`
+
+A filter function which can be passed to `craneLib.cleanCargoToml` to omit
+common Cargo.toml attributes which are irrelevant for a minimal build of a
+package's dependencies. It keeps unknown attributes by default.
 
 ### `craneLib.fileset.cargoTomlAndLock`
 
