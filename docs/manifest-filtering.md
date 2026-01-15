@@ -17,7 +17,7 @@ further filters the manifests to only include the fields relevant to dependency
 resolution using `craneLib.cleanCargoToml`.
 
 It is possible to customize this filter using `craneLib.mkDummySrc`'s
-`cargoManifestFilter` argument. `crane` provides two filters out of the box,
+`cleanCargoTomlFilter` argument. `crane` provides two filters out of the box,
 which you can use as-is or compose with your own filters:
 - `craneLib.filters.cargoTomlConservative`: omits a predefined list of irrelevant
   fields from the manifests. It keeps any unknown fields. (Default)
@@ -34,7 +34,7 @@ craneLib.buildDepsOnly {
     # other arguments ...
     dummySrc = craneLib.mkDummySrc {
       inherit src;
-      cargoManifestFilter = craneLib.filters.cargoTomlAggressive;
+      cleanCargoTomlFilter = craneLib.filters.cargoTomlAggressive;
     };
 }
 ```
@@ -55,7 +55,7 @@ let
 in
 craneLib.mkDummySrc {
   inherit src;
-  cargoManifestFilter = cargoTomlFilter;
+  cleanCargoTomlFilter = cargoTomlFilter;
 };
 ```
 
@@ -73,7 +73,7 @@ let
 in
 craneLib.mkDummySrc {
   inherit src;
-  cargoManifestFilter = cargoTomlFilter;
+  cleanCargoTomlFilter = cargoTomlFilter;
 };
 ```
 

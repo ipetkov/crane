@@ -1335,7 +1335,7 @@ build caches. More specifically:
 #### Optional attributes
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
-* `cargoTomlFilter`: a filter used to process each path found in each `Cargo.toml`
+* `cleanCargoTomlFilter`: a filter used to process each path found in each `Cargo.toml`
   file. Passed in as `craneLib.cleanCargoToml`'s `filter` argument.
 * `dummyrs`: a path to a file which will be used in place of all dummy rust
   files (e.g. `main.rs`, `lib.rs`, etc.). This can be useful to customize dummy

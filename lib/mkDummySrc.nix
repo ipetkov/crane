@@ -146,8 +146,8 @@ let
           {
             cargoToml = p;
           }
-          // lib.optionalAttrs (args ? cargoTomlFilter) {
-            filter = args.cargoTomlFilter;
+          // lib.optionalAttrs (args ? cleanCargoTomlFilter) {
+            filter = args.cleanCargoTomlFilter;
           }
         );
 

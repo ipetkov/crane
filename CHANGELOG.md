@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 * `cleanCargoToml` can now be customized using the `filter` argument
-* `mkDummySrc` can now pass the `cargoTomlFilter` argument to `cleanCargoToml` as the
+* `mkDummySrc` can now pass the `cleanCargoTomlFilter` argument to `cleanCargoToml` as the
   `filter` argument for convenience
 * `craneLib.filters` exposes two filters `cargoTomlAggressive` and `cargoTomlConservative` for
   composition of custom filters for `cleanCargoToml`
