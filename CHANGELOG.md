@@ -19,8 +19,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   implementation will lead to cache invalidation if built on a Nix
   implementation outside of NixOS (see the API documentation for more details).
   Thus using this hook is now *opt-in*.
-* **Breaking**: `cleanCargoToml` now removes unknown fields
-  (went from paths to remove to paths to keep)
 
 ## [0.22.0] - 2025-12-26
 
