@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `craneLib.filters` exposes two filters `cargoTomlAggressive` and `cargoTomlConservative` for
   composition of custom filters for `cleanCargoToml`
 
+## [0.23.0] - 2026-01-13
+
 ### Changed
 * **Breaking**: `mkCargoDerivation` now no longer automatically includes the
   `remapPathPrefixHook` as a nativeBuildInput. Unfortunately, this hook's
@@ -946,6 +948,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.23.0]: https://github.com/ipetkov/crane/compare/v0.22.0...v0.23.0
 [0.22.0]: https://github.com/ipetkov/crane/compare/v0.21.3...v0.22.0
 [0.21.3]: https://github.com/ipetkov/crane/compare/v0.21.2...v0.21.3
 [0.21.2]: https://github.com/ipetkov/crane/compare/v0.21.1...v0.21.2
