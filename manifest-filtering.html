@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Cargo.toml manifest filtering - crane</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A Nix library for building cargo projects.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "ayu";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">crane</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane/edit/master/docs/./manifest-filtering.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="cargotoml-manifest-filtering"><a class="header" href="#cargotoml-manifest-filtering">Cargo.toml manifest filtering</a></h2>
+<p>As described in <a href="./source-filtering.html">Source filtering</a>, it is important to
+filter the source files used in a Nix build to reduce unnecessary rebuilds.</p>
+<p><code>craneLib.mkDummySrc</code>, which is used for <code>craneLib.buildDepsOnly</code>, takes this
+to the extreme by only including:</p>
+<ol>
+<li>the <code>Cargo.lock</code> file</li>
+<li>any <code>.cargo/config.toml</code> files</li>
+<li>any <code>Cargo.toml</code> files
+to ensure that the deps are only rebuilt when really necessary.</li>
+</ol>
+<p>However, the <code>Cargo.toml</code> manifests can still include a lot of fields which are
+irrelevant to dependency resolution, such as documentation links, authorship
+information, and so on. To avoid rebuilds due to changes in these fields <code>crane</code>
+further filters the manifests to only include the fields relevant to dependency
+resolution using <code>craneLib.cleanCargoToml</code>.</p>
+<p>It is possible to customize this filter using <code>craneLib.mkDummySrc</code>'s
+<code>cleanCargoTomlFilter</code> argument. <code>crane</code> provides two filters out of the box,
+which you can use as-is or compose with your own filters:</p>
+<ul>
+<li><code>craneLib.filters.cargoTomlConservative</code>: omits a predefined list of irrelevant
+fields from the manifests. It keeps any unknown fields. (Default)</li>
+<li><code>craneLib.filters.cargoTomlAggressive</code>: only keeps a predefined list of
+relevant fields in the manifests. It omits any unknown fields.</li>
+</ul>
+<p>To use these in <code>craneLib.buildDepsOnly</code>, you can do the following:</p>
+<pre><code class="language-nix">let
+  src = craneLib.path ./.;
+in
+craneLib.buildDepsOnly {
+    # other arguments ...
+    dummySrc = craneLib.mkDummySrc {
+      inherit src;
+      cleanCargoTomlFilter = craneLib.filters.cargoTomlAggressive;
+    };
+}
+</code></pre>
+<p>The filters might omit fields that are actually relevant to your project, for
+example, if you are using custom tools beyond <code>cargo</code>. In that case, you may
+want to compose your own filter on top of them to retain those:</p>
+<pre><code class="language-nix">let
+  src = craneLib.path ./.;
+  # keep all workspace.metadata.my-tool.* fields
+  cargoTomlMyTool = path:
+    lib.lists.hasPrefix path ["workspace" "metadata" "my-tool"];
+  cargoTomlFilter = path:
+    cargoTomlMyTool path ||
+    craneLib.filters.cargoTomlAggressive path;
+in
+craneLib.mkDummySrc {
+  inherit src;
+  cleanCargoTomlFilter = cargoTomlFilter;
+};
+</code></pre>
+<p>Additionally you can also remove further fields:</p>
+<pre><code class="language-nix">let
+  src = craneLib.path ./.;
+  # also remove the package.version field (and any fields nested beneath it)
+  cargoTomlStripVersion = path:
+    !lib.lists.hasPrefix ["package" "version"] path;
+  cargoTomlFilter = path:
+    cargoTomlStripVersion path &amp;&amp;
+    craneLib.filters.cargoTomlAggressive path;
+in
+craneLib.mkDummySrc {
+  inherit src;
+  cleanCargoTomlFilter = cargoTomlFilter;
+};
+</code></pre>
+<h3 id="filterscargotomlconservative-vs-filterscargotomlaggressive"><a class="header" href="#filterscargotomlconservative-vs-filterscargotomlaggressive"><code>filters.cargoTomlConservative</code> vs <code>filters.cargoTomlAggressive</code></a></h3>
+<p><code>craneLib.filters.cargoTomlAggressive</code> is stricter and will result in fewer
+rebuilds, but it comes with the following caveats:</p>
+<ul>
+<li>It will omit any unknown fields, which may be relevant if you are using
+custom tools beyond <code>cargo</code>. You can include those fields by composing your
+own filter on top of it, as shown above.</li>
+<li>If you add a field to your <code>Cargo.toml</code> which was just recently added to
+the manifest specification, you need to keep your <code>crane</code> version up to date
+to ensure that the field is retained by the filter. With
+<code>cargoTomlConservative</code> this is not an issue, as unknown fields are kept by
+default.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="source-filtering.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="local_development.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="source-filtering.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="local_development.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
