@@ -79,13 +79,13 @@ craneLib.mkDummySrc {
 
 ### `filters.cargoTomlConservative` vs `filters.cargoTomlAggressive`
 
-`craneLib.filters.cargoTomlAggressive` is stricuter and will result in less
+`craneLib.filters.cargoTomlAggressive` is stricter and will result in fewer
 rebuilds, but it comes with the following caveats:
 - It will omit any unknown fields, which may be relevant if you are using
   custom tools beyond `cargo`. You can include those fields by composing your
   own filter on top of it, as shown above.
 - If you add a field to your `Cargo.toml` which was just recently added to
   the manifest specification, you need to keep your `crane` version up to date
-  to ensure that the field is included in the retainlist. With
+  to ensure that the field is retained by the filter. With
   `cargoTomlConservative` this is not an issue, as unknown fields are kept by
   default.

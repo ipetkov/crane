@@ -1118,17 +1118,16 @@ cleanSourceWith {
 
 `cargoTomlAggressive :: [string] -> bool`
 
-A filter function which can be passed to `craneLib.cleanCargoToml` to only
-retain common Cargo.toml attributes which are relevant for a minimal build of
-a package's dependencies. It strips out unknown attributes by default.
-
+A filter function which can be passed to `craneLib.cleanCargoToml` to omit all
+`Cargo.toml` attributes except a small set which are necessary for a minimal
+build of a package's dependencies. It strips out unknown attributes by default.
 
 ### `craneLib.filters.cargoTomlConservative`
 
 `cargoTomlConservative :: [string] -> bool`
 
 A filter function which can be passed to `craneLib.cleanCargoToml` to omit
-common Cargo.toml attributes which are irrelevant for a minimal build of a
+common `Cargo.toml` attributes which are irrelevant for a minimal build of a
 package's dependencies. It keeps unknown attributes by default.
 
 ### `craneLib.fileset.cargoTomlAndLock`
