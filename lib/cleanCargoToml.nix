@@ -1,123 +1,35 @@
-{ }:
-
+{
+  filters,
+  lib,
+}:
 let
-  # https://doc.rust-lang.org/cargo/reference/manifest.html#the-package-section
-  cleanPackage =
-    package:
-    removeAttrs package [
-      "authors"
-      "autobenches"
-      "autobins"
-      "autoexamples"
-      "autotests"
-      "build"
-      "categories"
-      "default-run"
-      "default_run"
-      "description"
-      "documentation"
-      "exclude"
-      "homepage"
-      "include"
-      "keywords"
-      "license-file"
-      "license_file"
-      "license"
-      "links"
-      "metadata"
-      "publish"
-      "readme"
-      "repository"
-      "rust-version"
-      "rust_version"
-
-      # Additional package attributes which are expressly kept in
-      # (but listed here for audit purposes)
-      # "edition"      # Influences cargo behavior
-      # "name"         # Required
-      # "resolver"     # Influences cargo behavior when edition != 2021
-      # "version"      # Required
-      # "workspace"    # Keep project structure as is
-    ];
-
-  # https://doc.rust-lang.org/cargo/reference/cargo-targets.html#configuring-a-target
-  cleanTargetCommon =
-    target:
-    removeAttrs target [
-      "test"
-      "doctest"
-      "bench"
-      "doc"
-      "plugin"
-      "required-features" # only affects selection of a target, does not actually enable any features
-      "required_features" # only affects selection of a target, does not actually enable any features
-
-      # Additional package attributes which are expressly kept in
-      # (but listed here for audit purposes)
-      # "edition"           # Influences cargo behavior
-      # "path"              # maintain project structure
-      # "name"              # let cargo manage targets/collisions/etc.
-      # "crate-type"        # some tools may try to inspect crate types (e.g. wasm-pack), retain the
-      #                     # definition to honor the project structure
-      # "proc-macro"        # If we have a proc-macro dependency in the workspace, rustc may try to
-      #                     # compile `proc-macro2` for the target system
-      # "harness"           # Controls how tests are compiled and run, which might have implications
-      #                     # on additional scripts which try to run the tests during buildDepsOnly
-    ];
-
-  cleanWorkspace =
-    workspace:
-    removeAttrs workspace [
-      "lints"
-      "metadata"
-
-      # Additional package attributes which are expressly kept in
-      # (but listed here for audit purposes)
-      # "default-members"
-      # "exclude"
-      # "dependencies"
-      # "members"
-      # "package"
-      # "resolver"
-    ];
-
-  # https://doc.rust-lang.org/cargo/reference/manifest.html
-  cleanCargoToml =
-    parsed:
-    let
-      safeClean =
-        f: attr:
-        if builtins.hasAttr attr parsed then { ${attr} = f (builtins.getAttr attr parsed); } else { };
-
-      safeCleanList = f: safeClean (map f);
-
-      topLevelCleaned = removeAttrs parsed [
-        "badges" # Badges to display on a registry.
-        "lints" # Only applied to local sources, which we need to rebuild anyway
-
-        # Top level attributes intentionally left in place:
-        # "build-dependencies" # we want to build and cache these
-        # "cargo-features"     # just in case some special depencency-related features are needed
-        # "dependencies"       # we want build and cache these
-        # "dev-dependencies"   # we want to build and cache these
-        # "features"           # keep this as is, some deps may be compiled with different feature combinations
-        # "patch"              # configures sources as the project wants
-        # "profile"            # this could influence how dependencies are built/optimized
-        # "replace"            # (deprecated) configures sources as the project wants
-        # "target"             # we want to build and cache these
-      ];
-    in
-    topLevelCleaned
-    // (safeClean cleanPackage "package")
-    // (safeClean cleanTargetCommon "lib")
-    // (safeClean cleanWorkspace "workspace")
-    // (safeCleanList cleanTargetCommon "bench")
-    // (safeCleanList cleanTargetCommon "bin")
-    // (safeCleanList cleanTargetCommon "example")
-    // (safeCleanList cleanTargetCommon "test");
+  # Based on lib.filterAttrsRecursive, but
+  # - also processes lists
+  # - passes the full path to the filter function
+  filterData' =
+    pred: path: val:
+    if builtins.isAttrs val then
+      builtins.listToAttrs (
+        builtins.concatMap (
+          name:
+          let
+            v = val.${name};
+            p = path ++ [ name ];
+          in
+          if pred p then [ (lib.nameValuePair name (filterData' pred p v)) ] else [ ]
+        ) (builtins.attrNames val)
+      )
+    else if builtins.isList val then
+      # Keep all list elements but filter their contents.
+      builtins.map (filterData' pred path) val
+    else
+      val;
+  filterData = pred: val: filterData' pred [ ] val;
 in
 {
   cargoToml ? throw "either cargoToml or cargoTomlContents must be specified",
   cargoTomlContents ? builtins.readFile cargoToml,
+  # ([String] -> Boolean)
+  cleanCargoTomlFilter ? filters.cargoTomlDefault,
 }:
-cleanCargoToml (builtins.fromTOML cargoTomlContents)
+filterData cleanCargoTomlFilter (builtins.fromTOML cargoTomlContents)
