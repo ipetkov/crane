@@ -147,7 +147,7 @@ let
             cargoToml = p;
           }
           // lib.optionalAttrs (args ? cleanCargoTomlFilter) {
-            filter = args.cleanCargoTomlFilter;
+            inherit (args) cleanCargoTomlFilter;
           }
         );
 

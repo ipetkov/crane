@@ -834,7 +834,8 @@ Cleans all definitions from a Cargo.toml file which are irrelevant for a
 minimal build of a package's dependencies. See `mkDummySrc` for more information
 on how the result is applied.
 
-In general, the following types of attributes are kept from the original input:
+In general, the default behavior is that the following types of attributes are
+kept from the original input:
 * basic package definitions (like name and version)
 * dependency definitions
 * feature definitions
@@ -849,9 +850,10 @@ craneLib.cleanCargoToml { cargoToml = ./Cargo.toml; }
 #### Input attributes
 * `cargoToml`: a path to a Cargo.toml file
 * `cargoTomlContents`: the contents of a Cargo.toml file as a string
-* `filter`: a filter (`[String] -> Boolean`) which is passed each path found in the Cargo.toml
-  file, and is expected to return whether that path should be kept in the result.
-  - Default value: `craneLib.filters.cargoTomlConservative`
+* `cleanCargoTomlFilter`: a filter (`[String] -> Boolean`) which is passed each
+  path found in the Cargo.toml file, and is expected to return whether that path
+  should be kept in the result.
+  - Default value: `craneLib.filters.cargoTomlDefault`
 
 At least one of the `cargoToml` and `cargoTomlContents` attributes must be specified, or an error will be
 raised during evaluation.
@@ -1342,7 +1344,7 @@ build caches. More specifically:
 * `cargoLock`: a path to a Cargo.lock file
   - Default value: `src + /Cargo.lock`
 * `cleanCargoTomlFilter`: a filter used to process each path found in each `Cargo.toml`
-  file. Passed in as `craneLib.cleanCargoToml`'s `filter` argument.
+  file. Passed down to `craneLib.cleanCargoToml` if provided.
 * `dummyrs`: a path to a file which will be used in place of all dummy rust
   files (e.g. `main.rs`, `lib.rs`, etc.). This can be useful to customize dummy
   source files (e.g. enable certain lang features for a given target).
