@@ -1068,18 +1068,6 @@ any crates it contains for vendoring.
 * `name`: set to `"cargo-git"`
 * `src`: the git repo checkout, as determined by the input parameters
 
-### `craneLib.findCargoFiles`
-
-`findCargoFiles :: path -> set of lists`
-
-Given a path, recursively search it for any `Cargo.toml`, `.cargo/config` or
-`.cargo/config.toml` files.
-
-```nix
-craneLib.findCargoFiles ./src
-# { cargoTomls = [ "..." ]; cargoConfigs = [ "..." ]; }
-```
-
 ### `craneLib.filterCargoSources`
 
 `filterCargoSources :: path -> string -> bool`
@@ -1113,22 +1101,6 @@ cleanSourceWith {
   name = "source"; # Be reproducible, regardless of the directory name
 }
 ```
-
-### `craneLib.filters.cargoTomlAggressive`
-
-`cargoTomlAggressive :: [string] -> bool`
-
-A filter function which can be passed to `craneLib.cleanCargoToml` to omit all
-`Cargo.toml` attributes except a small set which are necessary for a minimal
-build of a package's dependencies. It strips out unknown attributes by default.
-
-### `craneLib.filters.cargoTomlConservative`
-
-`cargoTomlConservative :: [string] -> bool`
-
-A filter function which can be passed to `craneLib.cleanCargoToml` to omit
-common `Cargo.toml` attributes which are irrelevant for a minimal build of a
-package's dependencies. It keeps unknown attributes by default.
 
 ### `craneLib.fileset.cargoTomlAndLock`
 
@@ -1170,6 +1142,34 @@ A [fileset] helper which will only include `*.rs` files from the specified path.
 `toml :: path -> fileset`
 
 A [fileset] helper which will only include `*.toml` files from the specified path.
+
+### `craneLib.filters.cargoTomlAggressive`
+
+`cargoTomlAggressive :: [string] -> bool`
+
+A filter function which can be passed to `craneLib.cleanCargoToml` to omit all
+`Cargo.toml` attributes except a small set which are necessary for a minimal
+build of a package's dependencies. It strips out unknown attributes by default.
+
+### `craneLib.filters.cargoTomlConservative`
+
+`cargoTomlConservative :: [string] -> bool`
+
+A filter function which can be passed to `craneLib.cleanCargoToml` to omit
+common `Cargo.toml` attributes which are irrelevant for a minimal build of a
+package's dependencies. It keeps unknown attributes by default.
+
+### `craneLib.findCargoFiles`
+
+`findCargoFiles :: path -> set of lists`
+
+Given a path, recursively search it for any `Cargo.toml`, `.cargo/config` or
+`.cargo/config.toml` files.
+
+```nix
+craneLib.findCargoFiles ./src
+# { cargoTomls = [ "..." ]; cargoConfigs = [ "..." ]; }
+```
 
 ### `craneLib.mkCargoDerivation`
 
