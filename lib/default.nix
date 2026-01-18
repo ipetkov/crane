@@ -112,7 +112,7 @@ let
       filters = {
         cargoTomlAggressive = callPackage ./filters/cargoTomlAggressive.nix { };
         cargoTomlConservative = callPackage ./filters/cargoTomlConservative.nix { };
-        cargoTomlFilterDefault = self.filters.cargoTomlConservative;
+        cargoTomlDefault = self.filters.cargoTomlConservative;
       };
 
       fileset = {

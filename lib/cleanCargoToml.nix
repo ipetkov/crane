@@ -1,6 +1,6 @@
 {
+  filters,
   lib,
-  cargoTomlFilterDefault,
 }:
 let
   # Based on lib.filterAttrsRecursive, but
@@ -30,6 +30,6 @@ in
   cargoToml ? throw "either cargoToml or cargoTomlContents must be specified",
   cargoTomlContents ? builtins.readFile cargoToml,
   # ([String] -> Boolean)
-  filter ? cargoTomlFilterDefault,
+  filter ? filters.cargoTomlDefault,
 }:
 filterData filter (builtins.fromTOML cargoTomlContents)

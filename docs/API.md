@@ -1159,9 +1159,9 @@ A filter function which can be passed to `craneLib.cleanCargoToml` to omit
 common `Cargo.toml` attributes which are irrelevant for a minimal build of a
 package's dependencies. It keeps unknown attributes by default.
 
-### `craneLib.filters.cargoTomlFilterDefault`
+### `craneLib.filters.cargoTomlDefault`
 
-`cargoTomlFilterDefault :: [string] -> bool`
+`cargoTomlDefault :: [string] -> bool`
 
 The default filter applied by `cleanCargoToml`. Currently corresponds to
 `craneLib.filters.cargoTomlConservative`.
