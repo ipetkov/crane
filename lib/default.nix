@@ -89,9 +89,7 @@ let
       cleanCargoSource = callPackage ./cleanCargoSource.nix {
         inherit internalCrateNameForCleanSource;
       };
-      cleanCargoToml = callPackage ./cleanCargoToml.nix {
-        cargoTomlFilterDefault = self.filters.cargoTomlConservative;
-      };
+      cleanCargoToml = callPackage ./cleanCargoToml.nix { };
       configureCargoCommonVarsHook = callPackage ./setupHooks/configureCargoCommonVars.nix { };
       configureCargoVendoredDepsHook = callPackage ./setupHooks/configureCargoVendoredDeps.nix { };
       craneLib = self;
@@ -112,8 +110,9 @@ let
       filterCargoSources = callPackage ./filterCargoSources.nix { };
 
       filters = {
-	cargoTomlConservative = callPackage ./filters/cargoTomlConservative.nix { };
-	cargoTomlAggressive = callPackage ./filters/cargoTomlAggressive.nix { };
+        cargoTomlAggressive = callPackage ./filters/cargoTomlAggressive.nix { };
+        cargoTomlConservative = callPackage ./filters/cargoTomlConservative.nix { };
+        cargoTomlFilterDefault = self.filters.cargoTomlConservative;
       };
 
       fileset = {
