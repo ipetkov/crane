@@ -136,7 +136,12 @@
           inherit system;
         };
 
-        formatter = pkgs.nixfmt-tree;
+        formatter = pkgs.nixfmt-tree.override {
+          settings.excludes = [
+            "lib/filters/cargoTomlAggressive.nix"
+            "lib/filters/cargoTomlConservative.nix"
+          ];
+        };
 
         myLib = mkLib pkgs;
       in
