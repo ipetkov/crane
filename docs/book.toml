@@ -1,7 +1,6 @@
 [book]
 authors = ["Ivan Petkov"]
 language = "en"
-multilingual = false
 src = "."
 title = "crane"
 description = "A Nix library for building cargo projects."
