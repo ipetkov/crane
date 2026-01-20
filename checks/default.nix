@@ -24,8 +24,11 @@ onlyDrvs (
       );
       x64Linux = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
       aarch64Darwin = pkgs.stdenv.hostPlatform.system == "aarch64-darwin";
+      myPkgs = import ../pkgs {
+        inherit pkgs myLib;
+      };
     in
-    {
+    lib.attrsets.unionOfDisjoint myPkgs {
       behaviorChangesWithFeatures =
         let
           cmd = myLib.buildPackage {
