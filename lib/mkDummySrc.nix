@@ -358,7 +358,8 @@ let
 in
 runCommand sourceName { } ''
   mkdir -p $out
-  cp --recursive --no-preserve=mode,ownership ${cleanSrc}/. -t $out
+  cp --recursive --no-preserve=ownership ${cleanSrc}/. -t $out
+  chmod +w -R $out
   ${copyCargoLock}
   ${copyAndStubCargoTomls}
   ${extraDummyScript}
