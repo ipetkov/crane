@@ -356,9 +356,17 @@ let
     else
       last nameWithoutHash;
 in
+# NB: A previous attempt used --no-preserve-mode + --preserve=xattr to prevent needing to change any
+# xattrs at all, but this doesn't work when cp is built without xattr support. So instead we just
+# create the effect of --no-preserve=mode without using that flag: making $out writeable,
+# recursively.
+#
+# Without this, builds can fail when using macOS's Virtualization.framework to share the store into
+# a Linux VM, because its implementation of virtiofs doesn't seem to support xattrs.
 runCommand sourceName { } ''
   mkdir -p $out
-  cp --recursive --no-preserve=mode,ownership ${cleanSrc}/. -t $out
+  cp --recursive --no-preserve=ownership ${cleanSrc}/. -t $out
+  chmod +w -R $out
   ${copyCargoLock}
   ${copyAndStubCargoTomls}
   ${extraDummyScript}
