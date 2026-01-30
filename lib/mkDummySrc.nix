@@ -360,7 +360,7 @@ in
 # xattrs at all, but this doesn't work when cp is built without xattr support. So instead we just
 # create the effect of --no-preserve=mode without using that flag: making $out writeable,
 # recursively.
-# 
+#
 # Without this, builds can fail when using macOS's Virtualization.framework to share the store into
 # a Linux VM, because its implementation of virtiofs doesn't seem to support xattrs.
 runCommand sourceName { } ''
