@@ -17,9 +17,4 @@ publish = false
 smallvec = { version = "1", default-features = false, features = ["const_new"] }
 tokio = { version = "1", features = ["full"] }
 
-[build-dependencies]
-proc-macro2 = { version = "1" }
-quote = { version = "1" }
-syn = { version = "2", features = ["full", "visit-mut"] }
-
 ### END HAKARI SECTION
