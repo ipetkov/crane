@@ -136,21 +136,7 @@
             # then try to do a build, which will fail but will print out the correct value
             # for `hash`. Replace the value and then repeat the process but this time the
             # printed value will be for the second `hash` below
-            wasm-bindgen-cli = pkgs.buildWasmBindgenCli rec {
-              src = pkgs.fetchCrate {
-                pname = "wasm-bindgen-cli";
-                version = "0.2.100";
-                hash = "sha256-3RJzK7mkYFrs7C/WkhW9Rr4LdP5ofb2FdYGz1P7Uxog=";
-                # hash = lib.fakeHash;
-              };
-
-              cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-                inherit src;
-                inherit (src) pname version;
-                hash = "sha256-qsO12332HSjWCVKtf1cUePWWb9IdYUmT+8OPj/XP2WE=";
-                # hash = lib.fakeHash;
-              };
-            };
+            wasm-bindgen-cli = pkgs.wasm-bindgen-cli_0_2_108;
           }
         );
       in

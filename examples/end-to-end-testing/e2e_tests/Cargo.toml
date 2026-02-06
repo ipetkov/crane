@@ -6,6 +6,6 @@ edition.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-thirtyfour = "0.35"
+thirtyfour = "0.36"
 tokio = { version = "1.26", features = ["full"] }
 anyhow = "1.0"
