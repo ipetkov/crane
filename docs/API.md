@@ -126,6 +126,10 @@ to influence its behavior.
 * `cargoTestExtraArgs`: additional flags to be passed in the `cargoTestCommand`
   invocation (e.g. enabling specific tests)
   - Default value: `"--no-run"`
+* `doStripVersion`: when set to `true`, the workspace crate version(s) in the
+  dummy source will be replaced with a placeholder version (`0.0.0`). This
+  improves cache hit rates when only the crate version changes but dependencies
+  remain the same.
 * `cargoVendorDir`: A path (or derivation) of vendored cargo sources which can
   be consumed without network access. Directory structure should basically
   follow the output of `cargo vendor`.
@@ -161,6 +165,7 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `cargoTestCommand`
 * `cargoTestExtraArgs`
+* `doStripVersion`
 * `dummySrc`
 * `outputHashes`
 * `outputs`
@@ -221,6 +226,10 @@ install hooks.
 * `doInstallCargoArtifacts`: controls whether cargo's `target` directory should
   be copied as an output
   - Default value: `false`
+* `doStripVersion`: when set to `true`, the workspace crate version(s) in the
+  dummy source used for `buildDepsOnly` will be replaced with a placeholder
+  version (`0.0.0`). This improves cache hit rates when only the crate version
+  changes but dependencies remain the same.
 * `installPhaseCommand`: the command(s) which are expected to install the
   derivation's outputs.
   - Default value: will look for a temporary installation directory created by
@@ -236,6 +245,7 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `cargoTestCommand`
 * `cargoTestExtraArgs`
+* `doStripVersion`
 * `outputHashes`
 
 #### Native build dependencies and included hooks
@@ -280,7 +290,10 @@ Except where noted below, all derivation attributes are delegated to
   dependency of `trunk`, the version used here must match the version
   of `wasm-bindgen` in the `Cargo.lock` file of your project *exactly*.
   - Default value: `pkgs.wasm-bindgen-cli`
-
+* `doStripVersion`: when set to `true`, the workspace crate version(s) in the
+  dummy source used for `buildDepsOnly` will be replaced with a placeholder
+  version (`0.0.0`). This improves cache hit rates when only the crate version
+  changes but dependencies remain the same.
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -291,6 +304,7 @@ environment variables during the build, you can bring them back via
 * `trunkExtraArgs`
 * `trunkExtraBuildArgs`
 * `trunkIndexPath`
+* `doStripVersion`
 
 #### Native build dependencies and included hooks
 The following hooks are automatically added as native build inputs:
@@ -854,6 +868,11 @@ craneLib.cleanCargoToml { cargoToml = ./Cargo.toml; }
   path found in the Cargo.toml file, and is expected to return whether that path
   should be kept in the result.
   - Default value: `craneLib.filters.cargoTomlDefault`
+* `doStripVersion`: when set to `true`, the `package.version` in the cleaned
+  output will be replaced with a placeholder version (`0.0.0`).
+* `versionPlaceholder`: the placeholder version to use when `doStripVersion` is
+  enabled.
+  - Default value: `"0.0.0"`
 
 At least one of the `cargoToml` and `cargoTomlContents` attributes must be specified, or an error will be
 raised during evaluation.
@@ -1345,6 +1364,13 @@ build caches. More specifically:
   - Default value: `src + /Cargo.lock`
 * `cleanCargoTomlFilter`: a filter used to process each path found in each `Cargo.toml`
   file. Passed down to `craneLib.cleanCargoToml` if provided.
+* `doStripVersion`: when set to `true`, the workspace crate version(s) in both
+  `Cargo.toml` files and the `Cargo.lock` file will be replaced with a
+  placeholder version (`0.0.0`). This improves cache hit rates when only the
+  crate version changes but dependencies remain the same.
+* `versionPlaceholder`: the placeholder version to use when `doStripVersion` is
+  enabled.
+  - Default value: `"0.0.0"`
 * `dummyrs`: a path to a file which will be used in place of all dummy rust
   files (e.g. `main.rs`, `lib.rs`, etc.). This can be useful to customize dummy
   source files (e.g. enable certain lang features for a given target).
