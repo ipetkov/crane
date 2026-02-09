@@ -108,11 +108,7 @@ let
 
   cleanSrc =
     let
-      allUncleanFiles =
-        map (p: removePrefix uncleanSrcBasePath (toString p))
-          # Allow the default `Cargo.lock` location to be picked up here
-          # (if it exists) so it automattically appears in the cleaned source
-          (uncleanFiles.cargoConfigs ++ [ "Cargo.lock" ]);
+      allUncleanFiles = map (p: removePrefix uncleanSrcBasePath (toString p)) uncleanFiles.cargoConfigs;
     in
     lib.cleanSourceWith {
       inherit src;
