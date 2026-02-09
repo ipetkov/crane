@@ -17,6 +17,7 @@ in
   cargoLock ? null,
   extraDummyScript ? "",
   doStripVersion ? false,
+  versionPlaceholder ? "0.0.0",
   ...
 }@args:
 let
@@ -145,7 +146,7 @@ let
 
         cleanedCargoToml = cleanCargoToml (
           {
-            inherit doStripVersion;
+            inherit doStripVersion versionPlaceholder;
             cargoToml = p;
           }
           // lib.optionalAttrs (args ? cleanCargoTomlFilter) {
@@ -329,9 +330,40 @@ let
     ) cargoTomls
   );
 
+  # Replaces versions of workspace crates
+  # This works because crates from the local cargo workspace do not have a 'source' attribute
+  cleanWorkspacePackageVersions =
+    cargoLockContents:
+    cargoLockContents
+    // {
+      package = builtins.map (
+        pkg: if pkg ? source then pkg else pkg // { version = versionPlaceholder; }
+      ) (cargoLockContents.package or [ ]);
+    };
+
   # Since we allow the caller to provide a path to *some* Cargo.lock file
   # we include it in our dummy build only if it was explicitly specified.
-  copyCargoLock = if cargoLock == null then "" else "cp ${cargoLock} $out/Cargo.lock";
+  copyCargoLock =
+    let
+      srcCargoLock =
+        if cargoLock != null then
+          cargoLock
+        else if builtins.pathExists (origSrc + "/Cargo.lock") then
+          origSrc + "/Cargo.lock"
+        else
+          null;
+    in
+    if srcCargoLock == null then
+      ""
+    else if doStripVersion then
+      let
+        cleanedCargoLock = writeTOML "Cargo.lock" (
+          cleanWorkspacePackageVersions (builtins.fromTOML (builtins.readFile srcCargoLock))
+        );
+      in
+      "cp ${cleanedCargoLock} $out/Cargo.lock"
+    else
+      "cp ${srcCargoLock} $out/Cargo.lock";
 
   # Note that the name we choose for the dummy source output is load bearing:
   # some CMake projects will error out (thinking their caches are invalidated)
