@@ -340,26 +340,17 @@ let
   # Since we allow the caller to provide a path to *some* Cargo.lock file
   # we include it in our dummy build only if it was explicitly specified.
   copyCargoLock =
-    let
-      srcCargoLock =
-        if cargoLock != null then
-          cargoLock
-        else if builtins.pathExists (origSrc + "/Cargo.lock") then
-          origSrc + "/Cargo.lock"
-        else
-          null;
-    in
-    if srcCargoLock == null then
-      ""
-    else if doStripVersion then
+    if cargoLock == null && !builtins.pathExists (origSrc + "/Cargo.lock") then
+      null
+    else
       let
+        srcCargoLock = if cargoLock != null then cargoLock else origSrc + "/Cargo.lock";
+        cargoLockContents = builtins.fromTOML (builtins.readFile srcCargoLock);
         cleanedCargoLock = writeTOML "Cargo.lock" (
-          cleanWorkspacePackageVersions (builtins.fromTOML (builtins.readFile srcCargoLock))
+          if doStripVersion then cleanWorkspacePackageVersions cargoLockContents else cargoLockContents
         );
       in
-      "cp ${cleanedCargoLock} $out/Cargo.lock"
-    else
-      "cp ${srcCargoLock} $out/Cargo.lock";
+      "cp ${cleanedCargoLock} $out/Cargo.lock";
 
   # Note that the name we choose for the dummy source output is load bearing:
   # some CMake projects will error out (thinking their caches are invalidated)
