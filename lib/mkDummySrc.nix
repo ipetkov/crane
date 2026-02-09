@@ -16,6 +16,8 @@ in
   src,
   cargoLock ? null,
   extraDummyScript ? "",
+  doStripVersion ? false,
+  versionPlaceholder ? "0.0.0",
   ...
 }@args:
 let
@@ -106,11 +108,7 @@ let
 
   cleanSrc =
     let
-      allUncleanFiles =
-        map (p: removePrefix uncleanSrcBasePath (toString p))
-          # Allow the default `Cargo.lock` location to be picked up here
-          # (if it exists) so it automattically appears in the cleaned source
-          (uncleanFiles.cargoConfigs ++ [ "Cargo.lock" ]);
+      allUncleanFiles = map (p: removePrefix uncleanSrcBasePath (toString p)) uncleanFiles.cargoConfigs;
     in
     lib.cleanSourceWith {
       inherit src;
@@ -144,6 +142,7 @@ let
 
         cleanedCargoToml = cleanCargoToml (
           {
+            inherit doStripVersion versionPlaceholder;
             cargoToml = p;
           }
           // lib.optionalAttrs (args ? cleanCargoTomlFilter) {
@@ -327,9 +326,31 @@ let
     ) cargoTomls
   );
 
+  # Replaces versions of workspace crates
+  # This works because crates from the local cargo workspace do not have a 'source' attribute
+  cleanWorkspacePackageVersions =
+    cargoLockContents:
+    cargoLockContents
+    // {
+      package = builtins.map (
+        pkg: if pkg ? source then pkg else pkg // { version = versionPlaceholder; }
+      ) (cargoLockContents.package or [ ]);
+    };
+
   # Since we allow the caller to provide a path to *some* Cargo.lock file
   # we include it in our dummy build only if it was explicitly specified.
-  copyCargoLock = if cargoLock == null then "" else "cp ${cargoLock} $out/Cargo.lock";
+  copyCargoLock =
+    if cargoLock == null && !builtins.pathExists (origSrc + "/Cargo.lock") then
+      null
+    else
+      let
+        srcCargoLock = if cargoLock != null then cargoLock else origSrc + "/Cargo.lock";
+        cargoLockContents = builtins.fromTOML (builtins.readFile srcCargoLock);
+        cleanedCargoLock = writeTOML "Cargo.lock" (
+          if doStripVersion then cleanWorkspacePackageVersions cargoLockContents else cargoLockContents
+        );
+      in
+      "cp ${cleanedCargoLock} $out/Cargo.lock";
 
   # Note that the name we choose for the dummy source output is load bearing:
   # some CMake projects will error out (thinking their caches are invalidated)

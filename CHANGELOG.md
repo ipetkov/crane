@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `mkDummySrc` can now pass the `cleanCargoTomlFilter` argument to `cleanCargoToml`
 * `craneLib.filters` exposes `cargoTomlAggressive`, `cargoTomlConservative`, and
   `cargoTomlDefault` for composition of custom filters for `cleanCargoToml`
+* `doStripVersion`: a new option for `buildDepsOnly`, `buildPackage`,
+  `buildTrunkPackage`, `cleanCargoToml`, and `mkDummySrc` which strips version
+  information from workspace crates in the dummy source. This improves cache hit
+  rates when only the crate version changes but dependencies remain the same.
 
 ## [0.23.0] - 2026-01-13
 

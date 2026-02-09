@@ -12,6 +12,7 @@
   cargoExtraArgs ? "--locked",
   cargoTestCommand ? "cargoWithProfile test",
   cargoTestExtraArgs ? "--no-run",
+  doStripVersion ? false,
   ...
 }@args:
 let
@@ -22,6 +23,7 @@ let
     "cargoExtraArgs"
     "cargoTestCommand"
     "cargoTestExtraArgs"
+    "doStripVersion"
     "outputHashes"
     "dummySrc"
     "outputs"
@@ -48,6 +50,11 @@ let
   argsMaybeDummySrcOverride = if args ? dummySrc then args // { src = args.dummySrc; } else args;
 
   crateName = crateNameFromCargoToml argsMaybeDummySrcOverride;
+
+  # Use placeholder version when stripping versions to improve cache hit rates
+  versionPlaceholder = "0.0.0";
+  effectiveVersion =
+    if doStripVersion then versionPlaceholder else (args.version or crateName.version);
 in
 mkCargoDerivation (
   cleanedArgs
@@ -57,7 +64,7 @@ mkCargoDerivation (
     src = dummySrc;
     pnameSuffix = "-deps";
     pname = args.pname or crateName.pname;
-    version = args.version or crateName.version;
+    version = effectiveVersion;
 
     cargoArtifacts = null;
     cargoVendorDir = args.cargoVendorDir or (vendorCargoDeps argsMaybeDummySrcOverride);

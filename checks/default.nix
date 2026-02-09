@@ -926,6 +926,59 @@ onlyDrvs (
           }
         );
 
+      # Verify that buildDepsOnly produces the same derivation for different versions
+      # when doStripVersion is enabled (versions 1.2.3 and 9.8.7 should produce identical deps)
+      # Note: the crate source is in a subdirectory that has the same name for both versions,
+      # to avoid name differences triggering a cache miss
+      stripVersionDepsEquality =
+        let
+          depsV1 = myLib.buildDepsOnly {
+            src = ./stripVersion/sources;
+            doStripVersion = true;
+          };
+          depsV2 = myLib.buildDepsOnly {
+            src = ./stripVersionAlt/sources;
+            doStripVersion = true;
+          };
+        in
+        pkgs.runCommand "strip-version-deps-equality-check" { } ''
+          if [ "${depsV1}" != "${depsV2}" ]; then
+            echo "ERROR: buildDepsOnly derivations differ despite doStripVersion=true"
+            echo "  stripVersion (1.2.3): ${depsV1}"
+            echo "  stripVersionAlt (9.8.7): ${depsV2}"
+            exit 1
+          fi
+          echo "SUCCESS: buildDepsOnly derivations are identical with doStripVersion=true"
+          touch $out
+        '';
+
+      # Verify that buildDepsOnly produces DIFFERENT derivations when doStripVersion is disabled
+      # This ensures the equality check above is meaningful
+      stripVersionDepsInequality =
+        let
+          depsV1 = myLib.buildDepsOnly {
+            src = ./stripVersion/sources;
+            doStripVersion = false;
+          };
+          depsV2 = myLib.buildDepsOnly {
+            src = ./stripVersionAlt/sources;
+            doStripVersion = false;
+          };
+        in
+        pkgs.runCommand "strip-version-deps-inequality-check" { } ''
+          if [ "${depsV1}" = "${depsV2}" ]; then
+            echo "ERROR: buildDepsOnly derivations are identical despite doStripVersion=false"
+            echo "  This means the test is not meaningful - versions should differ!"
+            echo "  stripVersion (1.2.3): ${depsV1}"
+            echo "  stripVersionAlt (9.8.7): ${depsV2}"
+            exit 1
+          fi
+          echo "SUCCESS: buildDepsOnly derivations differ with doStripVersion=false (as expected)"
+          echo "  stripVersion (1.2.3): ${depsV1}"
+          echo "  stripVersionAlt (9.8.7): ${depsV2}"
+          touch $out
+        '';
+
       windows = myLibWindows.buildPackage {
         strictDeps = true;
         pname = "windows";

@@ -1,0 +1,12 @@
+[package]
+name = "strip-version-test"
+version = "9.8.7"
+edition = "2021"
+description = "Test package for version stripping functionality"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dev-dependencies]
+tokio-test = "0.4"

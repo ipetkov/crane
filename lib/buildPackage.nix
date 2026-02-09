@@ -14,6 +14,7 @@
   cargoExtraArgs ? "--locked",
   cargoTestCommand ? "cargoWithProfile test",
   cargoTestExtraArgs ? "",
+  doStripVersion ? false,
   ...
 }@args:
 let
@@ -25,6 +26,7 @@ let
     "cargoExtraArgs"
     "cargoTestCommand"
     "cargoTestExtraArgs"
+    "doStripVersion"
     "outputHashes"
   ];
 
