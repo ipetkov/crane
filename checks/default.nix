@@ -926,6 +926,26 @@ onlyDrvs (
           }
         );
 
+      stripVersionEnabled = myLib.buildPackage {
+        src = ./stripVersion;
+        doStripVersion = true;
+      };
+
+      stripVersionDisabled = myLib.buildPackage {
+        src = ./stripVersion;
+        doStripVersion = false;
+      };
+
+      stripVersionDeps = myLib.buildDepsOnly {
+        src = ./stripVersion;
+        doStripVersion = true;
+      };
+
+      stripVersionDepsDisabled = myLib.buildDepsOnly {
+        src = ./stripVersion;
+        doStripVersion = false;
+      };
+
       windows = myLibWindows.buildPackage {
         strictDeps = true;
         pname = "windows";

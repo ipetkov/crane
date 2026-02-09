@@ -37,6 +37,7 @@ in
   trunkExtraBuildArgs ? "",
   trunkIndexPath ? "./index.html",
   wasm-bindgen-cli ? lib.warn missingWasmBindgenCliPkgMessage default-wasm-bindgen-cli,
+  doStripVersion ? false,
   ...
 }@origArgs:
 let
@@ -45,6 +46,7 @@ let
     "trunkExtraBuildArgs"
     "trunkIndexPath"
     "wasm-bindgen-cli"
+    "doStripVersion"
   ];
 
   crateName = crateNameFromCargoToml cleanedArgs;
@@ -67,6 +69,7 @@ mkCargoDerivation (
         // {
           CARGO_BUILD_TARGET = args.CARGO_BUILD_TARGET or "wasm32-unknown-unknown";
           doCheck = args.doCheck or false;
+          inherit doStripVersion;
         }
       ));
 

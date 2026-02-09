@@ -16,6 +16,7 @@ in
   src,
   cargoLock ? null,
   extraDummyScript ? "",
+  doStripVersion ? false,
   ...
 }@args:
 let
@@ -144,6 +145,7 @@ let
 
         cleanedCargoToml = cleanCargoToml (
           {
+            inherit doStripVersion;
             cargoToml = p;
           }
           // lib.optionalAttrs (args ? cleanCargoTomlFilter) {

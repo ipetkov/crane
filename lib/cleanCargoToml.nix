@@ -2,6 +2,16 @@
   filters,
   lib,
 }:
+
+{
+  cargoToml ? throw "either cargoToml or cargoTomlContents must be specified",
+  cargoTomlContents ? builtins.readFile cargoToml,
+  # ([String] -> Boolean)
+  cleanCargoTomlFilter ? filters.cargoTomlDefault,
+  doStripVersion ? false,
+  versionPlaceholder ? "0.0.0",
+}:
+
 let
   # Based on lib.filterAttrsRecursive, but
   # - also processes lists
@@ -25,11 +35,16 @@ let
     else
       val;
   filterData = pred: val: filterData' pred [ ] val;
+
+  cleaned = filterData cleanCargoTomlFilter (builtins.fromTOML cargoTomlContents);
 in
-{
-  cargoToml ? throw "either cargoToml or cargoTomlContents must be specified",
-  cargoTomlContents ? builtins.readFile cargoToml,
-  # ([String] -> Boolean)
-  cleanCargoTomlFilter ? filters.cargoTomlDefault,
-}:
-filterData cleanCargoTomlFilter (builtins.fromTOML cargoTomlContents)
+
+if doStripVersion && builtins.hasAttr "package" cleaned then
+  cleaned
+  // {
+    package = cleaned.package // {
+      version = versionPlaceholder;
+    };
+  }
+else
+  cleaned
