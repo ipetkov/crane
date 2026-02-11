@@ -75,6 +75,10 @@ stdenv.mkDerivation {
         cargo metadata --format-version 1 --no-deps --manifest-path "$cargoToml" |
         jq -r '.packages[] | select(.manifest_path == "'"$cargoToml"'") | "\(.name)-\(.version)"'
       )
+      local crateName=$(
+        cargo metadata --format-version 1 --no-deps --manifest-path "$cargoToml" |
+        jq -r '.packages[] | select(.manifest_path == "'"$cargoToml"'") | .name'
+      )
 
       if [ -n "$crate" ]; then
         if [[ -n "''${existing_crates["$crate"]}" ]]; then
@@ -105,21 +109,13 @@ stdenv.mkDerivation {
         (
           cd "$(dirname "$cargoToml")"
 
-          # NB: we tell ripgrep to ignore any ignore files (via -uuu) since we are manually
-          # applying the includes/excludes defined in Cargo.toml. Since this is a fresh git
-          # checkout, it will not include any files listed in .gitignore anyway!
-          crateFiles="$(rg -uuu --follow --files --ignore-file=<(
-            remarshal -i "$cargoToml" -if toml -of json \
-              | jq -r '.package | if has("include") then .include | map("!\(.)" | sub("^!!"; "")) else .exclude // [] end| .[]?'
-            echo '!/Cargo.toml'
-            # Always excluded
-            echo '/target'
-            # Always exclude subpackages (directories with `Cargo.toml`)
-            # mindepth 2 because ./Cargo.toml counts as a depth of 1
-            find ./ -mindepth 2 -name Cargo.toml -print0 \
-              | xargs -0 -r -n1 dirname \
-              | sed 's|^\.||'
-          ) | sort)"
+          # Use `cargo package` to interpret the include/exclude rules
+          #
+          # XXX: throws errors on some crates, don't know why, is it the build-scripts?
+          #
+          # NB: `Cargo.lock` is excluded if it doesn't exist, because previous implementation
+          # handled it that way. `cargo package` has other goals than us, maybe?
+          crateFiles="$(cargo package --offline --exclude-lockfile -l -p "$crateName" | grep -v -e "^Cargo.toml.orig" $(if [[ ! -f Cargo.lock ]]; then echo "-e^Cargo.lock"; fi) | sort)"
 
           (
             cd "$dest"

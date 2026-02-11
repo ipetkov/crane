@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `mkDummySrc` can now pass the `cleanCargoTomlFilter` argument to `cleanCargoToml`
 * `craneLib.filters` exposes `cargoTomlAggressive`, `cargoTomlConservative`, and
   `cargoTomlDefault` for composition of custom filters for `cleanCargoToml`
+* `downloadCargoPackageFromGit` now uses `cargo package -l` for generating the file
+  list, resulting in more accurate include/exclude rule interpretation. This fixes
+  builds in some dependencies, notably `aws-lc-rs` from git.
 
 ## [0.23.0] - 2026-01-13
 
