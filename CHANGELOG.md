@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.23.1] - 2026-02-14
+
 ### Added
 * `cleanCargoToml` can now be customized using the `cleanCargoTomlFilter` argument
 * `mkDummySrc` can now pass the `cleanCargoTomlFilter` argument to `cleanCargoToml`
@@ -950,6 +952,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.23.1]: https://github.com/ipetkov/crane/compare/v0.23.0...v0.23.1
 [0.23.0]: https://github.com/ipetkov/crane/compare/v0.22.0...v0.23.0
 [0.22.0]: https://github.com/ipetkov/crane/compare/v0.21.3...v0.22.0
 [0.21.3]: https://github.com/ipetkov/crane/compare/v0.21.2...v0.21.3
