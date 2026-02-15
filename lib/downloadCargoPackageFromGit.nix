@@ -4,8 +4,6 @@
   craneUtils,
   jq,
   pkgsBuildBuild,
-  remarshal,
-  ripgrep,
 }:
 
 let
@@ -61,11 +59,9 @@ stdenv.mkDerivation {
     cargo
     craneUtils
     jq
-    remarshal
-    ripgrep
   ];
 
-  installPhase = ''
+  installPhase = /* bash */ ''
     runHook preInstall
 
     mkdir -p $out
@@ -105,21 +101,8 @@ stdenv.mkDerivation {
         (
           cd "$(dirname "$cargoToml")"
 
-          # NB: we tell ripgrep to ignore any ignore files (via -uuu) since we are manually
-          # applying the includes/excludes defined in Cargo.toml. Since this is a fresh git
-          # checkout, it will not include any files listed in .gitignore anyway!
-          crateFiles="$(rg -uuu --follow --files --ignore-file=<(
-            remarshal -i "$cargoToml" -if toml -of json \
-              | jq -r '.package | if has("include") then .include | map("!\(.)" | sub("^!!"; "")) else .exclude // [] end| .[]?'
-            echo '!/Cargo.toml'
-            # Always excluded
-            echo '/target'
-            # Always exclude subpackages (directories with `Cargo.toml`)
-            # mindepth 2 because ./Cargo.toml counts as a depth of 1
-            find ./ -mindepth 2 -name Cargo.toml -print0 \
-              | xargs -0 -r -n1 dirname \
-              | sed 's|^\.||'
-          ) | sort)"
+          # Use `cargo package` to interpret the include/exclude rules
+          crateFiles="$(cargo package --offline --exclude-lockfile -l | grep -v -e "^Cargo.toml.orig" | sort)"
 
           (
             cd "$dest"
@@ -130,7 +113,20 @@ stdenv.mkDerivation {
               | xargs -0 -r mkdir -p
           )
           tr '\n' '\0' <<<"$crateFiles" \
-            | xargs -0 -r "-P''${NIX_BUILD_CORES:-1}" -I FILE cp -L FILE "$dest/FILE"
+            | xargs -0 -r "-P''${NIX_BUILD_CORES:-1}" -I FILE cp -L FILE "$dest/FILE" \
+            || (
+              # NB: Sometimes cargo will list out certain files (e.g. README.md which is meant to
+              # refer to the one at the root of the repo) even if they don't actually exist in the
+              # crate subdirectory, so we should ignore any such files which fail to copy, but
+              # explicitly warn about them for debugging purposes. This also side steps any issues
+              # from legitimately broken symlinks (e.g. we cannot blindly resolve all symlinks
+              # because some crates intentionally have broken symlinks for tests etc.).
+              #
+              # At the very least if we get this wrong, downstream consumers can always patch this
+              # derivation to fixup the files beforehand and hopefully do the right thing...
+              echo 'NOTE: ignoring the following files (listed by cargo) that failed to copy:'
+              comm -23 - <<<"$crateFiles" <(find . -type f -printf "%P\n" | sort) | awk '{ print "'"$(pwd)"'/" $0 }'
+            )
         )
 
         echo '{"files":{}, "package":null}' > "$dest/.cargo-checksum.json"
