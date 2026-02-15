@@ -103,8 +103,6 @@ stdenv.mkDerivation {
 
           # Use `cargo package` to interpret the include/exclude rules
           #
-          # XXX: throws errors on some crates, don't know why, is it the build-scripts?
-          #
           # NB: `Cargo.lock` is excluded if it doesn't exist, because previous implementation
           # handled it that way. `cargo package` has other goals than us, maybe?
           crateFiles="$(cargo package --offline --exclude-lockfile -l | grep -v -e "^Cargo.toml.orig" $(if [[ ! -f Cargo.lock ]]; then echo "-e^Cargo.lock"; fi) | sort)"
@@ -118,7 +116,20 @@ stdenv.mkDerivation {
               | xargs -0 -r mkdir -p
           )
           tr '\n' '\0' <<<"$crateFiles" \
-            | xargs -0 -r "-P''${NIX_BUILD_CORES:-1}" -I FILE cp -L FILE "$dest/FILE"
+            | xargs -0 -r "-P''${NIX_BUILD_CORES:-1}" -I FILE cp -L FILE "$dest/FILE" \
+            || (
+              # NB: Sometimes cargo will list out certain files (e.g. README.md which is meant to
+              # refer to the one at the root of the repo) even if they don't actually exist in the
+              # crate subdirectory, so we should ignore any such files which fail to copy, but
+              # explicitly warn about them for debugging purposes. This also side steps any issues
+              # from legitimately broken symlinks (e.g. we cannot blindly resolve all symlinks
+              # because some crates intentionally have broken symlinks for tests etc.).
+              #
+              # At the very least if we get this wrong, downstream consumers can always patch this
+              # derivation to fixup the files beforehand and hopefully do the right thing...
+              echo 'NOTE: ignoring the following files (listed by cargo) that failed to copy:'
+              comm -23 - <<<"$crateFiles" <(find . -type f -printf "%P\n" | sort) | awk '{ print "'"$(pwd)"'/" $0 }'
+            )
         )
 
         echo '{"files":{}, "package":null}' > "$dest/.cargo-checksum.json"
