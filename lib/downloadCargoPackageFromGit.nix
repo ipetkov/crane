@@ -102,10 +102,7 @@ stdenv.mkDerivation {
           cd "$(dirname "$cargoToml")"
 
           # Use `cargo package` to interpret the include/exclude rules
-          #
-          # NB: `Cargo.lock` is excluded if it doesn't exist, because previous implementation
-          # handled it that way. `cargo package` has other goals than us, maybe?
-          crateFiles="$(cargo package --offline --exclude-lockfile -l | grep -v -e "^Cargo.toml.orig" $(if [[ ! -f Cargo.lock ]]; then echo "-e^Cargo.lock"; fi) | sort)"
+          crateFiles="$(cargo package --offline --exclude-lockfile -l | grep -v -e "^Cargo.toml.orig" | sort)"
 
           (
             cd "$dest"
