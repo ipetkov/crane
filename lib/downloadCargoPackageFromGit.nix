@@ -4,8 +4,6 @@
   craneUtils,
   jq,
   pkgsBuildBuild,
-  remarshal,
-  ripgrep,
 }:
 
 let
@@ -61,8 +59,6 @@ stdenv.mkDerivation {
     cargo
     craneUtils
     jq
-    remarshal
-    ripgrep
   ];
 
   installPhase = ''
