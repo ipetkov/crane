@@ -61,7 +61,7 @@ stdenv.mkDerivation {
     jq
   ];
 
-  installPhase = ''
+  installPhase = /* bash */ ''
     runHook preInstall
 
     mkdir -p $out
