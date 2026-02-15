@@ -75,10 +75,6 @@ stdenv.mkDerivation {
         cargo metadata --format-version 1 --no-deps --manifest-path "$cargoToml" |
         jq -r '.packages[] | select(.manifest_path == "'"$cargoToml"'") | "\(.name)-\(.version)"'
       )
-      local crateName=$(
-        cargo metadata --format-version 1 --no-deps --manifest-path "$cargoToml" |
-        jq -r '.packages[] | select(.manifest_path == "'"$cargoToml"'") | .name'
-      )
 
       if [ -n "$crate" ]; then
         if [[ -n "''${existing_crates["$crate"]}" ]]; then
@@ -115,7 +111,7 @@ stdenv.mkDerivation {
           #
           # NB: `Cargo.lock` is excluded if it doesn't exist, because previous implementation
           # handled it that way. `cargo package` has other goals than us, maybe?
-          crateFiles="$(cargo package --offline --exclude-lockfile -l -p "$crateName" | grep -v -e "^Cargo.toml.orig" $(if [[ ! -f Cargo.lock ]]; then echo "-e^Cargo.lock"; fi) | sort)"
+          crateFiles="$(cargo package --offline --exclude-lockfile -l | grep -v -e "^Cargo.toml.orig" $(if [[ ! -f Cargo.lock ]]; then echo "-e^Cargo.lock"; fi) | sort)"
 
           (
             cd "$dest"
