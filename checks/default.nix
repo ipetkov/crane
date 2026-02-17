@@ -979,6 +979,16 @@ onlyDrvs (
           touch $out
         '';
 
+      compilesFreshSimpleStripVersion = self.compilesFresh "simple" (myLib.cargoBuild) {
+        src = ./simple;
+        doStripVersion = true;
+      };
+
+      compilesFreshStripVersion = self.compilesFresh "strip-version-test" (myLib.cargoBuild) {
+        src = ./stripVersion/sources;
+        doStripVersion = true;
+      };
+
       windows = myLibWindows.buildPackage {
         strictDeps = true;
         pname = "windows";
