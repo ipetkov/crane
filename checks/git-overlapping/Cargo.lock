@@ -5,12 +5,17 @@ version = 4
 [[package]]
 name = "futures-io"
 version = "0.3.32"
-source = "git+https://github.com/rust-lang/futures-rs#b7bfade372ee43f3ce9da356b95a5c95373c7641"
+source = "git+https://github.com/rust-lang/futures-rs?rev=b7bfade372ee43f3ce9da356b95a5c95373c7641#b7bfade372ee43f3ce9da356b95a5c95373c7641"
 
 [[package]]
 name = "futures-sink"
 version = "0.4.0-alpha.0"
-source = "git+https://github.com/rust-lang/futures-rs#b7bfade372ee43f3ce9da356b95a5c95373c7641"
+source = "git+https://github.com/rust-lang/futures-rs?rev=b7bfade372ee43f3ce9da356b95a5c95373c7641#b7bfade372ee43f3ce9da356b95a5c95373c7641"
+
+[[package]]
+name = "futures-task"
+version = "0.4.0-alpha.0"
+source = "git+https://github.com/rust-lang/futures-rs?rev=b7bfade372ee43f3ce9da356b95a5c95373c7641#b7bfade372ee43f3ce9da356b95a5c95373c7641"
 
 [[package]]
 name = "git-overlapping"
@@ -18,4 +23,5 @@ version = "0.1.0"
 dependencies = [
  "futures-io",
  "futures-sink",
+ "futures-task",
 ]
