@@ -10,13 +10,8 @@
 }:
 
 let
-  src = ./git-repo-with-many-crates;
+  src = ./git-overlapping;
   lock = builtins.fromTOML (builtins.readFile "${src}/Cargo.lock");
-
-  # Ensure crate still builds
-  crate = buildPackage {
-    inherit src;
-  };
 
   vendoredGit = vendorGitDeps {
     lockPackages = lock.package;
@@ -25,9 +20,9 @@ let
 
   checkSubset = runCommand "vendorGitSubsetAsExpected" { } ''
     cat >expected <<EOF
-    tokio-1.20.4
-    tokio-macros-1.8.0
-    tokio-util-0.7.3
+    futures-io-0.3.32
+    futures-sink-0.4.0-alpha.0
+    futures-task-0.4.0-alpha.0
     EOF
 
     ${builtins.concatStringsSep "\n" (
@@ -40,7 +35,4 @@ let
     touch $out
   '';
 in
-linkFarmFromDrvs "vendorGitSubset" [
-  checkSubset
-  crate
-]
+checkSubset
