@@ -4,8 +4,10 @@
   pkgs,
   runCommand,
   stdenv,
+  wasm-bindgen-cli_0_2_108,
 }:
 
+# FIXME: revisit
 let
   wasmToolchainFor =
     p:
@@ -26,19 +28,7 @@ let
   defaultArgs = {
     src = ./trunk;
     doCheck = false;
-    wasm-bindgen-cli = pkgs.buildWasmBindgenCli rec {
-      src = pkgs.fetchCrate {
-        pname = "wasm-bindgen-cli";
-        version = "0.2.92";
-        hash = "sha256-1VwY8vQy7soKEgbki4LD+v259751kKxSxmo/gqE6yV0=";
-      };
-
-      cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-        inherit src;
-        inherit (src) pname version;
-        hash = "sha256-81vQkKubMWaX0M3KAwpYgMA1zUQuImFGvh5yTW+rIAs=";
-      };
-    };
+    wasm-bindgen-cli = wasm-bindgen-cli_0_2_108;
   };
 
   # default build
