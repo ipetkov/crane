@@ -481,10 +481,6 @@ onlyDrvs (
         src = ./git-overlapping;
       };
 
-      gitRevNoRef = myLib.buildPackage {
-        src = ./gitRevNoRef;
-      };
-
       illegalBin = myLib.buildPackage {
         src = ./illegal-bin;
       };
