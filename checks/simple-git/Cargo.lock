@@ -16,7 +16,7 @@ source = "git+https://github.com/BurntSushi/byteorder.git#5a82625fae462e8ba64cec
 [[package]]
 name = "hello"
 version = "0.2.0"
-source = "git+https://github.com/ipetkov/crane-test-repo?branch=something%2For%2Fother#be0d3c039d260457a55c26e229ad9aa30242c2cf"
+source = "git+https://github.com/ipetkov/crane-test-repo?branch=something%2For%2Fother#1526c9c33dee51ff6fd6eb8c0a423de98464cd2a"
 dependencies = [
  "byteorder 1.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -27,19 +27,14 @@ version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
- "libc 0.2.153",
+ "libc",
 ]
 
 [[package]]
 name = "libc"
-version = "0.2.151"
-source = "git+https://github.com/rust-lang/libc.git?branch=main#a0f5b4b21391252fe38b2df9310dc65e37b07d9f"
-
-[[package]]
-name = "libc"
-version = "0.2.153"
+version = "0.2.182"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c198f91728a82281a64e1f4f9eeb25d82cb32a5de251c6bd1b5154d63a8e7bd"
+checksum = "6800badb6cb2082ffd7b6a67e6125bb39f18782f793520caee8cb8846be06112"
 
 [[package]]
 name = "num_cpus"
@@ -47,13 +42,13 @@ version = "1.13.1"
 source = "git+https://github.com/seanmonstar/num_cpus.git?tag=v1.13.1#5f1b03332000b4c4274b5bd35fac516049ff1c6b"
 dependencies = [
  "hermit-abi",
- "libc 0.2.153",
+ "libc",
 ]
 
 [[package]]
 name = "print"
 version = "0.2.0"
-source = "git+https://github.com/ipetkov/crane-test-repo?branch=something%2For%2Fother#be0d3c039d260457a55c26e229ad9aa30242c2cf"
+source = "git+https://github.com/ipetkov/crane-test-repo?branch=something%2For%2Fother#1526c9c33dee51ff6fd6eb8c0a423de98464cd2a"
 dependencies = [
  "hello",
  "world",
@@ -69,7 +64,6 @@ name = "simple-git"
 version = "0.1.0"
 dependencies = [
  "byteorder 1.5.0 (git+https://github.com/BurntSushi/byteorder.git)",
- "libc 0.2.151",
  "num_cpus",
  "print",
  "rustversion",
@@ -78,7 +72,7 @@ dependencies = [
 [[package]]
 name = "world"
 version = "0.2.0"
-source = "git+https://github.com/ipetkov/crane-test-repo?branch=something%2For%2Fother#be0d3c039d260457a55c26e229ad9aa30242c2cf"
+source = "git+https://github.com/ipetkov/crane-test-repo?branch=something%2For%2Fother#1526c9c33dee51ff6fd6eb8c0a423de98464cd2a"
 dependencies = [
  "byteorder 1.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
