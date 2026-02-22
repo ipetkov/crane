@@ -371,23 +371,6 @@ onlyDrvs (
           '';
         };
 
-      # https://github.com/ipetkov/crane/discussions/203
-      dependencyBuildScriptPerms = myLib.cargoClippy {
-        src = ./dependencyBuildScriptPerms;
-        cargoExtraArgs = "--all-features --all";
-        cargoClippyExtraArgs = "-- --deny warnings";
-        cargoArtifacts = myLib.buildDepsOnly {
-          src = ./dependencyBuildScriptPerms;
-          # NB: explicitly build this with no feature flags
-          buildInputs = lib.optionals isDarwin [
-            pkgs.libiconv
-          ];
-        };
-        buildInputs = lib.optionals isDarwin [
-          pkgs.libiconv
-        ];
-      };
-
       docs = myLib.cargoDoc {
         src = ./simple;
         cargoArtifacts = myLib.buildDepsOnly {

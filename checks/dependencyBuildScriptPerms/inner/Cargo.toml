@@ -1,7 +1,0 @@
-[package]
-name = "inner"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-miette = { version = "5.1.1", features = ["fancy"] }
