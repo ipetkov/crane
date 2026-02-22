@@ -12,11 +12,6 @@ package = "print"
 git = "https://github.com/ipetkov/crane-test-repo"
 branch = "something/or/other"
 
-[dependencies.libc]
-version = "*"
-git = "https://github.com/rust-lang/libc.git"
-branch = "main"
-
 [dependencies.num_cpus]
 version = "*"
 git = "https://github.com/seanmonstar/num_cpus.git"

@@ -8,6 +8,7 @@ foo = { path = "../foo" }
 bar = { path = "../bar" }
 
 # https://github.com/ipetkov/crane/issues/802
-[dependencies.libduckdb-sys]
-git = "https://github.com/duckdb/duckdb-rs"
-rev = "6d5368011043bd65dac42cf5c7a26784c16d82cc"
+[dependencies.crane-test-repo]
+package = "hello"
+git = "https://github.com/ipetkov/crane-test-repo"
+branch = "excludes"
