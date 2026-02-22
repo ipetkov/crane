@@ -1,6 +1,6 @@
 use std::any::TypeId;
 
 fn main() {
-    println!("{:?}", TypeId::of::<tokio::io::ReadBuf>());
-    println!("{:?}", TypeId::of::<tokio_util::either::Either<(), ()>>());
+    println!("{:?}", TypeId::of::<futures_io::Error>());
+    println!("{:?}", TypeId::of::<dyn futures_sink::Sink<(), Error = ()>>());
 }
