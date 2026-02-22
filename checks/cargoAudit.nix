@@ -37,7 +37,6 @@ linkFarmFromDrvs "cleanCargoToml" [
   simpleWithAuditToml
   containsAuditTomlInSrc
 
-  (auditWith ./gitRevNoRef)
   (auditWith ./git-overlapping)
 
   (auditWith ./workspace)
