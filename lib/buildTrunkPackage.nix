@@ -21,12 +21,10 @@ let
     buildTrunkPackage now requires the argument wasm-bindgen-cli:
 
     buildTrunkPackage {
-      wasm-bindgen-cli = pkgs.wasm-bindgen-cli.override {
-        version = "${default-wasm-bindgen-cli.version}";
-        hash = "${default-wasm-bindgen-cli.hash or "lib.fakeHash"}";
-        cargoHash = "${default-wasm-bindgen-cli.cargoHash or "lib.fakeHash"}";
+      wasm-bindgen-cli = pkgs.wasm-bindgen-cli_${
+        lib.replaceStrings [ "." ] [ "_" ] default-wasm-bindgen-cli.version
       };
-      ...
+      # ...
     }
   '';
   default-wasm-bindgen-cli = wasm-bindgen-cli;
