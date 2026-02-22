@@ -1052,8 +1052,6 @@ any crates it contains for vendoring.
    - `cargo`
    - `craneUtils`
    - `jq`
-   - `remarshal`
-   - `ripgrep`
 * `dontBuild`: `true`
 * `dontConfigure`: `true`
 * `dontFixup`: `true`
