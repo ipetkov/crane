@@ -322,7 +322,7 @@ mod table_like_ext {
 
     /// Generalized form of the item yielded by [`IntoIterator`] for the two [`TableLike`] types
     /// in [`toml_edit`]
-    type CommonIterItem = (toml_edit::InternalString, Item);
+    type CommonIterItem = (String, Item);
 
     /// Extension trait to iterate [`Item`]s from a [`TableLike`] item
     pub(super) trait TableLikeExt: TableLike + IntoIterator {

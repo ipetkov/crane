@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* Update `crane-utils` dependencies, namely depending on `toml_edit@0.25` which
+  now includes parsing support for TOML 1.1
+
 ## [0.23.1] - 2026-02-14
 
 ### Added
