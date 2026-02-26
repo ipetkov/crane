@@ -1,0 +1,1268 @@
+<!DOCTYPE HTML>
+<html lang="en" class="ayu sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Changelog - crane</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A Nix library for building cargo projects.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "ayu";
+            const default_dark_theme = "ayu";
+            window.path_to_searchindex_js = "searchindex-1557f45f.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-ca47417b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('ayu')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">crane</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/ipetkov/crane/edit/master/docs/./CHANGELOG.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="http://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
+and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2 id="unreleased"><a class="header" href="#unreleased">Unreleased</a></h2>
+<h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
+<ul>
+<li>Update <code>crane-utils</code> dependencies, namely depending on <code>toml_edit@0.25</code> which
+now includes parsing support for TOML 1.1</li>
+<li><code>cargoNextest</code> now defaults to setting <code>NEXTEST_SHOW_PROGRESS=counter</code> unless
+otherwise specified (setting <code>env.NEXTEST_SHOW_PROGRESS</code> or passing in
+<code>--show-progress=...</code> will take precedence). This avoids progress bar
+(re)painting from resulting in garbled build logs</li>
+</ul>
+<h2 id="0231---2026-02-14"><a class="header" href="#0231---2026-02-14"><a href="https://github.com/ipetkov/crane/compare/v0.23.0...v0.23.1">0.23.1</a> - 2026-02-14</a></h2>
+<h3 id="added"><a class="header" href="#added">Added</a></h3>
+<ul>
+<li><code>cleanCargoToml</code> can now be customized using the <code>cleanCargoTomlFilter</code> argument</li>
+<li><code>mkDummySrc</code> can now pass the <code>cleanCargoTomlFilter</code> argument to <code>cleanCargoToml</code></li>
+<li><code>craneLib.filters</code> exposes <code>cargoTomlAggressive</code>, <code>cargoTomlConservative</code>, and
+<code>cargoTomlDefault</code> for composition of custom filters for <code>cleanCargoToml</code></li>
+<li><code>downloadCargoPackageFromGit</code> now uses <code>cargo package -l</code> for generating the file
+list, resulting in more accurate include/exclude rule interpretation. This fixes
+builds in some dependencies, notably <code>aws-lc-rs</code> from git.</li>
+</ul>
+<h2 id="0230---2026-01-13"><a class="header" href="#0230---2026-01-13"><a href="https://github.com/ipetkov/crane/compare/v0.22.0...v0.23.0">0.23.0</a> - 2026-01-13</a></h2>
+<h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: <code>mkCargoDerivation</code> now no longer automatically includes the
+<code>remapPathPrefixHook</code> as a nativeBuildInput. Unfortunately, this hook’s
+implementation will lead to cache invalidation if built on a Nix
+implementation outside of NixOS (see the API documentation for more details).
+Thus using this hook is now <em>opt-in</em>.</li>
+</ul>
+<h2 id="0220---2025-12-26"><a class="header" href="#0220---2025-12-26"><a href="https://github.com/ipetkov/crane/compare/v0.21.3...v0.22.0">0.22.0</a> - 2025-12-26</a></h2>
+<h3 id="changed-2"><a class="header" href="#changed-2">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: dropped compatibility for Nix versions below 2.31.2</li>
+<li><strong>Breaking</strong>: dropped compatibility for nixpkgs-25.05</li>
+<li><code>remapPathPrefixHook</code> is now do nothing when building on Darwin since the
+current implementation results in validating build caches due to Nix behavior
+differences between Linux and Darwin.</li>
+</ul>
+<h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
+<ul>
+<li><code>mkCargoDerivation</code> will now set <code>noCompressDebugSectionsSet</code> to disable
+compressing debug sections (when <code>remapPathPrefixHook</code> is active and running)
+on platforms which do not support it</li>
+</ul>
+<h2 id="0213---2025-12-04"><a class="header" href="#0213---2025-12-04"><a href="https://github.com/ipetkov/crane/compare/v0.21.2...v0.21.3">0.21.3</a> - 2025-12-04</a></h2>
+<h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
+<ul>
+<li>Add <code>remapSourcePathPrefixHook</code>, which can map source code file paths to their
+correct location within the Nix store. By default this hook will run for any
+<code>dontStrip = true</code> builds, but can otherwise be controlled using
+<code>doRemapPathPrefix</code>.</li>
+</ul>
+<h3 id="fixed-1"><a class="header" href="#fixed-1">Fixed</a></h3>
+<ul>
+<li><code>downloadCargoPackageFromGit</code> now correctly includes any files listed in a
+<code>.ignore</code> file (but otherwise not listed in <code>.gitignore</code>) when unpacking git
+checkouts.</li>
+</ul>
+<h2 id="0212---2025-11-07"><a class="header" href="#0212---2025-11-07"><a href="https://github.com/ipetkov/crane/compare/v0.21.1...v0.21.2">0.21.2</a> - 2025-11-07</a></h2>
+<h3 id="changed-3"><a class="header" href="#changed-3">Changed</a></h3>
+<ul>
+<li><code>mkDummySrc</code> now accepts <code>dummyBuildrs</code> to customize the dummy source used for
+build scripts specifically. If not specified, the value of <code>dummyrs</code> will be
+used, otherwise, the existing default dummy build script will be used.</li>
+</ul>
+<h3 id="fixed-2"><a class="header" href="#fixed-2">Fixed</a></h3>
+<ul>
+<li>Fix Windows pthreads being added to non-Windows platforms when cross compiling</li>
+</ul>
+<h2 id="0211---2025-09-24"><a class="header" href="#0211---2025-09-24"><a href="https://github.com/ipetkov/crane/compare/v0.21.0...v0.21.1">0.21.1</a> - 2025-09-24</a></h2>
+<h3 id="fixed-3"><a class="header" href="#fixed-3">Fixed</a></h3>
+<ul>
+<li>The default dummy source used by <code>mkDummySrc</code> now additionally works for the
+<code>amdgpu</code> target out of the box</li>
+<li><code>removeReferencesToRustToolchainHook</code> now handles exclusions case
+insensitively</li>
+<li><code>cleanCargoToml</code> now retains targets’ <code>harness</code> attribute if defined</li>
+<li><code>cargoTest</code>, <code>cargoDocTest</code>, and <code>cargoNextest</code> will log a warning if <code>doCheck = false;</code></li>
+<li><code>installCargoArtifactsHook</code> gracefully handles (ignores) situations where no
+cargo artifacts are generated by the derivation</li>
+</ul>
+<h2 id="0210---2025-07-19"><a class="header" href="#0210---2025-07-19"><a href="https://github.com/ipetkov/crane/compare/v0.20.3...v0.21.0">0.21.0</a> - 2025-07-19</a></h2>
+<h3 id="changed-4"><a class="header" href="#changed-4">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: dropped compatibility for Nix versions below 2.28.3</li>
+<li><strong>Breaking</strong>: dropped compatibility for nixpkgs-24.11</li>
+<li>Windows cross builds provides pthreads as it is required for most crates.</li>
+<li><code>registryFromSparse</code> now passes <code>fetchurlExtraArgs</code> to the initial query for the
+registry’s <code>config.json</code></li>
+</ul>
+<h2 id="0203---2025-04-23"><a class="header" href="#0203---2025-04-23"><a href="https://github.com/ipetkov/crane/compare/v0.20.2...v0.20.3">0.20.3</a> - 2025-04-23</a></h2>
+<h3 id="added-2"><a class="header" href="#added-2">Added</a></h3>
+<ul>
+<li><code>mkCrossToolchainEnv</code> is now available for setting up some default
+cross-compilation environment variables and derivation arguments</li>
+</ul>
+<h3 id="changed-5"><a class="header" href="#changed-5">Changed</a></h3>
+<ul>
+<li>Vendoring git dependencies now respects Cargo.toml <code>includes</code> and <code>excludes</code></li>
+<li><code>mkCargoDerivation</code> now configures the cross-compilation toolchain by default
+using the newly added <code>mkCrossToolchainEnv</code> function. To select the utilized
+cross compiler, the <code>stdenv</code> argument now also accepts a selector function,
+taking an arbitrary <code>pkgs</code> instantiation as an argument. This behavior can be
+turned off by setting <code>doIncludeCrossToolchainEnv = false;</code>.</li>
+</ul>
+<h2 id="0202---2025-03-08"><a class="header" href="#0202---2025-03-08"><a href="https://github.com/ipetkov/crane/compare/v0.20.1...v0.20.2">0.20.2</a> - 2025-03-08</a></h2>
+<h3 id="changed-6"><a class="header" href="#changed-6">Changed</a></h3>
+<ul>
+<li><code>craneUtils</code> (used internally for vendoring git dependencies) now uses
+<code>importCargoLock</code> to fetch its own dependencies instead of the (now
+deprecated) <code>fetchCargoTarball</code> method.</li>
+<li><code>cleanCargoToml</code> now preserves the <code>proc-macro</code> attribute of any defined
+targets</li>
+</ul>
+<h3 id="fixed-4"><a class="header" href="#fixed-4">Fixed</a></h3>
+<ul>
+<li><code>buildTrunkPackage</code> no longer ignores <code>installPhase</code> and <code>installPhaseCommand</code> args.</li>
+<li><code>mkDummySrc</code> now supports embedded proc-macros.</li>
+<li><code>removeReferencesToRustToolchainHook</code> now handles file names which contain
+whitespace</li>
+<li><code>removeReferencesToVendoredSourcesHook</code> now handles file names which contain
+whitespace</li>
+</ul>
+<h2 id="0201---2025-02-08"><a class="header" href="#0201---2025-02-08"><a href="https://github.com/ipetkov/crane/compare/v0.20.0...v0.20.1">0.20.1</a> - 2025-02-08</a></h2>
+<h3 id="added-3"><a class="header" href="#added-3">Added</a></h3>
+<ul>
+<li><code>cargoNextest</code> now supports passing <code>cargoNextestPartitionsExtraArgs</code> to each
+<code>cargo nextest</code> partition run.</li>
+<li>Add self-reference <code>craneLib</code> to crane lib instance.</li>
+<li>Add <code>removeReferencesToRustToolchainHook</code>, which, by default, removes
+references to the Rust toolchain from all installed binaries</li>
+</ul>
+<h3 id="changed-7"><a class="header" href="#changed-7">Changed</a></h3>
+<ul>
+<li><code>buildPackage</code> now includes <code>removeReferencesToRustToolchainHook</code> as a native
+dependency. To disable automatically removing references to the Rust
+toolchain, set <code>doNotRemoveReferencesToRustToolchain = true;</code></li>
+<li><code>mkCargoDerivation</code> now will also append the <code>rustc</code> package to the
+derivation’s <code>nativeBuildInputs</code></li>
+</ul>
+<h2 id="0200---2024-12-21"><a class="header" href="#0200---2024-12-21"><a href="https://github.com/ipetkov/crane/compare/v0.19.4...v0.20.0">0.20.0</a> - 2024-12-21</a></h2>
+<h3 id="changed-8"><a class="header" href="#changed-8">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: dropped compatibility for Nix versions below 2.24.10</li>
+<li><strong>Breaking</strong>: dropped compatibility for nixpkgs-24.05</li>
+<li><strong>Breaking</strong> (technically): <code>buildPackage</code>’s installation behavior has been
+split into two steps: binaries are now installed into a temporary directory as
+a post build hook (to avoid interference from the check phase clobbering
+resultant binaries with development features enabled) followed by an actual
+installation (from said directory) during the install phase. If you use a
+custom build phase with <code>buildPackage</code> you may need to ensure the additional
+post build hook defined in <code>installFromCargoBuildLogHook</code> runs (or follow the
+error messages to resolve any build issues).</li>
+<li><code>mkDummySrc</code> has been reworked to match cargo’s <code>autobin</code> detection logic,
+meaning that only real binary targets defined by the project will be dummified
+if they exist (no more injecting <code>src/bin/crane-dummy-*</code>). This does mean that
+adding a new bin target definition will invalidate caches and require
+rebuilding all dependencies once more. (If this is a frequent enough
+occurrence for your project to cause headaches, please open an issue!)</li>
+</ul>
+<h3 id="fixed-5"><a class="header" href="#fixed-5">Fixed</a></h3>
+<ul>
+<li><code>mkDummySrc</code> will deduplicate discovered and declared binary targets when
+dummifying sources</li>
+<li><code>crateNameFromCargoToml</code> will ignore store contexts when parsing a Cargo.toml
+file (avoiding errors like <code>the string ... is not allowed to refer to a store path</code>).</li>
+<li><code>vendorGitDeps</code> will perform a basic URL-decoding of git dependency entries in
+the <code>Cargo.lock</code> file since lockfiles now encode special characters starting
+at version 4</li>
+</ul>
+<h3 id="meta"><a class="header" href="#meta">Meta</a></h3>
+<ul>
+<li>Dropped support for publishing releases to https://flakestry.dev/</li>
+</ul>
+<h2 id="0194---2024-11-30"><a class="header" href="#0194---2024-11-30"><a href="https://github.com/ipetkov/crane/compare/v0.19.3...v0.19.4">0.19.4</a> - 2024-11-30</a></h2>
+<h3 id="fixed-6"><a class="header" href="#fixed-6">Fixed</a></h3>
+<ul>
+<li><code>removeReferencesToVendoredSources</code> now deduplicates any found references to
+avoid pathological memory usage before removing them.</li>
+<li><code>buildDepsOnly</code> will calculate fallback <code>pname</code>/<code>version</code>/<code>cargoVendorDir</code>
+attributes using <code>dummySrc</code> if it was specified (rather than attempting to use
+<code>src</code>)</li>
+</ul>
+<h2 id="0193---2024-11-18"><a class="header" href="#0193---2024-11-18"><a href="https://github.com/ipetkov/crane/compare/v0.19.2...v0.19.3">0.19.3</a> - 2024-11-18</a></h2>
+<p>A republish of 0.19.2 which was incorrectly tagged.</p>
+<h2 id="0192---2024-11-18"><a class="header" href="#0192---2024-11-18"><a href="https://github.com/ipetkov/crane/compare/v0.19.1...v0.19.2">0.19.2</a> - 2024-11-18</a></h2>
+<h3 id="added-4"><a class="header" href="#added-4">Added</a></h3>
+<ul>
+<li>Added a number of fileset helpers to more easily compose source filtering:
+<ul>
+<li><code>fileset.cargoTomlAndLock</code>: for <code>Cargo.toml</code> and <code>Cargo.lock</code> files</li>
+<li><code>fileset.commonCargoSources</code>: for files commonly used by cargo projects</li>
+<li><code>fileset.configToml</code>: for <code>config.toml</code> files</li>
+<li><code>fileset.rust</code>: for <code>*.rs</code> files</li>
+<li><code>fileset.toml</code>: for <code>*.toml</code> files</li>
+</ul>
+</li>
+</ul>
+<h3 id="fixed-7"><a class="header" href="#fixed-7">Fixed</a></h3>
+<ul>
+<li><code>buildTrunkPackage</code> will pass in <code>--release=true</code> (instead of just
+<code>--release</code>) for trunk versions 0.21 or higher to avoid argument ambiguities</li>
+<li><code>buildTrunkPackage</code> will now correctly honor <code>buildPhaseCargoCommand</code> if
+specified (previously the value of <code>buildPhaseCommand</code> was incorrectly being
+used)</li>
+<li><code>removeReferencesToVendoredSourcesHook</code> avoids referencing <code>/dev/fd</code>
+directly since it may not be present on certain platforms</li>
+</ul>
+<h2 id="0191---2024-10-12"><a class="header" href="#0191---2024-10-12"><a href="https://github.com/ipetkov/crane/compare/v0.19.0...v0.19.1">0.19.1</a> - 2024-10-12</a></h2>
+<h3 id="added-5"><a class="header" href="#added-5">Added</a></h3>
+<ul>
+<li><code>cargoDocTest</code> is now available as an alternative to <code>cargoTest</code> which runs
+only doc tests.</li>
+</ul>
+<h3 id="changed-9"><a class="header" href="#changed-9">Changed</a></h3>
+<ul>
+<li><code>buildDepsOnly</code> now sets <code>CRANE_BUILD_DEPS_ONLY</code> as an environment variable
+when it runs. Build hooks can use this as a shortcut to determine whether
+running inside of a <code>buildDepsOnly</code> derivation in case they need to tailor
+their behavior accordingly.</li>
+</ul>
+<h3 id="fixed-8"><a class="header" href="#fixed-8">Fixed</a></h3>
+<ul>
+<li>Vendoring dependencies avoids creating malformed TOML configurations in
+situations where registry name/url definitions cannot be found. When this
+happens a warning will be printed out during evaluation to highlight the
+issue.</li>
+</ul>
+<h2 id="0190---2024-09-25"><a class="header" href="#0190---2024-09-25"><a href="https://github.com/ipetkov/crane/compare/v0.18.1...v0.19.0">0.19.0</a> - 2024-09-25</a></h2>
+<h3 id="added-6"><a class="header" href="#added-6">Added</a></h3>
+<ul>
+<li><code>taploFmt</code> is now available for checking TOML formatting</li>
+</ul>
+<h3 id="changed-10"><a class="header" href="#changed-10">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong> (technically): <code>buildPackage</code> no longer adds <code>jq</code> to
+<code>nativeBuildInputs</code> as doing so can result in rebuilding any <code>*-sys</code> crates
+which rely on <code>PKG_CONFIG_PATH</code> remaining stable</li>
+<li><strong>Breaking</strong>: <code>downloadCargoPackageFromGit</code> now takes <code>hash</code> instead of
+<code>sha256</code> when specifying an output hash for the download</li>
+<li><code>installFromCargoBuildLogHook</code> no longer assumes or requires that <code>jq</code> is
+available on <code>$PATH</code> and will instead directly reference <code>pkgs.jq</code></li>
+<li><code>downloadCargoPackageFromGit</code> will now set <code>fetchLFS = true</code> when fetching git
+repos with defined output hashes</li>
+</ul>
+<h3 id="fixed-9"><a class="header" href="#fixed-9">Fixed</a></h3>
+<ul>
+<li><code>cargoDoc</code> correctly honors <code>docInstallRoot</code> when specified</li>
+<li><code>cargoDoc</code> falls back to installing from <code>./target/doc</code> even if
+<code>$CARGO_BUILD_TARGET</code> is set but <code>./target/$CARGO_BUILD_TARGET/doc</code> does not
+exist</li>
+</ul>
+<h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
+<ul>
+<li>The deprecated top-level (flake) attribute <code>lib</code> no longer exists. Please use
+<code>mkLib</code> with an instance of <code>pkgs</code> instead.</li>
+</ul>
+<h2 id="0181---2024-08-22"><a class="header" href="#0181---2024-08-22"><a href="https://github.com/ipetkov/crane/compare/v0.18.0...v0.18.1">0.18.1</a> - 2024-08-22</a></h2>
+<h3 id="fixed-10"><a class="header" href="#fixed-10">Fixed</a></h3>
+<ul>
+<li>Fixed vendoring dependencies from an alternative registry which they
+themselves have dependencies on crates from <em>other</em> registries.</li>
+<li>Fixed <code>cargoNextest</code>’s positioning of <code>cargoExtraArgs</code> to form a valid command
+invocation when specified.</li>
+</ul>
+<h2 id="0180---2024-07-05"><a class="header" href="#0180---2024-07-05"><a href="https://github.com/ipetkov/crane/compare/v0.17.3...v0.18.0">0.18.0</a> - 2024-07-05</a></h2>
+<h3 id="changed-11"><a class="header" href="#changed-11">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: dropped compatibility for Nix versions below 2.18.2</li>
+<li><strong>Breaking</strong>: dropped compatibility for nixpkgs-23.11</li>
+<li>The guidance around using (both) <code>cleanCargoSource</code> and <code>path</code> has been
+updated. Namely, it is no longer necessary to call both (e.g.
+<code>craneLib.cleanCargoSource (craneLib.path ./.)</code>): it is recommended to either
+use <code>craneLib.cleanCargoSource ./.</code> directly (if the default source cleaning
+is desired) or <code>craneLib.path ./.</code> (if not).</li>
+<li><code>overrideToolchain</code> has been updated to better handle cross-compilation
+splicing for a customized toolchain. This means that <code>overrideToolchain</code>
+should now be called with a function which constructs said toolchain for any
+given <code>pkgs</code> instantiation. For example: <code>craneLib.overrideToolchain (p: p.rust-bin.stable.latest.default)</code></li>
+</ul>
+<h3 id="fixed-11"><a class="header" href="#fixed-11">Fixed</a></h3>
+<ul>
+<li>The cross compilation example also hows how to set the <code>TARGET_CC</code> environment
+variable which may be required by some build scripts to function properly</li>
+<li><code>vendorCargoDeps</code> and <code>crateNameFromCargoToml</code> do their best to avoid IFD when
+<code>src</code> is the result of <code>lib.cleanSourceWith</code> (and by extension
+<code>cleanCargoSource</code>)</li>
+<li><code>removeReferencesToVendoredSources</code> handles the edge case where
+<code>cargoVendorDir</code> does not point to a path within the Nix store</li>
+<li>It is now possible to use <code>.overrideScope</code> to change what instance of
+<code>craneUtils</code> will be used during vendoring.</li>
+</ul>
+<h2 id="0173---2024-06-02"><a class="header" href="#0173---2024-06-02"><a href="https://github.com/ipetkov/crane/compare/v0.17.2...v0.17.3">0.17.3</a> - 2024-06-02</a></h2>
+<h3 id="fixed-12"><a class="header" href="#fixed-12">Fixed</a></h3>
+<ul>
+<li><code>removeReferencesToVendoredSources</code> correctly signs aarch64-darwin builds
+(which was accidentally broken in 0.17.2)</li>
+</ul>
+<h2 id="0172---2024-05-26"><a class="header" href="#0172---2024-05-26"><a href="https://github.com/ipetkov/crane/compare/v0.17.1...v0.17.2">0.17.2</a> - 2024-05-26</a></h2>
+<h3 id="fixed-13"><a class="header" href="#fixed-13">Fixed</a></h3>
+<ul>
+<li><code>removeReferencesToVendoredSources</code> has been optimized to search for source
+references only once. For derivations which install many files, this phase can
+run up to 99% faster than before.</li>
+<li><code>cleanCargoToml</code> now cleans underscored versions of the same attributes (e.g.
+<code>lib.proc-macro</code> and <code>lib.proc_macro</code>)</li>
+</ul>
+<h2 id="0171---2024-05-19"><a class="header" href="#0171---2024-05-19"><a href="https://github.com/ipetkov/crane/compare/v0.17.0...v0.17.1">0.17.1</a> - 2024-05-19</a></h2>
+<h3 id="fixed-14"><a class="header" href="#fixed-14">Fixed</a></h3>
+<ul>
+<li><code>downloadCargoPackage</code> and <code>downloadCargoPackageFromGit</code> no longer run the
+fixup phase by default, avoiding issues with source directories and files
+being moved to different locations</li>
+<li><code>downloadCargoPackage</code> now unpacks and installs from a fresh directory,
+avoiding having build environment files (like <code>env-vars</code>) appearing in the
+output</li>
+</ul>
+<h2 id="0170---2024-05-18"><a class="header" href="#0170---2024-05-18"><a href="https://github.com/ipetkov/crane/compare/v0.16.6...v0.17.0">0.17.0</a> - 2024-05-18</a></h2>
+<h3 id="added-7"><a class="header" href="#added-7">Added</a></h3>
+<ul>
+<li><code>cargoDoc</code> now supports <code>docInstallRoot</code> to influence which directory will be
+installed to <code>$out/share</code> (which can be useful when cross-compiling). By
+default <code>$CARGO_TARGET_DIR</code> and <code>$CARGO_BUILD_TARGET</code> (if set) will be taken
+into account</li>
+<li><code>crateNameFromCargoToml</code> now supports selecting a derivation name by setting
+<code>package.metadata.crane.name</code> or <code>workspace.metadata.crane.name</code> in the root
+<code>Cargo.toml</code></li>
+<li><code>vendorCargoDeps</code>, <code>vendorCargoRegistries</code>, <code>vendorGitDeps</code>, and
+<code>vendorMultipleCargoDeps</code> now support arbitrary overrides (i.e. patching) at
+the individual crate/repo level when vendoring sources.</li>
+</ul>
+<h3 id="changed-12"><a class="header" href="#changed-12">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong> <code>cargoAudit</code> no longer accepts <code>cargoExtraArgs</code> (since it does
+not support the regular set of <code>cargo</code> flags like most cargo-commands do, it
+does not make much sense to propagate those flags through)</li>
+<li><code>buildTrunkPackage</code> now sets <code>env.TRUNK_SKIP_VERSION_CHECK = "true";</code> if not
+specified</li>
+</ul>
+<h3 id="deprecations"><a class="header" href="#deprecations">Deprecations</a></h3>
+<ul>
+<li>In the future, <code>crateNameFromCargoToml</code> will stop considering
+<code>workspace.package.name</code> in the root <code>Cargo.toml</code> when determining the crate
+name. This attribute is not recognized by cargo (which will emit its own
+warnings about it) and should be avoided going forward.</li>
+<li>In the future, <code>crane.lib.${system}</code> will be removed. Please switch to using
+<code>(crane.mkLib nixpkgs.lib.${system})</code> as an equivalent alternative.</li>
+</ul>
+<h2 id="0166---2024-05-04"><a class="header" href="#0166---2024-05-04"><a href="https://github.com/ipetkov/crane/compare/v0.16.5...v0.16.6">0.16.6</a> - 2024-05-04</a></h2>
+<h3 id="fixed-15"><a class="header" href="#fixed-15">Fixed</a></h3>
+<ul>
+<li>Same as 0.16.5 but with the correct tag deployed to Flakestry/FlakeHub</li>
+</ul>
+<h2 id="0165---2024-05-04"><a class="header" href="#0165---2024-05-04"><a href="https://github.com/ipetkov/crane/compare/v0.16.4...v0.16.5">0.16.5</a> - 2024-05-04</a></h2>
+<h3 id="fixed-16"><a class="header" href="#fixed-16">Fixed</a></h3>
+<ul>
+<li>Workspace inheritance for git dependencies now ignores (removes) all comments
+around dependency declarations to work around a mangling bug in <code>toml_edit</code>
+(see https://github.com/ipetkov/crane/issues/527 and
+https://github.com/toml-rs/toml/issues/691)</li>
+</ul>
+<h2 id="0164---2024-04-07"><a class="header" href="#0164---2024-04-07"><a href="https://github.com/ipetkov/crane/compare/v0.16.3...v0.16.4">0.16.4</a> - 2024-04-07</a></h2>
+<h3 id="added-8"><a class="header" href="#added-8">Added</a></h3>
+<ul>
+<li>Added a warning if an unsupported version of nixpkgs is used</li>
+</ul>
+<h3 id="changed-13"><a class="header" href="#changed-13">Changed</a></h3>
+<ul>
+<li><code>cargoNextest</code> now supports setting <code>withLlvmCov</code> which will automatically run
+<code>cargo llvm-cov nextest</code>. Note that <code>withLlvmCov = true;</code> is (currently) only
+supported when <code>partitions = 1;</code></li>
+</ul>
+<h3 id="fixed-17"><a class="header" href="#fixed-17">Fixed</a></h3>
+<ul>
+<li><code>inheritCargoArtifactsHook</code> and <code>installCargoArtifactsHook</code> now correctly
+handle the case when <code>CARGO_TARGET_DIR</code> is set to a nested directory</li>
+<li>Dependency vendoring now correctly takes unused patch dependencies into
+account</li>
+</ul>
+<h2 id="0163---2024-03-19"><a class="header" href="#0163---2024-03-19"><a href="https://github.com/ipetkov/crane/compare/v0.16.2...v0.16.3">0.16.3</a> - 2024-03-19</a></h2>
+<h3 id="changed-14"><a class="header" href="#changed-14">Changed</a></h3>
+<ul>
+<li>Sources are now fetched <a href="https://blog.rust-lang.org/2024/03/11/crates-io-download-changes.html">crates.io’s
+CDN</a>,
+following cargo’s (new) default behavior.</li>
+</ul>
+<h3 id="fixed-18"><a class="header" href="#fixed-18">Fixed</a></h3>
+<ul>
+<li><code>vendorMultipleCargoDeps</code> correctly lists <code>registries</code> as an optional
+parameter</li>
+</ul>
+<h2 id="0162---2024-02-21"><a class="header" href="#0162---2024-02-21"><a href="https://github.com/ipetkov/crane/compare/v0.16.1...v0.16.2">0.16.2</a> - 2024-02-21</a></h2>
+<h3 id="changed-15"><a class="header" href="#changed-15">Changed</a></h3>
+<ul>
+<li><code>cleanCargoToml</code> now also strips out <code>[lints]</code> and <code>[workspace.lints]</code>
+definitions. This means avoiding unnecessarily rebuilding dependencies when
+the lint definitions change, and it avoids issues with failing to build
+dummified sources which might have violated a lint marked as <code>deny</code> or
+<code>forbid</code></li>
+</ul>
+<h3 id="fixed-19"><a class="header" href="#fixed-19">Fixed</a></h3>
+<ul>
+<li>Fixed an edge case with inheriting workspace dependencies where the workspace
+dependency is a string (e.g. <code>foo = "0.1.2"</code>) but the crate definition is a
+table (e.g. <code>foo = { workspace = true, optional = true }</code>)</li>
+</ul>
+<h2 id="0161---2024-01-28"><a class="header" href="#0161---2024-01-28"><a href="https://github.com/ipetkov/crane/compare/v0.16.0...v0.16.1">0.16.1</a> - 2024-01-28</a></h2>
+<h3 id="changed-16"><a class="header" href="#changed-16">Changed</a></h3>
+<ul>
+<li><code>buildDepsOnly</code> now ignores any outputs (besides the default <code>out</code>)</li>
+</ul>
+<h3 id="fixed-20"><a class="header" href="#fixed-20">Fixed</a></h3>
+<ul>
+<li><code>buildDepsOnly</code> no longer fails when workspace is configured with
+<code>#[deny(unused-extern-crates)]</code></li>
+<li><code>vendorCargoDeps</code> (and friends) are now much more friendly to
+cross-compilation definitions. Specifically, source vendoring will always
+build dependencies to run on the build machine (and not for the host we’re
+cross compiling to).</li>
+</ul>
+<h2 id="0160---2024-01-18"><a class="header" href="#0160---2024-01-18"><a href="https://github.com/ipetkov/crane/compare/v0.15.1...v0.16.0">0.16.0</a> - 2024-01-18</a></h2>
+<h3 id="changed-17"><a class="header" href="#changed-17">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: dropped compatibility for Nix versions below 2.18.1</li>
+<li><strong>Breaking</strong>: dropped compatibility for nixpkgs-23.05.</li>
+<li><code>buildTrunkPackage</code> has a new argument, <code>wasm-bindgen-cli</code> must be set
+to avoid mismatching versions between the wasm-bindgen library and CLI tool.</li>
+</ul>
+<h3 id="fixed-21"><a class="header" href="#fixed-21">Fixed</a></h3>
+<ul>
+<li>Workspace inheritance of <code>lints</code> in git dependencies is now correctly handled</li>
+</ul>
+<h2 id="0151---2023-11-30"><a class="header" href="#0151---2023-11-30"><a href="https://github.com/ipetkov/crane/compare/v0.15.0...v0.15.1">0.15.1</a> - 2023-11-30</a></h2>
+<h3 id="changed-18"><a class="header" href="#changed-18">Changed</a></h3>
+<ul>
+<li><code>buildDepsOnly</code> will now assume <code>cargoTestExtraArgs = "--no-run";</code> if not
+specified (since there is no point to trying to run tests with the stripped
+sources). To get the old behavior back, set <code>cargoTestExtraArgs = "";</code></li>
+</ul>
+<h3 id="fixed-22"><a class="header" href="#fixed-22">Fixed</a></h3>
+<ul>
+<li><code>buildTrunkPackage</code>’s <code>preConfigure</code> script to fail quicker with a more
+obvious error message if dependencies at not appropriately met</li>
+</ul>
+<h2 id="0150---2023-11-05"><a class="header" href="#0150---2023-11-05"><a href="https://github.com/ipetkov/crane/compare/v0.14.3...v0.15.0">0.15.0</a> - 2023-11-05</a></h2>
+<h3 id="added-9"><a class="header" href="#added-9">Added</a></h3>
+<ul>
+<li><code>cargoDeny</code> added for running <a href="https://github.com/EmbarkStudios/cargo-deny"><code>cargo-deny</code></a>.</li>
+<li><code>installCargoArtifactsHook</code> will now pass along the contents of
+<code>$zstdCompressionExtraArgs</code> as arguments to <code>zstd</code> when compressing artifacts.
+This allows for tailoring compression behavior, for example, by setting
+<code>zstdCompressionExtraArgs = "-19";</code> on the derivation.</li>
+</ul>
+<h3 id="changed-19"><a class="header" href="#changed-19">Changed</a></h3>
+<ul>
+<li>The <code>use-zstd</code> artifact installation mode now uses a chained, incremental
+approach to avoid redundancy. Old behavior (taking a full snapshot of the
+cargo artifacts) can be achieved by setting <code>doCompressAndInstallFullArchive = true</code>.</li>
+<li>The default <code>installCargoArtifactsMode</code> has been changed to <code>use-zstd</code>,
+meaning cargo artifacts will be compressed to a series of incremental, zstd
+compressed tarballs across derivations. To get the old behavior back, set
+<code>installCargoArtifactsMode = "use-symlink"</code> to any derivation which produces
+cargo artifacts.</li>
+<li>All dependencies (outside of <code>nixpkgs</code>) have been dropped from the (main)
+flake.lock file so they do not pollute downstream projects’ lock files.</li>
+</ul>
+<h3 id="fixed-23"><a class="header" href="#fixed-23">Fixed</a></h3>
+<ul>
+<li><code>mkDummySrc</code> now properly handles file cleaning (and file including) when a
+build is invoked with a <code>--store ...</code> override</li>
+</ul>
+<h2 id="0143---2023-10-17"><a class="header" href="#0143---2023-10-17"><a href="https://github.com/ipetkov/crane/compare/v0.14.2...v0.14.3">0.14.3</a> - 2023-10-17</a></h2>
+<h3 id="changed-20"><a class="header" href="#changed-20">Changed</a></h3>
+<ul>
+<li><code>craneUtils</code> will now be built with the <code>rustPlatform</code> provided by nixpkgs
+instead of the currently configured toolchain. This should hopefully result in
+fewer surprises for those testing with really old MSRV toolchains.</li>
+<li><code>devShell</code> will now additionally include <code>clippy</code> and <code>rustfmt</code> from the
+currently configured toolchain</li>
+</ul>
+<h3 id="fixed-24"><a class="header" href="#fixed-24">Fixed</a></h3>
+<ul>
+<li><code>replaceCargoLockHook</code> now runs as a <code>prePatch</code> hook (rather
+than <code>postUnpack</code>) which correctly replaces the <code>Cargo.lock</code> in the source
+directory rather than the parent directory</li>
+</ul>
+<h2 id="0142---2023-10-15"><a class="header" href="#0142---2023-10-15"><a href="https://github.com/ipetkov/crane/compare/v0.14.1...v0.14.2">0.14.2</a> - 2023-10-15</a></h2>
+<h3 id="added-10"><a class="header" href="#added-10">Added</a></h3>
+<ul>
+<li><code>replaceCargoLockHook</code> can now be used to easily replace or insert a
+<code>Cargo.lock</code> file in the current derivation</li>
+</ul>
+<h3 id="changed-21"><a class="header" href="#changed-21">Changed</a></h3>
+<ul>
+<li><code>cargoAudit</code> will pass <code>--ignore yanked</code> by default if <code>cargoAuditExtraArgs</code>
+are not specified. This is because <code>cargo-audit</code> cannot check for yanked
+crates from inside of the sandbox. To get the old behavior back, set
+<code>cargoAuditExtraArgs = "";</code>.</li>
+</ul>
+<h3 id="fixed-25"><a class="header" href="#fixed-25">Fixed</a></h3>
+<ul>
+<li>Fixed handling of Cargo workspace inheritance for git-dependencies where said
+crate relies on reading non-TOML metadata (i.e. comments) from its Cargo.toml
+at build time. (<a href="https://github.com/ipetkov/crane/pull/407">#407</a>)</li>
+<li>Fixed handling of dummy target names to avoid issues with <code>cargo doc</code>.
+(<a href="https://github.com/ipetkov/crane/pull/410">#410</a>)</li>
+<li>When using <code>installCargoArtifactsMode = "use-zstd";</code> all files will be marked
+as user-writable while compressing</li>
+<li><code>removeReferencesToVendoredSources</code> now signs <code>aarch64-darwin</code> binaries. (<a href="https://github.com/ipetkov/crane/pull/418">#418</a>)</li>
+</ul>
+<h2 id="0141---2023-09-23"><a class="header" href="#0141---2023-09-23"><a href="https://github.com/ipetkov/crane/compare/v0.14.0...v0.14.1">0.14.1</a> - 2023-09-23</a></h2>
+<h3 id="fixed-26"><a class="header" href="#fixed-26">Fixed</a></h3>
+<ul>
+<li>Fixed a bug where <code>buildPackage</code> would fail to inherit artifacts from
+dependency crates if <code>cargoArtifacts</code> was not explicitly specified.</li>
+</ul>
+<h2 id="0140---2023-09-21"><a class="header" href="#0140---2023-09-21"><a href="https://github.com/ipetkov/crane/compare/v0.13.1...v0.14.0">0.14.0</a> - 2023-09-21</a></h2>
+<h3 id="added-11"><a class="header" href="#added-11">Added</a></h3>
+<ul>
+<li>Added <code>devShell</code>, a thin wrapper around <code>pkgs.mkShell</code> which automatically
+provides <code>cargo</code> and <code>rustc</code>.</li>
+<li>Added the ability to specify output hashes of git dependencies for fully
+offline evaluations. The <code>outputHashes</code> attribute can now be optionally
+specified in <code>vendorCargoDeps</code>, <code>vendorGitDeps</code>, <code>vendorMultipleCargoDeps</code>, or
+anything else which delegates to them.</li>
+</ul>
+<h3 id="changed-22"><a class="header" href="#changed-22">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong> (technically): <code>buildDepsOnly</code>, <code>buildPackage</code>, <code>cargoBuild</code>,
+<code>cargoClippy</code>, <code>cargoDoc</code>, <code>cargoLlvmCov</code>, and <code>cargoTest</code>’s defaults have
+been changed such that if <code>cargoExtraArgs</code> have not been set, a default value
+of <code>--locked</code> will be used. This ensures that a project’s committed
+<code>Cargo.lock</code> is exactly what is expected (without implicit changes at build
+time) but this may end up rejecting builds which were previously passing. To
+get the old behavior back, set <code>cargoExtraArgs = "";</code></li>
+<li><strong>Breaking</strong>: <code>cargoDoc</code> will no longer install cargo artifacts by default.
+Set <code>doInstallCargoArtifacts = true;</code> to get the old behavior back.</li>
+<li><code>cargoDoc</code> will now install generated documentation in <code>$out/share/doc</code></li>
+<li>Fixed a bug when testing proc macro crates with <code>cargoNextest</code> on macOS.
+(<a href="https://github.com/ipetkov/crane/pull/376">#376</a>)</li>
+<li>Replaced various internal usages of <code>runCommandLocal</code> with <code>runCommand</code> for
+more optimal behavior when downloading cached artifacts</li>
+</ul>
+<h2 id="0131---2023-08-22"><a class="header" href="#0131---2023-08-22"><a href="https://github.com/ipetkov/crane/compare/v0.13.0...v0.13.1">0.13.1</a> - 2023-08-22</a></h2>
+<h3 id="changed-23"><a class="header" href="#changed-23">Changed</a></h3>
+<ul>
+<li><code>buildTrunkPackage</code> will now use <code>dart-sass</code> instead of <code>nodePackages.sass</code></li>
+<li>Vendoring git dependencies will now always resolve symlinks inside of a
+crate’s directory. This allows for symlinks inside of a crate’s directory to
+possibly refer to files at the root of the git repo itself (via symlink) and
+have those contents preserved during vendoring.</li>
+</ul>
+<h2 id="0130---2023-08-07"><a class="header" href="#0130---2023-08-07"><a href="https://github.com/ipetkov/crane/compare/v0.12.2...v0.13.0">0.13.0</a> - 2023-08-07</a></h2>
+<h3 id="added-12"><a class="header" href="#added-12">Added</a></h3>
+<ul>
+<li><code>buildPackage</code> now supports installing <code>dylib</code> targets</li>
+<li>Added support for sparse registries</li>
+</ul>
+<h3 id="changed-24"><a class="header" href="#changed-24">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: dropped compatibility for Nix versions below 2.13.3</li>
+<li><strong>Breaking</strong>: dropped compatibility for nixpkgs-22.05. nixpkgs-23.05 and</li>
+<li><strong>Breaking</strong> (technically): if <code>buildPackage</code> is called <em>without</em> setting
+<code>cargoArtifacts</code>, the default <code>buildDepsOnly</code> invocation will now stop running
+any installation hooks</li>
+<li><strong>Breaking</strong> (technically): <code>buildPackage</code> no longer installs cargo binary
+dependencies (i.e. when the <code>bindeps</code> feature is used) by default</li>
+<li><code>inheritCargoArtifactsHook</code> will now symlink dependency <code>.rlib</code> and <code>.rmeta</code>
+files. This means that derivations which reuse existing cargo artifacts will
+run faster as fewer files (and bytes!) need to be copied around. To disable
+this behavior, set <code>doNotLinkInheritedArtifacts = true;</code>.</li>
+<li><code>cargoTarpaulin</code> will now set <code>doNotLinkInheritedArtifacts = true;</code> unless
+otherwise specified</li>
+<li>Update <code>crane-utils</code> dependencies for successful build in nightly Rust (2023-06-28)</li>
+</ul>
+<h2 id="0122---2023-06-06"><a class="header" href="#0122---2023-06-06"><a href="https://github.com/ipetkov/crane/compare/v0.12.1...v0.12.2">0.12.2</a> - 2023-06-06</a></h2>
+<h3 id="added-13"><a class="header" href="#added-13">Added</a></h3>
+<ul>
+<li>Added support for the <a href="https://trunkrs.dev">Trunk</a> wasm app build tool</li>
+</ul>
+<h3 id="changed-25"><a class="header" href="#changed-25">Changed</a></h3>
+<ul>
+<li><code>resolver</code> key is no longer cleaned from Cargo.toml</li>
+</ul>
+<h3 id="fixed-27"><a class="header" href="#fixed-27">Fixed</a></h3>
+<ul>
+<li><code>buildTrunkPackage</code> will now strip references to store files by default</li>
+<li><code>buildTrunkPackage</code> will now set the right <code>wasm-opt</code> version</li>
+</ul>
+<h2 id="0121---2023-04-10"><a class="header" href="#0121---2023-04-10"><a href="https://github.com/ipetkov/crane/compare/v0.12.0...v0.12.1">0.12.1</a> - 2023-04-10</a></h2>
+<h3 id="changed-26"><a class="header" href="#changed-26">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: When setting a default value for <code>cargoArtifacts</code>,
+<code>buildPackage</code> will now ignore <code>installPhase</code> and <code>installPhaseCommand</code> when
+calling <code>buildPackage</code>. To bring back the old behavior, please specify
+<code>cargoArtifacts</code> explicitly</li>
+</ul>
+<h3 id="added-14"><a class="header" href="#added-14">Added</a></h3>
+<ul>
+<li><code>vendorMultipleCargoDeps</code> can now be used to vendor crates from multiple
+distinct <code>Cargo.lock</code> files. Notably this allows for building the standard
+library (via <code>-Z build-std</code> or equivalent) since both the project’s
+and the Rust toolchain’s <code>Cargo.lock</code> files can be vendored together</li>
+</ul>
+<h3 id="changed-27"><a class="header" href="#changed-27">Changed</a></h3>
+<ul>
+<li><code>vendorCargoRegistries</code> now accepts a <code>registries</code> parameter from the caller.
+If not specified, it will be computed via <code>cargoConfigs</code>. Also <code>cargoConfigs</code>
+is now an optional parameter which will default to <code>[]</code> if not specified.</li>
+</ul>
+<h3 id="fixed-28"><a class="header" href="#fixed-28">Fixed</a></h3>
+<ul>
+<li><code>vendorCargoDeps</code> correctly accepts arguments which have <em>not</em> set <code>src</code>, so
+long as one of <code>cargoLock</code>, <code>cargoLockContents</code>, or <code>cargoLockParsed</code> is set</li>
+</ul>
+<h2 id="0120---2023-03-19"><a class="header" href="#0120---2023-03-19"><a href="https://github.com/ipetkov/crane/compare/v0.11.3...v0.12.0">0.12.0</a> - 2023-03-19</a></h2>
+<h3 id="added-15"><a class="header" href="#added-15">Added</a></h3>
+<ul>
+<li>Add a stubbed binary target to each “dummy” crate generated to support
+<a href="https://doc.rust-lang.org/cargo/reference/unstable.html#artifact-dependencies">“artifact dependencies” nightly feature</a>
+in case a crate is used as <code>bin</code> artifact dependency.</li>
+<li>Add <code>cargoLlvmCov</code> to run <code>cargo llvm-cov</code></li>
+<li>Add <code>cargoLockParsed</code> option to <code>vendorCargoDeps</code> to support <code>Cargo.lock</code>
+files parsed as nix attribute sets.</li>
+<li><code>craneLib.path</code> can now be used as a convenience wrapper on (or drop in
+replacement of) <code>builtins.path</code> to ensure reproducible results whenever paths
+like <code>./.</code> or <code>./..</code> are used directly.</li>
+</ul>
+<h3 id="changed-28"><a class="header" href="#changed-28">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong> (technically): <code>mkCargoDerivation</code> will remove the following
+attributes before lowering to <code>mkDerivation</code>: <code>cargoLock</code>, <code>cargoLockContents</code>
+and <code>cargoLockParsed</code>. If your derivation needs these values to be present
+they can be explicitly passed through via <code>.overrideAttrs</code>
+<code>buildDepsOnly</code> as <code>dummySrc</code> will take priority</li>
+<li>The API docs have been updated to refer to <code>craneLib</code> (instead of just <code>lib</code>)
+to avoid ambiguities with <code>pkgs.lib</code>.</li>
+<li>cargo is now invoked with <code>--release</code> when <code>$CARGO_PROFILE == release</code> instead
+of passing in <code>--profile release</code> to better support tools which do not
+understand the latter</li>
+</ul>
+<h3 id="fixed-29"><a class="header" href="#fixed-29">Fixed</a></h3>
+<ul>
+<li>Fixed support for projects depending on crates utilising per-target workspace dependencies.</li>
+</ul>
+<h2 id="0113---2023-02-19"><a class="header" href="#0113---2023-02-19"><a href="https://github.com/ipetkov/crane/compare/v0.11.2...v0.11.3">0.11.3</a> - 2023-02-19</a></h2>
+<h3 id="fixed-30"><a class="header" href="#fixed-30">Fixed</a></h3>
+<ul>
+<li>Fixed an unintentional cache invalidation whenever <code>buildDepsOnly</code> would run
+on an unfiltered source (like <code>src = ./.;</code>).</li>
+</ul>
+<h3 id="changed-29"><a class="header" href="#changed-29">Changed</a></h3>
+<ul>
+<li>A warning will now be emitted if a derivation’s <code>pname</code> or <code>version</code>
+attributes are not set and the value cannot be loaded from the derivation’s
+root <code>Cargo.toml</code>. To resolve it consider setting <code>pname = "...";</code> or <code>version = "...";</code> explicitly on the derivation.</li>
+<li>A warning will now be emitted if <code>src</code> and <code>dummySrc</code> are passed to
+<code>buildDepsOnly</code> as <code>dummySrc</code> will take priority</li>
+</ul>
+<h2 id="0112---2023-02-11"><a class="header" href="#0112---2023-02-11"><a href="https://github.com/ipetkov/crane/compare/v0.11.1...v0.11.2">0.11.2</a> - 2023-02-11</a></h2>
+<h3 id="fixed-31"><a class="header" href="#fixed-31">Fixed</a></h3>
+<ul>
+<li><code>buildPackage</code> is more tolerant of misbehaving proc macros which write to
+stdout during the build</li>
+</ul>
+<h2 id="0111---2023-01-21"><a class="header" href="#0111---2023-01-21"><a href="https://github.com/ipetkov/crane/compare/v0.11.0...v0.11.1">0.11.1</a> - 2023-01-21</a></h2>
+<h3 id="changed-30"><a class="header" href="#changed-30">Changed</a></h3>
+<ul>
+<li>Documented and made it easier to build a cargo workspace located in a
+subdirectory of the source root</li>
+</ul>
+<h3 id="fixed-32"><a class="header" href="#fixed-32">Fixed</a></h3>
+<ul>
+<li>Previously compiled build scripts now maintain their executable bit when
+inherited</li>
+<li>Workspace inheritance in git dependencies is now correctly handled</li>
+</ul>
+<h2 id="0110---2022-12-26"><a class="header" href="#0110---2022-12-26"><a href="https://github.com/ipetkov/crane/compare/v0.10.0...v0.11.0">0.11.0</a> - 2022-12-26</a></h2>
+<h3 id="added-16"><a class="header" href="#added-16">Added</a></h3>
+<ul>
+<li>Documentation is now available at <a href="https://crane.dev">crane.dev</a></li>
+</ul>
+<h3 id="changed-31"><a class="header" href="#changed-31">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: dropped compatibility for Nix versions below 2.11.0</li>
+<li><strong>Breaking</strong>: dropped compatibility for nixpkgs-22.05. nixpkgs-22.11 and
+nixpkgs-unstable are fully supported</li>
+<li>Zstd compression of cargo artifacts now defaults to using as many cores as
+<code>$NIX_BUILD_CORES</code> allows for (or all available cores if it isn’t defined)</li>
+<li>Dummy sources now attempt to use the same name as their original source (minus
+the Nix store path and hash) to minimize errors with build scripts which
+expect their full path to not change between runs</li>
+</ul>
+<h2 id="0100---2022-12-01"><a class="header" href="#0100---2022-12-01"><a href="https://github.com/ipetkov/crane/compare/v0.9.0...v0.10.0">0.10.0</a> - 2022-12-01</a></h2>
+<h3 id="added-17"><a class="header" href="#added-17">Added</a></h3>
+<ul>
+<li>A new installation mode has been defined which symlinks identical cargo
+artifacts against previously generated ones. This allows for linear space
+usage in the Nix store across many chained derivations (as opposed to using a
+zstd compressed tarball which uses quadratic space across many chained
+derivations).</li>
+<li><code>mkDummySrc</code> optionally accepts a <code>dummyrs</code> argument which allows for
+customizing the contents of the dummy Rust files that will be generated.</li>
+</ul>
+<h3 id="changed-32"><a class="header" href="#changed-32">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: all cargo-based derivations will now default to using symlinking
+their installed artifacts together instead of using zstd compressed tarballs.
+To get the old behavior back, set <code>installCargoArtifactsMode = "use-zstd";</code> in
+the derivation.
+<ul>
+<li>Note that <code>buildPackage</code> will continue to use zstd compressed tarballs while
+building dependencies (unless either of <code>cargoArtifacts</code> or
+<code>installCargoArtifactsMode</code> is defined, in which case they will be honored)</li>
+</ul>
+</li>
+<li><strong>Breaking</strong>: the format for defining crate registries has been changed: each
+registry URL should map to a set containing a <code>downloadUrl</code> attribute. This
+set may also define <code>fetchurlExtraArgs</code> (another set) which will be forwarded
+to the <code>fetchurl</code> invocations for crates for that registry.</li>
+<li><strong>Breaking</strong> (technically): <code>buildDepsOnly</code> will now only default to running
+<code>cargo check</code> with the <code>--all-targets</code> flag only if <code>doCheck = true;</code> is set on
+the derivation (otherwise the flag is omitted). To get the previous behavior
+back simply set <code>cargoCheckExtraArgs = "--all-targets";</code>.</li>
+<li><code>registryFromGitIndex</code> now uses shallow checkouts for better performance</li>
+<li><code>registryFromDownloadUrl</code> and <code>registryFromGitIndex</code> now allow specifying
+<code>fetchurlExtraArgs</code> which will be forwarded to the <code>fetchurl</code> invocations for
+crates for that registry</li>
+</ul>
+<h3 id="fixed-33"><a class="header" href="#fixed-33">Fixed</a></h3>
+<ul>
+<li>Unpacking a git repository now ignores duplicate crates to match cargo’s
+behavior</li>
+<li>Sped up stripping references to source files</li>
+<li>Dummy sources now import the <code>core</code> crate more robustly (playing more nicely
+with <code>cargo-hakari</code>)</li>
+<li>Building a crate’s dependencies automatically works for uefi targets</li>
+</ul>
+<h2 id="090---2022-10-29"><a class="header" href="#090---2022-10-29"><a href="https://github.com/ipetkov/crane/compare/v0.8.0...v0.9.0">0.9.0</a> - 2022-10-29</a></h2>
+<h3 id="changed-33"><a class="header" href="#changed-33">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: all setup hooks have been removed from the <code>packages</code> flake
+output. They can still be accessed via the <code>lib</code> flake output.</li>
+<li><strong>Breaking</strong>: <code>cargoBuild</code> now only runs <code>cargo build</code> in a workspace, tests
+are no longer run</li>
+<li><strong>Breaking</strong>: <code>buildDepsOnly</code> does not automatically imply the <code>--all-targets</code>
+flag when invoking <code>cargo check</code>. Use <code>cargoCheckExtraArgs</code> to control this</li>
+<li><code>buildDepsOnly</code> now accepts <code>cargoCheckExtraArgs</code> for passing additional
+arguments just to the <code>cargo check</code> invocation. By default <code>--all-targets</code>
+will be used</li>
+<li><code>buildDepsOnly</code> now accepts <code>cargoTestExtraArgs</code> for passing additional
+arguments just to the <code>cargo test</code> invocation</li>
+<li><code>buildPackage</code> now delegates to <code>mkCargoDerivation</code> instead of <code>cargoBuild</code></li>
+</ul>
+<h3 id="fixed-34"><a class="header" href="#fixed-34">Fixed</a></h3>
+<ul>
+<li><code>crateNameFromCargoToml</code> now takes workspace inheritance into account. If a
+crate does not specify <code>package.version</code> in its (root) Cargo.toml but does
+specify <code>workspace.package.version</code> then the latter will be returned.</li>
+<li>Freestanding (<code>#![no_std]</code>) targets are now supported</li>
+</ul>
+<h2 id="080---2022-10-09"><a class="header" href="#080---2022-10-09"><a href="https://github.com/ipetkov/crane/compare/v0.7.0...v0.8.0">0.8.0</a> - 2022-10-09</a></h2>
+<h3 id="added-18"><a class="header" href="#added-18">Added</a></h3>
+<ul>
+<li><code>cargoTest</code> can now be used for only running the tests of a workspace</li>
+</ul>
+<h3 id="changed-34"><a class="header" href="#changed-34">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong> (technically): build hooks now expect helper tools (like <code>cargo</code>,
+<code>jq</code>, <code>zstd</code>, etc.) to be present on the path instead of substituting a
+reference to a (possibly different) executable in the store.</li>
+<li><code>mkCargoDerivation</code> now automatically vendors dependencies if <code>cargoVendorDir</code>
+is not defined</li>
+<li><code>mkCargoDerivation</code> now automatically populates <code>pname</code> and <code>version</code> (via
+<code>crateNameFromCargoToml</code>) if they are not specified</li>
+<li><code>mkCargoDerivation</code> now defaults to an empty <code>checkPhaseCargoCommand</code> if not
+specified</li>
+<li><code>cargoAudit</code> now delegates to <code>mkCargoDerivation</code> instead of <code>cargoBuild</code></li>
+<li><code>cargoClippy</code> now delegates to <code>mkCargoDerivation</code> instead of <code>cargoBuild</code></li>
+<li><code>cargoDoc</code> now delegates to <code>mkCargoDerivation</code> instead of <code>cargoBuild</code></li>
+<li><code>cargoFmt</code> now delegates to <code>mkCargoDerivation</code> instead of <code>cargoBuild</code></li>
+<li><code>cargoNextest</code> now delegates to <code>mkCargoDerivation</code> instead of <code>cargoBuild</code></li>
+<li><code>cargoTarpaulin</code> now delegates to <code>mkCargoDerivation</code> instead of <code>cargoBuild</code></li>
+</ul>
+<h3 id="fixed-35"><a class="header" href="#fixed-35">Fixed</a></h3>
+<ul>
+<li>Installing binaries now uses the same version of cargo as was used to build
+the package (instead of using whatever version is present in nixpkgs)</li>
+</ul>
+<h3 id="deprecated"><a class="header" href="#deprecated">Deprecated</a></h3>
+<ul>
+<li>The <code>packages</code> flake output has been deprecated. All setup hooks can be
+accessed via the <code>lib</code> flake output (or via the result of the <code>mkLib</code> flake
+output)</li>
+</ul>
+<h2 id="070---2022-09-28"><a class="header" href="#070---2022-09-28"><a href="https://github.com/ipetkov/crane/compare/v0.6.0...v0.7.0">0.7.0</a> - 2022-09-28</a></h2>
+<h2 id="added-19"><a class="header" href="#added-19">Added</a></h2>
+<ul>
+<li><code>cargoDoc</code> can now be used for building the documentation of a workspace</li>
+<li><code>cleanCargoSource</code> can now be used to filter sources to only include cargo and
+Rust files (and avoid rebuilds when irrelevant files change).
+<code>filterCargoSources</code> is the underlying filter implementation and can be
+composed with other filters</li>
+<li><code>removeReferencesToVendoredSourcesHook</code> defines a post-install hook which will
+remove any references to vendored sources from any installed binaries. Useful
+for preventing nix from considering the binaries as having a (runtime)
+dependency on said sources</li>
+</ul>
+<h2 id="changed-35"><a class="header" href="#changed-35">Changed</a></h2>
+<ul>
+<li><strong>Breaking</strong>: <code>mkCargoDerivation</code> now includes a default <code>configurePhase</code>
+which does nothing but run the <code>preConfigure</code> and <code>postConfigure</code> hooks. This
+is done to avoid breaking builds by including puts happen to have setup-hooks
+which try to claim the configure phase (such as <code>cmake</code>). To get the old
+behavior back, set <code>configurePhase = null;</code> in the derivation.</li>
+<li><code>mkCargoDerivation</code> (along with any of its callers like <code>cargoBuild</code>,
+<code>buildPackage</code>, etc.) now accept a <code>stdenv</code> argument which will override the
+default environment (coming from <code>pkgs.stdenv</code>) for that particular derivation</li>
+<li><code>mkDummySrc</code> now accepts <code>extraScript</code> which can be used to run a custom
+script, and therefore customize what the dummy source contains</li>
+<li><code>buildDepsOnly</code> now accepts <code>dummySrc</code> as a way to directly pass in the dummy
+source to be used. Automatically derived via <code>args.src</code> if not specified.</li>
+</ul>
+<h2 id="fixed-36"><a class="header" href="#fixed-36">Fixed</a></h2>
+<ul>
+<li><code>cargoAudit</code> properly keeps any <code>audit.toml</code> files when cleaning the source</li>
+<li><code>buildPackage</code> now has more robust checks to ensure that all references to
+vendored sources are removed after installation (which avoids consumers of the
+final binaries having to download the sources as well)</li>
+<li><code>mkDummySrc</code> how handles build scripts in a manner which ensures cargo runs
+the real script later (instead of thinking it has not changed)</li>
+</ul>
+<h2 id="060---2022-09-07"><a class="header" href="#060---2022-09-07"><a href="https://github.com/ipetkov/crane/compare/v0.5.1...v0.6.0">0.6.0</a> - 2022-09-07</a></h2>
+<h3 id="added-20"><a class="header" href="#added-20">Added</a></h3>
+<ul>
+<li>Added <code>cargoNextest</code> for running tests via <a href="https://nexte.st/">cargo-nextest</a></li>
+<li>Added <code>cargoAudit</code> for running <a href="https://crates.io/crates/cargo-audit">cargo-audit</a>
+with a provided advisory database instance.</li>
+</ul>
+<h3 id="changed-36"><a class="header" href="#changed-36">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: the <code>--workspace</code> flag is no longer set for all cargo commands
+by default. The previous behavior can be recovered by setting <code>cargoExtraArgs = "--workspace";</code> in any derivation.</li>
+<li><strong>Breaking</strong>: the <code>$CARGO_PROFILE</code> environment variable can be used to specify
+which cargo-profile all invocations use (by default <code>release</code> will be used).
+Technically breaking if the default command was overridden for any derivation;
+set <code>CARGO_PROFILE = "";</code> to avoid telling cargo to use a release build.</li>
+<li><strong>Breaking</strong>: <code>cargoTarpaulin</code> will use the release profile by default</li>
+<li><strong>Breaking</strong>: <code>cargoClippy</code>’s <code>cargoClippyExtraArgs</code> now default to
+<code>"--all-targets"</code> instead of being specified as the cargo command itself. If
+you have set <code>cargoClippyExtraArgs</code> to an explicit value and wish to retain
+the previous behavior you should prepend <code>"--all-targets"</code> to it.</li>
+<li><strong>Breaking</strong>: <code>remapSourcePathPrefixHook</code> and the <code>doRemapSourcePathPrefix</code>
+option have been removed, and the behavior of <code>buildPackage</code> has been updated
+to break false dependencies on the crate sources from the final binaries
+(which was the old behavior of the <code>doRemapSourcePathPrefix</code> option). To
+disable this behavior, set the <code>doNotRemoveReferencesToVendorDir</code> environment
+variable to any non-empty string.</li>
+<li>All cargo invocations made during the build are automatically logged</li>
+<li>Vendoring git dependencies will throw a descriptive error message if a locked
+revision is missing from <code>Cargo.lock</code> and a hint towards resolution</li>
+</ul>
+<h3 id="fixed-37"><a class="header" href="#fixed-37">Fixed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: <code>vendorGitDeps</code> will only include crates referenced by the
+<code>Cargo.lock</code> file, meaning any extraneous crates which happen to be present in
+the git repository will be ignored.</li>
+</ul>
+<h2 id="051---2022-07-20"><a class="header" href="#051---2022-07-20"><a href="https://github.com/ipetkov/crane/compare/v0.5.0...v0.5.1">0.5.1</a> - 2022-07-20</a></h2>
+<h3 id="added-21"><a class="header" href="#added-21">Added</a></h3>
+<ul>
+<li>Added <code>.overrideToolchain</code> as a convenience for using a custom rust toolchain</li>
+</ul>
+<h3 id="fixed-38"><a class="header" href="#fixed-38">Fixed</a></h3>
+<ul>
+<li>Fixed an issue where <code>mkDummySrc</code> would produce incorrect results for filtered
+sources: #46</li>
+</ul>
+<h2 id="050---2022-06-12"><a class="header" href="#050---2022-06-12"><a href="https://github.com/ipetkov/crane/compare/v0.4.1...v0.5.0">0.5.0</a> - 2022-06-12</a></h2>
+<h3 id="changed-37"><a class="header" href="#changed-37">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: dropped compatibility for Nix versions below 2.8.1</li>
+<li><strong>Breaking</strong>: updated all flake attributes to follow the new <code>.default</code>
+guidance as per Nix’s warnings. Specifically:
+<ul>
+<li>Crane’s default overlay is now available at <code>.overlays.default</code> (previously
+<code>.overlay</code>)</li>
+<li>All templates now use <code>{app,devShells,packages}.default</code> as well</li>
+</ul>
+</li>
+<li><strong>Breaking</strong>: <code>lib.fromTOML</code> and <code>lib.toTOML</code> have been removed in favor of
+<code>builtins.fromTOML</code></li>
+<li>Improved support for consuming <code>crane</code> without using flakes</li>
+<li>The <code>nix-std</code> dependency has been dropped</li>
+</ul>
+<h2 id="041---2022-05-29"><a class="header" href="#041---2022-05-29"><a href="https://github.com/ipetkov/crane/compare/v0.4.0...v0.4.1">0.4.1</a> - 2022-05-29</a></h2>
+<h3 id="fixed-39"><a class="header" href="#fixed-39">Fixed</a></h3>
+<ul>
+<li>Dummy source derivations go to greater lengths to only depend on the files
+they consume. Specifying the entire flake source as an input (e.g. via
+<code>buildPackage { src = self; }</code>) now avoids rebuilding everything from scratch
+whenever <em>any</em> file is changed. #28</li>
+</ul>
+<h2 id="040---2022-05-10"><a class="header" href="#040---2022-05-10"><a href="https://github.com/ipetkov/crane/compare/v0.3.3...v0.4.0">0.4.0</a> - 2022-05-10</a></h2>
+<h3 id="changed-38"><a class="header" href="#changed-38">Changed</a></h3>
+<ul>
+<li><strong>Breaking</strong>: the previously named <code>utils</code> flake input has been renamed to
+<code>flake-utils</code></li>
+<li><code>buildDepsOnly</code> now adds <code>--all-targets</code> to the default <code>cargo check</code> invocation. This allows caching all artifacts (including from
+dev-dependencies) such that tools like clippy don’t have to generate them
+every time they run.</li>
+<li>Templates now use the newer flake format accepted by Nix 2.8 (e.g.
+<code>{packages,overlays,devShells}.default</code>, etc.)</li>
+</ul>
+<h3 id="fixed-40"><a class="header" href="#fixed-40">Fixed</a></h3>
+<ul>
+<li>Fixed project and template flakes to avoid superfluous follows declaration for
+<code>flake-utils</code></li>
+<li>Fixed quoting of relative paths to allow building with external sources</li>
+</ul>
+<h2 id="033---2022-02-24"><a class="header" href="#033---2022-02-24"><a href="https://github.com/ipetkov/crane/compare/v0.3.2...v0.3.3">0.3.3</a> - 2022-02-24</a></h2>
+<h3 id="fixed-41"><a class="header" href="#fixed-41">Fixed</a></h3>
+<ul>
+<li>Use <code>lib.groupBy</code> if <code>builtins.groupBy</code> isn’t available (i.e. if a Nix version
+earlier than 2.5 is used)</li>
+<li>The cross compilation example also hows how to set the <code>HOST_CC</code> environment
+variable which may be required by some build scripts to function properly</li>
+</ul>
+<h2 id="032---2022-02-18"><a class="header" href="#032---2022-02-18"><a href="https://github.com/ipetkov/crane/compare/v0.3.1...v0.3.2">0.3.2</a> - 2022-02-18</a></h2>
+<h3 id="fixed-42"><a class="header" href="#fixed-42">Fixed</a></h3>
+<ul>
+<li>Fixed handling git dependencies whose locked revision is not on the
+repository’s main branch</li>
+</ul>
+<h2 id="031---2022-02-17"><a class="header" href="#031---2022-02-17"><a href="https://github.com/ipetkov/crane/compare/v0.3.0...v0.3.1">0.3.1</a> - 2022-02-17</a></h2>
+<h3 id="added-22"><a class="header" href="#added-22">Added</a></h3>
+<ul>
+<li>Added template and example for cross compiling to other platforms</li>
+<li>Added template and example for building static binaries using musl</li>
+</ul>
+<h3 id="changed-39"><a class="header" href="#changed-39">Changed</a></h3>
+<ul>
+<li><code>cargoClippy</code> and <code>cargoTarpaulin</code> will install cargo artifacts by default (or
+install an empty <code>target</code> directory if there are none). This allows for more
+easily chaining derivations if doing so is desired.
+<ul>
+<li>This can be disabled by setting <code>doInstallCargoArtifacts = false;</code> in the
+derivation</li>
+</ul>
+</li>
+</ul>
+<h3 id="fixed-43"><a class="header" href="#fixed-43">Fixed</a></h3>
+<ul>
+<li>Fixed an issue where cross compiling would try to needlessly cross compile
+rustc and cargo themselves</li>
+</ul>
+<h2 id="030---2022-02-11"><a class="header" href="#030---2022-02-11"><a href="https://github.com/ipetkov/crane/compare/v0.2.1...v0.3.0">0.3.0</a> - 2022-02-11</a></h2>
+<h3 id="added-23"><a class="header" href="#added-23">Added</a></h3>
+<ul>
+<li><code>downloadCargoPackageFromGit</code> has been added to handle downloading and
+unpacking a cargo workspace from a git repository</li>
+<li><code>vendorCargoRegistries</code> has been added to handle vendoring crates from all
+registries used in a <code>Cargo.lock</code> file</li>
+<li><code>vendorGitDeps</code> has been added to handle vendoring crates from all git sources
+used in a <code>Cargo.lock</code> file</li>
+</ul>
+<h3 id="changed-40"><a class="header" href="#changed-40">Changed</a></h3>
+<ul>
+<li><code>vendorCargoDeps</code> now automatically handles git dependencies by default
+<ul>
+<li>Git dependencies will be vendored as another source in the output derivation</li>
+<li>The cargo configuration is done such that the sources are available to use
+when it decides, without overriding that crate for the entire workspace
+<ul>
+<li>For example, if your workspace contains a crate only used for testing
+which has a git dependency of a crate used by other parts of the
+workspace, then only that crate will use the git dependency. The rest of
+the workspace will continue to use the crates.io version, just like cargo
+behaves when used outside of Nix.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="021---2022-02-11"><a class="header" href="#021---2022-02-11"><a href="https://github.com/ipetkov/crane/compare/v0.2.0...v0.2.1">0.2.1</a> - 2022-02-11</a></h2>
+<h3 id="changed-41"><a class="header" href="#changed-41">Changed</a></h3>
+<ul>
+<li><code>cargoFmt</code> will install cargo artifacts by default (or install an empty
+<code>target</code> directory if there are none). This allows for more easily chaining
+derivations if doing so is desired.
+<ul>
+<li>This can be disabled by setting <code>doInstallCargoArtifacts = false;</code> in the
+derivation</li>
+</ul>
+</li>
+</ul>
+<h2 id="020---2022-01-30"><a class="header" href="#020---2022-01-30"><a href="https://github.com/ipetkov/crane/compare/v0.1.0...v0.2.0">0.2.0</a> - 2022-01-30</a></h2>
+<h3 id="added-24"><a class="header" href="#added-24">Added</a></h3>
+<ul>
+<li>Support for alternative cargo registries</li>
+</ul>
+<h3 id="changed-42"><a class="header" href="#changed-42">Changed</a></h3>
+<ul>
+<li><code>urlForCargoPackage</code> now takes configured registries into account when
+downloading crate sources</li>
+<li><strong>Breaking</strong>: <code>vendorCargoDeps</code> now vendors each unique registry as a subdirectory within
+the derivation’s output. A <code>config.toml</code> file is also placed at the output
+root which contains the necessary configurations to point cargo at the
+vendored sources.</li>
+<li><code>configureCargoVendoredDepsHook</code> is now aware of the updated <code>vendorCargoDeps</code>
+output format, and will use the <code>config.toml</code> file it generates if it is
+present. Otherwise it will fall back to the previous behavior (which is treat
+the entire directory as only vendoring crates.io).</li>
+<li>Source vendoring now uses <code>runCommandLocal</code> (instead of <code>runCommand</code>) to
+reduce network pressure in trying to fetch results which can quickly be built
+locally</li>
+<li>Searching for <code>Cargo.toml</code> or <code>.cargo/config.toml</code> files is now done more
+efficiently</li>
+</ul>
+<h2 id="010---2022-01-22"><a class="header" href="#010---2022-01-22">0.1.0 - 2022-01-22</a></h2>
+<ul>
+<li>First release</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="introduction.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="introduction.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
