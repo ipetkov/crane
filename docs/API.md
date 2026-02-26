@@ -696,6 +696,10 @@ Except where noted below, all derivation attributes are delegated to
   - Note that all flags from `cargo test` are supported.
 * `cargoNextestPartitionsExtraArgs`: additional flags to be passed in the nextest partition invocation
   - Default value: `""`
+* `env.NEXTEST_SHOW_PROGRESS`: environment variable which controls nextest's progress output.
+  - Default value: `"counter"`
+  - Note: setting `env.NEXTEST_SHOW_PROGRESS = "...";` or passing in
+    `--show-progress=...` as a argument will take precedence over this default
 * `partitions`: The number of separate nextest partitions to run. Useful if the
   test suite takes a long time and can be parallelized across multiple build
   nodes.

@@ -42,6 +42,18 @@ let
       pnameSuffix = "-nextest${extraSuffix}";
       doCheck = args.doCheck or true;
 
+      # Nextest seems to default to a value which prints a progress bar
+      # which can mess up the derivation logs. Thus we'll set a sensible default
+      # (still shows test progress but without redrawing the screen) but still
+      # respect if the caller has any specific values
+      env =
+        (lib.optionalAttrs (cmd == "run") {
+          # Also honor if a value was set at the "top level" args and not
+          # nested under env = { ... };
+          NEXTEST_SHOW_PROGRESS = args.NEXTEST_SHOW_PROGRESS or "counter";
+        })
+        // (args.env or { });
+
       buildPhaseCargoCommand =
         args.buildPhaseCargoCommand or ''
           mkdir -p $out
