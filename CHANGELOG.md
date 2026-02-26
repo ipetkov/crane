@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * Update `crane-utils` dependencies, namely depending on `toml_edit@0.25` which
   now includes parsing support for TOML 1.1
+* `cargoNextest` now defaults to setting `NEXTEST_SHOW_PROGRESS=counter` unless
+  otherwise specified (setting `env.NEXTEST_SHOW_PROGRESS` or passing in
+  `--show-progress=...` will take precedence). This avoids progress bar
+  (re)painting from resulting in garbled build logs
 
 ## [0.23.1] - 2026-02-14
 
