@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `--show-progress=...` will take precedence). This avoids progress bar
   (re)painting from resulting in garbled build logs
 
+### Fixed
+* `findCargoFiles` (and by extension `mkDummySrc` and `vendorCargoDeps`) will
+  now always respect source filters, meaning any ignored `Cargo.toml` or
+  `.cargo/config.toml` files will no longer be processed and included during
+  processing.
+
 ## [0.23.1] - 2026-02-14
 
 ### Added

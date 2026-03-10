@@ -1177,6 +1177,12 @@ The default filter applied by `cleanCargoToml`. Currently corresponds to
 Given a path, recursively search it for any `Cargo.toml`, `.cargo/config` or
 `.cargo/config.toml` files.
 
+Note: if `src` is the result of `lib.cleanSource`, `lib.cleanSourceWith`, or
+`lib.fileset.toSource` the embedded filtering logic will be respected (i.e. if
+the result of the cleaned source would ignore certain `Cargo.toml` or
+`.cargo/config.toml` files, they will also be omitted in the results here). The
+resulting files will use paths from the original (unfiltered) source.
+
 ```nix
 craneLib.findCargoFiles ./src
 # { cargoTomls = [ "..." ]; cargoConfigs = [ "..." ]; }

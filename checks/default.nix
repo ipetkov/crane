@@ -438,6 +438,14 @@ onlyDrvs (
         };
       };
 
+      # https://github.com/ipetkov/crane/issues/985
+      filesetIgnoredInvalidCargotoml = myLib.buildPackage {
+        src = lib.fileset.toSource {
+          root = ./simple-with-extra-invalid-cargo-toml;
+          fileset = lib.fileset.difference ./simple-with-extra-invalid-cargo-toml ./simple-with-extra-invalid-cargo-toml/invalid;
+        };
+      };
+
       filesetWorkspace = myLib.buildPackage {
         src = lib.fileset.toSource {
           root = ./workspace;
@@ -597,6 +605,14 @@ onlyDrvs (
           mkdir -p $out/foo
           touch "$out/foo/bar baz"
         '';
+      };
+
+      # https://github.com/ipetkov/crane/issues/985
+      simpleIgnoredInvalidCargotoml = myLib.buildPackage {
+        src = lib.cleanSourceWith {
+          src = ./simple-with-extra-invalid-cargo-toml;
+          filter = path: type: !(type == "directory" && lib.hasSuffix "invalid" path);
+        };
       };
 
       simpleNoDeps = myLib.buildPackage {

@@ -13,10 +13,10 @@ let
 
   inherit (lib.attrsets) optionalAttrs;
 
-  origSrc = src: if src ? _isLibCleanSourceWith then src.origSrc else src;
+  # NB: findCargoFiles will apply any filtering for us here so we don't need to check origSrc
+  cargoConfigs = if args ? src then (findCargoFiles args.src).cargoConfigs else [ ];
 
-  cargoConfigs = if args ? src then (findCargoFiles (origSrc args.src)).cargoConfigs else [ ];
-
+  origSrc = src: if src._isLibCleanSourceWith or false then src.origSrc else src;
   src = origSrc (
     args.src or (throw ''
       unable to find `src` attribute. consider one of the following:
