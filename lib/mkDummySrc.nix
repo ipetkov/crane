@@ -96,10 +96,12 @@ let
   # whose prefix won't match the paths we observe when we try to clean the source a bit further down
   # (Nix optimizes multiple filters by running them all once against the original source).
   # https://github.com/ipetkov/crane/issues/46
-  origSrc = if src ? _isLibCleanSourceWith then src.origSrc else src;
-
+  origSrc = if src._isLibCleanSourceWith or false then src.origSrc else src;
   uncleanSrcBasePath = builtins.unsafeDiscardStringContext ((toString origSrc) + "/");
-  uncleanFiles = findCargoFiles origSrc;
+  # NB: findCargoFiles will apply any cleanSourceWith filters so we pass in the original
+  # src (not origSrc) here which will give us the best of both worlds
+  # https://github.com/ipetkov/crane/issues/985
+  uncleanFiles = findCargoFiles src;
 
   cargoTomlsBase = uncleanSrcBasePath;
   inherit (uncleanFiles) cargoTomls;
