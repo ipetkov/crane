@@ -10,6 +10,7 @@
   trunk,
   vendorCargoDeps,
   wasm-bindgen-cli,
+  tailwindcss_4,
 }:
 
 let
@@ -77,13 +78,16 @@ mkCargoDerivation (
       TRUNK_TOOLS_SASS=$(sass --version | head -n1)
       TRUNK_TOOLS_WASM_BINDGEN=$(wasm-bindgen --version | cut -d' ' -f2)
       TRUNK_TOOLS_WASM_OPT="version_$(wasm-opt --version | cut -d' ' -f3)"
+      TRUNK_TOOLS_TAILWIND="$(tailwindcss --help | head -n 1 | cut -d ' ' -f3 | tr -d 'v')"
       export TRUNK_TOOLS_SASS
       export TRUNK_TOOLS_WASM_BINDGEN
       export TRUNK_TOOLS_WASM_OPT
+      export TRUNK_TOOLS_TAILWIND
 
       echo "TRUNK_TOOLS_SASS=''${TRUNK_TOOLS_SASS}"
       echo "TRUNK_TOOLS_WASM_BINDGEN=''${TRUNK_TOOLS_WASM_BINDGEN}"
       echo "TRUNK_TOOLS_WASM_OPT=''${TRUNK_TOOLS_WASM_OPT}"
+      echo "TRUNK_TOOLS_TAILWIND=''${TRUNK_TOOLS_TAILWIND}"
     '';
 
     buildPhaseCargoCommand =
@@ -109,6 +113,7 @@ mkCargoDerivation (
       dart-sass
       trunk
       wasm-bindgen-cli
+      tailwindcss_4
       # Store references are certainly false positives
       removeReferencesToRustToolchainHook
       removeReferencesToVendoredSourcesHook
