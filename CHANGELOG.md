@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `buildTrunkPackage` can now process css assets with tailwind
+  using `rel="tailwind-css"` in the index.html.
 ### Changed
 * Update `crane-utils` dependencies, namely depending on `toml_edit@0.25` which
   now includes parsing support for TOML 1.1

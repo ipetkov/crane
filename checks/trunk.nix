@@ -25,10 +25,12 @@ let
     }
   );
 
-  defaultArgs = {
-    src = ./trunk;
+  commonArgs = {
     doCheck = false;
     wasm-bindgen-cli = wasm-bindgen-cli_0_2_108;
+  };
+  defaultArgs = commonArgs // {
+    src = ./trunk;
   };
 
   # default build
@@ -52,11 +54,20 @@ let
       pname = "trunk-simple-no-artifacts";
     }
   );
+  trunkTailwind = myLibWasm.buildTrunkPackage (
+    commonArgs
+    // {
+      src = ./trunk-tailwind;
+      pname = "trunk-tailwind";
+      nativeBuildInputs = [ pkgs.tailwindcss_4 ];
+    }
+  );
 
   body = lib.optionalString (pkgs ? buildWasmBindgenCli) ''
     test -f ${trunkSimple}/*.wasm
     test -f ${trunkSimple}/*.css
     test -f ${trunkSimpleNoArtifacts}/*.wasm
+    test -f ${trunkTailwind}/*.css
   '';
 in
 runCommand "trunkTests" { } ''
