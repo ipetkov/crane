@@ -1,0 +1,25 @@
+diff --git a/checks/trunk/index.html b/checks/trunk/index.html
+index bf5e7e1..ae8a061 100644
+--- a/checks/trunk/index.html
++++ b/checks/trunk/index.html
+@@ -2,10 +2,10 @@
+ <html>
+   <head>
+     <meta charset="utf-8" />
+-    <title>Trunk App</title>
+-    <link data-trunk rel="scss" href="./main.scss" />
++    <title>Trunk App with Tailwind</title>
++    <link data-trunk rel="tailwind-css" href="./tailwind.css">
+   </head>
+-  <body>
++  <body class="bg-red-200">
+     <p>Hello world!</p>
+   </body>
+ </html>
+diff --git a/checks/trunk/tailwind.css b/checks/trunk/tailwind.css
+new file mode 100644
+index 0000000..f1d8c73
+--- /dev/null
++++ b/checks/trunk/tailwind.css
+@@ -0,0 +1 @@
++@import "tailwindcss";

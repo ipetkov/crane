@@ -4,10 +4,10 @@
   pkgs,
   runCommand,
   stdenv,
+  tailwindcss_4,
   wasm-bindgen-cli_0_2_108,
 }:
 
-# FIXME: revisit
 let
   wasmToolchainFor =
     p:
@@ -25,12 +25,10 @@ let
     }
   );
 
-  commonArgs = {
+  defaultArgs = {
+    src = ./trunk;
     doCheck = false;
     wasm-bindgen-cli = wasm-bindgen-cli_0_2_108;
-  };
-  defaultArgs = commonArgs // {
-    src = ./trunk;
   };
 
   # default build
@@ -55,11 +53,13 @@ let
     }
   );
   trunkTailwind = myLibWasm.buildTrunkPackage (
-    commonArgs
+    defaultArgs
     // {
-      src = ./trunk-tailwind;
+      inherit cargoArtifacts;
       pname = "trunk-tailwind";
-      nativeBuildInputs = [ pkgs.tailwindcss_4 ];
+      patchFlags = [ "-p3" ];
+      patches = [ ./trunk-with-tailwind.patch ];
+      nativeBuildInputs = [ tailwindcss_4 ];
     }
   );
 
