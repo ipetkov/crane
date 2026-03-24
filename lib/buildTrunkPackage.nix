@@ -81,7 +81,7 @@ mkCargoDerivation (
       export TRUNK_TOOLS_WASM_BINDGEN
       export TRUNK_TOOLS_WASM_OPT
 
-      if command -v tailwindcss &> /dev/null; then
+      if [ -z "''${TRUNK_TOOLS_TAILWIND:-}" ] && command -v tailwindcss &> /dev/null; then
         TRUNK_TOOLS_TAILWIND="$(tailwindcss --help | head -n 1 | cut -d ' ' -f3 | tr -d 'v')"
         export TRUNK_TOOLS_TAILWIND
         echo "TRUNK_TOOLS_TAILWIND=''${TRUNK_TOOLS_TAILWIND}"
