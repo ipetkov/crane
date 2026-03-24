@@ -42,7 +42,7 @@ jobs:
     - uses: cachix/install-nix-action@v31
       with:
         install_url: ${{ matrix.install_url }}
-    - uses: cachix/cachix-action@v16
+    - uses: cachix/cachix-action@v17
       with:
         name: crane
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
@@ -74,7 +74,7 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: cachix/install-nix-action@v31
-    - uses: cachix/cachix-action@v16
+    - uses: cachix/cachix-action@v17
       with:
         name: crane
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
@@ -94,7 +94,7 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: cachix/install-nix-action@v31
-    - uses: cachix/cachix-action@v16
+    - uses: cachix/cachix-action@v17
       with:
         name: crane
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
