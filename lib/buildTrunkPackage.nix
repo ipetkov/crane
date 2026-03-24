@@ -81,9 +81,17 @@ mkCargoDerivation (
       export TRUNK_TOOLS_WASM_BINDGEN
       export TRUNK_TOOLS_WASM_OPT
 
+      if [ -z "''${TRUNK_TOOLS_TAILWIND:-}" ] && command -v tailwindcss &> /dev/null; then
+        TRUNK_TOOLS_TAILWIND="$(tailwindcss --help | head -n 1 | cut -d ' ' -f3 | tr -d 'v')"
+        export TRUNK_TOOLS_TAILWIND
+        echo "TRUNK_TOOLS_TAILWIND=''${TRUNK_TOOLS_TAILWIND}"
+      fi
+
       echo "TRUNK_TOOLS_SASS=''${TRUNK_TOOLS_SASS}"
       echo "TRUNK_TOOLS_WASM_BINDGEN=''${TRUNK_TOOLS_WASM_BINDGEN}"
       echo "TRUNK_TOOLS_WASM_OPT=''${TRUNK_TOOLS_WASM_OPT}"
+
+      ${args.preConfigure or ""}
     '';
 
     buildPhaseCargoCommand =

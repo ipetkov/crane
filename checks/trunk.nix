@@ -4,10 +4,10 @@
   pkgs,
   runCommand,
   stdenv,
+  tailwindcss_4,
   wasm-bindgen-cli_0_2_108,
 }:
 
-# FIXME: revisit
 let
   wasmToolchainFor =
     p:
@@ -52,11 +52,22 @@ let
       pname = "trunk-simple-no-artifacts";
     }
   );
+  trunkTailwind = myLibWasm.buildTrunkPackage (
+    defaultArgs
+    // {
+      inherit cargoArtifacts;
+      pname = "trunk-tailwind";
+      patchFlags = [ "-p3" ];
+      patches = [ ./trunk-with-tailwind.patch ];
+      nativeBuildInputs = [ tailwindcss_4 ];
+    }
+  );
 
   body = lib.optionalString (pkgs ? buildWasmBindgenCli) ''
     test -f ${trunkSimple}/*.wasm
     test -f ${trunkSimple}/*.css
     test -f ${trunkSimpleNoArtifacts}/*.wasm
+    test -f ${trunkTailwind}/*.css
   '';
 in
 runCommand "trunkTests" { } ''

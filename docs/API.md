@@ -252,6 +252,12 @@ Create a derivation which will build a distributable directory for a WASM applic
 Except where noted below, all derivation attributes are delegated to
 `mkCargoDerivation`, and can be used to influence its behavior.
 
+Note: if `tailwindcss` is executable at build time (i.e. a `nativeBuildInput`
+supplies it) a preconfigure hook will automatically configure
+`TRUNK_TOOLS_TAILWIND` so that support works out of the box. To disable this
+behavior you can either set `env.TRUNK_TOOLS_TAILWIND` to any value on the
+derivation, or `unset TRUNK_TOOLS_TAILWIND` in a build hook.
+
 #### Optional attributes
 * `buildPhaseCargoCommand`: A command to run during the derivation's build
   phase. Pre and post build hooks will automatically be run.
@@ -280,7 +286,6 @@ Except where noted below, all derivation attributes are delegated to
   dependency of `trunk`, the version used here must match the version
   of `wasm-bindgen` in the `Cargo.lock` file of your project *exactly*.
   - Default value: `pkgs.wasm-bindgen-cli`
-
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
