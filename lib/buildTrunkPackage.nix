@@ -90,6 +90,8 @@ mkCargoDerivation (
       echo "TRUNK_TOOLS_SASS=''${TRUNK_TOOLS_SASS}"
       echo "TRUNK_TOOLS_WASM_BINDGEN=''${TRUNK_TOOLS_WASM_BINDGEN}"
       echo "TRUNK_TOOLS_WASM_OPT=''${TRUNK_TOOLS_WASM_OPT}"
+
+      ${args.preConfigure or ""}
     '';
 
     buildPhaseCargoCommand =
