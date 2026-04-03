@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Changed
+* `downloadCargoPackage` now extracts tarballs with `--no-same-owner`.
+  Ultimately this should make no difference since the Nix store will reset all
+  ownership permissions anyway, but it may avoid some spurious errors on certain
+  systems.
+
 ## [0.23.2] - 2026-03-23
 
 ### Added

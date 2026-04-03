@@ -37,7 +37,7 @@ stdenv.mkDerivation {
   unpackPhase = ''
     runHook preUnpack
     mkdir -p crate
-    tar -xzf ${tarball} -C crate --strip-components=1
+    tar -xzf ${tarball} -C crate --strip-components=1 --no-same-owner
     runHook postUnpack
   '';
 
