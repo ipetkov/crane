@@ -3,7 +3,6 @@
   filters,
   lib,
   linkFarmFromDrvs,
-  remarshal,
   runCommand,
   writeTOML,
 }:
@@ -22,11 +21,7 @@ let
         if lib.pathExists expectedPathSpecific then expectedPathSpecific else path + "/expected.toml";
     in
     runCommand "compare-${folderName}-${filterName}" { } ''
-      function reformat {
-        ${remarshal}/bin/remarshal --sort-keys -i "$1" --of toml
-      }
-
-      diff <(reformat ${expected}) <(reformat ${cleanedToml})
+      diff ${expected} ${cleanedToml}
       touch $out
     '';
   cmpAllFilters =
