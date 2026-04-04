@@ -4,7 +4,7 @@
 
 let
   inherit (pkgsBuildBuild)
-    remarshal
+    yj
     runCommand
     ;
 in
@@ -13,8 +13,8 @@ runCommand name
   {
     contents = builtins.toJSON contents;
     passAsFile = [ "contents" ];
-    nativeBuildInputs = [ remarshal ];
+    nativeBuildInputs = [ yj ];
   }
   ''
-    remarshal -i $contentsPath -if json -of toml -o $out
+    cat $contentsPath | yj -jt > $out
   ''

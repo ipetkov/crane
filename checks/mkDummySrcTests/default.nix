@@ -2,7 +2,6 @@
   lib,
   linkFarmFromDrvs,
   mkDummySrc,
-  remarshal,
   runCommand,
   writeText,
 }:
@@ -18,15 +17,6 @@ let
     in
     runCommand "compare-${name}" { } ''
       echo ${expected} ${actual}
-      cp -r --no-preserve=ownership,mode ${expected} ./expected
-      cp -r --no-preserve=ownership,mode ${actual} ./actual
-
-      find ./expected ./actual \
-        -name Cargo.toml \
-        -exec mv '{}' '{}.bak' \; \
-        -exec ${remarshal}/bin/remarshal --sort-keys --if toml -i '{}.bak' --of toml -o '{}' \;
-      find ./expected ./actual -name Cargo.toml.bak -delete
-
       diff -r ./expected ./actual
       touch $out
     '';
