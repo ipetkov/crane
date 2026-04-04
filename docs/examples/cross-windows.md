@@ -1,5 +1,4 @@
-To cross compiling a rust program for windows, run the following in a fresh
-directory:
+To cross-compile a Rust application for Windows, run the following in a fresh directory:
 
 ```sh
 nix flake init -t github:ipetkov/crane#cross-windows
@@ -11,3 +10,6 @@ following `flake.nix`:
 ```nix
 {{#include ../../examples/cross-windows/flake.nix}}
 ```
+
+
+The `cross-windows-rust-overlay` template/example is a version of the above using `oxalica/rust-overlay` and the `cross-windows-sqlite` template/example is a version of the above containing a Rust application that uses SQLx and SQLite.

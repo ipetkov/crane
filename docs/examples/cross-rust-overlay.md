@@ -1,5 +1,4 @@
-To cross compile a rust project using `oxalica/rust-overlay`, run the following
-in a fresh directory:
+To cross compile a Rust application using `oxalica/rust-overlay`, run the following in a fresh directory:
 
 ```sh
 nix flake init -t github:ipetkov/crane#cross-rust-overlay
