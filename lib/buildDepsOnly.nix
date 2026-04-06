@@ -10,6 +10,7 @@
   cargoBuildCommand ? "cargoWithProfile build",
   cargoCheckCommand ? "cargoWithProfile check",
   cargoExtraArgs ? "--locked",
+  cargoBuildExtraArgs ? "",
   cargoTestCommand ? "cargoWithProfile test",
   cargoTestExtraArgs ? "--no-run",
   ...
@@ -20,6 +21,7 @@ let
     "cargoCheckCommand"
     "cargoCheckExtraArgs"
     "cargoExtraArgs"
+    "cargoBuildExtraArgs"
     "cargoTestCommand"
     "cargoTestExtraArgs"
     "outputHashes"
@@ -75,7 +77,7 @@ mkCargoDerivation (
     buildPhaseCargoCommand =
       args.buildPhaseCargoCommand or ''
         ${cargoCheckCommand} ${cargoExtraArgs} ${cargoCheckExtraArgs}
-        ${cargoBuildCommand} ${cargoExtraArgs}
+        ${cargoBuildCommand} ${cargoExtraArgs} ${cargoBuildExtraArgs}
       '';
 
     checkPhaseCargoCommand =

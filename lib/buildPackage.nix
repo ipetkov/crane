@@ -12,6 +12,7 @@
 {
   cargoBuildCommand ? "cargoWithProfile build",
   cargoExtraArgs ? "--locked",
+  cargoBuildExtraArgs ? "",
   cargoTestCommand ? "cargoWithProfile test",
   cargoTestExtraArgs ? "",
   ...
@@ -23,6 +24,7 @@ let
   cleanedArgs = removeAttrs args [
     "cargoBuildCommand"
     "cargoExtraArgs"
+    "cargoBuildExtraArgs"
     "cargoTestCommand"
     "cargoTestExtraArgs"
     "outputHashes"
@@ -57,7 +59,7 @@ mkCargoDerivation (
     buildPhaseCargoCommand =
       args.buildPhaseCargoCommand or ''
         cargoBuildLog=$(mktemp cargoBuildLogXXXX.json)
-        ${cargoBuildCommand} --message-format json-render-diagnostics ${cargoExtraArgs} >"$cargoBuildLog"
+        ${cargoBuildCommand} --message-format json-render-diagnostics ${cargoExtraArgs} ${cargoBuildExtraArgs} >"$cargoBuildLog"
       '';
 
     checkPhaseCargoCommand =
