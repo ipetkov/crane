@@ -11,6 +11,7 @@
   cargoExtraArgs ? "",
   cargoLlvmCovExtraArgs ? "--lcov --output-path $out/coverage",
   cargoNextestExtraArgs ? "",
+  cargoNextestArchiveExtraArgs ? "",
   cargoNextestPartitionsExtraArgs ? "",
   doInstallCargoArtifacts ? true,
   partitions ? 1,
@@ -101,7 +102,12 @@ else
     mkArchiveArgs = root: "--archive-format tar-zst --archive-file ${root}/archive.tar.zst";
     archive = mkCargoDerivation (mkUpdatedArgs {
       cmd = "archive";
-      moreArgs = mkArchiveArgs "$out";
+      moreArgs = builtins.concatStringsSep " " (
+        [
+          (mkArchiveArgs "$out")
+        ]
+        ++ lib.optional (cargoNextestArchiveExtraArgs != "") cargoNextestArchiveExtraArgs
+      );
       withLlvmCov =
         !(lib.asserts.assertMsg (!withLlvmCov) "withLLvmCov is not supported for partitioned runs");
     });

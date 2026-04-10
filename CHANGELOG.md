@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   systems.
 * `buildPackage` and `buildDepsOnly` now has a `cargoBuildExtraArgs` option for
   passing arguments specifically to `cargoBuildCommand`.
+* `cargoNextest` now accepts `cargoNextestArchiveExtraArgs` for passing
+  flags to `cargo nextest archive` invocations.
 
 ## [0.23.2] - 2026-03-23
 
