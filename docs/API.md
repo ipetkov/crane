@@ -699,6 +699,8 @@ Except where noted below, all derivation attributes are delegated to
   (e.g. specifying a profile)
   - Default value: `""`
   - Note that all flags from `cargo test` are supported.
+* `cargoNextestArchiveExtraArgs`: additional flags to be passed in the nextest archive invocation
+  - Default value: `""`
 * `cargoNextestPartitionsExtraArgs`: additional flags to be passed in the nextest partition invocation
   - Default value: `""`
 * `env.NEXTEST_SHOW_PROGRESS`: environment variable which controls nextest's progress output.
