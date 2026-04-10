@@ -80,4 +80,4 @@ conditions.
 [Nix]: https://nixos.org/
 [rustfmt]: https://github.com/rust-lang/rustfmt
 [Semantic Versioning]: http://semver.org/spec/v2.0.0.html
-[Trunk]: https://trunkrs.dev/
+[Trunk]: https://trunk-rs.github.io/trunk/
