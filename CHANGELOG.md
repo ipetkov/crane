@@ -11,8 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   Ultimately this should make no difference since the Nix store will reset all
   ownership permissions anyway, but it may avoid some spurious errors on certain
   systems.
-* `cargoNextest` now has a `cargoNextestArchiveExtraArgs` option for passing
-  flags to nextest archive invocations.
+* `buildPackage` and `buildDepsOnly` now has a `cargoBuildExtraArgs` option for
+  passing arguments specifically to `cargoBuildCommand`.
+* `cargoNextest` now accepts `cargoNextestArchiveExtraArgs` for passing
+  flags to `cargo nextest archive` invocations.
 
 ## [0.23.2] - 2026-03-23
 

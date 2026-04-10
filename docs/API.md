@@ -105,6 +105,9 @@ to influence its behavior.
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
       is selected; setting it to `""` will omit specifying a profile
       altogether.
+* `cargoBuildExtraArgs`: additional flags to be passed in the `cargoBuildCommand`
+  invocation
+  - Default value: `""`
 * `cargoCheckCommand`: A cargo (check) invocation to run during the derivation's build
   phase (in order to cache additional artifacts)
   - Default value: `"cargo check --profile release ${cargoCheckExtraArgs}"`
@@ -156,6 +159,7 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 
 * `cargoBuildCommand`
+* `cargoBuildExtraArgs`
 * `cargoCheckCommand`
 * `cargoCheckExtraArgs`
 * `cargoExtraArgs`
@@ -204,6 +208,9 @@ install hooks.
     * `CARGO_PROFILE` can be set on the derivation to alter which cargo profile
       is selected; setting it to `""` will omit specifying a profile
       altogether.
+* `cargoBuildExtraArgs`: additional flags to be passed in the `cargoBuildCommand`
+  invocation
+  - Default value: `""`
 * `cargoExtraArgs`: additional flags to be passed in the cargo invocation (e.g.
   enabling specific features)
   - Default value: `"--locked"`
@@ -233,6 +240,7 @@ environment variables during the build, you can bring them back via
 `.overrideAttrs`.
 
 * `cargoBuildCommand`
+* `cargoBuildExtraArgs`
 * `cargoExtraArgs`
 * `cargoTestCommand`
 * `cargoTestExtraArgs`
