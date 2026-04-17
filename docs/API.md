@@ -585,6 +585,23 @@ environment variables during the build, you can bring them back via
 * `cargoExtraArgs`
 * `rustFmtExtraArgs`
 
+### `craneLib.stdenvSelector`
+
+`stdenvSelector :: set -> drv`
+
+A function which when given an instance `pkgs` (or `pkgsBuildBuild`,
+`pkgsBuildHost`, ..., etc. when cross compiling) will return the `stdenv`
+instance that should be used across all derivations. By default this has the
+value `p: p.stdenv`, i.e. use the default `stdenv` instance in nixpkgs.
+
+This can be overridden via `.overrideScope`:
+
+```nix
+craneLib.overrideScope (final: prev: {
+  stdenvSelector = p: p.clangStdenv;
+})
+```
+
 ### `craneLib.taploFmt`
 
 `taploFmt :: set -> drv`
@@ -1277,10 +1294,6 @@ This is a fairly low-level abstraction, so consider using `buildPackage` or
   - Default value: the package name listed in `Cargo.toml`
 * `pnameSuffix`: a suffix appended to `pname`
   - Default value: `""`
-* `stdenv`: a function to select the standard build environment to use for this
-  derivation. For backwards compatibility a non-function value (i.e. `stdenv =
-  pkgs.stdenv;`) will still be accepted.
-  - Default value: `p: p.stdenv`
 * `version`: the version of the derivation
   - Default value: the version listed in `Cargo.toml`
 

@@ -1,13 +1,12 @@
 {
   pkgsBuildBuild,
+  stdenvSelector,
   urlForCargoPackage,
 }:
 
 let
-  inherit (pkgsBuildBuild)
-    fetchurl
-    stdenv
-    ;
+  inherit (pkgsBuildBuild) fetchurl;
+  stdenv = stdenvSelector pkgsBuildBuild;
 in
 {
   name,

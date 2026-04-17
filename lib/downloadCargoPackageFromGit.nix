@@ -4,13 +4,12 @@
   craneUtils,
   jq,
   pkgsBuildBuild,
+  stdenvSelector,
 }:
 
 let
-  inherit (pkgsBuildBuild)
-    fetchgit
-    stdenv
-    ;
+  inherit (pkgsBuildBuild) fetchgit;
+  stdenv = stdenvSelector pkgsBuildBuild;
 
   namePrefix = "cargo-git-";
   # 211 minus one for the `-` separator

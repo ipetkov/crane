@@ -12,6 +12,7 @@
   replaceCargoLockHook,
   rsync,
   rustc,
+  stdenvSelector,
   vendorCargoDeps,
   writeText,
   writeTOML,
@@ -19,13 +20,14 @@
 }:
 
 let
-  # Warn if an stdenv selector function is required (e.g. when cross compiling) while only a single stdenv instance is given
-  stdenvSelectorWarnMsg = ''
-    mkCargoDerivation's stdenv argument was set to a specific stdenv instance
-    while an stdenv selector function is recommended. Consider specifying a
-    function which selects an stdenv for any given `pkgs` instantiation:
+  legacyStdenvWarnMsg = ''
+    passing in an `stdenv` override into `mkCargoDerivation` is now deprecated.
+    Changing the default `stdenv` must be done at the `craneLib` level like so:
 
-    stdenv = p: p.stdenv;
+      craneLib' = craneLib.override (final: prev: {
+        # Set this to the chosen stdenv, e.g. `p.clangStdenv`
+        stdenvSelector = p: p.stdenv;
+      })
   '';
 in
 args@{
@@ -45,15 +47,15 @@ args@{
 }:
 let
   # Pick the default package stdenv if none is provided
-  argsStdenv = args.stdenv or (p: p.stdenv);
-  stdenvSelector =
+  argsStdenv = if args ? stdenv then lib.warn legacyStdenvWarnMsg args.stdenv else stdenvSelector;
+  compatStdenvSelector =
     if lib.isFunction argsStdenv then
       argsStdenv
     # If not a function, warn and return the value as is
     else
-      lib.warn stdenvSelectorWarnMsg (_: argsStdenv);
+      _: argsStdenv;
 
-  chosenStdenv = stdenvSelector pkgs;
+  chosenStdenv = compatStdenvSelector pkgs;
 
   crateName = crateNameFromCargoToml args;
   cleanedArgs = builtins.removeAttrs args [
@@ -78,7 +80,7 @@ let
   cargoLock = args.cargoLock or cargoLockFromContents;
 
   crossEnv = lib.optionalAttrs (args.doIncludeCrossToolchainEnv or true) (
-    mkCrossToolchainEnv stdenvSelector
+    mkCrossToolchainEnv compatStdenvSelector
   );
 
   baseDrvArgs =
