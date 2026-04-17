@@ -172,7 +172,9 @@ let
       vendorGitDeps = callPackage ./vendorGitDeps.nix {
         inherit internalPercentDecode;
       };
-      writeTOML = callPackage ./writeTOML.nix { };
+      writeTOML = self.writeTOMLViaCraneUtils;
+      writeTOMLViaCraneUtils = callPackage ./writeTOMLViaCraneUtils.nix { };
+      writeTOMLViaRemarshal = callPackage ./writeTOMLViaRemarshal.nix { };
     };
 
   craneSpliced = makeScopeWithSplicing' {

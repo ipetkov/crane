@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+* `writeTOMLViaCraneUtils`: write toml file in the Nix store using a TOML to
+  JSON conversion implemented by a `crane` utility tool. Useful for flattening
+  dependency chains and avoid dragging in `remarshal` and all of its
+  dependencies.
+* `writeTOMLViaRemarshal`: the previous implementation of `writeTOML`, now
+  explicitly separated for backwards compatibility.
+
+### Changed
+* `writeTOML` now, by default, refers to `writeTOMLViaCraneUtils` to minimize
+  dependency chains on non-Rust projects. Bringing back the old behavior (using
+  `remarshal`) can be done via `craneLibRemarshal = craneLib.overrideScope
+  (final: prev: { writeTOML = final.writeTOMLViaRemarshal; });`
+
 ## [0.23.3] - 2026-04-16
 
 ### Changed

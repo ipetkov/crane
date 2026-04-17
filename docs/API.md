@@ -1815,6 +1815,43 @@ craneLib.writeTOML "foo.toml" { foo.bar = "baz"; }
 # «derivation /nix/store/...-foo.toml.drv»
 ```
 
+By default this is implemented via `craneLib.writeTOMLViaCraneUtils`. Changing
+this can be done similar to the following:
+
+```nix
+craneLib.overrideScope (final: prev: {
+  writeTOML = final.writeTOMLViaRemarshal;
+})
+```
+
+### `craneLib.writeTOMLViaCraneUtils`
+
+`writeTOMLViaCraneUtils :: String -> String -> drv`
+
+Takes a file name and an attribute set, converts the set to a TOML document and
+writes it to a file with the given name. Implemented via small helper utility
+defined by `crane` (which requires being compiled before the main project is
+built if not already cached).
+
+```nix
+craneLib.writeTOMLViaCraneUtils "foo.toml" { foo.bar = "baz"; }
+# «derivation /nix/store/...-foo.toml.drv»
+```
+
+### `craneLib.writeTOMLViaRemarshal`
+
+`writeTOMLRemarshal :: String -> String -> drv`
+
+Takes a file name and an attribute set, converts the set to a TOML document and
+writes it to a file with the given name. Implemented via `remarshal` which is
+usually cached by the NixOS hydra instance, but may not be available on all
+platforms.
+
+```nix
+craneLib.writeTOMLViaRemarshal "foo.toml" { foo.bar = "baz"; }
+# «derivation /nix/store/...-foo.toml.drv»
+```
+
 ## Hooks
 
 ### `craneLib.cargoHelperFunctionsHook`
