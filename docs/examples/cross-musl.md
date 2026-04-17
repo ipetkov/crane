@@ -1,5 +1,4 @@
-To build a cargo project with musl to crate statically linked binaries, run the
-following in a fresh directory:
+To cross-compile a Rust application with musl with musl to crate statically linked binaries, run the following in a fresh directory:
 
 ```sh
 nix flake init -t github:ipetkov/crane#cross-musl

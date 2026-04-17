@@ -82,8 +82,18 @@
         };
 
         cross-windows = {
-          description = "Cross compiling a rust program for windows";
+          description = "Cross-compile a Rust application for Windows without rust-overlay";
           path = ./examples/cross-windows;
+        };
+
+        cross-windows-rust-overlay = {
+          description = "Cross-compile a Rust application for Windows with rust-overlay";
+          path = ./examples/cross-windows-rust-overlay;
+        };
+
+        cross-windows-sqlite = {
+          description = "Cross-compile a SQLx+SQLite application for Windows";
+          path = ./examples/cross-windows-sqlite;
         };
 
         custom-toolchain = {

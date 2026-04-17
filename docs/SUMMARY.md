@@ -16,7 +16,7 @@
   * [Building standard library crates](./examples/build-std.md)
   * [Cross compiling](./examples/cross-rust-overlay.md)
   * [Cross compiling with musl](./examples/cross-musl.md)
-  * [Cross compiling to windows](./examples/cross-windows.md)
+  * [Cross compiling to Windows](./examples/cross-windows.md)
   * [Building Trunk projects](./examples/trunk.md)
   * [Workspace with Trunk](./examples/trunk-workspace.md)
   * [End-to-End Testing](./examples/end-to-end-testing.md)
