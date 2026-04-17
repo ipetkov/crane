@@ -10,6 +10,17 @@ let
   inherit (pkgs) lib;
   inherit (pkgs.stdenv) isDarwin;
   onlyDrvs = lib.filterAttrs (_: lib.isDerivation);
+
+  myLibClang = myLib.overrideScope (
+    _: _: {
+      stdenvSelector = p: p.clangStdenv;
+    }
+  );
+  myLibGcc = myLib.overrideScope (
+    _: _: {
+      stdenvSelector = p: p.gccStdenv;
+    }
+  );
 in
 onlyDrvs (
   lib.makeScope myLib.newScope (
@@ -385,9 +396,8 @@ onlyDrvs (
       };
 
       # https://github.com/ipetkov/crane/issues/188
-      depsOnlySourceName = myLib.buildPackage {
+      depsOnlySourceName = myLibClang.buildPackage {
         src = ./highs-sys-test;
-        stdenv = p: p.clangStdenv;
         LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
         nativeBuildInputs = with pkgs; [
           cmake
@@ -671,9 +681,8 @@ onlyDrvs (
       simpleOnlyTests = myLib.buildPackage {
         src = myLib.cleanCargoSource ./simple-only-tests;
       };
-      simpleAltStdenv = myLib.buildPackage {
+      simpleAltStdenv = myLibGcc.buildPackage {
         src = ./simple;
-        stdenv = p: p.gccStdenv;
       };
       # https://github.com/ipetkov/crane/issues/104
       simpleWithCmake = myLib.buildPackage {

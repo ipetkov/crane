@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `cargoNextest` now accepts `cargoNextestArchiveExtraArgs` for passing
   flags to `cargo nextest archive` invocations.
 
+### Deprecations
+* `mkCargoDerivation` (and by extension all utilities which delegate to it) no
+  longer support overriding the `stdenv` used for `mkDerivation` via an
+  attribute. Instead any such overrides should be done at the `craneLib` level
+  via the new `stdenvSelector` function. For example: `(crane.mkLib
+  pkgs).overrideScope (final: prev: { stdenvSelector = p: p.clangStdenv; });`
+
 ## [0.23.2] - 2026-03-23
 
 ### Added

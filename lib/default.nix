@@ -163,6 +163,7 @@ let
         callPackage ./setupHooks/removeReferencesToVendoredSources.nix
           { };
       replaceCargoLockHook = callPackage ./setupHooks/replaceCargoLockHook.nix { };
+      stdenvSelector = p: p.stdenv;
       taploFmt = callPackage ./taploFmt.nix { };
       urlForCargoPackage = callPackage ./urlForCargoPackage.nix { };
       vendorCargoDeps = callPackage ./vendorCargoDeps.nix { };

@@ -2,10 +2,12 @@
   lib,
   makeSetupHook,
   pkgsBuildBuild,
-  stdenv,
+  pkgs,
+  stdenvSelector,
 }:
 
 let
+  stdenv = stdenvSelector pkgs;
   darwinCodeSign = stdenv.targetPlatform.isDarwin && stdenv.targetPlatform.isAarch64;
 in
 makeSetupHook {
