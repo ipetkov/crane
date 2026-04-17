@@ -1,9 +1,7 @@
 # Regression test for https://github.com/ipetkov/crane/issues/60
 
 {
-  buildPackage,
   lib,
-  linkFarmFromDrvs,
   runCommand,
   vendorGitDeps,
   outputHashes ? { },
