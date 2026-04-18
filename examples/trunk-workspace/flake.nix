@@ -132,11 +132,7 @@
               cd ..
             '';
             # The version of wasm-bindgen-cli here must match the one from Cargo.lock.
-            # When updating to a new version replace the hash values with lib.fakeHash,
-            # then try to do a build, which will fail but will print out the correct value
-            # for `hash`. Replace the value and then repeat the process but this time the
-            # printed value will be for the second `hash` below
-            wasm-bindgen-cli = pkgs.wasm-bindgen-cli_0_2_108;
+            wasm-bindgen-cli = pkgs.wasm-bindgen-cli_0_2_114;
           }
         );
       in
