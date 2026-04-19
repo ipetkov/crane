@@ -1,4 +1,4 @@
-[Trunk](https://trunkrs.dev) is a tool that allow you to build web apps using Rust and webassembly, including compiling scss, and distributing other assets.
+[Trunk](https://trunk-rs.github.io/trunk/) is a tool that allow you to build web apps using Rust and webassembly, including compiling scss, and distributing other assets.
 It can be used in conjunction with any of Rust's web frameworks for the development of full stack web applications.
 
 In this example we have a workspace with three members:
