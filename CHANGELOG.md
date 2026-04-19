@@ -603,7 +603,7 @@ A republish of 0.19.2 which was incorrectly tagged.
 ## [0.12.2] - 2023-06-06
 
 ### Added
-* Added support for the [Trunk](https://trunkrs.dev) wasm app build tool
+* Added support for the [Trunk](https://trunk-rs.github.io/trunk/) wasm app build tool
 
 ### Changed
 * `resolver` key is no longer cleaned from Cargo.toml
