@@ -11,4 +11,5 @@ fn panic(_info: &::core::panic::PanicInfo<'_>) -> ! {
     loop {}
 }
 
+#[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
 pub fn main() {}
