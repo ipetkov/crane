@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   dependency chains on non-Rust projects. Bringing back the old behavior (using
   `remarshal`) can be done via `craneLibRemarshal = craneLib.overrideScope
   (final: prev: { writeTOML = final.writeTOMLViaRemarshal; });`
+* `buildDepsOnly` now allows the user to override the `pnameSuffix`
 
 ## [0.23.3] - 2026-04-16
 
