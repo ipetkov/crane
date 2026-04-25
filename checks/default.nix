@@ -570,6 +570,21 @@ onlyDrvs (
           }
         );
 
+      uefi =
+        let
+          uefiLib = myLib.overrideToolchain (
+            p:
+            p.rust-bin.stable.latest.minimal.override {
+              targets = [ "x86_64-unknown-uefi" ];
+            }
+          );
+        in
+        uefiLib.buildPackage {
+          src = myLib.cleanCargoSource ./simple-nostd;
+          CARGO_BUILD_TARGET = "x86_64-unknown-uefi";
+          doCheck = false;
+        };
+
       bindeps =
         let
           bindepsLib = myLib.overrideToolchain (

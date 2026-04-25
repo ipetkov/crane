@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   `remarshal`) can be done via `craneLibRemarshal = craneLib.overrideScope
   (final: prev: { writeTOML = final.writeTOMLViaRemarshal; });`
 
+### Fixed
+* The default dummy source for UEFI correctly builds for no_std environments.
+
 ## [0.23.3] - 2026-04-16
 
 ### Changed

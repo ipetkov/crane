@@ -1,5 +1,3 @@
-#![allow(clippy::all)]
-#![allow(dead_code)]
 #![cfg_attr(any(target_os = "none", target_os = "uefi", target_arch = "amdgpu"), no_std)]
 #![cfg_attr(any(target_os = "none", target_os = "uefi", target_arch = "amdgpu"), no_main)]
 
@@ -12,4 +10,4 @@ fn panic(_info: &::core::panic::PanicInfo<'_>) -> ! {
 }
 
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
-pub fn main() {}
+fn main() { }
