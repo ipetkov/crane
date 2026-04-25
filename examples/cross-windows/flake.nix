@@ -7,11 +7,6 @@
     crane.url = "github:ipetkov/crane";
 
     flake-utils.url = "github:numtide/flake-utils";
-
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -19,14 +14,12 @@
       nixpkgs,
       crane,
       flake-utils,
-      rust-overlay,
       ...
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = import nixpkgs {
-          overlays = [ (import rust-overlay) ];
           localSystem = system;
           crossSystem = {
             config = "x86_64-w64-mingw32";
@@ -34,12 +27,7 @@
           };
         };
 
-        craneLib = (crane.mkLib pkgs).overrideToolchain (
-          p:
-          p.rust-bin.stable.latest.default.override {
-            targets = [ "x86_64-pc-windows-gnu" ];
-          }
-        );
+        craneLib = crane.mkLib pkgs;
 
         my-crate = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;
