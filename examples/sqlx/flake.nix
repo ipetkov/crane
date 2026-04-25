@@ -48,7 +48,6 @@
 
           buildInputs = [
             # Add additional build inputs here
-            pkgs.openssl
           ];
 
           # Additional environment variables can be set directly
