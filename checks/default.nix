@@ -574,7 +574,7 @@ onlyDrvs (
         let
           uefiLib = myLib.overrideToolchain (
             p:
-            p.rust-bin.stable.latest.default.override {
+            p.rust-bin.stable.latest.minimal.override {
               targets = [ "x86_64-unknown-uefi" ];
             }
           );
