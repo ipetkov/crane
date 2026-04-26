@@ -24,7 +24,7 @@ let
     passing in an `stdenv` override into `mkCargoDerivation` is now deprecated.
     Changing the default `stdenv` must be done at the `craneLib` level like so:
 
-      craneLib' = craneLib.override (final: prev: {
+      craneLib = (inputs.crane.mkLib pkgs).overrideScope (final: prev: {
         # Set this to the chosen stdenv, e.g. `p.clangStdenv`
         stdenvSelector = p: p.stdenv;
       })
