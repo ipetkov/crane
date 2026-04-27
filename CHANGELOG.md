@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   dependency chains on non-Rust projects. Bringing back the old behavior (using
   `remarshal`) can be done via `craneLibRemarshal = craneLib.overrideScope
   (final: prev: { writeTOML = final.writeTOMLViaRemarshal; });`
+* `buildDepsOnly` now allows the user to override the `pnameSuffix`
+* `buildTrunkPackage` now adds a `-trunk` suffix to the name of dependency derivation
 
 ### Fixed
 * The default dummy source for UEFI correctly builds for no_std environments.
