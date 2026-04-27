@@ -66,8 +66,7 @@ let
         ${
           if withLlvmCov then "cargo llvm-cov nextest ${cargoLlvmCovExtraArgs}" else "cargo nextest ${cmd}"
         } \
-        ''${CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE} \
-        ${cargoExtraArgs} ${cargoNextestExtraArgs} ${moreArgs}
+        ''${CARGO_PROFILE:+--cargo-profile $CARGO_PROFILE} ${cargoExtraArgs} ${cargoNextestExtraArgs} ${moreArgs}
       '';
 
       nativeBuildInputs =
