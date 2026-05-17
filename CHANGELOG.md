@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [0.23.4] - 2026-05-17
+
 ### Added
 * `writeTOMLViaCraneUtils`: write toml file in the Nix store using a TOML to
   JSON conversion implemented by a `crane` utility tool. Useful for flattening
@@ -1011,6 +1013,7 @@ files parsed as nix attribute sets.
 ## 0.1.0 - 2022-01-22
 - First release
 
+[0.23.4]: https://github.com/ipetkov/crane/compare/v0.23.3...v0.23.4
 [0.23.3]: https://github.com/ipetkov/crane/compare/v0.23.2...v0.23.3
 [0.23.2]: https://github.com/ipetkov/crane/compare/v0.23.1...v0.23.2
 [0.23.1]: https://github.com/ipetkov/crane/compare/v0.23.0...v0.23.1
