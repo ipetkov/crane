@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 * The default dummy source for UEFI correctly builds for no_std environments.
+* `craneUtils` is now uses `writableTmpDirAsHomeHook` to better control cargo's
+  home directory placement, avoiding issues on non-sandboxed builds.
 
 ## [0.23.3] - 2026-04-16
 
