@@ -8,4 +8,4 @@ anyhow = "1.0"
 futures = "0.3"
 sqlx = { version = "0.8", features = ["sqlite", "runtime-tokio-rustls"] }
 structopt = "0.3"
-tokio = { version = "1.20.0", features = ["rt", "macros"]}
+tokio = { version = "1.52.3", features = ["rt", "macros"]}
