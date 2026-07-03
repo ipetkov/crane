@@ -7,6 +7,10 @@ on:
       - 'master'
       - 'ci*' # Allow testing CI fixes without opening a PR
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -22,6 +26,7 @@ jobs:
       - examples-darwin
       - examples-linux
       - tests
+      - zizmor
 
   tests:
     strategy:
@@ -31,27 +36,36 @@ jobs:
         include:
           # NB: current latest release of 2.33.0 has bugs
           - install_url: https://releases.nixos.org/nix/nix-2.31.2/install
+            name: run tests
             # Latest and greatest release of Nix
           #- install_url: https://nixos.org/nix/install
             # The 25.11 branch ships with Nix 2.31.2
           - install_url: https://releases.nixos.org/nix/nix-2.31.2/install
-            nixpkgs-override: "--override-input nixpkgs $(./ci/ref-from-lock.sh ./test#nixpkgs-latest-release)"
+            USE_LATEST_RELEASE: "1"
+            name: run tests 25.11
     runs-on: ubuntu-latest
+    name: ${{ matrix.name }}
+    environment: cachix
+    env:
+      USE_LATEST_RELEASE: ${{ matrix.USE_LATEST_RELEASE }}
     steps:
-    - uses: actions/checkout@v7
-    - uses: cachix/install-nix-action@v31
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
       with:
         install_url: ${{ matrix.install_url }}
-    - uses: cachix/cachix-action@v17
+    - uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
       with:
         name: crane
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
     - run: nix flake check -L .#
-    - run: nix develop --accept-flake-config --command ./ci/fast-flake-check.sh ./test ${{ matrix.nixpkgs-override }}
+    - run: ./ci/run-test-suite.sh
     - name: extra tests
-      run: nix develop --accept-flake-config --command ./extra-tests/test.sh
+      run: nix develop .#ci --accept-flake-config --command ./extra-tests/test.sh
 
   examples-linux:
+    name: build examples
     strategy:
       # Allow other jobs to finish building and cache properly before bailing
       fail-fast: false
@@ -71,10 +85,15 @@ jobs:
           - trunk-workspace
           - trunk
     runs-on: ubuntu-latest
+    environment: cachix
+    env:
+      EXAMPLE: ${{ matrix.example }}
     steps:
-    - uses: actions/checkout@v7
-    - uses: cachix/install-nix-action@v31
-    - uses: cachix/cachix-action@v17
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+    - uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
       with:
         name: crane
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
@@ -84,17 +103,21 @@ jobs:
       # "opt-out" of our lockfile .gitignore
       run: |
         rm ./examples/.gitignore
-        nix develop .# --accept-flake-config --command ./ci/check-example.sh ./examples/${{ matrix.example }} "./test#nixpkgs"
+        nix develop .#ci --accept-flake-config --command ./ci/check-example.sh "./examples/${EXAMPLE}" "./test#nixpkgs"
 
   examples-darwin:
+    name: build examples (darwin)
     strategy:
       # Allow other jobs to finish building and cache properly before bailing
       fail-fast: false
     runs-on: macos-latest
+    environment: cachix
     steps:
-    - uses: actions/checkout@v7
-    - uses: cachix/install-nix-action@v31
-    - uses: cachix/cachix-action@v17
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+    - uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
       with:
         name: crane
         authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
@@ -104,26 +127,45 @@ jobs:
       # "opt-out" of our lockfile .gitignore
       run: |
         rm ./examples/.gitignore
-        nix develop .# --accept-flake-config --command bash -c '
-          set -euo pipefail
-          for f in $(find ./examples -maxdepth 1 -mindepth 1 -type d -not -name build-std -not -name cross-musl -not -name cross-rust-overlay -not -name cross-windows | sort -u); do
-            # NB: nix-eval-jobs appears broken on darwin atm?
-            # /nix/store/2419grj384lg233jqchamm73il9iyjxg-libcxx-16.0.6-dev/include/c++/v1/optional:962: assertion this->has_value() failed: optional operator* called on a disengaged valueerror: error: while checking worker process, evaluation worker got killed by signal 6 (Abort trap: 6)
-            nix flake check \
-              --accept-flake-config \
-              --print-build-logs \
-              --reference-lock-file ./test/flake.lock \
-              --override-input crane ./. \
-              "${f}"
-          done
-        '
+        set -euo pipefail
+        for f in $(find ./examples -maxdepth 1 -mindepth 1 -type d -not -name build-std -not -name cross-musl -not -name cross-rust-overlay -not -name cross-windows | sort -u); do
+          nix flake check \
+            --accept-flake-config \
+            --print-build-logs \
+            --reference-lock-file ./test/flake.lock \
+            --override-input crane ./. \
+            "${f}"
+        done
 
   lints:
     runs-on: ubuntu-latest
+    name: check lints
     steps:
-    - uses: actions/checkout@v7
-    - uses: cachix/install-nix-action@v31
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
     - name: check formatting
       run: nix fmt -- --ci
     - name: check for dead code
-      run: nix develop .# --command deadnix .
+      run: nix develop .#deadnix --command deadnix .
+
+  zizmor:
+    name: run zizmor
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write # Required for upload-sarif (used by zizmor-action) to upload SARIF files.
+    steps:
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+    - name: Run zizmor 🌈
+      run: nix develop .#zizmor --command zizmor --persona=auditor --format=sarif . >results.sarif 
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
+      with:
+        sarif_file: results.sarif
+        category: zizmor

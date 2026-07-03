@@ -9,6 +9,8 @@ updates:
   commit-message:
       prefix: "chore"
       include: "scope"
+  cooldown:
+    default-days: 7
 - package-ecosystem: cargo
   directories:
     - "/examples/*"
@@ -23,3 +25,5 @@ updates:
   commit-message:
       prefix: "chore"
       include: "scope"
+  cooldown:
+    default-days: 7

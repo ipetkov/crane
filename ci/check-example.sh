@@ -25,6 +25,7 @@ cp {"${gitRoot}/test","${example}"}/flake.lock
 # otherwise nix-eval-jobs appears to ignore the previous entry and make up its own
 # (which ignores the versions we have pinned, so not what we want)
 git add -N --force "${example}/flake.lock"
+# shellcheck disable=SC2064
 trap "git rm -f ${example}/flake.lock" EXIT
 
 "${gitRoot}/ci/fast-flake-check.sh" "${commonArgs[@]}"
