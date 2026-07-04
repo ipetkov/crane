@@ -5,25 +5,29 @@ on:
   schedule:
     - cron: '37 16 3,18 * *'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   update-and-push-deps:
+    name: flake update
     runs-on: ubuntu-latest
+    environment: flake-update
     steps:
-    - uses: actions/checkout@v7
-    - uses: cachix/install-nix-action@v31
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+    - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
       with:
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - uses: cachix/cachix-action@v17
-      with:
-        name: crane
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - name: Update flake.lock
       id: flakeupdate
-      uses: DeterminateSystems/update-flake-lock@v28
+      uses: DeterminateSystems/update-flake-lock@834c491b2ece4de0bbd00d85214bb5e83b4da5c6 # v28
       with:
         token: ${{ secrets.PAT_FLAKE_UPDATE }}
         branch: "automation/flake-update"
@@ -34,6 +38,7 @@ jobs:
           dependencies
           flake update
     - name: Enable Pull Request Automerge
-      run: gh pr merge --squash --delete-branch --auto ${{ steps.flakeupdate.outputs.pull-request-number }}
+      run: gh pr merge --squash --delete-branch --auto "${PR_NUMBER}"
       env:
         GH_TOKEN: ${{ secrets.PAT_FLAKE_UPDATE }}
+        PR_NUMBER: ${{ steps.flakeupdate.outputs.pull-request-number }}

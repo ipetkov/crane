@@ -154,16 +154,44 @@
           inherit pkgs myLib;
         };
 
-        devShells.default = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [
-            deadnix
-            formatter
-            jq
-            mdbook
-            nix-eval-jobs
-            taplo
-          ];
-        };
+        devShells =
+          let
+            forCi = [
+              pkgs.jq
+              pkgs.nix-eval-jobs
+            ];
+            forDeadnix = [
+              pkgs.deadnix
+            ];
+            forZizmor = [
+              pkgs.zizmor
+            ];
+          in
+          {
+            default = pkgs.mkShell {
+              nativeBuildInputs =
+                forCi
+                ++ forDeadnix
+                ++ forZizmor
+                ++ [
+                  formatter
+                  pkgs.mdbook
+                  pkgs.taplo
+                ];
+            };
+
+            ci = pkgs.mkShell {
+              nativeBuildInputs = forCi;
+            };
+
+            deadnix = pkgs.mkShell {
+              nativeBuildInputs = forDeadnix;
+            };
+
+            zizmor = pkgs.mkShell {
+              nativeBuildInputs = forZizmor;
+            };
+          };
       }
     );
 }
