@@ -6,7 +6,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-latest-release.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-latest-release.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     advisory-db = {
       url = "github:rustsec/advisory-db";
