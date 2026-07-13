@@ -33,6 +33,45 @@ let
     name: path:
     lib.mapAttrsToList (filterName: filter: cmpCleanCargoToml name path filterName filter) filters;
 
+  cargoTomlConservativeKeptPaths = [
+    [ ]
+    [ "unknown" ]
+    [ "package" ]
+    [
+      "package"
+      "authors-near-miss"
+    ]
+    [
+      "prefix"
+      "package"
+      "authors"
+    ]
+  ];
+
+  cargoTomlConservativeRemovedPaths = [
+    [ "badges" ]
+    [
+      "badges"
+      "nested"
+    ]
+    [
+      "package"
+      "authors"
+    ]
+    [
+      "package"
+      "authors"
+      "nested"
+    ]
+  ];
+
+  cargoTomlConservativeSemantics =
+    assert lib.all filters.cargoTomlConservative cargoTomlConservativeKeptPaths;
+    assert lib.all (path: !filters.cargoTomlConservative path) cargoTomlConservativeRemovedPaths;
+    runCommand "cargo-toml-conservative-semantics" { } ''
+      touch $out
+    '';
+
   testMatrix = {
     barebones = ./barebones;
     complex = ./complex;
@@ -42,4 +81,6 @@ let
     proc-macro = ./proc-macro;
   };
 in
-linkFarmFromDrvs "cleanCargoToml" (lib.concatLists (lib.mapAttrsToList cmpAllFilters testMatrix))
+linkFarmFromDrvs "cleanCargoToml" (
+  [ cargoTomlConservativeSemantics ] ++ lib.concatLists (lib.mapAttrsToList cmpAllFilters testMatrix)
+)
