@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Reduced Nix evaluation overhead in `cargoTomlConservative` by indexing removed
   manifest paths.
 
+### Fixed
+* `urlForCargoPackage` was fixed to correctly handle crate prefixes for crate
+  names longer than 4 characters
+
 ## [0.23.4] - 2026-05-17
 
 ### Added
