@@ -57,11 +57,7 @@ let
         pname = "test-scrub-toolchain";
         version = "0.1.0";
         src = ./includes-toolchain-refs;
-        nativeBuildInputs =
-          [ ]
-          ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-            pkgs.gcc
-          ];
+        nativeBuildInputs = pkgs.lib.optional pkgs.stdenv.isLinux pkgs.gcc;
       }
     );
 
@@ -71,11 +67,7 @@ let
       pname = "test-scrub-toolchain-fenix";
       version = "0.1.0";
       src = ./includes-toolchain-refs;
-      nativeBuildInputs =
-        [ ]
-        ++ pkgs.lib.optional pkgs.stdenv.isLinux [
-          pkgs.gcc
-        ];
+      nativeBuildInputs = pkgs.lib.optional pkgs.stdenv.isLinux pkgs.gcc;
     }
   );
 in
