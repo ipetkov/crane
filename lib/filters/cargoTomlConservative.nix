@@ -85,6 +85,22 @@ let
   ++ (pathsToRemovePerTarget "test")
   ++ (pathsToRemovePerTarget "bench");
 
-  cargoTomlConservative = path: !builtins.any (p: lib.lists.hasPrefix p path) pathsToRemove;
+  pathsToRemoveIndex = lib.foldl' lib.recursiveUpdate { } (
+    map (path: lib.setAttrByPath path true) pathsToRemove
+  );
+
+  isPathRemoved =
+    index: path:
+    if builtins.isBool index then
+      index
+    else if path == [ ] then
+      false
+    else
+      let
+        next = index.${builtins.head path} or null;
+      in
+      next != null && isPathRemoved next (builtins.tail path);
+
+  cargoTomlConservative = path: !isPathRemoved pathsToRemoveIndex path;
 in
 cargoTomlConservative
