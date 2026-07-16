@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 byteorder = { version = "*" }
-epitech_api = { version = "*", registry = "alexandrie" }
+registry-conformance = { version = "0.5", registry = "registry-conformance" }

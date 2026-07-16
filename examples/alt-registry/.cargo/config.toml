@@ -1,2 +1,2 @@
-[registries.alexandrie]
-index = "https://github.com/Hirevo/alexandrie-index"
+[registries.registry-conformance]
+index = "sparse+https://integer32llc.github.io/registry-conformance/"
