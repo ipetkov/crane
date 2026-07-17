@@ -742,9 +742,9 @@ onlyDrvs (
       smokeAltRegistry = self.smoke [ "alt-registry" ] (
         let
           myLibWithRegistry = myLib.appendCrateRegistries [
-            (myLib.registryFromGitIndex {
-              indexUrl = "https://github.com/Hirevo/alexandrie-index";
-              rev = "90df25daf291d402d1ded8c32c23d5e1498c6725";
+            (myLib.registryFromSparse {
+              indexUrl = "https://integer32llc.github.io/registry-conformance";
+              configSha256 = "sha256-dGXyGNh5rplyhOqxnZx05NNcX8WH/UIodLwXDGm58hE=";
             })
             (myLib.registryFromSparse {
               indexUrl = "https://index.crates.io";
