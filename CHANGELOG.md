@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 * `urlForCargoPackage` was fixed to correctly handle crate prefixes for crate
   names longer than 4 characters
+* Inheriting cargo artifacts produced via `installCargoArtifactsMode =
+  "use-symlink"` now handle paths to cargo's newly introduced internal lock
+  files
 
 ## [0.23.4] - 2026-05-17
 
