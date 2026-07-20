@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 * **Breaking**: dropped compatibility for Nix versions below 2.31.2
 * **Breaking**: dropped compatibility for nixpkgs-25.11
+* **Breaking** (technically): `mkCrossToolchainEnv` now uses the full nix store
+  path for environment variables and no longer adds `cc` compilers to
+  `nativeBuildInputs`. This fixes cross compilation for certain cases which did
+  not previously work. To bring back the previous behavior add the necessary
+  compilers to `nativeBuildInputs`.
 * Reduced Nix evaluation overhead in `cargoTomlConservative` by indexing removed
   manifest paths.
 

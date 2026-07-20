@@ -14,7 +14,8 @@ let
     buildKind: chosenPkgs:
     let
       chosenStdenv = stdenvSelector chosenPkgs;
-      ccPrefix = chosenStdenv.cc.targetPrefix;
+      # Use full CC path, preventing ambiguity from relying on PATH
+      ccPrefix = "${chosenStdenv.cc}/bin/${chosenStdenv.cc.targetPrefix}";
       cargoEnv = chosenStdenv.hostPlatform.rust.cargoEnvVarTarget;
       # Configure an emulator for the platform (if we need one, and there's one available)
       runnerAvailable =
@@ -54,12 +55,6 @@ lib.optionalAttrs (selectedStdenv.buildPlatform != selectedStdenv.hostPlatform) 
       # Set the target we want to build for (= Cargo target platform, Nixpkgs host platform)
       # The configureCargoCommonVars setup hook will set CARGO_BUILD_TARGET to this value if the user hasn't specified their own target to use
       "${cranePrefix}CARGO_BUILD_TARGET" = selectedStdenv.hostPlatform.rust.rustcTarget;
-
-      # Pull in any compilers we need
-      nativeBuildInputs = [
-        (stdenvSelector pkgsBuildHost).cc
-        (stdenvSelector pkgsHostTarget).cc
-      ];
     }
 
     # NOTE: This is Cargo's host platform (i.e. the platform Cargo runs on) and Nixpkgs's build platform.
