@@ -48,9 +48,9 @@ inheritCargoArtifacts() {
       # since the store is read-only and cargo would otherwise choke
       chmod -R u+w "${cargoTargetDir}"
 
-      # NB: cargo also doesn't like it if `.cargo-lock` files remain with a
+      # NB: cargo also doesn't like it if various `.cargo*lock` files remain with a
       # timestamp in the distant past so we need to delete them here
-      find "${cargoTargetDir}" -name '.cargo-lock' -delete
+      find "${cargoTargetDir}" -name '.cargo*lock' -delete
     else
       # Dependency .rlib and .rmeta files are content addressed and thus are not written to after
       # being built (since changing `Cargo.lock` would rebuild everything anyway), which makes them
@@ -82,10 +82,13 @@ inheritCargoArtifacts() {
       # NB: `.cargo-lock` files tend to appear in "top level" profile artifact directories.
       # Those directories usually contain a `*.d` file for each binary target, but these are NOT
       # content addressed, so we will want to copy them directly so they become writable in place
-      find "${cargoTargetDir}" -name '.cargo-lock' -delete \
+      find "${cargoTargetDir}" -name '.cargo*lock' -delete \
        -execdir bash -c '
+         set -x
          for f in *.d; do
-           cp --preserve=timestamps --no-preserve=ownership --remove-destination "$(readlink "${f}")" "${f}"
+           orig="$(readlink "${f}")"
+           [[ -n "${orig}" ]] || continue
+           cp --preserve=timestamps --no-preserve=ownership --remove-destination "${orig}" "${f}"
            chmod u+w "${f}"
          done
        ' \;

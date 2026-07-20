@@ -23,7 +23,7 @@ let
     else if nameLen == 3 then
       "3/${substr 0 1 name}"
     else
-      "${substr 0 2 name}/${substr 2 4 name}";
+      "${substr 0 2 name}/${substr 2 2 name}";
 
   knownRegistries = "\n  " + lib.concatStringsSep "\n  " (builtins.attrNames crateRegistries) + "\n";
   registry =
