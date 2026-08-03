@@ -63,6 +63,7 @@ mkCargoDerivation (
       args.cargoArtifacts or (buildDepsOnly (
         args
         // {
+          pnameSuffix = "-trunk-deps";
           CARGO_BUILD_TARGET = args.CARGO_BUILD_TARGET or "wasm32-unknown-unknown";
           doCheck = args.doCheck or false;
         }
