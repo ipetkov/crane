@@ -7,7 +7,7 @@
 }:
 
 let
-  inherit (pkgs.stdenv) isDarwin;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   extraAllowed = builtins.concatStringsSep "\\|" (
     lib.optionals isDarwin [
@@ -57,7 +57,7 @@ let
         pname = "test-scrub-toolchain";
         version = "0.1.0";
         src = ./includes-toolchain-refs;
-        nativeBuildInputs = pkgs.lib.optional pkgs.stdenv.isLinux pkgs.gcc;
+        nativeBuildInputs = pkgs.lib.optional pkgs.stdenv.hostPlatform.isLinux pkgs.gcc;
       }
     );
 
@@ -67,7 +67,7 @@ let
       pname = "test-scrub-toolchain-fenix";
       version = "0.1.0";
       src = ./includes-toolchain-refs;
-      nativeBuildInputs = pkgs.lib.optional pkgs.stdenv.isLinux pkgs.gcc;
+      nativeBuildInputs = pkgs.lib.optional pkgs.stdenv.hostPlatform.isLinux pkgs.gcc;
     }
   );
 in
