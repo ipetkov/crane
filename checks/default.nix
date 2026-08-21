@@ -8,7 +8,7 @@
 
 let
   inherit (pkgs) lib;
-  inherit (pkgs.stdenv) isDarwin;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
   onlyDrvs = lib.filterAttrs (_: lib.isDerivation);
 
   myLibClang = myLib.overrideScope (
