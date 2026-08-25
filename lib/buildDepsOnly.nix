@@ -57,7 +57,7 @@ mkCargoDerivation (
     inherit doCheck;
 
     src = dummySrc;
-    pnameSuffix = "-deps";
+    pnameSuffix = args.pnameSuffix or "-deps";
     pname = args.pname or crateName.pname;
     version = args.version or crateName.version;
 
