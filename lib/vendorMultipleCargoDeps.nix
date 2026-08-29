@@ -42,10 +42,23 @@ in
   overrideVendorCargoPackage ? _: drv: drv,
   overrideVendorGitCheckout ? _: drv: drv,
   registries ? null,
+  patch ? { },
+  src,
 }:
 let
   cargoLocksParsed =
     (map fromTOML ((map readFile cargoLockList) ++ cargoLockContentsList)) ++ cargoLockParsedList;
+
+  linkedPatches =
+    lib.attrsets.foldlAttrs (acc: name: value: if value ? path then acc + ''
+      ln -s ${src}/${value.path} $out/${name}
+    '' else acc) "" patch;
+
+  linkedPatchesWarn =
+    if linkedPatches != "" then
+      builtins.warn "Using Crane together with [patch] may prevent the caching of build atrefacts" linkedPatches
+    else
+      "";
 
   # Extract all packages from all Cargo.locks and trim any unused attributes from the parsed
   # data so we do not get any faux duplicates
@@ -94,4 +107,5 @@ runCommandLocal "vendor-cargo-deps" { } ''
 
   ${linkSources vendoredRegistries.sources}
   ${linkSources vendoredGit.sources}
+  ${linkedPatchesWarn}
 ''
