@@ -109,6 +109,10 @@ mkCargoDerivation (
         cp -r "$(dirname "${trunkIndexPath}")/dist" $out
       '';
 
+    meta =
+      lib.optionalAttrs (crateName ? description) { inherit (crateName) description; }
+      // (args.meta or { });
+
     # Installing artifacts on a distributable dir does not make much sense
     doInstallCargoArtifacts = args.doInstallCargoArtifacts or false;
 
