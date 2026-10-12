@@ -37,4 +37,8 @@ lib.filterAttrs (_: v: v != null) {
     (toml.package.version or null)
     (toml.workspace.package.version or null)
   ];
+  description = firstNonNull [
+    (toml.package.description or null)
+    (toml.workspace.package.description or null)
+  ];
 }
