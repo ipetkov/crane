@@ -25,7 +25,6 @@ let
   inherit (lib)
     concatMapStrings
     concatStrings
-    escapeShellArg
     flatten
     foldl
     groupBy
@@ -65,7 +64,7 @@ let
     runCommandLocal "vendor-registry" { } ''
       mkdir -p $out
       ${concatMapStrings (p: ''
-        ln -s ${escapeShellArg (vendorCrate p)} $out/${escapeShellArg "${p.name}-${p.version}"}
+        ln -s ${vendorCrate p} $out/${p.name}-${p.version}
       '') packages}
     '';
 
@@ -158,7 +157,7 @@ let
         hashed = hash prefixedUrl;
       in
       ''
-        [source.${escapeShellArg name}]
+        [source.${name}]
         registry = "${url}"
         replace-with = "nix-sources-${hashed}"
       ''
