@@ -91,7 +91,7 @@
         packages.default = my-crate;
 
         apps.default = flake-utils.lib.mkApp {
-          drv = pkgs.writeScriptBin "my-app" ''
+          drv = pkgs.pkgsBuildBuild.writeShellScriptBin "my-app" ''
             ${pkgs.pkgsBuildBuild.qemu}/bin/qemu-aarch64 ${my-crate}/bin/cross-rust-overlay
           '';
         };
