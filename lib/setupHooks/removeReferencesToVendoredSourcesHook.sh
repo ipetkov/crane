@@ -10,8 +10,8 @@ removeReferencesToVendoredSources() {
     find "${installLocation}" -type f -print0 |
       sort -z |
       tee -a >(tr '\0' '\n' >&3) |
-      xargs -0 --no-run-if-empty sed -i'' -f <(
-        echo -n 's!@storeDir@/\(eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+      xargs -0 --no-run-if-empty -L 1 @nukeRefsTo@ $(
+        echo -n '@storeDir@/(eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
         (
           # Include the root of the vendor dir itself
@@ -25,10 +25,10 @@ removeReferencesToVendoredSources() {
           grep --ignore-case --only-matching '@storeDir@/[a-z0-9]\{32\}' |
           sort -u |
           while read -r crateSource; do
-            echo -n '\|'"${crateSource#@storeDir@/}";
+            echo -n '|'"${crateSource#@storeDir@/}";
           done || true # Handle if vendoredDir doesn't point to the store
 
-        echo -n '\)!@storeDir@/eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!gi'
+        echo -n ')'
       )
 
     echo 'stripping references done'
