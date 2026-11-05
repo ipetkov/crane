@@ -59,7 +59,7 @@ let
 
   internalName = internalCrateNameFromCargoToml toml debugPath;
 in
-{
+lib.filterAttrs (_: v: v != null) {
   pname =
     internalName.pname or (traceMsg "name" "pname" "cargo-package" [
       ''`package.metadata.crane.name` = "..."''
@@ -69,4 +69,5 @@ in
     internalName.version or (traceMsg "version" "version" "0.0.1" [
       ''`workspace.package.version` = "..."''
     ]);
+  description = internalName.description or null;
 }
