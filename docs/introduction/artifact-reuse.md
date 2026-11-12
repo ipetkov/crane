@@ -18,7 +18,7 @@ Here's how we can set up our flake to achieve our goals:
 ```nix
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
     crane.url = "github:ipetkov/crane";
     flake-utils.url = "github:numtide/flake-utils";
   };
