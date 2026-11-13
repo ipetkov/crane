@@ -37,7 +37,7 @@ craneLib.buildPackage {
 # flake.nix
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
 
     crane.url = "github:ipetkov/crane";
 
@@ -104,7 +104,7 @@ If you need to change behavior that way, consider using a combination of
 # flake.nix
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
 
     crane.url = "github:ipetkov/crane";
 

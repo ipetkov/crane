@@ -5,8 +5,8 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-latest-release.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
+    nixpkgs-latest-release.url = "https://channels.nixos.org/nixos-26.05/nixexprs.tar.zst";
 
     advisory-db = {
       url = "github:rustsec/advisory-db";

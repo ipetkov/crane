@@ -6,4 +6,4 @@ nixpkgsFrom="${1:?missing nixpkgsFrom}"
 flakeLock="$(echo "${nixpkgsFrom}" | cut -d# -f1)"
 input="$(echo "${nixpkgsFrom}" | cut -d# -f2)"
 
-jq -r <"${flakeLock}/flake.lock" '.nodes.root.inputs."'"${input}"'" as $name | .nodes | getpath([$name]).locked | "\(.type):\(.owner)/\(.repo)/\(.rev)"'
+jq -r <"${flakeLock}/flake.lock" '.nodes.root.inputs."'"${input}"'" as $name | .nodes | getpath([$name]).locked | if .type == "tarball" then "tarball+\(.url)" else "\(.type):\(.owner)/\(.repo)/\(.rev)" end'
