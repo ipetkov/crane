@@ -42,7 +42,7 @@ You can find a full demo project [here](https://github.com/vypxl/nix-rust-window
   description = "Build a cargo project";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
     crane.url = "github:ipetkov/crane";
     fenix = {
       url = "github:nix-community/fenix";
