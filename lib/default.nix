@@ -130,6 +130,7 @@ let
       mkCargoDerivation = callPackage ./mkCargoDerivation.nix { };
       mkCrossToolchainEnv = callPackage ./mkCrossToolchainEnv.nix { };
       mkDummySrc = callPackage ./mkDummySrc.nix { };
+      nukeRefsTo = callPackage ./nukeRefsTo.nix { };
 
       overrideToolchain =
         toolchainArg:
