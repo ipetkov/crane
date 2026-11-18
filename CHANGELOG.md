@@ -6,8 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-### Changed
+### Added
+* `craneLib.buildPackage` and `craneLib.buildTrunkPackage` now populate the
+  derivation's `meta.description` from the crate's `package.description` (or
+  `workspace.package.description`) in its root Cargo.toml, unless
+  `meta.description` is explicitly set. `crateNameFromCargoToml`
+  correspondingly exposes a `description` attribute (omitted when absent).
 
+### Changed
 * Move Nixpkgs flake channels in examples and tests to tarballs
 
 ## [0.24.0] - 2026-08-21

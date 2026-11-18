@@ -232,6 +232,9 @@ install hooks.
   derivation's outputs.
   - Default value: will look for a temporary installation directory created by
     `installFromCargoBuildLogHook` and then install all of its contents
+* `meta`: metadata of the derivation.
+  - Default value: `{ }` with `meta.description` populated from
+    `crateNameFromCargoToml`. Set `meta.description` explicitly to override it.
 
 #### Remove attributes
 The following attributes will be removed before being lowered to
@@ -284,6 +287,9 @@ derivation, or `unset TRUNK_TOOLS_TAILWIND` in a build hook.
 * `installPhaseCommand`: the command(s) which are expected to install the
   derivation's outputs.
   - Default value: will install trunk's `dist` output directory
+* `meta`: metadata of the derivation.
+  - Default value: `{ }` with `meta.description` populated from
+    `crateNameFromCargoToml`. Set `meta.description` explicitly to override it.
 * `trunkExtraArgs` pass additional arguments to `trunk`
   - Default value: `""`
 * `trunkExtraBuildArgs` pass additional arguments to `trunk build`
@@ -898,7 +904,7 @@ raised during evaluation.
 
 `crateNameFromCargoToml :: set -> set`
 
-Extract a crate's name and version from its Cargo.toml file.
+Extract a crate's name, version, and description from its Cargo.toml file.
 
 The resulting `pname` attribute will be populated with the value of the
 Cargo.toml's (top-level) attributes in the following order, where the first
@@ -916,13 +922,20 @@ attribute (with a string value) will be chosen:
 1. `workspace.package.version`
 1. Otherwise a placeholder version will be used
 
+The resulting `description` attribute will be populated from
+`package.description` (or `workspace.package.description`), and simply omitted
+when neither is present (there is no placeholder fallback).
+
 Note that *only the root `Cargo.toml` of the specified source will be checked*.
 Directories **will not be crawled** to resolve potential workspace inheritance.
 
 ```nix
 craneLib.crateNameFromCargoToml { cargoToml = ./Cargo.toml; }
-# { pname = "simple"; version = "0.1.0"; }
+# { pname = "simple"; version = "0.1.0"; description = "..."; }
 ```
+
+`craneLib.buildPackage` and `craneLib.buildTrunkPackage` also populate
+`meta.description` from this value unless explicitly set.
 
 ### `craneLib.crateRegistries`
 

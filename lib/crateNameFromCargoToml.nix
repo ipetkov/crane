@@ -70,3 +70,4 @@ in
       ''`workspace.package.version` = "..."''
     ]);
 }
+// (lib.optionalAttrs (internalName ? description) { inherit (internalName) description; })
